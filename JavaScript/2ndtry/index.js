@@ -10,52 +10,12 @@ function timestamp()
 
 function getNode()
     {
-        try{
-            const fs = require('fs');
-            let rawdata = fs.readFileSync('config.json');
-            let data = JSON.parse(rawdata);
-            var node = data['Node'];
-            if (node!=null)
-            {
-                console.log("Your Node Address is: "+ node);
-                return node;
-            }
-            
-            else{
-                console.log("Node value is invalid");
-                return null;
-            }
-            }
-            catch(e)
-            {
-                console.log("Config File Not Found");
-                return null;
-            }
+        return "https://nodes.iota.cafe:443";
     }
 
     function getSeed()
     {
-        try{
-            const fs = require('fs');
-            let rawdata = fs.readFileSync('config.json');
-            let data = JSON.parse(rawdata);
-            var seed = data['Seed'];
-            if (seed!=null)
-            {
-                console.log("Your Seed is: "+ seed);
-                return seed;
-            }
-            
-            else{
-                console.log("Seed value is invalid");
-                return null;
-            }
-            }
-            catch(e)
-            {
-                console.log("Config File Not Found");
-                return null;
-            }
+        return "QCEVFK9GMHAGLLVWE99EKEWMEGQUPUQXMTTVKEWXV9RVVPANPKNIC9MYZVASV9INYODGBGBPRUJWSKNEF";
     }
 
 function generateSeed(id, password, info){
@@ -119,7 +79,7 @@ function generateAddressLocally(seed,deviceNumber,seclevel,id,password,info){
         return finalAddress;
 }
 
-function sendTransaction(seed, address, message){
+function sendPublicTransaction(seed, address, message){
 
     const Iota = require('@iota/core');
     const Converter = require('@iota/converter');
@@ -158,6 +118,33 @@ function sendTransaction(seed, address, message){
         });
         addTransaction(address, null);
         return "Transaction Added To IOTA"
+    }
+
+
+    function sendPrivateTransaction(seed, addresss, msg)
+    {
+
+    }
+
+    function getSingleHash(address,time)
+    {
+        const MongoClient = require('mongodb').MongoClient;
+     const uri = "mongodb+srv://spidy_admin:CsIcBnIcP786@thetamiddleware-pi0h1.gcp.mongodb.net/test?retryWrites=true&w=majority";
+     MongoClient.connect(uri, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("thetamw1");
+        var myobj = { _id: seed, ID: id, PASSWORD: password, Profile:info, SEED: seed };
+        transaction = null;
+        transaction = dbo.collection(address).find({timestamp:time})
+        db.close();
+        return transaction;
+      });
+    }
+
+
+    function getBundledHash(timeTo, timeFrom)
+    {
+
     }
 
 function addSeed(id, password, info, seed){
