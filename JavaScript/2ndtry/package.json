@@ -1,6 +1,6 @@
 {
   "name": "thetamiddleware",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "This is 1st version for ThetaMiddleware",
   "main": "index.js",
   "scripts": {
