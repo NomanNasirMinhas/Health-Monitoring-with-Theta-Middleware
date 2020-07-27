@@ -1,17 +1,11 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
 import IconButton from "@material-ui/core/IconButton"
 import Menu from "@material-ui/core/Menu"
 import Typography from '@material-ui/core/Typography';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import TimelineIcon from '@material-ui/icons/Timeline';
 import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
 import { withRouter } from 'react-router-dom';
 import SvgIcon from "@material-ui/core/SvgIcon"
@@ -20,8 +14,6 @@ import MenuItem from "@material-ui/core/MenuItem"
 import Divider from "@material-ui/core/Divider"
 
 const drawerWidth = 240;
-const options = ['View All Patients', 'Email', 'Spam'];
-const iconsForOptions = []
 
 const useStyles = makeStyles((theme) => ({
 
@@ -123,38 +115,7 @@ const Header = props => {
 
         </Toolbar>
       </AppBar>
-      <Drawer
-        className={classes.drawer}
-        variant="permanent"
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-      >
-        <Toolbar />
-        <div className={classes.drawerContainer}>
-          <List>
-            <ListItem button>
-              <ListItemIcon><TimelineIcon /></ListItemIcon>
-              <ListItemText primary="View All Patients" />
-            </ListItem>
-            {/* {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))} */}
-          </List>
-          {/* <Divider />
-          <List>
-            {['All mail', 'Trash', 'Spam'].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
-          </List> */}
-        </div>
-      </Drawer>
+      
       
         <Toolbar />
     </div>
