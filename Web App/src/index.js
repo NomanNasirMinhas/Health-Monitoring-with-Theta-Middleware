@@ -4,7 +4,7 @@ import './index.css';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import Header from './components/Header/Header.js'
-import ViewPatient from './views/ViewPatient/ViewPatient.js'
+import ViewPatientProfile from './views/ViewPatientProfile/ViewPatientProfile.js'
 import ViewAllPatients from './views/ViewAllPatients/ViewAllPatients.js'
 import YourProfile from './views/YourProfile/YourProfile.js'
 import HomePage from "./HomePage"
@@ -12,7 +12,7 @@ import HomePage from "./HomePage"
 ReactDOM.render(
   <Router>
     <Header />
-      <HomePage />
+      <ViewPatientProfile/>
     <Switch>
       <Route path="/viewallpatients" component={ViewAllPatients} />
       <Route path="/yourprofile" component={YourProfile} />
