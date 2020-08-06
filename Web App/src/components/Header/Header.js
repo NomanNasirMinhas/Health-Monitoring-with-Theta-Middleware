@@ -90,8 +90,8 @@ const Header = props => {
 
 
           <div className={classes.buttons}>
-            <Button variant="outlined">Homepage</Button>
-            <Button variant="outlined">Add Patient</Button>
+            <Button variant="outlined" style={{ color: '#FFFFFF'}}>Homepage</Button>
+            <Button variant="outlined" style={{ color: '#FFFFFF'}}>Add Patient</Button>
           </div>
           <div>
             <IconButton
