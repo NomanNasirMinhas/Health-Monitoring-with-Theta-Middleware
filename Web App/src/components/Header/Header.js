@@ -12,6 +12,7 @@ import SvgIcon from "@material-ui/core/SvgIcon"
 import AccountCircle from "@material-ui/icons/AccountCircle"
 import MenuItem from "@material-ui/core/MenuItem"
 import Divider from "@material-ui/core/Divider"
+import Button from "@material-ui/core/Button"
 
 const drawerWidth = 240;
 
@@ -52,6 +53,12 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
 
+  buttons:{
+    '& > *': {
+      margin: theme.spacing(1),
+    },
+  }
+
 }));
 
 const Header = props => {
@@ -81,6 +88,11 @@ const Header = props => {
             Welcome, Doctor
           </Typography>
 
+
+          <div className={classes.buttons}>
+            <Button variant="outlined">Homepage</Button>
+            <Button variant="outlined">Add Patient</Button>
+          </div>
           <div>
             <IconButton
               aria-label="account of current user"
@@ -91,6 +103,7 @@ const Header = props => {
             >
               <AccountCircle />
             </IconButton>
+
             <Menu
               id="menu-appbar"
               anchorEl={anchorEl}
