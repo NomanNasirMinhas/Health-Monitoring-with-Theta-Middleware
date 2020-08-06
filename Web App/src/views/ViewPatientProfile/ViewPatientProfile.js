@@ -2,7 +2,6 @@ import React from "react"
 import Typography from "@material-ui/core/Typography"
 import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
-import Paper from '@material-ui/core/Paper'
 import Card from "@material-ui/core/Card"
 import { Button } from "@material-ui/core"
 import AssessmentIcon from '@material-ui/icons/Assessment';
@@ -37,8 +36,26 @@ const useStyles = makeStyles((theme) => ({
         background: "#FFFFFF",
         boxShadow: "0px 0px 7px rgba(0, 0, 0, 0.28)",
         borderRadius: "12px",
-    }
-    ,
+    },
+
+    tileTopText:{
+        marginTop:"5px",
+        marginLeft:"5px",
+        fontSize:"30px",
+        fontWeight:"normal",
+        lineHeight: "35px",
+        color: "#959595"
+    },
+
+    tileBottomText:{
+        position:"relative",
+        top:'60px',
+        right:"-50%",
+        fontSize:"30px",
+        fontWeight:"normal",
+        lineHeight: "35px",
+        color: "rgba(0, 0, 0, 0.57)"
+    },
 
     rightBar:{
         marginTop:"200px",
@@ -74,8 +91,6 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: '9px'
     }
 }));
-
-
 
 const ViewPatientProfile = () => {
 
@@ -125,14 +140,17 @@ const ViewPatientProfile = () => {
             <Grid container>
                 <Card className={classes.cardBody}>
                     <Card className={classes.minicard}>
-                        <Typography variant = "h6">Hasnain</Typography>
+                        <Typography variant = "h6" className={classes.tileTopText}>Temperature</Typography>
+                        <Typography variant = "h6" className={classes.tileBottomText}>100 F</Typography>
                     </Card>
                     <Card className={classes.minicard}>
-                        <Typography variant = "h6">Hasnain</Typography>
+                        <Typography variant = "h6" className={classes.tileTopText}>BPM</Typography>
+                        <Typography variant = "h6" className={classes.tileBottomText}>85</Typography>
                     </Card>
 
                     <Card className={classes.minicard}>
-                        <Typography variant = "h6">Hasnain</Typography>
+                        <Typography variant = "h6" className={classes.tileTopText}>BP (mm/Hg)</Typography>
+                        <Typography variant = "h6" className={classes.tileBottomText}>120/80</Typography>
                     </Card>
                 </Card>
             </Grid>
@@ -143,7 +161,7 @@ const ViewPatientProfile = () => {
                <Grid item><Button variant="outlined" startIcon={<AssignmentTurnedInIcon/>}  className={classes.sideButton}>Discharge</Button></Grid>
                <Grid item><Button variant="outlined" startIcon={<HistoryIcon/>}  className={classes.sideButton}>View History</Button></Grid>
                <Grid item>
-                   <Button 
+                   <Button
                         variant="outlined" 
                         startIcon={<TimelineIcon/>} 
                         style={{backgroundColor: '#00a152', color:'#FFFFFF'}} 
