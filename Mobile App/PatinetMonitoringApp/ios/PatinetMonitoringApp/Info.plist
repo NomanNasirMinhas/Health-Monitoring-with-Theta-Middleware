@@ -12,6 +12,14 @@
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
+	<key>NSCameraUsageDescription</key>
+	<string>To Scan QR-Code of Patient Device</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Please Grant the requested permission</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Please Grant the requested permission</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Please Grant the requested permission</string>
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundlePackageType</key>
