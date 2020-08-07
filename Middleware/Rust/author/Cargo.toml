@@ -1,7 +1,7 @@
 [package]
 name = "author"
 version = "0.1.0"
-authors = ["JakeSCahill <jake.cahill@iota.org>"]
+authors = ["Noman Nasir Minhas <sp17bsse010@gmail.com>"]
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -9,4 +9,4 @@ edition = "2018"
 [dependencies]
 iota-streams = { git = "https://github.com/iotaledger/streams" }
 failure = "0.1"
-iota-lib-rs = "0.4.1"
+iota-lib-rs = "0.4"
