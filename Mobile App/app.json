@@ -19,10 +19,14 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.thetamiddleware.patientmonitoringapp"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
-    }
+    },
+   "android": {
+      "package": "com.thetamiddleware.patientmonitoringapp"
+   }
   }
 }
