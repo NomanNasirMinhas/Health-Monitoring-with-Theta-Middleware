@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
         height: '400px',
         left: '67px',
         top: '554px',
-        background: '#FFFFFF',
+        background: '#cfd8dc',
         border: '3px solid #FFFFFF',
         boxShadow:' 0px 0px 7px rgba(0, 0, 0, 0.28)',
         borderRadius: '12px',
@@ -86,7 +86,7 @@ const useStyles = makeStyles((theme) => ({
         height: '139px',
         left: '89px',
         top: '594px',
-        background: 'rgba(242, 242, 242, 0.47)',
+        background: '#eceff1',
         border: '3px solid #FFFFFF',
         borderRadius: '9px'
     }
