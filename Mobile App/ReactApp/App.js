@@ -35,11 +35,13 @@ function HomeScreen({ navigation }) {
 
 const Stack = createStackNavigator();
 
+
 function App() {
+
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Welocme">
-        <Stack.Screen name="Welcome" component={Welcome} />
+      <Stack.Navigator initialRouteName="Welcome">
+        <Stack.Screen name="Welcome Screen" component={Welcome} />
         <Stack.Screen name="qrScanner" component={qrScanner} />
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="Readings" component={Readings} />
@@ -49,3 +51,4 @@ function App() {
 }
 
 export default App;
+

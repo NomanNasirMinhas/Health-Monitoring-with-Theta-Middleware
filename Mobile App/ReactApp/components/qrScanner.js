@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import Profile from './Profile'
 
 export default function qrScanner({navigation}) {
   const [hasPermission, setHasPermission] = useState(null);
@@ -15,7 +16,7 @@ export default function qrScanner({navigation}) {
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+    navigation.navigate('Profile')
   };
 
   if (hasPermission === null) {
