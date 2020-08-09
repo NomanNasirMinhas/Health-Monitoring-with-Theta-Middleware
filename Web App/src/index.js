@@ -8,11 +8,13 @@ import ViewPatientProfile from './views/ViewPatientProfile/ViewPatientProfile.js
 import ViewAllPatients from './views/ViewAllPatients/ViewAllPatients.js'
 import YourProfile from './views/YourProfile/YourProfile.js'
 import HomePage from "./HomePage"
-
+import Login from "./views/Login/Login"
 ReactDOM.render(
   <Router>
-    <Header />
-      <ViewPatientProfile/>
+    {/* <Header />
+      <ViewPatientProfile/> */}
+
+      <Login/>
     <Switch>
       <Route path="/viewallpatients" component={ViewAllPatients} />
       <Route path="/yourprofile" component={YourProfile} />
