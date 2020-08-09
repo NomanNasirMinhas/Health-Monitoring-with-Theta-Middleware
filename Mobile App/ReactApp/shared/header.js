@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import { exp } from 'react-native-reanimated';
+// import { exp } from 'react-native-reanimated';
 
 export default function Header(){
     return(

@@ -48,7 +48,9 @@ function App() {
         component={Welcome}
         options={{
           title: 'Patient Monitoring App',
+          headerTitleAlign:'center',
           backgroundColor: '#141D2B',
+          headerShown: false,
           headerStyle: {
             backgroundColor: '#1A2332',
           },
@@ -56,9 +58,7 @@ function App() {
           headerTitleStyle: {
             color: 'white',
             fontWeight: 'bold',
-            alignContent: 'center',
-            alignItems: 'center',
-            justifyContent: 'center'
+            alignItems: 'center'
           },
         }} />
 
@@ -71,6 +71,7 @@ function App() {
           headerStyle: {
             backgroundColor: '#1A2332',
           },
+          headerTitleAlign:'center',
           headerTintColor: '#fff',
           headerTitleStyle: {
             color: 'white',
@@ -87,6 +88,8 @@ function App() {
         component={Profile} 
         options={{
           title: 'Patients Profile',
+          headerLeft:null,
+          headerTitleAlign:'center',
           backgroundColor: '#141D2B',
           headerStyle: {
             backgroundColor: '#1A2332',
@@ -106,6 +109,7 @@ function App() {
         component={Readings}
         options={{
           title: 'Patient Vital Readings',
+          headerTitleAlign:'center',
           backgroundColor: '#141D2B',
           headerStyle: {
             backgroundColor: '#1A2332',

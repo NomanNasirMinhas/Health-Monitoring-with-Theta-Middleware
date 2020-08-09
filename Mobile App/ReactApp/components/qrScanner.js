@@ -32,6 +32,7 @@ export default function qrScanner({navigation}) {
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'flex-end',
+        backgroundColor: '#141D2B'
       }}>
       <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
