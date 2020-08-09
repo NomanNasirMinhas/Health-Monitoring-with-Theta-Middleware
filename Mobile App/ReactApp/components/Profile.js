@@ -46,10 +46,10 @@ export default function Profile({navigation}) {
 
           <View style={styles.statsContainer}>
             <View style={styles.statsBox}>
-      <Text style={[styles.text, {fontSize: 24}]}>Heart{"\n"}Beat</Text>
+              <Text style={[styles.text, {fontSize: 24}]}>Heart{"\n"}Beat</Text>
               <Text style={[styles.text, styles.subText]}>80 BPM</Text>
             </View>
-            <View style={styles.statsBox}>
+            <View style={[styles.statsBox, {borderColor: "#DFD8C8", borderLeftWidth: 2, borderRightWidth: 2}]}>
               <Text style={[styles.text, {fontSize: 24}]}>Body{"\n"}Temp.</Text>
               <Text style={[styles.text, styles.subText]}>80 BPM</Text>
             </View>
@@ -87,9 +87,9 @@ export default function Profile({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff'
-    // alignItems: 'center',
-    // justifyContent: 'center',
+    backgroundColor: '#141D2B',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   text: {

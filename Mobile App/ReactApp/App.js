@@ -3,6 +3,8 @@ import { View, Text, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
+import Header from './shared/header';
+
 import Welcome from './components/Welcome';
 import qrScanner from './components/qrScanner';
 import Profile from './components/Profile';
@@ -41,10 +43,82 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Welcome">
-        <Stack.Screen name="Welcome Screen" component={Welcome} />
-        <Stack.Screen name="qrScanner" component={qrScanner} />
-        <Stack.Screen name="Profile" component={Profile} />
-        <Stack.Screen name="Readings" component={Readings} />
+        <Stack.Screen 
+        name="ThetaMiddleware" 
+        component={Welcome}
+        options={{
+          title: 'Patient Monitoring App',
+          backgroundColor: '#141D2B',
+          headerStyle: {
+            backgroundColor: '#1A2332',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            color: 'white',
+            fontWeight: 'bold',
+            alignContent: 'center',
+            alignItems: 'center',
+            justifyContent: 'center'
+          },
+        }} />
+
+        <Stack.Screen 
+        name="qrScanner" 
+        component={qrScanner}
+        options={{
+          title: 'Scan QR to Login',
+          backgroundColor: '#141D2B',
+          headerStyle: {
+            backgroundColor: '#1A2332',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            color: 'white',
+            fontWeight: 'bold',
+            alignContent: 'center',
+            alignItems: 'center',
+            justifyContent: 'center'
+          },
+        }}
+         />
+        
+        <Stack.Screen 
+        name="Profile" 
+        component={Profile} 
+        options={{
+          title: 'Patients Profile',
+          backgroundColor: '#141D2B',
+          headerStyle: {
+            backgroundColor: '#1A2332',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            color: 'white',
+            fontWeight: 'bold',
+            alignContent: 'center',
+            alignItems: 'center',
+            justifyContent: 'center'
+          },
+        }} />
+        
+        <Stack.Screen 
+        name="Readings" 
+        component={Readings}
+        options={{
+          title: 'Patient Vital Readings',
+          backgroundColor: '#141D2B',
+          headerStyle: {
+            backgroundColor: '#1A2332',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            color: 'white',
+            fontWeight: 'bold',
+            alignContent: 'center',
+            alignItems: 'center',
+            justifyContent: 'center'
+          },
+        }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

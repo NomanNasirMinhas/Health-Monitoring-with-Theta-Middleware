@@ -25,7 +25,7 @@ export default function Welcome({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#141D2B',
     alignItems: 'center',
     justifyContent: 'center',
   },
