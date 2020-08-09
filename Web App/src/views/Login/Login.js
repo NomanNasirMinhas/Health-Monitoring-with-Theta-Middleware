@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
     },
     paper: {
-        marginTop: theme.spacing(40),
+        marginTop: theme.spacing(35),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -53,7 +53,7 @@ const Login = () => {
                             required
                             fullWidth
                             id="username"
-                            label="User name"
+                            label="Username"
                             name="username"
                             autoComplete="off"
                         />
