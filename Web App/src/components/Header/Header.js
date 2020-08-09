@@ -18,6 +18,7 @@ const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
 
+  appBarSpacer: theme.mixins.toolbar,
   root: {
     display: 'flex',
   },
@@ -125,12 +126,9 @@ const Header = props => {
               <MenuItem onClick={handleClose}>Log Out</MenuItem>
             </Menu>
           </div>
-
         </Toolbar>
       </AppBar>
-      
-      
-        <Toolbar />
+      <div className={classes.appBarSpacer}/>
     </div>
   );
 }
