@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import Header from './components/Header/Header.js'
@@ -13,7 +12,6 @@ ReactDOM.render(
   <Router>
     {/* <Header />
       <ViewPatientProfile/> */}
-
       <Login/>
     <Switch>
       <Route path="/viewallpatients" component={ViewAllPatients} />
