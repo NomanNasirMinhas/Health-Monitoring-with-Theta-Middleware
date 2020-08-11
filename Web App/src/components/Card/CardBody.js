@@ -8,33 +8,30 @@ import { makeStyles } from "@material-ui/core/styles";
 // @material-ui/icons
 
 // core components
+import styles from "../../assets/jss/material-dashboard-react/components/cardBodyStyle"
 
-// import styles from "assets/jss/material-dashboard-react/components/cardStyle.js";
 
-import styles from "../../assets/jss/material-dashboard-react/components/cardStyle.js"
 const useStyles = makeStyles(styles);
 
-export default function Card(props) {
+export default function CardBody(props) {
   const classes = useStyles();
-  const { className, children, plain, profile, chart, ...rest } = props;
-  const cardClasses = classNames({
-    [classes.card]: true,
-    [classes.cardPlain]: plain,
-    [classes.cardProfile]: profile,
-    [classes.cardChart]: chart,
+  const { className, children, plain, profile, ...rest } = props;
+  const cardBodyClasses = classNames({
+    [classes.cardBody]: true,
+    [classes.cardBodyPlain]: plain,
+    [classes.cardBodyProfile]: profile,
     [className]: className !== undefined
   });
   return (
-    <div className={cardClasses} {...rest}>
+    <div className={cardBodyClasses} {...rest}>
       {children}
     </div>
   );
 }
 
-Card.propTypes = {
+CardBody.propTypes = {
   className: PropTypes.string,
   plain: PropTypes.bool,
   profile: PropTypes.bool,
-  chart: PropTypes.bool,
   children: PropTypes.node
 };
