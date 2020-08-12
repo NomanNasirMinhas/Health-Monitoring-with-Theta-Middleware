@@ -4,7 +4,6 @@ import Card from '../../components/Card/Card'
 import CardAvatar from '../../components/Card/CardAvatar'
 import CardHeader from '../../components/Card/CardHeader'
 import CardBody from '../../components/Card/CardBody'
-import Button from "@material-ui/core/Button/Button"
 import Divider from "@material-ui/core/Divider/Divider"
 import PhoneIcon from '@material-ui/icons/Phone'
 
@@ -26,7 +25,7 @@ const YourProfile = () => {
     const classes = useStyles();
     return (
         <div className={classes.content}>
-            <Typography variant="h2" style={{ color: '#bdbdbd' }}>Your Profile</Typography>
+``
             <main>
                 <Card profile>
                     <CardAvatar profile>
