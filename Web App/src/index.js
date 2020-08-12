@@ -10,13 +10,14 @@ import YourProfile from './views/YourProfile/YourProfile'
 import CreateAccount from "./views/CreateAccount/CreateAccount"
 import LiveReadings from './views/LiveReadings/LiveReadings';
 import ForgotPassword from './views/ForgotPassword/ForgotPassword';
+import AddPatient from './views/AddPatient/AddPatient'
 ReactDOM.render(
   <Router>
-    {/* <Header />
-      <ViewPatientProfile/>
+    <Header />
+      {/* <ViewPatientProfile/>
       <Login/> */}
     <Switch>
-      <Route path="/" component={ForgotPassword} />
+      <Route path="/" component={AddPatient} />
       {/* <Route path="/myprofile" component={MyProfile} /> */}
     </Switch>
   </Router>,

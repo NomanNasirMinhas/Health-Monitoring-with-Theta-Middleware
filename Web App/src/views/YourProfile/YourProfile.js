@@ -25,7 +25,7 @@ const YourProfile = () => {
     const classes = useStyles();
     return (
         <div className={classes.content}>
-            ``
+            <Typography variant="h2" style={{ color: '#bdbdbd' }}>Your Profile</Typography>
             <main>
                 <Card profile>
                     <CardAvatar profile>
