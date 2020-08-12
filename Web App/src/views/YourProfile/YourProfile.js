@@ -8,7 +8,6 @@ import Divider from "@material-ui/core/Divider/Divider"
 import PhoneIcon from '@material-ui/icons/Phone'
 
 const useStyles = makeStyles((theme) => ({
-
     root: {
         display: 'flex',
     },

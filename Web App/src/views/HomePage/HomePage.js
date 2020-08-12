@@ -1,14 +1,6 @@
 import React from 'react';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import Link from '@material-ui/core/Link'
-import { Typography } from '@material-ui/core';
+import { withStyles, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead } from '@material-ui/core';
+import {TableRow, Paper, Link, Typography } from '@material-ui/core';
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
@@ -56,7 +48,7 @@ export default function CustomizedTables() {
 
     return (
         <div className={classes.content}>
-             <Typography variant="h2" style={{ color: '#bdbdbd', marginBottom:"40px"}}>Current Patients</Typography>
+            <Typography variant="h2" style={{ color: '#bdbdbd', marginBottom: "40px" }}>Current Patients</Typography>
             <TableContainer component={Paper}>
                 <Table className={classes.table}>
                     <TableHead>

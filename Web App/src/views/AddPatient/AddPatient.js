@@ -1,7 +1,6 @@
 import React from 'react';
-import { Button, TextField, Link, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions } from '@material-ui/core';
+import { Button, TextField, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions } from '@material-ui/core';
 import { Grid, Typography, makeStyles, Container } from '@material-ui/core';
-import { AppBar, Toolbar } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => ({
     content: {

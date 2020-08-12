@@ -1,16 +1,14 @@
 import React from "react"
-import { Typography, makeStyles, Grid, Container } from "@material-ui/core"
+import { Typography, makeStyles, Grid } from "@material-ui/core"
 import ChartistGraph from "react-chartist"
 import Card from "../../components/Card/Card"
 import CardBody from "../../components/Card/CardBody"
 import CardHeader from "../../components/Card/CardHeader"
 
 const useStyles = makeStyles((theme) => ({
-
     root: {
         display: 'flex',
     },
-
     content: {
         padding: theme.spacing(3),
     },
@@ -77,11 +75,11 @@ const LiveReadings = () => {
             <Card>
                 <CardHeader><p>ECG</p></CardHeader>
                 <CardBody>
-                    <ChartistGraph 
+                    <ChartistGraph
                         data={biPolarBarChartData}
-                        options={biPolarBarChartOptions} 
+                        options={biPolarBarChartOptions}
                         type={'Line'}
-                        />
+                    />
                 </CardBody>
             </Card>
 
