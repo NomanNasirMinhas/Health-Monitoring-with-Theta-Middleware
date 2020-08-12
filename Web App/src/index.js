@@ -9,13 +9,14 @@ import Login from "./views/Login/Login"
 import YourProfile from './views/YourProfile/YourProfile'
 import CreateAccount from "./views/CreateAccount/CreateAccount"
 import LiveReadings from './views/LiveReadings/LiveReadings';
+import ForgotPassword from './views/ForgotPassword/ForgotPassword';
 ReactDOM.render(
   <Router>
-    <Header />
-      {/* <ViewPatientProfile/>
+    {/* <Header />
+      <ViewPatientProfile/>
       <Login/> */}
     <Switch>
-      <Route path="/" component={LiveReadings} />
+      <Route path="/" component={ForgotPassword} />
       {/* <Route path="/myprofile" component={MyProfile} /> */}
     </Switch>
   </Router>,

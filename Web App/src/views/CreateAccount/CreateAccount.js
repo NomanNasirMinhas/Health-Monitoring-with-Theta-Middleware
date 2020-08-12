@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, TextField, FormControlLabel, Checkbox, Link } from '@material-ui/core';
+import { Button, TextField, Link, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions } from '@material-ui/core';
 import { Grid, Typography, makeStyles, Container } from '@material-ui/core';
 import { AppBar, Toolbar } from "@material-ui/core"
 
@@ -36,6 +36,15 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp() {
     const classes = useStyles();
+    const [open, setOpen] = React.useState(false);
+    const handleSubmit = () => {
+        setOpen(true)
+        console.log("Done")
+    }
+
+    const handleClose = () => {
+        setOpen(false)
+    }
 
     return (
         <div>
@@ -46,7 +55,7 @@ export default function SignUp() {
                     </Typography>
                 </Toolbar>
             </AppBar>
-            <div className={classes.marginTopAppBar}/>
+            <div className={classes.marginTopAppBar} />
             <Container component="main" maxWidth="sm">
                 <div className={classes.paper}>
                     <form className={classes.form} noValidate>
@@ -99,7 +108,7 @@ export default function SignUp() {
                             </Grid>
                         </Grid>
                         <Button
-                            type="submit"
+                            onClick={handleSubmit}
                             fullWidth
                             variant="contained"
                             color="primary"
@@ -107,6 +116,29 @@ export default function SignUp() {
                         >
                             Sign Up
                         </Button>
+                        <Dialog
+                            fullWidth
+                            maxWidth="md"
+                            open={open}
+                            onClose={handleClose}
+                        >
+                            <DialogTitle>Account Created Successfully</DialogTitle>
+                            <DialogContent>
+                                <DialogContentText>
+                                    Kindly keep the Seed ID safe. Your Seed ID is: 1213213312114214123. Your QR is:
+                                </DialogContentText>
+                                    <img
+                                        src="https://s3.eu-central-1.amazonaws.com/centaur-wp/econsultancy/prod/content/uploads/archive/images/resized/0002/4236/qr_code-blog-third.png" />
+                                <DialogActions>
+                                    <Button onClick={handleClose} color="primary">
+                                        Save QR
+                                    </Button>
+                                    <Button onClick={handleClose} color="primary">
+                                        Close
+                                    </Button>
+                                </DialogActions>
+                            </DialogContent>
+                        </Dialog>
                         <Grid container justify="flex-end">
                             <Grid item>
                                 <Link href="#" variant="body2">

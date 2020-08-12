@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
     },
-    card:{
+    card: {
         padding: theme.spacing(3)
     },
     content: {
@@ -25,7 +25,7 @@ const YourProfile = () => {
     const classes = useStyles();
     return (
         <div className={classes.content}>
-``
+            ``
             <main>
                 <Card profile>
                     <CardAvatar profile>
