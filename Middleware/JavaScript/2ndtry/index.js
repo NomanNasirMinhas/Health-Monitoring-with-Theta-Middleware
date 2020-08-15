@@ -45,8 +45,23 @@ function getNode() {
   return "https://nodes.iota.cafe:443";
 }
 
-function getSeed() {
-  return "QCEVFK9GMHAGLLVWE99EKEWMEGQUPUQXMTTVKEWXV9RVVPANPKNIC9MYZVASV9INYODGBGBPRUJWSKNEF";
+function getSeed(id, pass) {
+  //return "QCEVFK9GMHAGLLVWE99EKEWMEGQUPUQXMTTVKEWXV9RVVPANPKNIC9MYZVASV9INYODGBGBPRUJWSKNEF";
+  //var seed=null;
+  MongoClient.connect(uri, function (err, db) {
+    if (err) throw err;
+    var dbo = db.db("thetamw1");
+    dbo
+      .collection("SEEDS")
+      .findOne({ $and: [{ ID: id }, { PASSWORD: pass }] }, function (
+        err,
+        result
+      ) {
+        if (err) throw err;
+        console.log(result.SEED);
+        db.close();
+      });
+  });
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
@@ -186,18 +201,44 @@ function sendPrivateTransaction(seed, addresss, msg) {}
 //--------------------------------------New Function------------------------------------------//
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+function getSingleData(address, time) {
+  const Iota = require('@iota/core');
+  const Extract = require('@iota/extract-json');
+  const iota = Iota.composeAPI({
+    provider: getNode()
+    });
+
+    const tailTransactionHash = getSingleHash(address, time);
+    console.log(tailTransactionHash);
+    //     iota.getBundle(tailTransactionHash)
+    // .then(bundle => {
+    //     console.log(JSON.parse(Extract.extractJson(bundle)));
+    // })
+    // .catch(err => {
+    //     console.error(err);
+    // });
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//                                                                                            //
+//--------------------------------------New Function------------------------------------------//
+//                                                                                            //
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
 function getSingleHash(address, time) {
-  const MongoClient = require("mongodb").MongoClient;
-  const uri =
-    "mongodb+srv://spidy_admin:CsIcBnIcP786@thetamiddleware-pi0h1.gcp.mongodb.net/test?retryWrites=true&w=majority";
+  hash = [];
   MongoClient.connect(uri, function (err, db) {
     if (err) throw err;
     var dbo = db.db("thetamw1");
-    //var myobj = { _id: seed, ID: id, PASSWORD: password, Profile:info, SEED: seed };
-    //transaction = null;
-    // transaction = dbo.collection(address).find({timestamp:time})
-    // db.close();
-    return dbo.collection(address).find({ timestamp: time });
+    dbo
+      .collection(address)
+      .findOne({ timestamp: time }, function (err, result) {
+        if (err) throw err;
+        console.log(result.txHash);
+        // hash.push(result.txHash);
+        db.close();
+      });
+      // console.log(hash[0]);
   });
 }
 
@@ -208,26 +249,25 @@ function getSingleHash(address, time) {
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
 function getAllHash(address, txDate) {
-  const MongoClient = require("mongodb").MongoClient;
-  const uri =
-    "mongodb+srv://spidy_admin:CsIcBnIcP786@thetamiddleware-pi0h1.gcp.mongodb.net/test?retryWrites=true&w=majority";
+  var transactionArray = [];
   MongoClient.connect(uri, function (err, db) {
     if (err) throw err;
     var dbo = db.db("thetamw1");
-    //var myobj = { _id: seed, ID: id, PASSWORD: password, Profile:info, SEED: seed };
-    transaction = null;
-    transaction = dbo.collection(address).find({ date: txDate });
-    db.close();
-    return transaction;
+    dbo
+      .collection(address)
+      .find({ date: txDate })
+      .toArray(function (err, result) {
+        if (err) throw err;
+        result.forEach(function (doc) {
+          // if (err) throw err;
+          transactionArray.push(doc._id);
+        });
+        console.log(transactionArray);
+        // console.log(result);
+        db.close();
+      });
   });
 }
-
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-//                                                                                            //
-//--------------------------------------New Function------------------------------------------//
-//                                                                                            //
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-function getBundledHash(timeTo, timeFrom) {}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 //                                                                                            //
@@ -239,7 +279,7 @@ function addSeed(id, password, info, seed) {
     if (err) throw err;
     var dbo = db.db("thetamw1");
     var myobj = {
-      _id: seed,
+      _id: id,
       ID: id,
       PASSWORD: password,
       Profile: info,
@@ -264,7 +304,7 @@ function addAddress(id, pass, seed, info, finalAddress) {
     if (err) throw err;
     var dbo = db.db("thetamw1");
     var myobj = {
-      _id: finalAddress,
+      _id: id,
       ID: id,
       PASSWORD: pass,
       SEED: seed,
@@ -298,6 +338,7 @@ function addTransaction(address, hash) {
       date: getDate(),
       timestamp: timestamp(),
       ADDRESS: address,
+      txHash: hash,
     };
     dbo.collection(address).insertOne(myobj, function (err, res) {
       if (err) throw err;
@@ -446,8 +487,8 @@ seed =
   "VLLPIQLDNUXPF9ECVNDQTDQITIQBSTNWJPXSHWEMHSDYHOEZT9CMMRKOIFRZPSJVDBZGJOYMXM9KPJAPY";
 address =
   "LZK9VJPEJNKHKNADMKYIQVBLWRW9YEXBDPGSYMONHFGVXDHQ9FRLPDPCCHNYAJRCQSJWKWHBFHKYNPCHA";
-// //privateMAM(seed, "Hello")
-var msg = getSeed();
-console.log(msg);
+  getSingleData(address, "16:1:59/15-8-2020");
+//var msg = getSeed("Username1", "Password1");
+//console.log(msg);
 // // var gSeed = generateSeed("Hello","Password","No Info")
 // // console.log("Generated Seed is "+gSeed)
