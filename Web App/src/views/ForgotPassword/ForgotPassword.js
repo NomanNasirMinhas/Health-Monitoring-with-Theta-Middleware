@@ -24,9 +24,12 @@ const useStyles = makeStyles((theme) => ({
         alignItems: "center",
         background: '#00a152'
     },
-
     marginTopAppBar: {
         marginTop: theme.spacing(35)
+    },
+    submit: {
+        margin: theme.spacing(6, 0, 2),
+        height: "70px"
     }
 }));
 
@@ -72,7 +75,7 @@ export default function ForgotPassword() {
                             onClick={handleSubmit}
                             fullWidth
                             variant="contained"
-                            color="primary"
+                            style={{ background: '#00a152', color: '#FFFFFF' }}
                             className={classes.submit}
                         >
                             Get Password

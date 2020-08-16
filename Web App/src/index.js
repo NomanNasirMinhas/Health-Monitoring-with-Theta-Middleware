@@ -13,9 +13,9 @@ import ForgotPassword from './views/ForgotPassword/ForgotPassword';
 import AddPatient from './views/AddPatient/AddPatient'
 ReactDOM.render(
   <Router>
-    {/* <Header />
-      <ViewPatientProfile/> */}
-      <CreateAccount/>
+    <Header />
+      <YourProfile/>
+      {/* <CreateAccount/> */}
     <Switch>
       {/* <Route path="/" component={AddPatient} /> */}
       {/* <Route path="/myprofile" component={MyProfile} /> */}

@@ -28,7 +28,7 @@ const YourProfile = () => {
             <main>
                 <Card profile>
                     <CardAvatar profile>
-                        <img src="https://www.pexels.com/photo/3408368/download/?search_query=&tracking_id=uegph83be9s" />
+                        <img src="https://www.publicdomainpictures.net/pictures/210000/velka/doctor-1490804718D0I.jpg" />
                     </CardAvatar>
                     <CardHeader profile>
                         <Typography
