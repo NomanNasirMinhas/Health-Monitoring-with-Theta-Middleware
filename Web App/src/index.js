@@ -13,11 +13,11 @@ import ForgotPassword from './views/ForgotPassword/ForgotPassword';
 import AddPatient from './views/AddPatient/AddPatient'
 ReactDOM.render(
   <Router>
-    <Header />
-      {/* <ViewPatientProfile/>
-      <Login/> */}
+    {/* <Header />
+      <ViewPatientProfile/> */}
+      <CreateAccount/>
     <Switch>
-      <Route path="/" component={AddPatient} />
+      {/* <Route path="/" component={AddPatient} /> */}
       {/* <Route path="/myprofile" component={MyProfile} /> */}
     </Switch>
   </Router>,
