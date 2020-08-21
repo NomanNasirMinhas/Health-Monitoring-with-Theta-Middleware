@@ -27,7 +27,7 @@ function timestamp() {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-function getDate() {
+ function getDate() {
   var today = new Date();
   var date =
     today.getDate() + "-" + (today.getMonth() + 1) + "-" + today.getFullYear();
@@ -41,11 +41,11 @@ function getDate() {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-function getNode() {
+ function getNode() {
   return "https://nodes.iota.cafe:443";
 }
 
-function getSeed(id, pass) {
+ function getSeed(id, pass) {
   //return "QCEVFK9GMHAGLLVWE99EKEWMEGQUPUQXMTTVKEWXV9RVVPANPKNIC9MYZVASV9INYODGBGBPRUJWSKNEF";
   //var seed=null;
   MongoClient.connect(uri, function (err, db) {
@@ -70,7 +70,7 @@ function getSeed(id, pass) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-function generateSeed(id, password, info) {
+ function generateSeed(id, password, info) {
   var result = "";
   var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ9";
   var charactersLength = characters.length;
@@ -95,7 +95,7 @@ function generateSeed(id, password, info) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-function generateAddressLocally(
+ function generateAddressLocally(
   seed,
   deviceNumber,
   seclevel,
@@ -150,7 +150,7 @@ function generateAddressLocally(
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-function sendPublicTransaction(seed, address, message) {
+ function sendPublicTransaction(seed, address, message) {
   const Iota = require("@iota/core");
   const Converter = require("@iota/converter");
 
@@ -194,14 +194,14 @@ function sendPublicTransaction(seed, address, message) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-function sendPrivateTransaction(seed, addresss, msg) {}
+ function sendPrivateTransaction(seed, addresss, msg) {}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 //                                                                                            //
 //--------------------------------------New Function------------------------------------------//
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-function getSingleData(address, time) {
+ function getSingleData(address, time) {
   const Iota = require('@iota/core');
   const Extract = require('@iota/extract-json');
   const iota = Iota.composeAPI({
@@ -225,7 +225,7 @@ function getSingleData(address, time) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-function getSingleHash(address, time) {
+ function getSingleHash(address, time) {
   hash = [];
   MongoClient.connect(uri, function (err, db) {
     if (err) throw err;
@@ -248,7 +248,7 @@ function getSingleHash(address, time) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-function getAllHash(address, txDate) {
+ function getAllHash(address, txDate) {
   var transactionArray = [];
   MongoClient.connect(uri, function (err, db) {
     if (err) throw err;
@@ -274,7 +274,7 @@ function getAllHash(address, txDate) {
 //--------------------------------------New Function------------------------------------------//
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-function addSeed(id, password, info, seed) {
+ function addSeed(id, password, info, seed) {
   MongoClient.connect(uri, function (err, db) {
     if (err) throw err;
     var dbo = db.db("thetamw1");
@@ -284,6 +284,7 @@ function addSeed(id, password, info, seed) {
       PASSWORD: password,
       Profile: info,
       SEED: seed,
+      streamRoot: null
     };
     dbo.collection("SEEDS").insertOne(myobj, function (err, res) {
       if (err) throw err;
@@ -299,7 +300,7 @@ function addSeed(id, password, info, seed) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-function addAddress(id, pass, seed, info, finalAddress) {
+ function addAddress(id, pass, seed, info, finalAddress) {
   MongoClient.connect(uri, function (err, db) {
     if (err) throw err;
     var dbo = db.db("thetamw1");
@@ -325,7 +326,7 @@ function addAddress(id, pass, seed, info, finalAddress) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-function addTransaction(address, hash) {
+ function addTransaction(address, hash) {
   const MongoClient = require("mongodb").MongoClient;
   const uri =
     "mongodb+srv://spidy_admin:CsIcBnIcP786@thetamiddleware-pi0h1.gcp.mongodb.net/test?retryWrites=true&w=majority";
@@ -353,7 +354,7 @@ function addTransaction(address, hash) {
 //--------------------------------------New Function------------------------------------------//
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-function publicMAM(msg) {
+ function publicMAM(msg) {
   const Mam = require("@iota/mam");
   const { asciiToTrytes } = require("@iota/converter");
 
@@ -385,7 +386,7 @@ function publicMAM(msg) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-function privateMAM(seed, msg) {
+ function privateMAM(seed, msg) {
   const Mam = require("@iota/mam");
   const { asciiToTrytes } = require("@iota/converter");
 
@@ -421,7 +422,7 @@ function privateMAM(seed, msg) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-function fetchPublicMAM(mamRoot) {
+ function fetchPublicMAM(mamRoot) {
   const Mam = require("@iota/mam");
   const { asciiToTrytes, trytesToAscii } = require("@iota/converter");
 
@@ -461,7 +462,7 @@ function fetchPublicMAM(mamRoot) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-function fetchPrivateMAM(seed, mamRoot) {
+ function fetchPrivateMAM(seed, mamRoot) {
   const Mam = require("@iota/mam");
   const { trytesToAscii } = require("@iota/converter");
 
@@ -487,8 +488,11 @@ seed =
   "VLLPIQLDNUXPF9ECVNDQTDQITIQBSTNWJPXSHWEMHSDYHOEZT9CMMRKOIFRZPSJVDBZGJOYMXM9KPJAPY";
 address =
   "LZK9VJPEJNKHKNADMKYIQVBLWRW9YEXBDPGSYMONHFGVXDHQ9FRLPDPCCHNYAJRCQSJWKWHBFHKYNPCHA";
-  getSingleData(address, "16:1:59/15-8-2020");
+//getSingleData(address, "16:1:59/15-8-2020");
 //var msg = getSeed("Username1", "Password1");
 //console.log(msg);
-// // var gSeed = generateSeed("Hello","Password","No Info")
+//publicMAM("Hello")
 // // console.log("Generated Seed is "+gSeed)
+
+module.exports = {fetchPublicMAM, fetchPrivateMAM, generateAddressLocally, generateSeed, getAllHash, getSeed,
+getSingleData, privateMAM, publicMAM, sendPrivateTransaction, sendPublicTransaction}
