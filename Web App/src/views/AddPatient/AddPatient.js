@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button, TextField, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions } from '@material-ui/core';
 import { Grid, Typography, makeStyles, Container } from '@material-ui/core';
-import HomePage from "../HomePage/HomePage"
 import Header from '../../components/Header/Header';
 
 const useStyles = makeStyles((theme) => ({
