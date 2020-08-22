@@ -1,18 +1,10 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from "@material-ui/core/IconButton"
-import Menu from "@material-ui/core/Menu"
-import Typography from '@material-ui/core/Typography';
+import { AppBar, CssBaseline, Toolbar, IconButton, Menu, Typography, DialogContent, DialogContentText } from '@material-ui/core';
+import { Divider, Button, MenuItem, SvgIcon, Dialog, DialogTitle, DialogActions, TextField } from "@material-ui/core"
 import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
-import { withRouter } from 'react-router-dom';
-import SvgIcon from "@material-ui/core/SvgIcon"
 import AccountCircle from "@material-ui/icons/AccountCircle"
-import MenuItem from "@material-ui/core/MenuItem"
-import Divider from "@material-ui/core/Divider"
-import Button from "@material-ui/core/Button"
+import { withRouter } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -54,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
 
-  buttons:{
+  buttons: {
     '& > *': {
       margin: theme.spacing(1),
     },
@@ -64,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Header = props => {
   const classes = useStyles();
-
+  const [dialogOpen, setDialogOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
@@ -72,12 +64,24 @@ const Header = props => {
     setAnchorEl(event.currentTarget);
   };
 
+  const dialogClose = () => {
+    setDialogOpen(false)
+  }
+
   const handleClose = () => {
     setAnchorEl(null);
   };
 
+  const handleChangePassword = () => {
+    setDialogOpen(true)
+  };
+
   const handleProfile = () => {
     props.history.push('/yourprofile')
+  }
+
+  const logOut = () => {
+    props.history.push('/')
   }
 
   return (
@@ -95,18 +99,18 @@ const Header = props => {
 
 
           <div className={classes.buttons}>
-            <Button 
+            <Button
               variant="outlined"
-              style={{ color: '#FFFFFF'}}
+              style={{ color: '#FFFFFF' }}
               href="/dashboard">
-                Homepage
+              Homepage
             </Button>
-              
-            <Button 
-              variant="outlined" 
-              style={{ color: '#FFFFFF'}}
+
+            <Button
+              variant="outlined"
+              style={{ color: '#FFFFFF' }}
               href="/addpatient">
-                Add Patient
+              Add Patient
             </Button>
           </div>
           <div>
@@ -136,14 +140,46 @@ const Header = props => {
               onClose={handleClose}
             >
               <MenuItem onClick={handleProfile}>My Profile</MenuItem>
-              <MenuItem onClick={handleClose}>Account Settings</MenuItem>
+              <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>
               <Divider />
-              <MenuItem onClick={handleClose}>Log Out</MenuItem>
+              <MenuItem onClick={logOut}>Log Out</MenuItem>
             </Menu>
+
+            <Dialog
+              fullWidth
+              maxWidth="md"
+              open={dialogOpen}
+              onClose={dialogClose}
+            >
+              <DialogTitle>Change Password</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Enter your password below in order to change it:
+                </DialogContentText>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                />
+                <DialogActions>
+                  <Button onClick={dialogClose} color="primary">
+                    Save Password
+            </Button>
+                  <Button onClick={dialogClose} color="primary">
+                    Cancel
+            </Button>
+                </DialogActions>
+              </DialogContent>
+            </Dialog>
           </div>
         </Toolbar>
       </AppBar>
-      <div className={classes.appBarSpacer}/>
+      <div className={classes.appBarSpacer} />
     </div>
   );
 }

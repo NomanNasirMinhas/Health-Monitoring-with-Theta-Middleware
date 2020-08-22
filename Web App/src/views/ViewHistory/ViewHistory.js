@@ -1,6 +1,6 @@
 import React from 'react';
 import { withStyles, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead } from '@material-ui/core';
-import { TableRow, Paper, Link, Typography } from '@material-ui/core';
+import { TableRow, Paper, Link, Typography, Grid } from '@material-ui/core';
 import Header from "../../components/Header/Header"
 
 const StyledTableCell = withStyles((theme) => ({
@@ -42,16 +42,47 @@ const useStyles = makeStyles((theme) => ({
     table: {
         minWidth: 700,
     },
+    headerText: {
+        color: '#9e9e9e'
+    },
+    labels: {
+        padding: theme.spacing(3)
+    },
 }));
 
-export default function HomePage() {
+export default function ViewHistory() {
     const classes = useStyles();
 
     return (
         <div>
             <Header />
             <div className={classes.content}>
-                <Typography variant="h2" style={{ color: '#bdbdbd', marginBottom: "40px" }}>Current Patients</Typography>
+                <Typography variant="h2" style={{ color: '#bdbdbd', marginBottom: "40px" }}>Patient's History</Typography>
+                <Grid container className={classes.labels}>
+                    <Grid item>
+                        <Typography variant="h4" className={classes.headerText}>
+                            Patient's Name:
+                        </Typography>
+                    </Grid>
+                    <Grid item>
+                        <Typography variant="h4">
+                            Wahaj Mustakeem
+                    </Typography>
+                    </Grid>
+                </Grid>
+
+                <Grid container className={classes.labels}>
+                    <Grid item>
+                        <Typography variant="h4" className={classes.headerText}>
+                            Patient's Age:
+                    </Typography>
+                    </Grid>
+                    <Grid item>
+                        <Typography variant="h4">
+                            69
+                    </Typography>
+                    </Grid>
+                </Grid>
                 <TableContainer component={Paper}>
                     <Table className={classes.table}>
                         <TableHead>

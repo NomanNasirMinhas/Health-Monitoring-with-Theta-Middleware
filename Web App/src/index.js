@@ -7,7 +7,7 @@ import CreateAccount from "./views/CreateAccount/CreateAccount"
 import ForgotPassword from './views/ForgotPassword/ForgotPassword';
 import loggedInStatus from './views/Login/Login'
 import HomePage from './views/HomePage/HomePage';
-// import Header from './components/Header/Header.js'
+import ViewHistory from './views/ViewHistory/ViewHistory'
 import ViewPatientProfile from './views/ViewPatientProfile/ViewPatientProfile.js'
 import YourProfile from './views/YourProfile/YourProfile'
 import LiveReadings from './views/LiveReadings/LiveReadings';
@@ -44,6 +44,7 @@ ReactDOM.render(
       <Route path="/yourprofile" component={YourProfile}/>
       <Route path="/livereadings" component={LiveReadings}/>
       <Route path="/addpatient" component={AddPatient}/>
+      <Route path="/viewhistory" component={ViewHistory}/>
 
       <Route path="*" component={() => "404 NOT FOUND"} />
     </Switch>

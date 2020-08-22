@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, TextField, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions } from '@material-ui/core';
-import { Grid, Typography, makeStyles, Container } from '@material-ui/core';
+import { Grid, Typography, makeStyles, Container, Select, MenuItem, InputLabel, FormControl } from '@material-ui/core';
 import Header from '../../components/Header/Header';
 
 const useStyles = makeStyles((theme) => ({
@@ -34,12 +34,14 @@ const useStyles = makeStyles((theme) => ({
     submit: {
         margin: theme.spacing(6, 0, 2),
         height: "70px"
-    }
+    },
 }));
 
 export default function AddPatient() {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
+    const [age, setAge] = React.useState('');
+
     const handleSubmit = () => {
         setOpen(true)
         console.log("Done")
@@ -51,7 +53,7 @@ export default function AddPatient() {
 
     return (
         <div>
-            <Header/>
+            <Header />
             <div className={classes.content}>
                 <Typography variant="h2" style={{ color: '#bdbdbd' }}>Add Patient</Typography>
                 <Container component="main" maxWidth="sm">
@@ -67,7 +69,6 @@ export default function AddPatient() {
                                         fullWidth
                                         id="firstName"
                                         label="First Name"
-
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
@@ -81,7 +82,7 @@ export default function AddPatient() {
                                         autoComplete="lname"
                                     />
                                 </Grid>
-                                <Grid item xs={12}>
+                                <Grid item xs={12} sm={6}>
                                     <TextField
                                         variant="outlined"
                                         required
@@ -90,6 +91,55 @@ export default function AddPatient() {
                                         id="age"
                                         label="Age in year(s)"
                                         name="age"
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <FormControl variant="outlined" fullWidth>
+                                        <InputLabel id="demo-simple-select-outlined-label">Gender</InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-outlined-label"
+                                            id="demo-simple-select-outlined"
+                                            onChange={(event) => { setAge(event.target.value) }}
+                                            value={age}
+                                            label="Gender"
+                                        >
+                                            <MenuItem value={'male'}>Male</MenuItem>
+                                            <MenuItem value={'female'}>Female</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        id="address"
+                                        label="Address"
+                                        name="address"
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <TextField
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        type="number"
+                                        id="contact"
+                                        label="Contact Number"
+                                        name="contact"
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <TextField
+                                        id="date"
+                                        label="Admission Date"
+                                        type="date"
+                                        defaultValue="2017-05-24"
+                                        fullWidth
+                                        className={classes.textField}
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
                                     />
                                 </Grid>
                             </Grid>

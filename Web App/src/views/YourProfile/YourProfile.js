@@ -7,12 +7,14 @@ import CardBody from '../../components/Card/CardBody'
 import Divider from "@material-ui/core/Divider/Divider"
 import PhoneIcon from '@material-ui/icons/Phone'
 import Header from "../../components/Header/Header"
+import BusinessIcon from '@material-ui/icons/Business'
+import EmailIcon from '@material-ui/icons/Email';
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
     },
     card: {
-        padding: theme.spacing(3)
+        padding: theme.spacing(3),
     },
     content: {
         padding: theme.spacing(3),
@@ -38,17 +40,21 @@ const YourProfile = () => {
                             <Typography
                                 variant="h4"
                             >
-                                Dr. Gia
+                                Dr. Gia Adams
                         </Typography>
                         </CardHeader>
                         <Divider />
                         <CardBody profile>
                             <Typography>
-                                Cardiologist
-                        </Typography>
+                                Dermatologist, Laser Specialist
+                            </Typography>
                             <div className={classes.card}>
                                 <PhoneIcon fontSize="large" />
                                 <Typography variant="h6">0334-121212</Typography>
+                                <BusinessIcon fontSize="large" />
+                                <Typography variant="h6">Room no. 7, Bahria Hospital, Rawalpindi</Typography>
+                                <EmailIcon fontSize="large" />
+                                <Typography variant="h6">gia@gmail.com</Typography>
                             </div>
                         </CardBody>
                     </Card>

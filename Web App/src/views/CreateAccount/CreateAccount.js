@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button, TextField, Link, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions } from '@material-ui/core';
-import { Grid, Typography, makeStyles, Container } from '@material-ui/core';
+import { Button, TextField, Link, Dialog, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core';
+import { Grid, Typography, makeStyles, Container, DialogActions } from '@material-ui/core';
 import { AppBar, Toolbar } from "@material-ui/core"
 
 const useStyles = makeStyles((theme) => ({
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
         background: '#00a152'
     },
     marginTopAppBar: {
-        marginTop: theme.spacing(35)
+        marginTop: theme.spacing(24)
     },
     submit: {
         margin: theme.spacing(6, 0, 2),
@@ -68,7 +68,6 @@ export default function SignUp() {
                                     fullWidth
                                     id="firstName"
                                     label="First Name"
-
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
@@ -87,10 +86,31 @@ export default function SignUp() {
                                     variant="outlined"
                                     required
                                     fullWidth
+                                    id="specialization"
+                                    label="Specialization"
+                                    name="specialization"
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    variant="outlined"
+                                    required
+                                    fullWidth
                                     id="email"
                                     label="Email Address"
                                     name="email"
                                     autoComplete="email"
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    variant="outlined"
+                                    required
+                                    fullWidth
+                                    type="number"
+                                    id="number"
+                                    label="Contact Number"
+                                    name="number"
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -103,6 +123,16 @@ export default function SignUp() {
                                     type="password"
                                     id="password"
                                     autoComplete="current-password"
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    variant="outlined"
+                                    required
+                                    fullWidth
+                                    id="address"
+                                    label="Address"
+                                    name="address"
                                 />
                             </Grid>
                         </Grid>
@@ -126,9 +156,9 @@ export default function SignUp() {
                                 <DialogContentText>
                                     Kindly keep the Seed ID safe. Your Seed ID is: 1213213312114214123. Your QR is:
                                 </DialogContentText>
-                                    <img
-                                        src="https://s3.eu-central-1.amazonaws.com/centaur-wp/econsultancy/prod/content/uploads/archive/images/resized/0002/4236/qr_code-blog-third.png"
-                                        alt="QR Code" />
+                                <img
+                                    src="https://s3.eu-central-1.amazonaws.com/centaur-wp/econsultancy/prod/content/uploads/archive/images/resized/0002/4236/qr_code-blog-third.png"
+                                    alt="QR Code" />
                                 <DialogActions>
                                     <Button onClick={handleClose} color="primary">
                                         Save QR
@@ -141,7 +171,10 @@ export default function SignUp() {
                         </Dialog>
                         <Grid container justify="flex-end">
                             <Grid item>
-                                <Link href="#" variant="body2">
+                                <Link
+                                    href="/"
+                                    variant="body2"
+                                    style={{ color: '#00a152' }}>
                                     Already have an account? Sign in
                                 </Link>
                             </Grid>

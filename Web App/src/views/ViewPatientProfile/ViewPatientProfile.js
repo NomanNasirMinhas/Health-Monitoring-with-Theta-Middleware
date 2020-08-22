@@ -1,5 +1,5 @@
 import React from "react"
-import { Typography, makeStyles, Grid, Card, Button } from "@material-ui/core"
+import { Typography, makeStyles, Grid, Card, Button, Dialog, DialogTitle, DialogContentText, DialogContent, DialogActions } from "@material-ui/core"
 import AssessmentIcon from '@material-ui/icons/Assessment';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import HistoryIcon from '@material-ui/icons/History';
@@ -16,8 +16,7 @@ const useStyles = makeStyles((theme) => ({
     },
     headerText: {
         color: '#9e9e9e'
-    }
-    ,
+    },
     labels: {
         padding: theme.spacing(3)
     },
@@ -83,15 +82,20 @@ const useStyles = makeStyles((theme) => ({
 const ViewPatientProfile = () => {
 
     const classes = useStyles();
+    const [openGenerateReport, setOpenGenerateReport] = React.useState(false);
+    const [openDischarge, setOpenDischarge] = React.useState(false);
     return (
         <div>
             <Header />
             <div className={classes.content}>
-
                 <Grid container lg={6}>
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
-                            <Typography variant="h2" style={{ color: '#bdbdbd' }}>Patient's Profile</Typography>
+                            <Typography
+                                variant="h2"
+                                style={{ color: '#bdbdbd' }}>
+                                Patient's Profile
+                            </Typography>
                         </Grid>
                     </Grid>
 
@@ -99,9 +103,8 @@ const ViewPatientProfile = () => {
                         <Grid item>
                             <Typography variant="h4" className={classes.headerText}>
                                 Patient's Name:
-                    </Typography>
+                            </Typography>
                         </Grid>
-
                         <Grid item>
                             <Typography variant="h4">
                                 Wahaj Mustakeem
@@ -147,19 +150,93 @@ const ViewPatientProfile = () => {
                 </Grid>
 
                 <Grid container className={classes.rightBar}>
-                    <Grid item><Button variant="outlined" startIcon={<AssessmentIcon />} className={classes.sideButton}>Generate Report</Button></Grid>
-                    <Grid item><Button variant="outlined" startIcon={<AssignmentTurnedInIcon />} className={classes.sideButton}>Discharge</Button></Grid>
-                    <Grid item><Button variant="outlined" startIcon={<HistoryIcon />} className={classes.sideButton}>View History</Button></Grid>
+                    <Grid item>
+                        <Button
+                         variant="outlined"
+                         startIcon={<AssessmentIcon />} 
+                         className={classes.sideButton}
+                         onClick={()=>{setOpenGenerateReport(true)}}>
+                        Generate Report</Button>
+                    </Grid>
+                    <Grid item>
+                        <Button 
+                            variant="outlined" 
+                            startIcon={<AssignmentTurnedInIcon />} 
+                            className={classes.sideButton}
+                            onClick={()=>{setOpenDischarge(true)}}>
+                            Discharge</Button>
+                    </Grid>
+                    <Grid item>
+                        <Button
+                             variant="outlined" 
+                             startIcon={<HistoryIcon />} 
+                             className={classes.sideButton}
+                             href="/viewhistory"
+                             >
+                                 View History
+                        </Button>
+                    </Grid>
                     <Grid item>
                         <Button
                             variant="outlined"
                             startIcon={<TimelineIcon />}
+                            href="/livereadings"
                             style={{ backgroundColor: '#00a152', color: '#FFFFFF' }}
                             className={classes.sideButton}>
                             Live Statistics
                     </Button>
                     </Grid>
                 </Grid>
+
+                <Dialog
+                    fullWidth
+                    maxWidth="md"
+                    open={openGenerateReport}
+                    onClose={()=>{setOpenGenerateReport(false)}}
+                >
+                    <DialogTitle>Generate Report</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Temperature: 100F
+                            {<br/>}
+                            BPM: 85
+                            {<br/>}
+                            Blood Pressure: 120/80
+                        </DialogContentText>
+
+                        <DialogActions>
+                            <Button onClick={()=>{setOpenGenerateReport(false)}} color="primary">
+                                Download Report
+                            </Button>
+                            <Button onClick={()=>{setOpenGenerateReport(false)}} color="primary">
+                                Cancel
+                            </Button>
+                        </DialogActions>
+                    </DialogContent>
+                </Dialog>
+
+                <Dialog
+                    fullWidth
+                    maxWidth="md"
+                    open={openDischarge}
+                    onClose={()=>{setOpenDischarge(false)}}
+                >
+                    <DialogTitle>Discharge Patient</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Are you sure you want to discharge this patient{"?"}
+                        </DialogContentText>
+
+                        <DialogActions>
+                            <Button onClick={()=>{setOpenDischarge(false)}} color="primary">
+                                Confirm
+                            </Button>
+                            <Button onClick={()=>{setOpenDischarge(false)}} color="primary">
+                                Cancel
+                            </Button>
+                        </DialogActions>
+                    </DialogContent>
+                </Dialog>
             </div>
         </div>
     )
