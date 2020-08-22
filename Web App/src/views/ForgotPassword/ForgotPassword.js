@@ -14,9 +14,6 @@ const useStyles = makeStyles((theme) => ({
         width: '100%',
         marginTop: theme.spacing(3),
     },
-    submit: {
-        margin: theme.spacing(6, 0, 2),
-    },
     toolBar: {
         minHeight: "180px",
     },

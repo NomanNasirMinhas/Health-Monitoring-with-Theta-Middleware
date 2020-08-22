@@ -6,7 +6,7 @@ import CardHeader from '../../components/Card/CardHeader'
 import CardBody from '../../components/Card/CardBody'
 import Divider from "@material-ui/core/Divider/Divider"
 import PhoneIcon from '@material-ui/icons/Phone'
-
+import Header from "../../components/Header/Header"
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
@@ -23,32 +23,37 @@ const useStyles = makeStyles((theme) => ({
 const YourProfile = () => {
     const classes = useStyles();
     return (
-        <div className={classes.content}>
-            <Typography variant="h2" style={{ color: '#bdbdbd' }}>Your Profile</Typography>
-            <main>
-                <Card profile>
-                    <CardAvatar profile>
-                        <img src="https://www.publicdomainpictures.net/pictures/210000/velka/doctor-1490804718D0I.jpg" />
-                    </CardAvatar>
-                    <CardHeader profile>
-                        <Typography
-                            variant="h4"
-                        >
-                            Dr. Gia
+        <div>
+            <Header />
+            <div className={classes.content}>
+                <Typography variant="h2" style={{ color: '#bdbdbd' }}>Your Profile</Typography>
+                <main>
+                    <Card profile>
+                        <CardAvatar profile>
+                            <img
+                                src="https://www.publicdomainpictures.net/pictures/210000/velka/doctor-1490804718D0I.jpg"
+                                alt="Avatar" />
+                        </CardAvatar>
+                        <CardHeader profile>
+                            <Typography
+                                variant="h4"
+                            >
+                                Dr. Gia
                         </Typography>
-                    </CardHeader>
-                    <Divider />
-                    <CardBody profile>
-                        <Typography>
-                            Cardiologist
+                        </CardHeader>
+                        <Divider />
+                        <CardBody profile>
+                            <Typography>
+                                Cardiologist
                         </Typography>
-                        <div className={classes.card}>
-                            <PhoneIcon fontSize="large" />
-                            <Typography variant="h6">0334-121212</Typography>
-                        </div>
-                    </CardBody>
-                </Card>
-            </main>
+                            <div className={classes.card}>
+                                <PhoneIcon fontSize="large" />
+                                <Typography variant="h6">0334-121212</Typography>
+                            </div>
+                        </CardBody>
+                    </Card>
+                </main>
+            </div>
         </div>
     )
 }

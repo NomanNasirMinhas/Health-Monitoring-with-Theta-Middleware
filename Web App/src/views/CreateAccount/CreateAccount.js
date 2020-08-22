@@ -18,9 +18,6 @@ const useStyles = makeStyles((theme) => ({
         width: '100%',
         marginTop: theme.spacing(3),
     },
-    submit: {
-        margin: theme.spacing(3, 0, 2),
-    },
     toolBar: {
         minHeight: "180px",
     },
@@ -42,7 +39,6 @@ export default function SignUp() {
     const [open, setOpen] = React.useState(false);
     const handleSubmit = () => {
         setOpen(true)
-        console.log("Done")
     }
 
     const handleClose = () => {
@@ -131,7 +127,8 @@ export default function SignUp() {
                                     Kindly keep the Seed ID safe. Your Seed ID is: 1213213312114214123. Your QR is:
                                 </DialogContentText>
                                     <img
-                                        src="https://s3.eu-central-1.amazonaws.com/centaur-wp/econsultancy/prod/content/uploads/archive/images/resized/0002/4236/qr_code-blog-third.png" />
+                                        src="https://s3.eu-central-1.amazonaws.com/centaur-wp/econsultancy/prod/content/uploads/archive/images/resized/0002/4236/qr_code-blog-third.png"
+                                        alt="QR Code" />
                                 <DialogActions>
                                     <Button onClick={handleClose} color="primary">
                                         Save QR

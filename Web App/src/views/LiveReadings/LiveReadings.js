@@ -4,6 +4,7 @@ import ChartistGraph from "react-chartist"
 import Card from "../../components/Card/Card"
 import CardBody from "../../components/Card/CardBody"
 import CardHeader from "../../components/Card/CardHeader"
+import Header from "../../components/Header/Header"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -40,55 +41,58 @@ const LiveReadings = () => {
 
     const classes = useStyles();
     return (
-        <div className={classes.content}>
-            <Typography variant="h2" style={{ color: '#bdbdbd' }}>Live Readings</Typography>
-            <Grid container xs={12}>
-                <Grid container className={classes.labels}>
-                    <Grid item>
-                        <Typography variant="h4" className={classes.headerText}>
-                            Patient's Name:
+        <div>
+            <Header />
+            <div className={classes.content}>
+                <Typography variant="h2" style={{ color: '#bdbdbd' }}>Live Readings</Typography>
+                <Grid container xs={12}>
+                    <Grid container className={classes.labels}>
+                        <Grid item>
+                            <Typography variant="h4" className={classes.headerText}>
+                                Patient's Name:
                     </Typography>
+                        </Grid>
+
+                        <Grid item>
+                            <Typography variant="h4">
+                                Wahaj Mustakeem
+                    </Typography>
+                        </Grid>
                     </Grid>
 
-                    <Grid item>
-                        <Typography variant="h4">
-                            Wahaj Mustakeem
+                    <Grid container className={classes.labels}>
+                        <Grid item>
+                            <Typography variant="h4" className={classes.headerText}>
+                                Patient's Age:
                     </Typography>
+                        </Grid>
+
+                        <Grid item>
+                            <Typography variant="h4">
+                                69
+                    </Typography>
+                        </Grid>
                     </Grid>
                 </Grid>
 
-                <Grid container className={classes.labels}>
-                    <Grid item>
-                        <Typography variant="h4" className={classes.headerText}>
-                            Patient's Age:
-                    </Typography>
-                    </Grid>
+                <Card>
+                    <CardHeader><p>ECG</p></CardHeader>
+                    <CardBody>
+                        <ChartistGraph
+                            data={biPolarBarChartData}
+                            options={biPolarBarChartOptions}
+                            type={'Line'}
+                        />
+                    </CardBody>
+                </Card>
 
-                    <Grid item>
-                        <Typography variant="h4">
-                            69
-                    </Typography>
-                    </Grid>
-                </Grid>
-            </Grid>
-
-            <Card>
-                <CardHeader><p>ECG</p></CardHeader>
-                <CardBody>
-                    <ChartistGraph
-                        data={biPolarBarChartData}
-                        options={biPolarBarChartOptions}
-                        type={'Line'}
-                    />
-                </CardBody>
-            </Card>
-
-            <Card>
-                <CardHeader><p>BPM</p></CardHeader>
-                <CardBody>
-                    <ChartistGraph data={biPolarBarChartData} options={biPolarBarChartOptions} type={'Line'} />
-                </CardBody>
-            </Card>
+                <Card>
+                    <CardHeader><p>BPM</p></CardHeader>
+                    <CardBody>
+                        <ChartistGraph data={biPolarBarChartData} options={biPolarBarChartOptions} type={'Line'} />
+                    </CardBody>
+                </Card>
+            </div>
         </div>
     )
 }

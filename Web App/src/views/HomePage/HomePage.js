@@ -1,6 +1,7 @@
 import React from 'react';
 import { withStyles, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead } from '@material-ui/core';
-import {TableRow, Paper, Link, Typography } from '@material-ui/core';
+import { TableRow, Paper, Link, Typography } from '@material-ui/core';
+import Header from "../../components/Header/Header"
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
@@ -47,40 +48,43 @@ export default function CustomizedTables() {
     const classes = useStyles();
 
     return (
-        <div className={classes.content}>
-            <Typography variant="h2" style={{ color: '#bdbdbd', marginBottom: "40px" }}>Current Patients</Typography>
-            <TableContainer component={Paper}>
-                <Table className={classes.table}>
-                    <TableHead>
-                        <TableRow>
-                            <StyledTableCell>ID</StyledTableCell>
-                            <StyledTableCell align="right">Name</StyledTableCell>
-                            <StyledTableCell align="right">Age</StyledTableCell>
-                            <StyledTableCell align="right">&nbsp;</StyledTableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {rows.map((row) => (
-                            <StyledTableRow key={row.id}>
-                                <StyledTableCell component="th" scope="row">
-                                    {row.id}
-                                </StyledTableCell>
-                                <StyledTableCell align="right">{row.name}</StyledTableCell>
-                                <StyledTableCell align="right">{row.age}</StyledTableCell>
-                                <StyledTableCell align="right">
-                                    <Link
-                                        href="#"
-                                        variant="body2"
-                                        style={{ color: '#00a152' }}
-                                    >
-                                        View Profile
-                                </Link>
-                                </StyledTableCell>
-                            </StyledTableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+        <div>
+            <Header />
+            <div className={classes.content}>
+                <Typography variant="h2" style={{ color: '#bdbdbd', marginBottom: "40px" }}>Current Patients</Typography>
+                <TableContainer component={Paper}>
+                    <Table className={classes.table}>
+                        <TableHead>
+                            <TableRow>
+                                <StyledTableCell>ID</StyledTableCell>
+                                <StyledTableCell align="right">Name</StyledTableCell>
+                                <StyledTableCell align="right">Age</StyledTableCell>
+                                <StyledTableCell align="right">&nbsp;</StyledTableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {rows.map((row) => (
+                                <StyledTableRow key={row.id}>
+                                    <StyledTableCell component="th" scope="row">
+                                        {row.id}
+                                    </StyledTableCell>
+                                    <StyledTableCell align="right">{row.name}</StyledTableCell>
+                                    <StyledTableCell align="right">{row.age}</StyledTableCell>
+                                    <StyledTableCell align="right">
+                                        <Link
+                                            href="/viewpatientprofile"
+                                            variant="body2"
+                                            style={{ color: '#00a152' }}
+                                        >
+                                            View Profile
+                                        </Link>
+                                    </StyledTableCell>
+                                </StyledTableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </div>
         </div>
     );
 }

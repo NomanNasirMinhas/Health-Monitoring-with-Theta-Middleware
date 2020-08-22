@@ -4,6 +4,7 @@ import AssessmentIcon from '@material-ui/icons/Assessment';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import HistoryIcon from '@material-ui/icons/History';
 import TimelineIcon from '@material-ui/icons/Timeline';
+import Header from "../../components/Header/Header"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -83,80 +84,83 @@ const ViewPatientProfile = () => {
 
     const classes = useStyles();
     return (
-        <div className={classes.content}>
+        <div>
+            <Header />
+            <div className={classes.content}>
 
-            <Grid container lg={6}>
-                <Grid container spacing={3}>
-                    <Grid item xs={12}>
-                        <Typography variant="h2" style={{ color: '#bdbdbd' }}>Patient's Profile</Typography>
+                <Grid container lg={6}>
+                    <Grid container spacing={3}>
+                        <Grid item xs={12}>
+                            <Typography variant="h2" style={{ color: '#bdbdbd' }}>Patient's Profile</Typography>
+                        </Grid>
                     </Grid>
-                </Grid>
 
-                <Grid container className={classes.labels}>
-                    <Grid item>
-                        <Typography variant="h4" className={classes.headerText}>
-                            Patient's Name:
+                    <Grid container className={classes.labels}>
+                        <Grid item>
+                            <Typography variant="h4" className={classes.headerText}>
+                                Patient's Name:
                     </Typography>
+                        </Grid>
+
+                        <Grid item>
+                            <Typography variant="h4">
+                                Wahaj Mustakeem
+                    </Typography>
+                        </Grid>
+                    </Grid>
+
+                    <Grid container className={classes.labels}>
+                        <Grid item>
+                            <Typography variant="h4" className={classes.headerText}>
+                                Patient's Age:
+                    </Typography>
+                        </Grid>
+
+                        <Grid item>
+                            <Typography variant="h4">
+                                69
+                    </Typography>
+                        </Grid>
                     </Grid>
 
                     <Grid item>
-                        <Typography variant="h4">
-                            Wahaj Mustakeem
-                    </Typography>
-                    </Grid>
-                </Grid>
-
-                <Grid container className={classes.labels}>
-                    <Grid item>
-                        <Typography variant="h4" className={classes.headerText}>
-                            Patient's Age:
-                    </Typography>
+                        <Typography variant="h4" className={[classes.headerText, classes.labels].join(' ')}>Vitals</Typography>
                     </Grid>
 
-                    <Grid item>
-                        <Typography variant="h4">
-                            69
-                    </Typography>
-                    </Grid>
-                </Grid>
+                    <Grid container>
+                        <Card className={classes.cardBody}>
+                            <Card className={classes.minicard}>
+                                <Typography variant="h6" className={classes.tileTopText}>Temperature</Typography>
+                                <Typography variant="h6" className={classes.tileBottomText}>100 F</Typography>
+                            </Card>
+                            <Card className={classes.minicard}>
+                                <Typography variant="h6" className={classes.tileTopText}>BPM</Typography>
+                                <Typography variant="h6" className={classes.tileBottomText}>85</Typography>
+                            </Card>
 
-                <Grid item>
-                    <Typography variant="h4" className={[classes.headerText, classes.labels].join(' ')}>Vitals</Typography>
-                </Grid>
-
-                <Grid container>
-                    <Card className={classes.cardBody}>
-                        <Card className={classes.minicard}>
-                            <Typography variant="h6" className={classes.tileTopText}>Temperature</Typography>
-                            <Typography variant="h6" className={classes.tileBottomText}>100 F</Typography>
+                            <Card className={classes.minicard}>
+                                <Typography variant="h6" className={classes.tileTopText}>BP (mm/Hg)</Typography>
+                                <Typography variant="h6" className={classes.tileBottomText}>120/80</Typography>
+                            </Card>
                         </Card>
-                        <Card className={classes.minicard}>
-                            <Typography variant="h6" className={classes.tileTopText}>BPM</Typography>
-                            <Typography variant="h6" className={classes.tileBottomText}>85</Typography>
-                        </Card>
-
-                        <Card className={classes.minicard}>
-                            <Typography variant="h6" className={classes.tileTopText}>BP (mm/Hg)</Typography>
-                            <Typography variant="h6" className={classes.tileBottomText}>120/80</Typography>
-                        </Card>
-                    </Card>
+                    </Grid>
                 </Grid>
-            </Grid>
 
-            <Grid container className={classes.rightBar}>
-                <Grid item><Button variant="outlined" startIcon={<AssessmentIcon />} className={classes.sideButton}>Generate Report</Button></Grid>
-                <Grid item><Button variant="outlined" startIcon={<AssignmentTurnedInIcon />} className={classes.sideButton}>Discharge</Button></Grid>
-                <Grid item><Button variant="outlined" startIcon={<HistoryIcon />} className={classes.sideButton}>View History</Button></Grid>
-                <Grid item>
-                    <Button
-                        variant="outlined"
-                        startIcon={<TimelineIcon />}
-                        style={{ backgroundColor: '#00a152', color: '#FFFFFF' }}
-                        className={classes.sideButton}>
-                        Live Statistics
+                <Grid container className={classes.rightBar}>
+                    <Grid item><Button variant="outlined" startIcon={<AssessmentIcon />} className={classes.sideButton}>Generate Report</Button></Grid>
+                    <Grid item><Button variant="outlined" startIcon={<AssignmentTurnedInIcon />} className={classes.sideButton}>Discharge</Button></Grid>
+                    <Grid item><Button variant="outlined" startIcon={<HistoryIcon />} className={classes.sideButton}>View History</Button></Grid>
+                    <Grid item>
+                        <Button
+                            variant="outlined"
+                            startIcon={<TimelineIcon />}
+                            style={{ backgroundColor: '#00a152', color: '#FFFFFF' }}
+                            className={classes.sideButton}>
+                            Live Statistics
                     </Button>
+                    </Grid>
                 </Grid>
-            </Grid>
+            </div>
         </div>
     )
 }

@@ -24,8 +24,23 @@ const useStyles = makeStyles((theme) => ({
         height: "70px"
     },
 }));
+const Login = (props) => {
+    // const authentication = {
+    //     isLoggedIn: false,
+    //     onAuthentication() {
+    //         this.isLoggedIn = true
+    //     },
+    //     getLoggedInStatus() {
+    //         return this.isLoggedIn
+    //     }
+    // }
+    const handleClick = () => {
+        setLoggedInStatus(true)
+        props.history.push('/dashboard')
+        // alert(loggedInStatus)
+    }
+    const [loggedInStatus, setLoggedInStatus] = React.useState(false);
 
-const Login = () => {
     const classes = useStyles();
     return (
         <div className={classes.content}>
@@ -69,6 +84,7 @@ const Login = () => {
                             variant="contained"
                             style={{ background: '#00a152', color: '#FFFFFF' }}
                             className={classes.submit}
+                            onClick={handleClick}
                         >
                             Log In
                          </Button>
@@ -76,7 +92,7 @@ const Login = () => {
                         <Grid container>
                             <Grid item xs>
                                 <Link
-                                    href="#"
+                                    href="/forgotpassword"
                                     variant="body2"
                                     style={{ color: '#00a152' }}
                                 >
@@ -85,7 +101,7 @@ const Login = () => {
                             </Grid>
                             <Grid item>
                                 <Link
-                                    href="#"
+                                    href="/createaccount"
                                     variant="body2"
                                     style={{ color: '#00a152' }}>
                                     {"Create New Account"}

@@ -76,6 +76,10 @@ const Header = props => {
     setAnchorEl(null);
   };
 
+  const handleProfile = () => {
+    props.history.push('/yourprofile')
+  }
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -91,8 +95,19 @@ const Header = props => {
 
 
           <div className={classes.buttons}>
-            <Button variant="outlined" style={{ color: '#FFFFFF'}}>Homepage</Button>
-            <Button variant="outlined" style={{ color: '#FFFFFF'}}>Add Patient</Button>
+            <Button 
+              variant="outlined"
+              style={{ color: '#FFFFFF'}}
+              href="/dashboard">
+                Homepage
+            </Button>
+              
+            <Button 
+              variant="outlined" 
+              style={{ color: '#FFFFFF'}}
+              href="/addpatient">
+                Add Patient
+            </Button>
           </div>
           <div>
             <IconButton
@@ -120,7 +135,7 @@ const Header = props => {
               open={open}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleClose}>My Profile</MenuItem>
+              <MenuItem onClick={handleProfile}>My Profile</MenuItem>
               <MenuItem onClick={handleClose}>Account Settings</MenuItem>
               <Divider />
               <MenuItem onClick={handleClose}>Log Out</MenuItem>

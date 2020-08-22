@@ -1,6 +1,8 @@
 import React from 'react';
 import { Button, TextField, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions } from '@material-ui/core';
 import { Grid, Typography, makeStyles, Container } from '@material-ui/core';
+import HomePage from "../HomePage/HomePage"
+import Header from '../../components/Header/Header';
 
 const useStyles = makeStyles((theme) => ({
     content: {
@@ -19,9 +21,6 @@ const useStyles = makeStyles((theme) => ({
     form: {
         width: '100%',
         marginTop: theme.spacing(3),
-    },
-    submit: {
-        margin: theme.spacing(3, 0, 2),
     },
     toolBar: {
         minHeight: "180px",
@@ -52,82 +51,86 @@ export default function AddPatient() {
     }
 
     return (
-        <div className={classes.content}>
-            <Typography variant="h2" style={{ color: '#bdbdbd' }}>Add Patient</Typography>
-            <Container component="main" maxWidth="sm">
-                <div className={classes.paper}>
-                    <form className={classes.form} noValidate>
-                        <Grid container spacing={3}>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    autoComplete="fname"
-                                    name="firstName"
-                                    variant="outlined"
-                                    required
-                                    fullWidth
-                                    id="firstName"
-                                    label="First Name"
+        <div>
+            <Header/>
+            <div className={classes.content}>
+                <Typography variant="h2" style={{ color: '#bdbdbd' }}>Add Patient</Typography>
+                <Container component="main" maxWidth="sm">
+                    <div className={classes.paper}>
+                        <form className={classes.form} noValidate>
+                            <Grid container spacing={3}>
+                                <Grid item xs={12} sm={6}>
+                                    <TextField
+                                        autoComplete="fname"
+                                        name="firstName"
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        id="firstName"
+                                        label="First Name"
 
-                                />
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <TextField
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        id="lastName"
+                                        label="Last Name"
+                                        name="lastName"
+                                        autoComplete="lname"
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        type="number"
+                                        id="age"
+                                        label="Age in year(s)"
+                                        name="age"
+                                    />
+                                </Grid>
                             </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    variant="outlined"
-                                    required
-                                    fullWidth
-                                    id="lastName"
-                                    label="Last Name"
-                                    name="lastName"
-                                    autoComplete="lname"
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    variant="outlined"
-                                    required
-                                    fullWidth
-                                    type="number"
-                                    id="age"
-                                    label="Age in year(s)"
-                                    name="age"
-                                />
-                            </Grid>
-                        </Grid>
-                        <Button
-                            onClick={handleSubmit}
-                            fullWidth
-                            variant="contained"
-                            style={{ background: '#00a152', color: '#FFFFFF' }}
-                            className={classes.submit}
-                        >
-                            Add Patient
+                            <Button
+                                onClick={handleSubmit}
+                                fullWidth
+                                variant="contained"
+                                style={{ background: '#00a152', color: '#FFFFFF' }}
+                                className={classes.submit}
+                            >
+                                Add Patient
                         </Button>
-                        <Dialog
-                            fullWidth
-                            maxWidth="md"
-                            open={open}
-                            onClose={handleClose}
-                        >
-                            <DialogTitle>Patient Added Successfully</DialogTitle>
-                            <DialogContent>
-                                <DialogContentText>
-                                    Kindly keep the Address ID safe. Your Patient's Address is: 29021093123 and the QR is:
+                            <Dialog
+                                fullWidth
+                                maxWidth="md"
+                                open={open}
+                                onClose={handleClose}
+                            >
+                                <DialogTitle>Patient Added Successfully</DialogTitle>
+                                <DialogContent>
+                                    <DialogContentText>
+                                        Kindly keep the Address ID safe. Your Patient's Address is: 29021093123 and the QR is:
                                 </DialogContentText>
-                                <img
-                                    src="https://s3.eu-central-1.amazonaws.com/centaur-wp/econsultancy/prod/content/uploads/archive/images/resized/0002/4236/qr_code-blog-third.png" />
-                                <DialogActions>
-                                    <Button onClick={handleClose} color="primary">
-                                        Save QR
+                                    <img
+                                        src="https://s3.eu-central-1.amazonaws.com/centaur-wp/econsultancy/prod/content/uploads/archive/images/resized/0002/4236/qr_code-blog-third.png"
+                                        alt="QR Code" />
+                                    <DialogActions>
+                                        <Button onClick={handleClose} color="primary">
+                                            Save QR
                                     </Button>
-                                    <Button onClick={handleClose} color="primary">
-                                        Close
+                                        <Button onClick={handleClose} color="primary">
+                                            Close
                                     </Button>
-                                </DialogActions>
-                            </DialogContent>
-                        </Dialog>
-                    </form>
-                </div>
-            </Container>
+                                    </DialogActions>
+                                </DialogContent>
+                            </Dialog>
+                        </form>
+                    </div>
+                </Container>
+            </div>
         </div>
     );
 }
