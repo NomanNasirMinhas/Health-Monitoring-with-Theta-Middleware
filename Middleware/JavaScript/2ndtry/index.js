@@ -483,7 +483,7 @@ function timestamp() {
   };
   execute();
 }
-
+getSeed("Username1", "Password1")
 seed =
   "VLLPIQLDNUXPF9ECVNDQTDQITIQBSTNWJPXSHWEMHSDYHOEZT9CMMRKOIFRZPSJVDBZGJOYMXM9KPJAPY";
 address =
