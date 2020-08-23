@@ -72,7 +72,7 @@ export default function ForgotPassword() {
                             onClick={handleSubmit}
                             fullWidth
                             variant="contained"
-                            style={{ background: '#00a152', color: '#FFFFFF' }}
+                            style={{ background: '#00a152', color: '#FFFFFF', fontSize: 20 }}
                             className={classes.submit}
                         >
                             Get Password

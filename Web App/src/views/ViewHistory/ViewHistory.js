@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
         minWidth: 700,
     },
     headerText: {
-        color: '#9e9e9e'
+        color: '#1AA620'
     },
     labels: {
         padding: theme.spacing(3)
@@ -64,7 +64,7 @@ export default function ViewHistory() {
         <div>
             <Header />
             <div className={classes.content}>
-                <Typography variant="h2" style={{ color: '#bdbdbd', marginBottom: "40px" }}>Patient's History</Typography>
+                <Typography variant="h2" style={{ color: '#0A7A0F', marginBottom: "40px" }}>Patient's History</Typography>
                 <Grid container className={classes.labels}>
                     <Grid item>
                         <Typography variant="h4" className={classes.headerText}>

@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(3),
     },
     toolBar: {
-        minHeight: "180px",
+        minHeight: "80px",
     },
     appBar: {
         alignItems: "center",
@@ -140,7 +140,7 @@ export default function SignUp() {
                             onClick={handleSubmit}
                             fullWidth
                             variant="contained"
-                            style={{ background: '#00a152', color: '#FFFFFF' }}
+                            style={{ background: '#00a152', color: '#FFFFFF', fontSize: 20 }}
                             className={classes.submit}
                         >
                             Sign Up

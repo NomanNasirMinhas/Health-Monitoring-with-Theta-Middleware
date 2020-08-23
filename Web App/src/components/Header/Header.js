@@ -94,7 +94,7 @@ const Header = props => {
           </SvgIcon>
 
           <Typography variant="h6" className={classes.title} noWrap>
-            Welcome, Doctor
+            Remote Patient Monitoring Portal
           </Typography>
 
 

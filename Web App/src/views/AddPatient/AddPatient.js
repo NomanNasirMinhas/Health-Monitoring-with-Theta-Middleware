@@ -55,7 +55,7 @@ export default function AddPatient() {
         <div>
             <Header />
             <div className={classes.content}>
-                <Typography variant="h2" style={{ color: '#bdbdbd' }}>Add Patient</Typography>
+                <Typography variant="h2" align="center" style={{ color: '#0A7A0F' }}>Add Patient</Typography>
                 <Container component="main" maxWidth="sm">
                     <div className={classes.paper}>
                         <form className={classes.form} noValidate>
@@ -147,7 +147,7 @@ export default function AddPatient() {
                                 onClick={handleSubmit}
                                 fullWidth
                                 variant="contained"
-                                style={{ background: '#00a152', color: '#FFFFFF' }}
+                                style={{ background: '#00a152', color: '#FFFFFF', fontSize: 20 }}
                                 className={classes.submit}
                             >
                                 Add Patient

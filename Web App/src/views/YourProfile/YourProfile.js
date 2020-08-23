@@ -28,7 +28,7 @@ const YourProfile = () => {
         <div>
             <Header />
             <div className={classes.content}>
-                <Typography variant="h2" style={{ color: '#bdbdbd' }}>Your Profile</Typography>
+                <Typography variant="h2" align="center" style={{ color: '#0A7A0F', marginBottom: "75px" }}>Your Profile</Typography>
                 <main>
                     <Card profile>
                         <CardAvatar profile>

@@ -51,26 +51,26 @@ export default function HomePage() {
         <div>
             <Header />
             <div className={classes.content}>
-                <Typography variant="h2" style={{ color: '#bdbdbd', marginBottom: "40px" }}>Current Patients</Typography>
+                <Typography variant="h2" align="center" style={{ color: '#0A7A0F', marginBottom: "40px" }}>Current Patients</Typography>
                 <TableContainer component={Paper}>
                     <Table className={classes.table}>
                         <TableHead>
                             <TableRow>
-                                <StyledTableCell>ID</StyledTableCell>
-                                <StyledTableCell align="right">Name</StyledTableCell>
-                                <StyledTableCell align="right">Age</StyledTableCell>
-                                <StyledTableCell align="right">&nbsp;</StyledTableCell>
+                                <StyledTableCell align="center">Patient's ID</StyledTableCell>
+                                <StyledTableCell align="center">Name</StyledTableCell>
+                                <StyledTableCell align="center">Age</StyledTableCell>
+                                <StyledTableCell align="center">Action</StyledTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {rows.map((row) => (
-                                <StyledTableRow key={row.id}>
-                                    <StyledTableCell component="th" scope="row">
+                                <StyledTableRow  key={row.id}>
+                                    <StyledTableCell align="center" component="th" scope="row">
                                         {row.id}
                                     </StyledTableCell>
-                                    <StyledTableCell align="right">{row.name}</StyledTableCell>
-                                    <StyledTableCell align="right">{row.age}</StyledTableCell>
-                                    <StyledTableCell align="right">
+                                    <StyledTableCell align="center">{row.name}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.age}</StyledTableCell>
+                                    <StyledTableCell align="center">
                                         <Link
                                             href="/viewpatientprofile"
                                             variant="body2"

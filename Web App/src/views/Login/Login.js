@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
     },
     toolBar: {
-        minHeight: "180px",
+        minHeight: "80px",
     },
     appBar: {
         alignItems: "center",
@@ -82,7 +82,7 @@ const Login = (props) => {
                             type="submit"
                             fullWidth
                             variant="contained"
-                            style={{ background: '#00a152', color: '#FFFFFF' }}
+                            style={{ background: '#00a152', color: '#FFFFFF', fontSize: 20 }}
                             className={classes.submit}
                             onClick={handleClick}
                         >

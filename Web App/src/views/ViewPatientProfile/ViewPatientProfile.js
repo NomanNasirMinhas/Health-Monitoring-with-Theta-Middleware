@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
         height: '400px',
         left: '67px',
         top: '554px',
-        background: '#cfd8dc',
+        background: '#86F68B',
         border: '3px solid #FFFFFF',
         boxShadow: ' 0px 0px 7px rgba(0, 0, 0, 0.28)',
         borderRadius: '12px',
@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
         height: '139px',
         left: '89px',
         top: '594px',
-        background: '#eceff1',
+        background: '#CEFDD0',
         border: '3px solid #FFFFFF',
         borderRadius: '9px'
     }
@@ -93,7 +93,7 @@ const ViewPatientProfile = () => {
                         <Grid item xs={12}>
                             <Typography
                                 variant="h2"
-                                style={{ color: '#bdbdbd' }}>
+                                style={{ color: '#0A7A0F' }}>
                                 Patient's Profile
                             </Typography>
                         </Grid>
@@ -101,12 +101,12 @@ const ViewPatientProfile = () => {
 
                     <Grid container className={classes.labels}>
                         <Grid item>
-                            <Typography variant="h4" className={classes.headerText}>
+                            <Typography variant="h4" className={classes.headerText} style={{ color: '#0A7A0F' }}>
                                 Patient's Name:
                             </Typography>
                         </Grid>
                         <Grid item>
-                            <Typography variant="h4">
+                            <Typography variant="h4" >
                                 Wahaj Mustakeem
                     </Typography>
                         </Grid>
@@ -114,7 +114,7 @@ const ViewPatientProfile = () => {
 
                     <Grid container className={classes.labels}>
                         <Grid item>
-                            <Typography variant="h4" className={classes.headerText}>
+                            <Typography variant="h4" className={classes.headerText} style={{ color: '#0A7A0F' }}>
                                 Patient's Age:
                     </Typography>
                         </Grid>
@@ -127,22 +127,22 @@ const ViewPatientProfile = () => {
                     </Grid>
 
                     <Grid item>
-                        <Typography variant="h4" className={[classes.headerText, classes.labels].join(' ')}>Vitals</Typography>
+                        <Typography variant="h2" style={{ color: '#0A7A0F' }} className={[classes.headerText, classes.labels].join(' ')}>Vitals</Typography>
                     </Grid>
 
                     <Grid container>
                         <Card className={classes.cardBody}>
                             <Card className={classes.minicard}>
-                                <Typography variant="h6" className={classes.tileTopText}>Temperature</Typography>
+                                <Typography variant="h6" style={{ color: '#0A7A0F' }} className={classes.tileTopText}>Temperature</Typography>
                                 <Typography variant="h6" className={classes.tileBottomText}>100 F</Typography>
                             </Card>
                             <Card className={classes.minicard}>
-                                <Typography variant="h6" className={classes.tileTopText}>BPM</Typography>
+                                <Typography variant="h6" style={{ color: '#0A7A0F' }} className={classes.tileTopText}>BPM</Typography>
                                 <Typography variant="h6" className={classes.tileBottomText}>85</Typography>
                             </Card>
 
                             <Card className={classes.minicard}>
-                                <Typography variant="h6" className={classes.tileTopText}>BP (mm/Hg)</Typography>
+                                <Typography variant="h6" style={{ color: '#0A7A0F' }} className={classes.tileTopText}>BP (mm/Hg)</Typography>
                                 <Typography variant="h6" className={classes.tileBottomText}>120/80</Typography>
                             </Card>
                         </Card>
@@ -155,21 +155,24 @@ const ViewPatientProfile = () => {
                          variant="outlined"
                          startIcon={<AssessmentIcon />} 
                          className={classes.sideButton}
+                         style={{ backgroundColor: '#00a152', color: '#FFFFFF' }}
                          onClick={()=>{setOpenGenerateReport(true)}}>
                         Generate Report</Button>
                     </Grid>
                     <Grid item>
-                        <Button 
+                        <Button
                             variant="outlined" 
                             startIcon={<AssignmentTurnedInIcon />} 
                             className={classes.sideButton}
+                            style={{ backgroundColor: '#00a152', color: '#FFFFFF' }}
                             onClick={()=>{setOpenDischarge(true)}}>
                             Discharge</Button>
                     </Grid>
                     <Grid item>
                         <Button
-                             variant="outlined" 
-                             startIcon={<HistoryIcon />} 
+                             variant="outlined"
+                             startIcon={<HistoryIcon />}
+                             style={{ backgroundColor: '#00a152', color: '#FFFFFF' }}
                              className={classes.sideButton}
                              href="/viewhistory"
                              >
