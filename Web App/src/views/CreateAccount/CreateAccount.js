@@ -3,6 +3,7 @@ import { Button, TextField, Link, Dialog, DialogContent, DialogContentText, Dial
 import { Grid, Typography, makeStyles, Container, DialogActions } from '@material-ui/core';
 import { AppBar, Toolbar } from "@material-ui/core"
 import theme from "../../assets/theme/theme"
+import { Link as link } from "react-router-dom"
 const useStyles = makeStyles((theme) => ({
     paper: {
         marginTop: theme.spacing(8),
@@ -168,9 +169,9 @@ export default function SignUp() {
                         <Grid container justify="flex-end">
                             <Grid item>
                                 <Link
-                                    href="/"
-                                    variant="body2"
-                                    style={{ color: '#00a152' }}>
+                                    to="/"
+                                    component={link}
+                                    variant="body2">
                                     Already have an account? Sign in
                                 </Link>
                             </Grid>

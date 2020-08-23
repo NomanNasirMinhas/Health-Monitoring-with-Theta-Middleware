@@ -2,6 +2,7 @@ import React from "react"
 import Typography from "@material-ui/core/Typography"
 import { makeStyles, Grid, Button, AppBar, Toolbar, TextField, Link, ThemeProvider } from '@material-ui/core'
 import theme from "../../assets/theme/theme"
+import {Link as link} from "react-router-dom"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -93,14 +94,16 @@ const Login = (props) => {
                             <Grid container>
                                 <Grid item xs>
                                     <Link
-                                        href="/forgotpassword"
+                                        component={link}
+                                        to="/forgotpassword"
                                         variant="body2">
                                         Forgot password?
                                 </Link>
                                 </Grid>
                                 <Grid item>
                                     <Link
-                                        href="/createaccount"
+                                        component={link}
+                                        to="/createaccount"
                                         variant="body2">
                                         {"Create New Account"}
                                     </Link>
