@@ -1,16 +1,17 @@
 import React from 'react';
 import { withStyles, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead } from '@material-ui/core';
-import { TableRow, Paper, Link, Typography } from '@material-ui/core';
+import { TableRow, Paper, Link, Typography, ThemeProvider } from '@material-ui/core';
 import Header from "../../components/Header/Header"
+import theme from "../../assets/theme/theme"
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
-        backgroundColor: "#00a152",
+        backgroundColor: theme.palette.primary.main,
         color: theme.palette.common.white,
     },
     body: {
         fontSize: 14,
-    },
+    }
 }))(TableCell);
 
 const StyledTableRow = withStyles((theme) => ({
@@ -42,16 +43,19 @@ const useStyles = makeStyles((theme) => ({
     table: {
         minWidth: 700,
     },
+    titletext: {
+        marginBottom: "40px"
+    }
 }));
 
 export default function HomePage() {
     const classes = useStyles();
 
     return (
-        <div>
+        <ThemeProvider theme={theme}>
             <Header />
             <div className={classes.content}>
-                <Typography variant="h2" align="center" style={{ color: '#0A7A0F', marginBottom: "40px" }}>Current Patients</Typography>
+                <Typography variant="h2" align="center" color="secondary" className={classes.titletext}>Current Patients</Typography>
                 <TableContainer component={Paper}>
                     <Table className={classes.table}>
                         <TableHead>
@@ -64,7 +68,7 @@ export default function HomePage() {
                         </TableHead>
                         <TableBody>
                             {rows.map((row) => (
-                                <StyledTableRow  key={row.id}>
+                                <StyledTableRow key={row.id}>
                                     <StyledTableCell align="center" component="th" scope="row">
                                         {row.id}
                                     </StyledTableCell>
@@ -85,6 +89,6 @@ export default function HomePage() {
                     </Table>
                 </TableContainer>
             </div>
-        </div>
+        </ThemeProvider>
     );
 }

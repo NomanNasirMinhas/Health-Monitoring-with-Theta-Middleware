@@ -1,7 +1,8 @@
 import React from 'react';
 import { Button, TextField, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions } from '@material-ui/core';
-import { Grid, Typography, makeStyles, Container } from '@material-ui/core';
+import { Grid, Typography, makeStyles, Container, ThemeProvider } from '@material-ui/core';
 import { AppBar, Toolbar } from "@material-ui/core"
+import theme from "../../assets/theme/theme"
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -19,7 +20,6 @@ const useStyles = makeStyles((theme) => ({
     },
     appBar: {
         alignItems: "center",
-        background: '#00a152'
     },
     marginTopAppBar: {
         marginTop: theme.spacing(35)
@@ -43,7 +43,7 @@ export default function ForgotPassword() {
     }
 
     return (
-        <div>
+        <ThemeProvider theme={theme}>
             <AppBar position="fixed" className={classes.appBar}>
                 <Toolbar className={classes.toolBar}>
                     <Typography variant="h3" className={classes.title}>
@@ -72,7 +72,8 @@ export default function ForgotPassword() {
                             onClick={handleSubmit}
                             fullWidth
                             variant="contained"
-                            style={{ background: '#00a152', color: '#FFFFFF', fontSize: 20 }}
+                            style={{ fontSize: 20 }}
+                            color="primary"
                             className={classes.submit}
                         >
                             Get Password
@@ -98,6 +99,6 @@ export default function ForgotPassword() {
                     </form>
                 </div>
             </Container>
-        </div>
+        </ThemeProvider>
     );
 }

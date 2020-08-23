@@ -1,10 +1,12 @@
 import React from "react"
-import { Typography, makeStyles, Grid, Card, Button, Dialog, DialogTitle, DialogContentText, DialogContent, DialogActions } from "@material-ui/core"
+import { Typography, makeStyles, Grid, Card, Button, Dialog } from "@material-ui/core"
+import { DialogTitle, DialogContentText, DialogContent, DialogActions, ThemeProvider } from "@material-ui/core"
 import AssessmentIcon from '@material-ui/icons/Assessment';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import HistoryIcon from '@material-ui/icons/History';
 import TimelineIcon from '@material-ui/icons/Timeline';
 import Header from "../../components/Header/Header"
+import theme from "../../assets/theme/theme"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -13,9 +15,6 @@ const useStyles = makeStyles((theme) => ({
     content: {
         display: 'flex',
         padding: theme.spacing(3),
-    },
-    headerText: {
-        color: '#9e9e9e'
     },
     labels: {
         padding: theme.spacing(3)
@@ -62,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
         height: '400px',
         left: '67px',
         top: '554px',
-        background: '#86F68B',
+        background: '#b7deb8',
         border: '3px solid #FFFFFF',
         boxShadow: ' 0px 0px 7px rgba(0, 0, 0, 0.28)',
         borderRadius: '12px',
@@ -85,7 +84,7 @@ const ViewPatientProfile = () => {
     const [openGenerateReport, setOpenGenerateReport] = React.useState(false);
     const [openDischarge, setOpenDischarge] = React.useState(false);
     return (
-        <div>
+        <ThemeProvider theme={theme}>
             <Header />
             <div className={classes.content}>
                 <Grid container lg={6}>
@@ -93,7 +92,7 @@ const ViewPatientProfile = () => {
                         <Grid item xs={12}>
                             <Typography
                                 variant="h2"
-                                style={{ color: '#0A7A0F' }}>
+                                color="secondary">
                                 Patient's Profile
                             </Typography>
                         </Grid>
@@ -101,7 +100,7 @@ const ViewPatientProfile = () => {
 
                     <Grid container className={classes.labels}>
                         <Grid item>
-                            <Typography variant="h4" className={classes.headerText} style={{ color: '#0A7A0F' }}>
+                            <Typography variant="h4" className={classes.headerText} color="secondary">
                                 Patient's Name:
                             </Typography>
                         </Grid>
@@ -114,7 +113,7 @@ const ViewPatientProfile = () => {
 
                     <Grid container className={classes.labels}>
                         <Grid item>
-                            <Typography variant="h4" className={classes.headerText} style={{ color: '#0A7A0F' }}>
+                            <Typography variant="h4" className={classes.headerText} color="secondary">
                                 Patient's Age:
                     </Typography>
                         </Grid>
@@ -127,7 +126,7 @@ const ViewPatientProfile = () => {
                     </Grid>
 
                     <Grid item>
-                        <Typography variant="h2" style={{ color: '#0A7A0F' }} className={[classes.headerText, classes.labels].join(' ')}>Vitals</Typography>
+                        <Typography variant="h2" color="secondary" className={[classes.headerText, classes.labels].join(' ')}>Vitals</Typography>
                     </Grid>
 
                     <Grid container>
@@ -152,31 +151,31 @@ const ViewPatientProfile = () => {
                 <Grid container className={classes.rightBar}>
                     <Grid item>
                         <Button
-                         variant="outlined"
-                         startIcon={<AssessmentIcon />} 
-                         className={classes.sideButton}
-                         style={{ backgroundColor: '#00a152', color: '#FFFFFF' }}
-                         onClick={()=>{setOpenGenerateReport(true)}}>
-                        Generate Report</Button>
+                            variant="outlined"
+                            startIcon={<AssessmentIcon />}
+                            className={classes.sideButton}
+                            color="primary"
+                            onClick={() => { setOpenGenerateReport(true) }}>
+                            Generate Report</Button>
                     </Grid>
                     <Grid item>
                         <Button
-                            variant="outlined" 
-                            startIcon={<AssignmentTurnedInIcon />} 
+                            variant="outlined"
+                            startIcon={<AssignmentTurnedInIcon />}
                             className={classes.sideButton}
-                            style={{ backgroundColor: '#00a152', color: '#FFFFFF' }}
-                            onClick={()=>{setOpenDischarge(true)}}>
+                            color="primary"
+                            onClick={() => { setOpenDischarge(true) }}>
                             Discharge</Button>
                     </Grid>
                     <Grid item>
                         <Button
-                             variant="outlined"
-                             startIcon={<HistoryIcon />}
-                             style={{ backgroundColor: '#00a152', color: '#FFFFFF' }}
-                             className={classes.sideButton}
-                             href="/viewhistory"
-                             >
-                                 View History
+                            variant="outlined"
+                            startIcon={<HistoryIcon />}
+                            color="primary"
+                            className={classes.sideButton}
+                            href="/viewhistory"
+                        >
+                            View History
                         </Button>
                     </Grid>
                     <Grid item>
@@ -195,23 +194,23 @@ const ViewPatientProfile = () => {
                     fullWidth
                     maxWidth="md"
                     open={openGenerateReport}
-                    onClose={()=>{setOpenGenerateReport(false)}}
+                    onClose={() => { setOpenGenerateReport(false) }}
                 >
                     <DialogTitle>Generate Report</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
                             Temperature: 100F
-                            {<br/>}
+                            {<br />}
                             BPM: 85
-                            {<br/>}
+                            {<br />}
                             Blood Pressure: 120/80
                         </DialogContentText>
 
                         <DialogActions>
-                            <Button onClick={()=>{setOpenGenerateReport(false)}} color="primary">
+                            <Button onClick={() => { setOpenGenerateReport(false) }} color="primary">
                                 Download Report
                             </Button>
-                            <Button onClick={()=>{setOpenGenerateReport(false)}} color="primary">
+                            <Button onClick={() => { setOpenGenerateReport(false) }} color="primary">
                                 Cancel
                             </Button>
                         </DialogActions>
@@ -222,7 +221,7 @@ const ViewPatientProfile = () => {
                     fullWidth
                     maxWidth="md"
                     open={openDischarge}
-                    onClose={()=>{setOpenDischarge(false)}}
+                    onClose={() => { setOpenDischarge(false) }}
                 >
                     <DialogTitle>Discharge Patient</DialogTitle>
                     <DialogContent>
@@ -231,17 +230,17 @@ const ViewPatientProfile = () => {
                         </DialogContentText>
 
                         <DialogActions>
-                            <Button onClick={()=>{setOpenDischarge(false)}} color="primary">
+                            <Button onClick={() => { setOpenDischarge(false) }} color="primary">
                                 Confirm
                             </Button>
-                            <Button onClick={()=>{setOpenDischarge(false)}} color="primary">
+                            <Button onClick={() => { setOpenDischarge(false) }} color="primary">
                                 Cancel
                             </Button>
                         </DialogActions>
                     </DialogContent>
                 </Dialog>
             </div>
-        </div>
+        </ThemeProvider>
     )
 }
 

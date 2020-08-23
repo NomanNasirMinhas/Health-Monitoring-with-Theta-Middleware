@@ -1,10 +1,11 @@
 import React from "react"
-import { Typography, makeStyles, Grid } from "@material-ui/core"
+import { Typography, makeStyles, Grid, ThemeProvider } from "@material-ui/core"
 import ChartistGraph from "react-chartist"
 import Card from "../../components/Card/Card"
 import CardBody from "../../components/Card/CardBody"
 import CardHeader from "../../components/Card/CardHeader"
 import Header from "../../components/Header/Header"
+import theme from "../../assets/theme/theme"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -41,10 +42,10 @@ const LiveReadings = () => {
 
     const classes = useStyles();
     return (
-        <div>
+        <ThemeProvider theme={theme}>
             <Header />
             <div className={classes.content}>
-                <Typography variant="h2" style={{ color: '#bdbdbd' }}>Live Readings</Typography>
+                <Typography variant="h2" color="secondary" align="center">Live Readings</Typography>
                 <Grid container xs={12}>
                     <Grid container className={classes.labels}>
                         <Grid item>
@@ -93,7 +94,7 @@ const LiveReadings = () => {
                     </CardBody>
                 </Card>
             </div>
-        </div>
+        </ThemeProvider>
     )
 }
 

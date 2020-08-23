@@ -1,8 +1,8 @@
 import React from 'react';
-import { Button, TextField, Link, Dialog, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core';
+import { Button, TextField, Link, Dialog, DialogContent, DialogContentText, DialogTitle, ThemeProvider } from '@material-ui/core';
 import { Grid, Typography, makeStyles, Container, DialogActions } from '@material-ui/core';
 import { AppBar, Toolbar } from "@material-ui/core"
-
+import theme from "../../assets/theme/theme"
 const useStyles = makeStyles((theme) => ({
     paper: {
         marginTop: theme.spacing(8),
@@ -10,16 +10,12 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: 'column',
         alignItems: 'center',
     },
-    avatar: {
-        margin: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.main,
-    },
     form: {
         width: '100%',
         marginTop: theme.spacing(3),
     },
     toolBar: {
-        minHeight: "80px",
+        minHeight: "180px",
     },
     appBar: {
         alignItems: "center",
@@ -46,7 +42,7 @@ export default function SignUp() {
     }
 
     return (
-        <div>
+        <ThemeProvider theme={theme}>
             <AppBar position="fixed" className={classes.appBar}>
                 <Toolbar className={classes.toolBar}>
                     <Typography variant="h3" className={classes.title}>
@@ -182,6 +178,6 @@ export default function SignUp() {
                     </form>
                 </div>
             </Container>
-        </div>
+        </ThemeProvider>
     );
 }

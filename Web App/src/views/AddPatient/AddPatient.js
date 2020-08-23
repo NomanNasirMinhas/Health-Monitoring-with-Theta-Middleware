@@ -1,7 +1,8 @@
 import React from 'react';
 import { Button, TextField, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions } from '@material-ui/core';
-import { Grid, Typography, makeStyles, Container, Select, MenuItem, InputLabel, FormControl } from '@material-ui/core';
+import { Grid, Typography, makeStyles, Container, Select, MenuItem, InputLabel, FormControl, ThemeProvider } from '@material-ui/core';
 import Header from '../../components/Header/Header';
+import theme from "../../assets/theme/theme"
 
 const useStyles = makeStyles((theme) => ({
     content: {
@@ -52,10 +53,10 @@ export default function AddPatient() {
     }
 
     return (
-        <div>
+        <ThemeProvider theme={theme}>
             <Header />
             <div className={classes.content}>
-                <Typography variant="h2" align="center" style={{ color: '#0A7A0F' }}>Add Patient</Typography>
+                <Typography variant="h2" align="center" color="secondary">Add Patient</Typography>
                 <Container component="main" maxWidth="sm">
                     <div className={classes.paper}>
                         <form className={classes.form} noValidate>
@@ -147,7 +148,8 @@ export default function AddPatient() {
                                 onClick={handleSubmit}
                                 fullWidth
                                 variant="contained"
-                                style={{ background: '#00a152', color: '#FFFFFF', fontSize: 20 }}
+                                style={{ fontSize: 20 }}
+                                color="primary"
                                 className={classes.submit}
                             >
                                 Add Patient
@@ -180,6 +182,6 @@ export default function AddPatient() {
                     </div>
                 </Container>
             </div>
-        </div>
+        </ThemeProvider>
     );
 }

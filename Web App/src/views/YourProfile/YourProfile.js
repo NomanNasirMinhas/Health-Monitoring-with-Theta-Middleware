@@ -1,5 +1,5 @@
 import React from 'react'
-import { Typography, makeStyles } from "@material-ui/core"
+import { Typography, makeStyles, ThemeProvider } from "@material-ui/core"
 import Card from '../../components/Card/Card'
 import CardAvatar from '../../components/Card/CardAvatar'
 import CardHeader from '../../components/Card/CardHeader'
@@ -9,9 +9,14 @@ import PhoneIcon from '@material-ui/icons/Phone'
 import Header from "../../components/Header/Header"
 import BusinessIcon from '@material-ui/icons/Business'
 import EmailIcon from '@material-ui/icons/Email';
+import theme from "../../assets/theme/theme"
+
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
+    },
+    headerText: {
+        marginBottom: "75px"
     },
     card: {
         padding: theme.spacing(3),
@@ -19,16 +24,15 @@ const useStyles = makeStyles((theme) => ({
     content: {
         padding: theme.spacing(3),
     },
-
 }));
 
 const YourProfile = () => {
     const classes = useStyles();
     return (
-        <div>
+        <ThemeProvider theme={theme}>
             <Header />
             <div className={classes.content}>
-                <Typography variant="h2" align="center" style={{ color: '#0A7A0F', marginBottom: "75px" }}>Your Profile</Typography>
+                <Typography variant="h2" align="center" color="secondary" className={classes.headerText}>Your Profile</Typography>
                 <main>
                     <Card profile>
                         <CardAvatar profile>
@@ -60,7 +64,7 @@ const YourProfile = () => {
                     </Card>
                 </main>
             </div>
-        </div>
+        </ThemeProvider>
     )
 }
 export default YourProfile

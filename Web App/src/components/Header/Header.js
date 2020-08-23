@@ -1,10 +1,11 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { AppBar, CssBaseline, Toolbar, IconButton, Menu, Typography, DialogContent, DialogContentText } from '@material-ui/core';
+import { AppBar, CssBaseline, Toolbar, IconButton, Menu, Typography, DialogContent, DialogContentText, ThemeProvider } from '@material-ui/core';
 import { Divider, Button, MenuItem, SvgIcon, Dialog, DialogTitle, DialogActions, TextField } from "@material-ui/core"
 import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
 import AccountCircle from "@material-ui/icons/AccountCircle"
 import { withRouter } from 'react-router-dom';
+import theme from "../../assets/theme/theme"
 
 const drawerWidth = 240;
 
@@ -84,103 +85,121 @@ const Header = props => {
     props.history.push('/')
   }
 
+  const date = () => {
+    const date = new Date()
+    const hours = date.getHours()
+    let timeOfDay
+
+    if (hours < 12) {
+      timeOfDay = "Good Morning"
+    } else if (hours >= 12 && hours < 17) {
+      timeOfDay = "Good Afternoon"
+    } else {
+      timeOfDay = "Good Evening"
+    }
+    return timeOfDay
+  }
+
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar position="fixed" className={classes.appBar} style={{ background: '#00a152' }}>
-        <Toolbar>
-          <SvgIcon className={classes.SvgIcon}>
-            <LocalHospitalIcon />
-          </SvgIcon>
+      <ThemeProvider theme={theme}>
+        <AppBar position="fixed" className={classes.appBar}>
+          <Toolbar>
+            <SvgIcon className={classes.SvgIcon}>
+              <LocalHospitalIcon />
+            </SvgIcon>
 
-          <Typography variant="h6" className={classes.title} noWrap>
-            Remote Patient Monitoring Portal
+            <Typography variant="h6" className={classes.title} noWrap>
+              {date()}, Doctor
           </Typography>
 
 
-          <div className={classes.buttons}>
-            <Button
-              variant="outlined"
-              style={{ color: '#FFFFFF' }}
-              href="/dashboard">
-              Homepage
+            <div className={classes.buttons}>
+              <Button
+                variant="outlined"
+                style={{ color: '#FFFFFF' }}
+                href="/dashboard">
+                Homepage
             </Button>
 
-            <Button
-              variant="outlined"
-              style={{ color: '#FFFFFF' }}
-              href="/addpatient">
-              Add Patient
+              <Button
+                variant="outlined"
+                style={{ color: '#FFFFFF' }}
+                href="/addpatient">
+                Add Patient
             </Button>
-          </div>
-          <div>
-            <IconButton
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleMenu}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
+            </div>
+            <div>
+              <IconButton
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
 
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={open}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={handleProfile}>My Profile</MenuItem>
-              <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>
-              <Divider />
-              <MenuItem onClick={logOut}>Log Out</MenuItem>
-            </Menu>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={open}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleProfile}>My Profile</MenuItem>
+                <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>
+                <Divider />
+                <MenuItem onClick={logOut}>Log Out</MenuItem>
+              </Menu>
 
-            <Dialog
-              fullWidth
-              maxWidth="md"
-              open={dialogOpen}
-              onClose={dialogClose}
-            >
-              <DialogTitle>Change Password</DialogTitle>
-              <DialogContent>
-                <DialogContentText>
-                  Enter your password below in order to change it:
+              <Dialog
+                fullWidth
+                maxWidth="md"
+                open={dialogOpen}
+                onClose={dialogClose}
+              >
+                <DialogTitle>Change Password</DialogTitle>
+                <DialogContent>
+                  <DialogContentText>
+                    Enter your password below in order to change it:
                 </DialogContentText>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                />
-                <DialogActions>
-                  <Button onClick={dialogClose} color="primary">
-                    Save Password
+                  <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                  />
+                  <DialogActions>
+                    <Button onClick={dialogClose} color="primary">
+                      Save Password
             </Button>
-                  <Button onClick={dialogClose} color="primary">
-                    Cancel
+                    <Button onClick={dialogClose} color="primary">
+                      Cancel
             </Button>
-                </DialogActions>
-              </DialogContent>
-            </Dialog>
-          </div>
-        </Toolbar>
-      </AppBar>
-      <div className={classes.appBarSpacer} />
+                  </DialogActions>
+                </DialogContent>
+              </Dialog>
+            </div>
+          </Toolbar>
+        </AppBar>
+        <div className={classes.appBarSpacer} />
+      </ThemeProvider>
     </div>
+
   );
 }
 
