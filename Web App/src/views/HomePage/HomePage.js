@@ -1,8 +1,9 @@
 import React from 'react';
-import { withStyles, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead } from '@material-ui/core';
-import { TableRow, Paper, Link, Typography, ThemeProvider } from '@material-ui/core';
+import { withStyles, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead, Link} from '@material-ui/core';
+import { TableRow, Paper, Typography, ThemeProvider } from '@material-ui/core';
 import Header from "../../components/Header/Header"
 import theme from "../../assets/theme/theme"
+import { Link as link } from "react-router-dom"
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
@@ -50,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function HomePage() {
     const classes = useStyles();
-
+    const preventDefault = (event) => event.preventDefault();
     return (
         <ThemeProvider theme={theme}>
             <Header />
@@ -76,9 +77,9 @@ export default function HomePage() {
                                     <StyledTableCell align="center">{row.age}</StyledTableCell>
                                     <StyledTableCell align="center">
                                         <Link
-                                            href="/viewpatientprofile"
+                                            component={link}
+                                            to="/viewpatientprofile"
                                             variant="body2"
-                                            style={{ color: '#00a152' }}
                                         >
                                             View Profile
                                         </Link>

@@ -4,7 +4,7 @@ import { AppBar, CssBaseline, Toolbar, IconButton, Menu, Typography, DialogConte
 import { Divider, Button, MenuItem, SvgIcon, Dialog, DialogTitle, DialogActions, TextField } from "@material-ui/core"
 import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
 import AccountCircle from "@material-ui/icons/AccountCircle"
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import theme from "../../assets/theme/theme"
 
 const drawerWidth = 240;
@@ -84,7 +84,7 @@ const Header = props => {
   const logOut = () => {
     props.history.push('/')
   }
-
+  
   const date = () => {
     const date = new Date()
     const hours = date.getHours()
@@ -117,16 +117,18 @@ const Header = props => {
 
             <div className={classes.buttons}>
               <Button
+                component={Link}
                 variant="outlined"
                 style={{ color: '#FFFFFF' }}
-                href="/dashboard">
+                to="/dashboard">
                 Homepage
             </Button>
 
               <Button
+                component={Link}
                 variant="outlined"
                 style={{ color: '#FFFFFF' }}
-                href="/addpatient">
+                to="/addpatient">
                 Add Patient
             </Button>
             </div>

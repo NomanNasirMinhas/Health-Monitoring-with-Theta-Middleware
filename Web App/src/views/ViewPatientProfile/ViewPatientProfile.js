@@ -7,6 +7,7 @@ import HistoryIcon from '@material-ui/icons/History';
 import TimelineIcon from '@material-ui/icons/Timeline';
 import Header from "../../components/Header/Header"
 import theme from "../../assets/theme/theme"
+import { Link } from "react-router-dom"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -169,20 +170,22 @@ const ViewPatientProfile = () => {
                     </Grid>
                     <Grid item>
                         <Button
+                            component={Link}
+                            to="/viewhistory"
                             variant="outlined"
                             startIcon={<HistoryIcon />}
                             color="primary"
                             className={classes.sideButton}
-                            href="/viewhistory"
                         >
                             View History
                         </Button>
                     </Grid>
                     <Grid item>
                         <Button
+                            component={Link}
+                            to="/livereadings"
                             variant="outlined"
                             startIcon={<TimelineIcon />}
-                            href="/livereadings"
                             style={{ backgroundColor: '#00a152', color: '#FFFFFF' }}
                             className={classes.sideButton}>
                             Live Statistics
