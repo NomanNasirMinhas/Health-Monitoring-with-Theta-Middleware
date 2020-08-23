@@ -9,6 +9,7 @@ import Welcome from './components/Welcome';
 import qrScanner from './components/qrScanner';
 import Profile from './components/Profile';
 import Readings from './components/Readings';
+import History from './components/Histroy';
 
 
 function DetailsScreen({navigation}) {
@@ -104,8 +105,8 @@ function App() {
           },
         }} />
         
-        <Stack.Screen 
-        name="Readings" 
+        <Stack.Screen
+        name="Readings"
         component={Readings}
         options={{
           title: 'Patient Vital Readings',
@@ -123,6 +124,27 @@ function App() {
             justifyContent: 'center'
           },
         }} />
+
+<Stack.Screen
+        name="History"
+        component={History}
+        options={{
+          title: 'Patient Readings History',
+          headerTitleAlign:'center',
+          backgroundColor: '#141D2B',
+          headerStyle: {
+            backgroundColor: '#1A2332',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            color: 'white',
+            fontWeight: 'bold',
+            alignContent: 'center',
+            alignItems: 'center',
+            justifyContent: 'center'
+          },
+        }} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -8,6 +8,7 @@ import { Ionicons, MaterialIcons} from '@expo/vector-icons'
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
 import Readings from './Readings';
+import History from './Histroy';
 
 const getFonts = () => Font.loadAsync({
   'Righteous':require('../assets/fonts/Righteous-Regular.ttf')
@@ -42,11 +43,16 @@ export default function Profile({navigation}) {
 
         <View style={styles.infoContainer}>
             <Text style={[styles.text, {fontWeight:"200", fontSize: 36 }]}>Patient Name</Text>
-            <Text style={[styles.text, {color:"white", fontSize: 20 }]}>Patient's Seed</Text> 
+            <Text style={[styles.text, {color:"white", fontSize: 20 }]}>Patient's Seed</Text>
           </View>
 
-          <View style={{marginTop:20, alignSelf:'center'}}>
-            <Button style={styles.button} title='Get Live Readings' onPress={() => navigation.navigate('Readings')}></Button>
+          <View style={{marginTop:20, alignSelf:'center', }}>
+            <Button style={[styles.button, {marginBottom: 20,}]} title='Get Live Readings' onPress={() => navigation.navigate('Readings')}></Button>
+            {/* <Button style={styles.button} title='View History' onPress={() => navigation.navigate('History')}></Button> */}
+          </View>
+          <View style={{marginTop:20, alignSelf:'center', }}>
+            {/* <Button style={[styles.button, {marginBottom: 20,}]} title='Get Live Readings' onPress={() => navigation.navigate('Readings')}></Button> */}
+            <Button style={styles.button} title='View History' onPress={() => navigation.navigate('History')}></Button>
           </View>
 
           <View style={styles.statsContainer}>
@@ -99,8 +105,8 @@ const styles = StyleSheet.create({
   },
   
   profileImage: {
-    width: 200,
-    height: 200,
+    width: 150,
+    height: 150,
     borderRadius: 100,
     overflow: "hidden"
   },
@@ -128,8 +134,8 @@ const styles = StyleSheet.create({
     //fontFamily: "Righteous",
     color: "#52575D",
     textAlign: "center",
-
-    
+    marginRight: 30,
+    marginBottom: 30
   }
 
 });
