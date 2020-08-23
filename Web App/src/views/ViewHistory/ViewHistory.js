@@ -21,18 +21,25 @@ const StyledTableRow = withStyles((theme) => ({
     },
 }))(TableRow);
 
-function createData(id, name, age) {
-    return { id, name, age };
+function createData(time, hr, temp, sys, diast) {
+    return { time, hr, temp, sys, diast };
 }
 
 const rows = [
-    createData(1, "Ahmad Bin Suleman", 22),
-    createData(2, "Aamna Ahmad", 23),
-    createData(3, "Mirza Jamshed", 40),
-    createData(4, "Wahaj Mustakeem", 69),
-    createData(5, "Inaam Shehzaad", 42),
-    createData(6, "Fatima Umar", 34),
-    createData(7, "Fatima Malik", 66),
+    createData("08-09-2020/10:00 PM", 82, 90, 81,122),
+    createData("08-09-2020/10:05 PM", 80, 91, 83,121),
+    createData("08-09-2020/10:10 PM", 84, 89, 81,120),
+    createData("08-09-2020/10:15 PM", 83, 88, 82,118),
+    createData("08-09-2020/10:20 PM", 81, 93, 83,119),
+    createData("08-09-2020/10:25 PM", 80, 92, 80,120),
+    createData("08-09-2020/10:30 PM", 79, 90, 84,122),
+    createData("08-09-2020/10:35 PM", 86, 91, 83,124),
+    createData("08-09-2020/10:40 PM", 84, 93, 82,121),
+    createData("08-09-2020/10:45 PM", 86, 94, 79,120),
+    createData("08-09-2020/10:50 PM", 84, 92, 78,124),
+    createData("08-09-2020/10:55 PM", 82, 91, 81,121),
+    createData("08-09-2020/11:00 PM", 81, 90, 80,120),
+
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -87,29 +94,23 @@ export default function ViewHistory() {
                     <Table className={classes.table}>
                         <TableHead>
                             <TableRow>
-                                <StyledTableCell>ID</StyledTableCell>
-                                <StyledTableCell align="right">Name</StyledTableCell>
-                                <StyledTableCell align="right">Age</StyledTableCell>
-                                <StyledTableCell align="right">&nbsp;</StyledTableCell>
+                                <StyledTableCell align="center">Timestamp</StyledTableCell>
+                                <StyledTableCell align="center">Heart Rate(BPM)</StyledTableCell>
+                                <StyledTableCell align="center">Body Temp (F)</StyledTableCell>
+                                <StyledTableCell align="center">Systolic BP</StyledTableCell>
+                                <StyledTableCell align="center">Diastolic BP</StyledTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {rows.map((row) => (
-                                <StyledTableRow key={row.id}>
-                                    <StyledTableCell component="th" scope="row">
-                                        {row.id}
+                                <StyledTableRow key={row.time}>
+                                    <StyledTableCell align="center" component="th" scope="row">
+                                        {row.time}
                                     </StyledTableCell>
-                                    <StyledTableCell align="right">{row.name}</StyledTableCell>
-                                    <StyledTableCell align="right">{row.age}</StyledTableCell>
-                                    <StyledTableCell align="right">
-                                        <Link
-                                            href="/viewpatientprofile"
-                                            variant="body2"
-                                            style={{ color: '#00a152' }}
-                                        >
-                                            View Profile
-                                        </Link>
-                                    </StyledTableCell>
+                                    <StyledTableCell align="center">{row.hr}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.temp}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.sys}</StyledTableCell>
+                                    <StyledTableCell align="center">{row.diast}</StyledTableCell>
                                 </StyledTableRow>
                             ))}
                         </TableBody>
