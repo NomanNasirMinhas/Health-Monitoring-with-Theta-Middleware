@@ -12,11 +12,11 @@ fn main() {
 let mut send_opt = SendTrytesOptions::default();
 send_opt.min_weight_magnitude = 9;
 send_opt.local_pow = false;
-let mut author = Author::new("MYAUTHORSECRETSTRING", 3, true);
+let mut author = Author::new("OURSEEDHERE", 3, true);
 let channel_address = author.channel_address().to_string();
 // let announce_message = start_a_new_channel(&mut author, &mut client, send_opt).unwrap();
 
-// let public_payload = "BREAKINGCHANGES";
+// let public_payload = "OURMESSAGEHERE";
 
 //let signed_message = send_signed_message(&mut author, &channel_address, &announce_message.msgid.to_string(), &public_payload.to_string(), &mut client, send_opt).unwrap();
 
