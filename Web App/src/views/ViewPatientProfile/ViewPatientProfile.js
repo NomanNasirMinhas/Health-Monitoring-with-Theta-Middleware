@@ -1,5 +1,5 @@
 import React from "react"
-import { Typography, makeStyles, Grid, Card, Button, Dialog } from "@material-ui/core"
+import { Typography, makeStyles, Grid, Card, Button, Dialog, Slide } from "@material-ui/core"
 import { DialogTitle, DialogContentText, DialogContent, DialogActions, ThemeProvider } from "@material-ui/core"
 import AssessmentIcon from '@material-ui/icons/Assessment';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
@@ -91,107 +91,114 @@ const ViewPatientProfile = () => {
                 <Grid container lg={6}>
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
-                            <Typography
-                                variant="h2"
-                                color="secondary">
-                                Patient's Profile
+                            <Slide direction="down" in={true} timeout={300}>
+                                <Typography
+                                    variant="h2"
+                                    color="secondary">
+                                    Patient's Profile
                             </Typography>
+                            </Slide>
                         </Grid>
                     </Grid>
-
-                    <Grid container className={classes.labels}>
-                        <Grid item>
-                            <Typography variant="h4" className={classes.headerText} color="secondary">
-                                Patient's Name:
+                    <Slide direction="down" in={true} timeout={300}>
+                        <Grid container className={classes.labels}>
+                            <Grid item>
+                                <Typography variant="h4" className={classes.headerText} color="secondary">
+                                    Patient's Name:
                             </Typography>
+                            </Grid>
+                            <Grid item>
+                                <Typography variant="h4" >
+                                    Wahaj Mustakeem
+                                </Typography>
+                            </Grid>
                         </Grid>
-                        <Grid item>
-                            <Typography variant="h4" >
-                                Wahaj Mustakeem
+                    </Slide>
+                    <Slide direction="down" in={true} timeout={300}>
+                        <Grid container className={classes.labels}>
+                            <Grid item>
+                                <Typography variant="h4" className={classes.headerText} color="secondary">
+                                    Patient's Age:
                     </Typography>
-                        </Grid>
-                    </Grid>
-
-                    <Grid container className={classes.labels}>
-                        <Grid item>
-                            <Typography variant="h4" className={classes.headerText} color="secondary">
-                                Patient's Age:
+                            </Grid>
+                            <Grid item>
+                                <Typography variant="h4">
+                                    69
                     </Typography>
+                            </Grid>
                         </Grid>
+                    </Slide>
 
+                    <Slide direction="right" in={true} timeout={300}>
                         <Grid item>
-                            <Typography variant="h4">
-                                69
-                    </Typography>
+                            <Typography variant="h2" color="secondary" className={[classes.headerText, classes.labels].join(' ')}>Vitals</Typography>
                         </Grid>
-                    </Grid>
+                    </Slide>
+                    <Slide direction="right" in={true} timeout={300}>
+                        <Grid container>
+                            <Card className={classes.cardBody}>
+                                <Card className={classes.minicard}>
+                                    <Typography variant="h6" style={{ color: '#0A7A0F' }} className={classes.tileTopText}>Temperature</Typography>
+                                    <Typography variant="h6" className={classes.tileBottomText}>100 F</Typography>
+                                </Card>
+                                <Card className={classes.minicard}>
+                                    <Typography variant="h6" style={{ color: '#0A7A0F' }} className={classes.tileTopText}>BPM</Typography>
+                                    <Typography variant="h6" className={classes.tileBottomText}>85</Typography>
+                                </Card>
 
-                    <Grid item>
-                        <Typography variant="h2" color="secondary" className={[classes.headerText, classes.labels].join(' ')}>Vitals</Typography>
-                    </Grid>
-
-                    <Grid container>
-                        <Card className={classes.cardBody}>
-                            <Card className={classes.minicard}>
-                                <Typography variant="h6" style={{ color: '#0A7A0F' }} className={classes.tileTopText}>Temperature</Typography>
-                                <Typography variant="h6" className={classes.tileBottomText}>100 F</Typography>
+                                <Card className={classes.minicard}>
+                                    <Typography variant="h6" style={{ color: '#0A7A0F' }} className={classes.tileTopText}>BP (mm/Hg)</Typography>
+                                    <Typography variant="h6" className={classes.tileBottomText}>120/80</Typography>
+                                </Card>
                             </Card>
-                            <Card className={classes.minicard}>
-                                <Typography variant="h6" style={{ color: '#0A7A0F' }} className={classes.tileTopText}>BPM</Typography>
-                                <Typography variant="h6" className={classes.tileBottomText}>85</Typography>
-                            </Card>
-
-                            <Card className={classes.minicard}>
-                                <Typography variant="h6" style={{ color: '#0A7A0F' }} className={classes.tileTopText}>BP (mm/Hg)</Typography>
-                                <Typography variant="h6" className={classes.tileBottomText}>120/80</Typography>
-                            </Card>
-                        </Card>
-                    </Grid>
+                        </Grid>
+                    </Slide>
                 </Grid>
-
-                <Grid container className={classes.rightBar}>
-                    <Grid item>
-                        <Button
-                            variant="outlined"
-                            startIcon={<AssessmentIcon />}
-                            className={classes.sideButton}
-                            color="primary"
-                            onClick={() => { setOpenGenerateReport(true) }}>
-                            Generate Report</Button>
-                    </Grid>
-                    <Grid item>
-                        <Button
-                            variant="outlined"
-                            startIcon={<AssignmentTurnedInIcon />}
-                            className={classes.sideButton}
-                            color="primary"
-                            onClick={() => { setOpenDischarge(true) }}>
-                            Discharge</Button>
-                    </Grid>
-                    <Grid item>
-                        <Button
-                            component={Link}
-                            to="/viewhistory"
-                            variant="outlined"
-                            startIcon={<HistoryIcon />}
-                            color="primary"
-                            className={classes.sideButton}
-                        >
-                            View History
+                <Slide direction="left" in={true} timeout={500}>
+                    <Grid container className={classes.rightBar}>
+                        <Grid item>
+                            <Button
+                                variant="outlined"
+                                startIcon={<AssessmentIcon />}
+                                className={classes.sideButton}
+                                color="primary"
+                                onClick={() => { setOpenGenerateReport(true) }}>
+                                Generate Report</Button>
+                        </Grid>
+                        <Grid item>
+                            <Button
+                                variant="outlined"
+                                startIcon={<AssignmentTurnedInIcon />}
+                                className={classes.sideButton}
+                                color="primary"
+                                onClick={() => { setOpenDischarge(true) }}>
+                                Discharge</Button>
+                        </Grid>
+                        <Grid item>
+                            <Button
+                                component={Link}
+                                to="/viewhistory"
+                                variant="outlined"
+                                startIcon={<HistoryIcon />}
+                                color="primary"
+                                className={classes.sideButton}
+                            >
+                                View History
                         </Button>
-                    </Grid>
-                    <Grid item>
-                        <Button
-                            component={Link}
-                            to="/livereadings"
-                            variant="outlined"
-                            startIcon={<TimelineIcon />}
-                            style={{ backgroundColor: '#00a152', color: '#FFFFFF' }}
-                            className={classes.sideButton}>
-                            Live Statistics
+                        </Grid>
+                        <Grid item>
+                            <Button
+                                component={Link}
+                                to="/livereadings"
+                                variant="outlined"
+                                startIcon={<TimelineIcon />}
+                                style={{ backgroundColor: '#00a152', color: '#FFFFFF' }}
+                                className={classes.sideButton}>
+                                Live Statistics
                     </Button>
+                        </Grid>
                     </Grid>
-                </Grid>
+                </Slide>
 
                 <Dialog
                     fullWidth

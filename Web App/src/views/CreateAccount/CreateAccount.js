@@ -4,6 +4,7 @@ import { Grid, Typography, makeStyles, Container, DialogActions } from '@materia
 import { AppBar, Toolbar } from "@material-ui/core"
 import theme from "../../assets/theme/theme"
 import { Link as link } from "react-router-dom"
+
 const useStyles = makeStyles((theme) => ({
     paper: {
         marginTop: theme.spacing(8),
@@ -44,14 +45,14 @@ export default function SignUp() {
 
     return (
         <ThemeProvider theme={theme}>
-            <AppBar position="fixed" className={classes.appBar}>
-                <Toolbar className={classes.toolBar}>
-                    <Typography variant="h3" className={classes.title}>
-                        SIGN UP
+                <AppBar position="fixed" className={classes.appBar}>
+                    <Toolbar className={classes.toolBar}>
+                        <Typography variant="h3" className={classes.title}>
+                            SIGN UP
                     </Typography>
-                </Toolbar>
-            </AppBar>
-            <div className={classes.marginTopAppBar} />
+                    </Toolbar>
+                </AppBar>
+                <div className={classes.marginTopAppBar} />
             <Container component="main" maxWidth="sm">
                 <div className={classes.paper}>
                     <form className={classes.form} noValidate>

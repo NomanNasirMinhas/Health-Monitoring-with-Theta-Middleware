@@ -1,6 +1,6 @@
 import React from 'react';
-import { withStyles, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead, Link} from '@material-ui/core';
-import { TableRow, Paper, Typography, ThemeProvider } from '@material-ui/core';
+import { withStyles, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead, Link } from '@material-ui/core';
+import { TableRow, Paper, Typography, ThemeProvider, Slide } from '@material-ui/core';
 import Header from "../../components/Header/Header"
 import theme from "../../assets/theme/theme"
 import { Link as link } from "react-router-dom"
@@ -51,45 +51,48 @@ const useStyles = makeStyles((theme) => ({
 
 export default function HomePage() {
     const classes = useStyles();
-    const preventDefault = (event) => event.preventDefault();
     return (
         <ThemeProvider theme={theme}>
             <Header />
-            <div className={classes.content}>
-                <Typography variant="h2" align="center" color="secondary" className={classes.titletext}>Current Patients</Typography>
-                <TableContainer component={Paper}>
-                    <Table className={classes.table}>
-                        <TableHead>
-                            <TableRow>
-                                <StyledTableCell align="center">Patient's ID</StyledTableCell>
-                                <StyledTableCell align="center">Name</StyledTableCell>
-                                <StyledTableCell align="center">Age</StyledTableCell>
-                                <StyledTableCell align="center">Action</StyledTableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {rows.map((row) => (
-                                <StyledTableRow key={row.id}>
-                                    <StyledTableCell align="center" component="th" scope="row">
-                                        {row.id}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">{row.name}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.age}</StyledTableCell>
-                                    <StyledTableCell align="center">
-                                        <Link
-                                            component={link}
-                                            to="/viewpatientprofile"
-                                            variant="body2"
-                                        >
-                                            View Profile
+            <Slide direction="down" in={true} timeout={300}>
+                <div className={classes.content}>
+                    <Typography variant="h2" align="center" color="secondary" className={classes.titletext}>Current Patients</Typography>
+                    <Slide direction="up" in={true} timeout={300}>
+                        <TableContainer component={Paper}>
+                            <Table className={classes.table}>
+                                <TableHead>
+                                    <TableRow>
+                                        <StyledTableCell align="center">Patient's ID</StyledTableCell>
+                                        <StyledTableCell align="center">Name</StyledTableCell>
+                                        <StyledTableCell align="center">Age</StyledTableCell>
+                                        <StyledTableCell align="center">Action</StyledTableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {rows.map((row) => (
+                                        <StyledTableRow key={row.id}>
+                                            <StyledTableCell align="center" component="th" scope="row">
+                                                {row.id}
+                                            </StyledTableCell>
+                                            <StyledTableCell align="center">{row.name}</StyledTableCell>
+                                            <StyledTableCell align="center">{row.age}</StyledTableCell>
+                                            <StyledTableCell align="center">
+                                                <Link
+                                                    component={link}
+                                                    to="/viewpatientprofile"
+                                                    variant="body2"
+                                                >
+                                                    View Profile
                                         </Link>
-                                    </StyledTableCell>
-                                </StyledTableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </div>
+                                            </StyledTableCell>
+                                        </StyledTableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Slide>
+                </div>
+            </Slide>
         </ThemeProvider>
     );
 }

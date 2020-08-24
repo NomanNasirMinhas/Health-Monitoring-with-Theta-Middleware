@@ -1,5 +1,5 @@
 import React from "react"
-import { Typography, makeStyles, Grid, ThemeProvider } from "@material-ui/core"
+import { Typography, makeStyles, Grid, ThemeProvider, Slide } from "@material-ui/core"
 import ChartistGraph from "react-chartist"
 import Card from "../../components/Card/Card"
 import CardBody from "../../components/Card/CardBody"
@@ -45,37 +45,42 @@ const LiveReadings = () => {
         <ThemeProvider theme={theme}>
             <Header />
             <div className={classes.content}>
-                <Typography variant="h2" color="secondary" align="center">Live Readings</Typography>
-                <Grid container xs={12}>
-                    <Grid container className={classes.labels}>
-                        <Grid item>
-                            <Typography variant="h4" className={classes.headerText}>
-                                Patient's Name:
-                    </Typography>
-                        </Grid>
+                <Slide direction="down" in={true} timeout={300}>
+                    <Typography variant="h2" color="secondary" align="center">Live Readings</Typography>
+                </Slide>
 
-                        <Grid item>
-                            <Typography variant="h4">
-                                Wahaj Mustakeem
+                <Slide direction="down" in={true} timeout={300}>
+                    <Grid container xs={12}>
+                        <Grid container className={classes.labels}>
+                            <Grid item>
+                                <Typography variant="h4" className={classes.headerText}>
+                                    Patient's Name:
                     </Typography>
+                            </Grid>
+
+                            <Grid item>
+                                <Typography variant="h4">
+                                    Wahaj Mustakeem
+                    </Typography>
+                            </Grid>
+                        </Grid>
+                        <Grid container className={classes.labels}>
+                            <Grid item>
+                                <Typography variant="h4" className={classes.headerText}>
+                                    Patient's Age:
+                    </Typography>
+                            </Grid>
+
+                            <Grid item>
+                                <Typography variant="h4">
+                                    69
+                    </Typography>
+                            </Grid>
                         </Grid>
                     </Grid>
-
-                    <Grid container className={classes.labels}>
-                        <Grid item>
-                            <Typography variant="h4" className={classes.headerText}>
-                                Patient's Age:
-                    </Typography>
-                        </Grid>
-
-                        <Grid item>
-                            <Typography variant="h4">
-                                69
-                    </Typography>
-                        </Grid>
-                    </Grid>
-                </Grid>
-
+                </Slide>
+                
+                
                 <Card>
                     <CardHeader><p>ECG</p></CardHeader>
                     <CardBody>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Typography, makeStyles, ThemeProvider } from "@material-ui/core"
+import { Typography, makeStyles, ThemeProvider, Slide } from "@material-ui/core"
 import Card from '../../components/Card/Card'
 import CardAvatar from '../../components/Card/CardAvatar'
 import CardHeader from '../../components/Card/CardHeader'
@@ -32,37 +32,41 @@ const YourProfile = () => {
         <ThemeProvider theme={theme}>
             <Header />
             <div className={classes.content}>
-                <Typography variant="h2" align="center" color="secondary" className={classes.headerText}>Your Profile</Typography>
-                <main>
-                    <Card profile>
-                        <CardAvatar profile>
-                            <img
-                                src="https://www.publicdomainpictures.net/pictures/210000/velka/doctor-1490804718D0I.jpg"
-                                alt="Avatar" />
-                        </CardAvatar>
-                        <CardHeader profile>
-                            <Typography
-                                variant="h4"
-                            >
-                                Dr. Gia Adams
+                <Slide direction="down" in={true} timeout={300}>
+                    <Typography variant="h2" align="center" color="secondary" className={classes.headerText}>Your Profile</Typography>
+                </Slide>
+                <Slide direction="left" in={true} timeout={300}>
+                    <main>
+                        <Card profile>
+                            <CardAvatar profile>
+                                <img
+                                    src="https://www.publicdomainpictures.net/pictures/210000/velka/doctor-1490804718D0I.jpg"
+                                    alt="Avatar" />
+                            </CardAvatar>
+                            <CardHeader profile>
+                                <Typography
+                                    variant="h4"
+                                >
+                                    Dr. Gia Adams
                         </Typography>
-                        </CardHeader>
-                        <Divider />
-                        <CardBody profile>
-                            <Typography>
-                                Dermatologist, Laser Specialist
+                            </CardHeader>
+                            <Divider />
+                            <CardBody profile>
+                                <Typography>
+                                    Dermatologist, Laser Specialist
                             </Typography>
-                            <div className={classes.card}>
-                                <PhoneIcon fontSize="large" />
-                                <Typography variant="h6">0334-121212</Typography>
-                                <BusinessIcon fontSize="large" />
-                                <Typography variant="h6">Room no. 7, Bahria Hospital, Rawalpindi</Typography>
-                                <EmailIcon fontSize="large" />
-                                <Typography variant="h6">gia@gmail.com</Typography>
-                            </div>
-                        </CardBody>
-                    </Card>
-                </main>
+                                <div className={classes.card}>
+                                    <PhoneIcon fontSize="large" />
+                                    <Typography variant="h6">0334-121212</Typography>
+                                    <BusinessIcon fontSize="large" />
+                                    <Typography variant="h6">Room no. 7, Bahria Hospital, Rawalpindi</Typography>
+                                    <EmailIcon fontSize="large" />
+                                    <Typography variant="h6">gia@gmail.com</Typography>
+                                </div>
+                            </CardBody>
+                        </Card>
+                    </main>
+                </Slide>
             </div>
         </ThemeProvider>
     )

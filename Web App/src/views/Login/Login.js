@@ -1,8 +1,8 @@
 import React from "react"
 import Typography from "@material-ui/core/Typography"
-import { makeStyles, Grid, Button, AppBar, Toolbar, TextField, Link, ThemeProvider } from '@material-ui/core'
+import { makeStyles, Grid, Button, AppBar, Toolbar, TextField, Link, ThemeProvider, Slide } from '@material-ui/core'
 import theme from "../../assets/theme/theme"
-import {Link as link} from "react-router-dom"
+import { Link as link } from "react-router-dom"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -48,12 +48,15 @@ const Login = (props) => {
             <ThemeProvider theme={theme}>
                 <AppBar position="fixed" className={classes.appBar}>
                     <Toolbar className={classes.toolBar}>
-                        <Typography variant="h3" className={classes.title}>
-                            LOGIN TO PORTAL
-                    </Typography>
+
+                        <Slide direction="down" in={true} timeout={300}>
+                            <Typography variant="h3" className={classes.title}>
+                                LOGIN TO PORTAL
+                            </Typography>
+                        </Slide>
                     </Toolbar>
                 </AppBar>
-
+                <Slide direction="down" in={true} timeout={300}>
                 <main>
                     <div className={classes.paper}>
                         <form className={classes.form} noValidate>
@@ -84,7 +87,7 @@ const Login = (props) => {
                                 fullWidth
                                 variant="contained"
                                 color="primary"
-                                style={{fontSize: 20 }}
+                                style={{ fontSize: 20 }}
                                 className={classes.submit}
                                 onClick={handleClick}
                             >
@@ -112,6 +115,7 @@ const Login = (props) => {
                         </form>
                     </div>
                 </main>
+                </Slide>
             </ThemeProvider>
         </div>
     )

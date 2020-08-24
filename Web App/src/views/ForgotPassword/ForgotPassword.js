@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, TextField, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions } from '@material-ui/core';
-import { Grid, Typography, makeStyles, Container, ThemeProvider } from '@material-ui/core';
+import { Grid, Typography, makeStyles, Container, ThemeProvider, Slide } from '@material-ui/core';
 import { AppBar, Toolbar } from "@material-ui/core"
 import theme from "../../assets/theme/theme"
 
@@ -46,59 +46,63 @@ export default function ForgotPassword() {
         <ThemeProvider theme={theme}>
             <AppBar position="fixed" className={classes.appBar}>
                 <Toolbar className={classes.toolBar}>
-                    <Typography variant="h3" className={classes.title}>
-                        FORGOT PASSWORD
-                    </Typography>
+                    <Slide direction="down" in={true} timeout={300}>
+                        <Typography variant="h3" className={classes.title}>
+                            FORGOT PASSWORD
+                         </Typography>
+                    </Slide>
                 </Toolbar>
             </AppBar>
             <div className={classes.marginTopAppBar} />
-            <Container component="main" maxWidth="sm">
-                <div className={classes.paper}>
-                    <form className={classes.form} noValidate>
-                        <Grid container spacing={3}>
-                            <Grid item xs={12}>
-                                <TextField
-                                    autoComplete="fname"
-                                    name="enterSeed"
-                                    variant="outlined"
-                                    required
-                                    fullWidth
-                                    id="enterSeed"
-                                    label="Enter Seed"
-                                />
+            <Slide direction="down" in={true} timeout={300}>
+                <Container component="main" maxWidth="sm">
+                    <div className={classes.paper}>
+                        <form className={classes.form} noValidate>
+                            <Grid container spacing={3}>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        autoComplete="fname"
+                                        name="enterSeed"
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        id="enterSeed"
+                                        label="Enter Seed"
+                                    />
+                                </Grid>
                             </Grid>
-                        </Grid>
-                        <Button
-                            onClick={handleSubmit}
-                            fullWidth
-                            variant="contained"
-                            style={{ fontSize: 20 }}
-                            color="primary"
-                            className={classes.submit}
-                        >
-                            Get Password
+                            <Button
+                                onClick={handleSubmit}
+                                fullWidth
+                                variant="contained"
+                                style={{ fontSize: 20 }}
+                                color="primary"
+                                className={classes.submit}
+                            >
+                                Get Password
                         </Button>
-                        <Dialog
-                            fullWidth
-                            maxWidth="sm"
-                            open={open}
-                            onClose={handleClose}
-                        >
-                            <DialogTitle>Password Received</DialogTitle>
-                            <DialogContent>
-                                <DialogContentText>
-                                    Your Password is: abc123
+                            <Dialog
+                                fullWidth
+                                maxWidth="sm"
+                                open={open}
+                                onClose={handleClose}
+                            >
+                                <DialogTitle>Password Received</DialogTitle>
+                                <DialogContent>
+                                    <DialogContentText>
+                                        Your Password is: abc123
                                 </DialogContentText>
-                                <DialogActions>
-                                    <Button onClick={handleClose} color="primary">
-                                        Close
+                                    <DialogActions>
+                                        <Button onClick={handleClose} color="primary">
+                                            Close
                                     </Button>
-                                </DialogActions>
-                            </DialogContent>
-                        </Dialog>
-                    </form>
-                </div>
-            </Container>
+                                    </DialogActions>
+                                </DialogContent>
+                            </Dialog>
+                        </form>
+                    </div>
+                </Container>
+            </Slide>
         </ThemeProvider>
     );
 }

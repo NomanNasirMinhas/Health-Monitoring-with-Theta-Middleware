@@ -1,6 +1,6 @@
 import React from 'react';
 import { withStyles, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead } from '@material-ui/core';
-import { TableRow, Paper, Typography, Grid, ThemeProvider } from '@material-ui/core';
+import { TableRow, Paper, Typography, Grid, ThemeProvider, Slide } from '@material-ui/core';
 import Header from "../../components/Header/Header"
 import theme from "../../assets/theme/theme"
 
@@ -64,65 +64,73 @@ export default function ViewHistory() {
             <div className={classes.content}>
                 <Grid container spacing={3}>
                     <Grid item xs={12}>
-                        <Typography
-                            variant="h2"
-                            color="secondary">
-                            Patient's Profile
+                        <Slide direction="down" in={true} timeout={300}>
+                            <Typography
+                                variant="h2"
+                                color="secondary">
+                                Patient's Profile
+                        </Typography>
+                        </Slide>
+                    </Grid>
+                </Grid>
+                <Slide direction="down" in={true} timeout={300}>
+                    <Grid container className={classes.labels}>
+                        <Grid item>
+                            <Typography variant="h4" className={classes.headerText} color="secondary">
+                                Patient's Name:
                             </Typography>
-                    </Grid>
-                </Grid>
-                <Grid container className={classes.labels}>
-                    <Grid item>
-                        <Typography variant="h4" className={classes.headerText} color="secondary">
-                            Patient's Name:
-                            </Typography>
-                    </Grid>
-                    <Grid item>
-                        <Typography variant="h4" >
-                            Wahaj Mustakeem
+                        </Grid>
+                        <Grid item>
+                            <Typography variant="h4" >
+                                Wahaj Mustakeem
                     </Typography>
+                        </Grid>
                     </Grid>
-                </Grid>
+                </Slide>
 
-                <Grid container className={classes.labels}>
-                    <Grid item>
-                        <Typography variant="h4" className={classes.headerText} color="secondary">
-                            Patient's Age:
+                <Slide direction="down" in={true} timeout={300}>
+                    <Grid container className={classes.labels}>
+                        <Grid item>
+                            <Typography variant="h4" className={classes.headerText} color="secondary">
+                                Patient's Age:
                     </Typography>
-                    </Grid>
+                        </Grid>
 
-                    <Grid item>
-                        <Typography variant="h4">
-                            69
+                        <Grid item>
+                            <Typography variant="h4">
+                                69
                     </Typography>
+                        </Grid>
                     </Grid>
-                </Grid>
-                <TableContainer component={Paper}>
-                    <Table className={classes.table}>
-                        <TableHead>
-                            <TableRow>
-                                <StyledTableCell align="center">Timestamp</StyledTableCell>
-                                <StyledTableCell align="center">Heart Rate(BPM)</StyledTableCell>
-                                <StyledTableCell align="center">Body Temp (F)</StyledTableCell>
-                                <StyledTableCell align="center">Systolic BP</StyledTableCell>
-                                <StyledTableCell align="center">Diastolic BP</StyledTableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {rows.map((row) => (
-                                <StyledTableRow key={row.time}>
-                                    <StyledTableCell align="center" component="th" scope="row">
-                                        {row.time}
-                                    </StyledTableCell>
-                                    <StyledTableCell align="center">{row.hr}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.temp}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.sys}</StyledTableCell>
-                                    <StyledTableCell align="center">{row.diast}</StyledTableCell>
-                                </StyledTableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                </Slide>
+                <Slide direction="left" in={true} timeout={500}>
+                    <TableContainer component={Paper}>
+                        <Table className={classes.table}>
+                            <TableHead>
+                                <TableRow>
+                                    <StyledTableCell align="center">Timestamp</StyledTableCell>
+                                    <StyledTableCell align="center">Heart Rate(BPM)</StyledTableCell>
+                                    <StyledTableCell align="center">Body Temp (F)</StyledTableCell>
+                                    <StyledTableCell align="center">Systolic BP</StyledTableCell>
+                                    <StyledTableCell align="center">Diastolic BP</StyledTableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {rows.map((row) => (
+                                    <StyledTableRow key={row.time}>
+                                        <StyledTableCell align="center" component="th" scope="row">
+                                            {row.time}
+                                        </StyledTableCell>
+                                        <StyledTableCell align="center">{row.hr}</StyledTableCell>
+                                        <StyledTableCell align="center">{row.temp}</StyledTableCell>
+                                        <StyledTableCell align="center">{row.sys}</StyledTableCell>
+                                        <StyledTableCell align="center">{row.diast}</StyledTableCell>
+                                    </StyledTableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </Slide>
             </div>
         </ThemeProvider>
     );
