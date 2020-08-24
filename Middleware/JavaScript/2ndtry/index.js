@@ -27,7 +27,7 @@ function timestamp() {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
- function getDate() {
+function getDate() {
   var today = new Date();
   var date =
     today.getDate() + "-" + (today.getMonth() + 1) + "-" + today.getFullYear();
@@ -41,11 +41,11 @@ function timestamp() {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
- function getNode() {
+function getNode() {
   return "https://nodes.iota.cafe:443";
 }
 
- function getSeed(id, pass) {
+function getSeed(id, pass) {
   //return "QCEVFK9GMHAGLLVWE99EKEWMEGQUPUQXMTTVKEWXV9RVVPANPKNIC9MYZVASV9INYODGBGBPRUJWSKNEF";
   //var seed=null;
   MongoClient.connect(uri, function (err, db) {
@@ -70,7 +70,7 @@ function timestamp() {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
- function generateSeed(id, password, info) {
+function generateSeed(id, password, info) {
   var result = "";
   var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ9";
   var charactersLength = characters.length;
@@ -95,7 +95,7 @@ function timestamp() {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
- function generateAddressLocally(
+function generateAddressLocally(
   seed,
   deviceNumber,
   seclevel,
@@ -110,18 +110,12 @@ function timestamp() {
   var subseed = Sign.subseed(Converter.trytesToTrits(seed), deviceNumber);
 
   var privateKey1 = Sign.key(subseed, 1 /*security level*/);
-  //   console.log('Private key length for security level 1: ' + Converter.tritsToTrytes(privateKey1).length);
   var privateKey2 = Sign.key(subseed, 2 /*security level*/);
-  //   console.log('Private key length for security level 2: ' + Converter.tritsToTrytes(privateKey2).length);
   var privateKey3 = Sign.key(subseed, 3 /*security level*/);
-  //   console.log('Private key length for security level 3: ' + Converter.tritsToTrytes(privateKey3).length);
 
   var privateKey1Digests = Sign.digests(privateKey1);
-  //   console.log(`Total key digests for security level 1: ` + Converter.tritsToTrytes(privateKey1Digests).length/81);
   var privateKey2Digests = Sign.digests(privateKey2);
-  //   console.log(`Total key digests for security level 2: ` + Converter.tritsToTrytes(privateKey2Digests).length/81);
   var privateKey3Digests = Sign.digests(privateKey3);
-  //   console.log(`Total key digests for security level 3: ` + Converter.tritsToTrytes(privateKey3Digests).length/81);
 
   var privateKey1Address = Sign.address(privateKey1Digests);
   var privateKey2Address = Sign.address(privateKey2Digests);
@@ -150,7 +144,7 @@ function timestamp() {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
- function sendPublicTransaction(seed, address, message) {
+function sendPublicTransaction(seed, address, message) {
   const Iota = require("@iota/core");
   const Converter = require("@iota/converter");
 
@@ -193,30 +187,22 @@ function timestamp() {
 //--------------------------------------New Function------------------------------------------//
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-
- function sendPrivateTransaction(seed, addresss, msg) {}
-
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-//                                                                                            //
-//--------------------------------------New Function------------------------------------------//
-//                                                                                            //
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
- function getSingleData(address, time) {
-  const Iota = require('@iota/core');
-  const Extract = require('@iota/extract-json');
+function getSingleData(address, time) {
+  const Iota = require("@iota/core");
+  const Extract = require("@iota/extract-json");
   const iota = Iota.composeAPI({
-    provider: getNode()
-    });
+    provider: getNode(),
+  });
 
-    const tailTransactionHash = getSingleHash(address, time);
-    console.log(tailTransactionHash);
-    //     iota.getBundle(tailTransactionHash)
-    // .then(bundle => {
-    //     console.log(JSON.parse(Extract.extractJson(bundle)));
-    // })
-    // .catch(err => {
-    //     console.error(err);
-    // });
+  const tailTransactionHash = getSingleHash(address, time);
+  console.log(tailTransactionHash);
+  //     iota.getBundle(tailTransactionHash)
+  // .then(bundle => {
+  //     console.log(JSON.parse(Extract.extractJson(bundle)));
+  // })
+  // .catch(err => {
+  //     console.error(err);
+  // });
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
@@ -225,7 +211,7 @@ function timestamp() {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
- function getSingleHash(address, time) {
+function getSingleHash(address, time) {
   hash = [];
   MongoClient.connect(uri, function (err, db) {
     if (err) throw err;
@@ -238,7 +224,7 @@ function timestamp() {
         // hash.push(result.txHash);
         db.close();
       });
-      // console.log(hash[0]);
+    // console.log(hash[0]);
   });
 }
 
@@ -248,7 +234,7 @@ function timestamp() {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
- function getAllHash(address, txDate) {
+function getAllHash(address, txDate) {
   var transactionArray = [];
   MongoClient.connect(uri, function (err, db) {
     if (err) throw err;
@@ -274,7 +260,7 @@ function timestamp() {
 //--------------------------------------New Function------------------------------------------//
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
- function addSeed(id, password, info, seed) {
+function addSeed(id, password, info, seed) {
   MongoClient.connect(uri, function (err, db) {
     if (err) throw err;
     var dbo = db.db("thetamw1");
@@ -284,7 +270,7 @@ function timestamp() {
       PASSWORD: password,
       Profile: info,
       SEED: seed,
-      streamRoot: null
+      streamRoot: null,
     };
     dbo.collection("SEEDS").insertOne(myobj, function (err, res) {
       if (err) throw err;
@@ -300,7 +286,7 @@ function timestamp() {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
- function addAddress(id, pass, seed, info, finalAddress) {
+function addAddress(id, pass, seed, info, finalAddress) {
   MongoClient.connect(uri, function (err, db) {
     if (err) throw err;
     var dbo = db.db("thetamw1");
@@ -326,7 +312,7 @@ function timestamp() {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
- function addTransaction(address, hash) {
+function addTransaction(address, hash) {
   const MongoClient = require("mongodb").MongoClient;
   const uri =
     "mongodb+srv://spidy_admin:CsIcBnIcP786@thetamiddleware-pi0h1.gcp.mongodb.net/test?retryWrites=true&w=majority";
@@ -349,12 +335,18 @@ function timestamp() {
   });
 }
 
+//********************************************************************************************//
+//                                                                                            //
+//--------------------------------------Code Under Development--------------------------------//
+//                                                                                            //
+//********************************************************************************************//
+
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 //                                                                                            //
 //--------------------------------------New Function------------------------------------------//
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
- function publicMAM(msg) {
+function publicMAM(msg) {
   const Mam = require("@iota/mam");
   const { asciiToTrytes } = require("@iota/converter");
 
@@ -362,15 +354,11 @@ function timestamp() {
   mamState = Mam.changeMode(mamState, "public");
 
   const publish = async (data) => {
-    // Convert the JSON to trytes and create a MAM message
     const trytes = asciiToTrytes(data);
     const message = Mam.create(mamState, trytes);
 
-    // Update the MAM state to the state of this latest message
-    // We need this so the next publish action knows it's state
     mamState = message.state;
 
-    // Attach the message
     await Mam.attach(message.payload, message.address, 3, 10);
     console.log("Sent message to the Tangle!");
     console.log("Address: " + message.root);
@@ -386,34 +374,30 @@ function timestamp() {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
- function privateMAM(seed, msg) {
+function privateMAM(seed, msg) {
   const Mam = require("@iota/mam");
   const { asciiToTrytes } = require("@iota/converter");
 
   let mamState = Mam.init(getNode());
 
-  // We are using MAM restricted mode with a shared secret in this example
   const mamType = "restricted";
   const mamSecret = seed;
 
   mamState = Mam.changeMode(mamState, mamType, mamSecret);
 
   const publish = async (data) => {
-    // Convert the JSON to trytes and create a MAM message
     const trytes = asciiToTrytes(data);
     const message = Mam.create(mamState, trytes);
 
-    // Update the MAM state to the state of this latest message
     mamState = message.state;
 
-    // Attach the message
     await Mam.attach(message.payload, message.address, 3, 10);
     console.log("Sent message to the Tangle!");
     console.log("Address: " + message.root);
   };
 
-  publish("Super Secret Message");
-  publish("Super Secret Message2");
+  publish("Message 1");
+  publish("Message 2");
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
@@ -422,7 +406,7 @@ function timestamp() {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
- function fetchPublicMAM(mamRoot) {
+function fetchPublicMAM(mamRoot) {
   const Mam = require("@iota/mam");
   const { asciiToTrytes, trytesToAscii } = require("@iota/converter");
 
@@ -436,14 +420,11 @@ function timestamp() {
     await Mam.init(getNode());
   }
 
-  // Check the MAM stream every 5 seconds for new data on the current root
-  // If a new root is returned we'll monitor that one from there on.
   async function checkMam() {
     if (root !== nextRoot) {
       root = nextRoot;
     }
 
-    // The showData callback will be called in order for each message found
     const data = await Mam.fetch(root, "public", null, showData);
     nextRoot = data.nextRoot;
 
@@ -462,7 +443,7 @@ function timestamp() {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
- function fetchPrivateMAM(seed, mamRoot) {
+function fetchPrivateMAM(seed, mamRoot) {
   const Mam = require("@iota/mam");
   const { trytesToAscii } = require("@iota/converter");
 
@@ -471,28 +452,76 @@ function timestamp() {
   const mamType = "restricted";
   const mamSecret = seed;
 
-  // Initialise MAM State
   let mamState = Mam.init(getNode());
 
-  // Callback used to pass data out of the fetch
   const logData = (data) => console.log(trytesToAscii(data));
 
   const execute = async () => {
-    // Callback used to pass data + returns next_root
     const resp = await Mam.fetch(root, mamType, mamSecret, logData);
   };
   execute();
 }
-getSeed("Username1", "Password1")
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//                                                                                            //
+//--------------------------------------New Function------------------------------------------//
+//                                                                                            //
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+function sendPrivateTransaction(seed, addresss, msg) {}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//                                                                                            //
+//--------------------------------------New Function------------------------------------------//
+//                                                                                            //
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+function deleteAddress(seed, username, password) {}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//                                                                                            //
+//--------------------------------------New Function------------------------------------------//
+//                                                                                            //
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+function getAllAddresses(seed) {}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//                                                                                            //
+//--------------------------------------New Function------------------------------------------//
+//                                                                                            //
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+function getLastTransaction(address) {}
+///////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+
 seed =
   "VLLPIQLDNUXPF9ECVNDQTDQITIQBSTNWJPXSHWEMHSDYHOEZT9CMMRKOIFRZPSJVDBZGJOYMXM9KPJAPY";
 address =
   "LZK9VJPEJNKHKNADMKYIQVBLWRW9YEXBDPGSYMONHFGVXDHQ9FRLPDPCCHNYAJRCQSJWKWHBFHKYNPCHA";
+
+sendPublicTransaction(seed, address, "This FYP Demonstration");
+//generateSeed("Username2", "Password2", "Info")
+//getSeed("Username1", "Password1")
+//generateAddressLocally(seed, 4, 2, "Username2", "Password2", "Info" )
+
 //getSingleData(address, "16:1:59/15-8-2020");
 //var msg = getSeed("Username1", "Password1");
 //console.log(msg);
 //publicMAM("Hello")
 // // console.log("Generated Seed is "+gSeed)
 
-module.exports = {fetchPublicMAM, fetchPrivateMAM, generateAddressLocally, generateSeed, getAllHash, getSeed,
-getSingleData, privateMAM, publicMAM, sendPrivateTransaction, sendPublicTransaction}
+module.exports = {
+  fetchPublicMAM,
+  fetchPrivateMAM,
+  generateAddressLocally,
+  generateSeed,
+  getAllHash,
+  getSeed,
+  getSingleData,
+  privateMAM,
+  publicMAM,
+  sendPrivateTransaction,
+  sendPublicTransaction,
+};
