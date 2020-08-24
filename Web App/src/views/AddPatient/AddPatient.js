@@ -159,7 +159,7 @@ export default function AddPatient() {
                                     Add Patient
                         </Button>
                                 <Dialog
-                                    fullWidth
+                                    
                                     maxWidth="md"
                                     open={open}
                                     onClose={handleClose}

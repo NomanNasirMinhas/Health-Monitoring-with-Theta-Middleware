@@ -165,8 +165,8 @@ const Header = props => {
               </Menu>
 
               <Dialog
-                fullWidth
-                maxWidth="md"
+              fullWidth
+                maxWidth="sm"
                 open={dialogOpen}
                 onClose={dialogClose}
               >

@@ -31,26 +31,26 @@ const useStyles = makeStyles((theme) => ({
     },
     tileTopText: {
         marginTop: "5px",
-        marginLeft: "5px",
-        fontSize: "30px",
+        marginLeft: "10px",
+        fontSize: "25px",
         fontWeight: "normal",
         lineHeight: "35px",
         color: "#959595"
     },
     tileBottomText: {
-        position: "relative",
-        top: '60px',
-        right: "-50%",
+        textAlign:"right",
+        marginTop:"60px",
+        marginRight: "10px",
         fontSize: "30px",
         fontWeight: "normal",
-        lineHeight: "35px",
+        lineHeight: "30px",
         color: "rgba(0, 0, 0, 0.57)"
     },
     rightBar: {
-        marginTop: "200px",
+        marginTop: "20px",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "space-between",
+        justifyContent: "space-evenly",
         alignItems: "flex-end"
     },
     cardBody: {
@@ -63,19 +63,18 @@ const useStyles = makeStyles((theme) => ({
         left: '67px',
         top: '554px',
         background: '#b7deb8',
-        border: '3px solid #FFFFFF',
+        border: '2px solid #6fbf73',
         boxShadow: ' 0px 0px 7px rgba(0, 0, 0, 0.28)',
         borderRadius: '12px',
     },
     minicard: {
-        margin: '26px',
+        position: "relative",
+        margin: '11%',
         width: '207px',
         height: '139px',
-        left: '89px',
-        top: '594px',
         background: '#CEFDD0',
-        border: '3px solid #FFFFFF',
-        borderRadius: '9px'
+
+        borderRadius: '6px'
     }
 }));
 
@@ -88,15 +87,15 @@ const ViewPatientProfile = () => {
         <ThemeProvider theme={theme}>
             <Header />
             <div className={classes.content}>
-                <Grid container lg={6}>
+                <Grid container lg={8}>
                     <Grid container spacing={3}>
-                        <Grid item xs={12}>
+                        <Grid item>
                             <Slide direction="down" in={true} timeout={300}>
                                 <Typography
                                     variant="h2"
                                     color="secondary">
                                     Patient's Profile
-                            </Typography>
+                                </Typography>
                             </Slide>
                         </Grid>
                     </Grid>
@@ -105,7 +104,7 @@ const ViewPatientProfile = () => {
                             <Grid item>
                                 <Typography variant="h4" className={classes.headerText} color="secondary">
                                     Patient's Name:
-                            </Typography>
+                                 </Typography>
                             </Grid>
                             <Grid item>
                                 <Typography variant="h4" >
@@ -202,7 +201,7 @@ const ViewPatientProfile = () => {
 
                 <Dialog
                     fullWidth
-                    maxWidth="md"
+                    maxWidth="sm"
                     open={openGenerateReport}
                     onClose={() => { setOpenGenerateReport(false) }}
                 >
@@ -229,7 +228,7 @@ const ViewPatientProfile = () => {
 
                 <Dialog
                     fullWidth
-                    maxWidth="md"
+                    maxWidth="sm"
                     open={openDischarge}
                     onClose={() => { setOpenDischarge(false) }}
                 >

@@ -48,7 +48,6 @@ const Login = (props) => {
             <ThemeProvider theme={theme}>
                 <AppBar position="fixed" className={classes.appBar}>
                     <Toolbar className={classes.toolBar}>
-
                         <Slide direction="down" in={true} timeout={300}>
                             <Typography variant="h3" className={classes.title}>
                                 LOGIN TO PORTAL
