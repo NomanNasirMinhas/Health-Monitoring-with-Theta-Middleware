@@ -484,7 +484,38 @@ function deleteAddress(seed, username, password) {}
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-function getAllAddresses(seed) {}
+function getAllAddresses(seed) {
+  var addressAray = [];
+  MongoClient.connect(uri, function (err, db) {
+    if (err) throw err;
+    var dbo = db.db("thetamw1");
+    dbo
+      .collection(seed)
+      .find()
+      .toArray(function (err, result) {
+        if (err) throw err;
+        result.forEach(function (doc) {
+          // if (err) throw err;
+          addressAray.push(doc.ADDRESS);
+        });
+        console.log(addressAray);
+        // console.log(result);
+        db.close();
+      });
+  });
+}
+
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//                                                                                            //
+//--------------------------------------New Function------------------------------------------//
+//                                                                                            //
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+function getAdressInfo(address)
+{
+
+}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 //                                                                                            //
@@ -501,11 +532,11 @@ seed =
 address =
   "LZK9VJPEJNKHKNADMKYIQVBLWRW9YEXBDPGSYMONHFGVXDHQ9FRLPDPCCHNYAJRCQSJWKWHBFHKYNPCHA";
 
-sendPublicTransaction(seed, address, "This FYP Demonstration");
+//sendPublicTransaction(seed, address, "This FYP Demonstration");
 //generateSeed("Username2", "Password2", "Info")
 //getSeed("Username1", "Password1")
 //generateAddressLocally(seed, 4, 2, "Username2", "Password2", "Info" )
-
+getAllAddresses(seed);
 //getSingleData(address, "16:1:59/15-8-2020");
 //var msg = getSeed("Username1", "Password1");
 //console.log(msg);
