@@ -476,7 +476,7 @@ function sendPrivateTransaction(seed, addresss, msg) {}
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-function deleteAddress(seed, username, password) {}
+function deleteAddress(seed, address) {}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 //                                                                                            //
@@ -512,9 +512,21 @@ function getAllAddresses(seed) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-function getAdressInfo(address)
+function getAddressInfo(seed, address)
 {
-
+  MongoClient.connect(uri, function (err, db) {
+    if (err) throw err;
+    var dbo = db.db("thetamw1");
+    dbo
+      .collection(seed)
+      .findOne({ ADDRESS: address }, function (err, result) {
+        if (err) throw err;
+        console.log(result.Profile);
+        // hash.push(result.txHash);
+        db.close();
+      });
+    // console.log(hash[0]);
+  });
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
@@ -536,7 +548,7 @@ address =
 //generateSeed("Username2", "Password2", "Info")
 //getSeed("Username1", "Password1")
 //generateAddressLocally(seed, 4, 2, "Username2", "Password2", "Info" )
-getAllAddresses(seed);
+getAddressInfo(seed, address);
 //getSingleData(address, "16:1:59/15-8-2020");
 //var msg = getSeed("Username1", "Password1");
 //console.log(msg);
