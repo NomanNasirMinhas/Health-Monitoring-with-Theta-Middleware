@@ -666,13 +666,18 @@ async function testing() {
 testing()
 
 module.exports = {
-  fetchPublicMAM,
-  fetchPrivateMAM,
-  generateAddressLocally,
+  checkAddress,
   generateSeed,
+  getAddress,
+  getAddressInfo,
+  getAllAddresses,
+  getAllHash,
+  getLastTransactionHash,
+  generateAddressLocally,
   getAllHash,
   getSeed,
-  privateMAM,
-  sendPrivateTransaction,
   sendPublicTransaction,
+  getPublicTransactionInfo,
+  getSingleHash,
+  updateAddressProfile
 };
