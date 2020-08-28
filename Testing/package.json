@@ -10,6 +10,6 @@
   "license": "ISC",
   "dependencies": {
     "module": "^1.2.5",
-    "thetamiddleware": "^2.0.3"
+    "thetamiddleware": "^2.1.0"
   }
 }
