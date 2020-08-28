@@ -1,7 +1,7 @@
 {
   "name": "thetamiddleware",
-  "version": "2.0.3",
-  "description": "Theta Middleware V-2.0.3",
+  "version": "2.1.0",
+  "description": "Theta Middleware V-2.1.0",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
