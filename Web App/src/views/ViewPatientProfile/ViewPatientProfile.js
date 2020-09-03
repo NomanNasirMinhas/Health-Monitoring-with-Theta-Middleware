@@ -58,10 +58,8 @@ const useStyles = makeStyles((theme) => ({
         gridTemplateRows: '1fr 1fr',
         gridTemplateColumns: '1fr 1fr',
         flexWrap: 'wrap',
-        width: '535px',
+        width: '530px',
         height: '400px',
-        left: '67px',
-        top: '554px',
         background: '#b7deb8',
         border: '2px solid #6fbf73',
         boxShadow: ' 0px 0px 7px rgba(0, 0, 0, 0.28)',
@@ -70,10 +68,7 @@ const useStyles = makeStyles((theme) => ({
     minicard: {
         position: "relative",
         margin: '11%',
-        width: '207px',
-        height: '139px',
         background: '#CEFDD0',
-
         borderRadius: '6px'
     }
 }));
