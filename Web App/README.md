@@ -2,7 +2,7 @@
 
 ## Usage Instructions
 Please follow instruction mentioned bleow to run this Web Application.
-1. Navigate into this `Web App` directory.
+1. Navigate into this `Web App` directory
 2. run `npm install`. This will install all dependencies for this application.
 3. run `npm start`. This will run application in development mode. 
 
