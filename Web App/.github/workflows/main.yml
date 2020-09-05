@@ -38,4 +38,4 @@ jobs:
       run: npm install -g surge
     
     - name: deploying on surge
-      run: surge ./'Web App'/build http://ThetaMiddleware.surge.sh/ --token ${{secrets.SURGE_TOKEN}}
+      run: surge ./build http://ThetaMiddleware.surge.sh/ --token ${{secrets.SURGE_TOKEN}}
