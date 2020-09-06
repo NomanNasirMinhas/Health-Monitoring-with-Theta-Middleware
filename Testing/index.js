@@ -7,7 +7,7 @@ async function testing() {
     testAddress =
       "LZK9VJPEJNKHKNADMKYIQVBLWRW9YEXBDPGSYMONHFGVXDHQ9FRLPDPCCHNYAJRCQSJWKWHBFHKYNPCHA";
   
-    var result = await getAllHash(testAddress, "28-8-2020");
+    var result = await getSeed("Username1", "Password1");
     console.log(result);
   }
 

@@ -3,9 +3,14 @@
 const { address } = require("@iota/signing");
 const { get } = require("http");
 
+function getMongoURI(){
+  const config = require('./config.json')
+  return config.MongoURI.toString()
+}
+
+
 const MongoClient = require("mongodb").MongoClient;
-const uri =
-  "mongodb+srv://spidy_admin:CsIcBnIcP786@thetamiddleware-pi0h1.gcp.mongodb.net/test?retryWrites=true&w=majority";
+const uri = getMongoURI()
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 //                                                                                            //
@@ -45,8 +50,10 @@ function getDate() {
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
 function getNode() {
-  return "https://nodes.iota.cafe:443";
+  const config = require('./config.json')
+  return config.IotaNodeURI.toString()
 }
+
 
 async function getSeed(id, pass) {
   //return "QCEVFK9GMHAGLLVWE99EKEWMEGQUPUQXMTTVKEWXV9RVVPANPKNIC9MYZVASV9INYODGBGBPRUJWSKNEF";
@@ -77,7 +84,7 @@ async function generateSeed(id, password, info) {
   for (var i = 0; i < 81; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
-  console.log("Your New Seed is: " + result);
+  //console.log("Your New Seed is: " + result);
 
   await addSeed(id, password, info, result);
   return result;
@@ -234,6 +241,7 @@ async function addSeed(id, password, info, seed) {
       streamRoot: null,
     };
     await dbo.collection("SEEDS").insertOne(myobj);
+    db.close()
     return true;
   } catch (err) {
     return err;
@@ -659,12 +667,11 @@ async function testing() {
   //var lastresult = await getLastTransactionHash(testAddress);
   //var result = await getPrivateTransactionInfo(testSeed, testAddress, lastresult);
   //console.log(result);
- var root = await publishMAMmsg("Hello");
+ var root = await generateSeed("2", "2", "1")
  //await root("Hello");
  console.log(root);
 }
 testing()
-
 module.exports = {
   checkAddress,
   generateSeed,
