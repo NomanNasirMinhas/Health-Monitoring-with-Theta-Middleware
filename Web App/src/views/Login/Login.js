@@ -3,6 +3,7 @@ import Typography from "@material-ui/core/Typography"
 import { makeStyles, Grid, Button, AppBar, Toolbar, TextField, Link, ThemeProvider, Slide } from '@material-ui/core'
 import theme from "../../assets/theme/theme"
 import { Link as link } from "react-router-dom"
+import { getSeed } from "thetamiddleware"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -37,9 +38,13 @@ const Login = (props) => {
     // }
     const handleClick = () => {
         setLoggedInStatus(true)
+        // var seed = await getSeed(userName, password)
+        // alert(seed)
         props.history.push('/dashboard')
         // alert(loggedInStatus)
     }
+    const [userName, SetUserName] = React.useState('');
+    const [password, SetPassword] = React.useState('');
     const [loggedInStatus, setLoggedInStatus] = React.useState(false);
 
     const classes = useStyles();
@@ -56,64 +61,68 @@ const Login = (props) => {
                     </Toolbar>
                 </AppBar>
                 <Slide direction="down" in={true} timeout={300}>
-                <main>
-                    <div className={classes.paper}>
-                        <form className={classes.form} noValidate>
-                            <TextField
-                                variant="outlined"
-                                margin="normal"
-                                required
-                                fullWidth
-                                id="username"
-                                label="Username"
-                                name="username"
-                                autoComplete="off"
-                            />
-                            <TextField
-                                variant="outlined"
-                                margin="normal"
-                                required
-                                fullWidth
-                                name="password"
-                                label="Password"
-                                type="password"
-                                id="password"
-                                autoComplete="current-password"
-                            />
+                    <main>
+                        <div className={classes.paper}>
+                            <form className={classes.form} noValidate>
+                                <TextField
+                                    variant="outlined"
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    id="username"
+                                    label="Username"
+                                    name="username"
+                                    value={userName}
+                                    onChange={e => SetUserName(e.target.value)}
+                                    autoComplete="off"
+                                />
+                                <TextField
+                                    variant="outlined"
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    name="password"
+                                    label="Password"
+                                    type="password"
+                                    id="password"
+                                    value={password}
+                                    onChange={e => SetPassword(e.target.value)}
+                                    autoComplete="current-password"
+                                />
 
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                color="primary"
-                                style={{ fontSize: 20 }}
-                                className={classes.submit}
-                                onClick={handleClick}
-                            >
-                                Log In
+                                <Button
+                                    type="submit"
+                                    fullWidth
+                                    variant="contained"
+                                    color="primary"
+                                    style={{ fontSize: 20 }}
+                                    className={classes.submit}
+                                    onClick={handleClick}
+                                >
+                                    Log In
                          </Button>
 
-                            <Grid container>
-                                <Grid item xs>
-                                    <Link
-                                        component={link}
-                                        to="/forgotpassword"
-                                        variant="body2">
-                                        Forgot password?
+                                <Grid container>
+                                    <Grid item xs>
+                                        <Link
+                                            component={link}
+                                            to="/forgotpassword"
+                                            variant="body2">
+                                            Forgot password?
                                 </Link>
+                                    </Grid>
+                                    <Grid item>
+                                        <Link
+                                            component={link}
+                                            to="/createaccount"
+                                            variant="body2">
+                                            {"Create New Account"}
+                                        </Link>
+                                    </Grid>
                                 </Grid>
-                                <Grid item>
-                                    <Link
-                                        component={link}
-                                        to="/createaccount"
-                                        variant="body2">
-                                        {"Create New Account"}
-                                    </Link>
-                                </Grid>
-                            </Grid>
-                        </form>
-                    </div>
-                </main>
+                            </form>
+                        </div>
+                    </main>
                 </Slide>
             </ThemeProvider>
         </div>
