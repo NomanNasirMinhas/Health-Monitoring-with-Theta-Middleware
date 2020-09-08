@@ -92,7 +92,7 @@ const Login = (props) => {
                                     value={password}
                                     onChange={e => {
                                         SetPassword(e.target.value)
-                                        gitconsole.log(e.target.value)
+                                        console.log(e.target.value)
                                     }}
                                     autoComplete="current-password"
                                 />
