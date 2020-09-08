@@ -40,7 +40,8 @@ const Login = (props) => {
         setLoggedInStatus(true)
         var seed = await getSeed(userName, password)
         alert(seed)
-        props.history.push('/dashboard')
+        console.log(seed)
+        //props.history.push('/dashboard')
         // alert(loggedInStatus)
     }
     const [userName, SetUserName] = React.useState('');
@@ -91,7 +92,7 @@ const Login = (props) => {
                                     value={password}
                                     onChange={e => {
                                         SetPassword(e.target.value)
-                                        console.log(e.target.value)
+                                        gitconsole.log(e.target.value)
                                     }}
                                     autoComplete="current-password"
                                 />
