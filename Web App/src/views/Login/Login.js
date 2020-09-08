@@ -36,11 +36,12 @@ const Login = (props) => {
     //         return this.isLoggedIn
     //     }
     // }
-    const handleClick = () => {
+    const handleClick = async () => {
         setLoggedInStatus(true)
-        // var seed = await getSeed(userName, password)
-        // alert(seed)
-        props.history.push('/dashboard')
+        var seed = await getSeed(userName, password)
+        alert(seed)
+        console.log(seed)
+        //props.history.push('/dashboard')
         // alert(loggedInStatus)
     }
     const [userName, SetUserName] = React.useState('');

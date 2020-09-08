@@ -671,7 +671,7 @@ async function testing() {
  //await root("Hello");
  console.log(root);
 }
-testing()
+//testing()
 module.exports = {
   checkAddress,
   generateSeed,
