@@ -36,10 +36,10 @@ const Login = (props) => {
     //         return this.isLoggedIn
     //     }
     // }
-    const handleClick = () => {
+    const handleClick = async () => {
         setLoggedInStatus(true)
-        // var seed = await getSeed(userName, password)
-        // alert(seed)
+        var seed = await getSeed(userName, password)
+        alert(seed)
         props.history.push('/dashboard')
         // alert(loggedInStatus)
     }
@@ -73,7 +73,10 @@ const Login = (props) => {
                                     label="Username"
                                     name="username"
                                     value={userName}
-                                    onChange={e => SetUserName(e.target.value)}
+                                    onChange={e => {
+                                        SetUserName(e.target.value)
+                                        console.log(e.target.value)
+                                    }}
                                     autoComplete="off"
                                 />
                                 <TextField
@@ -86,7 +89,10 @@ const Login = (props) => {
                                     type="password"
                                     id="password"
                                     value={password}
-                                    onChange={e => SetPassword(e.target.value)}
+                                    onChange={e => {
+                                        SetPassword(e.target.value)
+                                        console.log(e.target.value)
+                                    }}
                                     autoComplete="current-password"
                                 />
 
