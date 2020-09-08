@@ -11,6 +11,7 @@
     "bootstrap": "^4.5.0",
     "chartist": "^0.11.4",
     "formik": "^2.1.5",
+    "modules": "^0.4.0",
     "react": "^16.13.1",
     "react-bootstrap": "^1.2.2",
     "react-chartist": "^0.14.3",
@@ -18,7 +19,7 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.3",
-    "thetamiddleware": "^2.1.2",
+    "thetamiddleware": "^2.1.3",
     "yup": "^0.29.3"
   },
   "scripts": {
