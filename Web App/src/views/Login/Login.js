@@ -3,7 +3,8 @@ import Typography from "@material-ui/core/Typography"
 import { makeStyles, Grid, Button, AppBar, Toolbar, TextField, Link, ThemeProvider, Slide } from '@material-ui/core'
 import theme from "../../assets/theme/theme"
 import { Link as link } from "react-router-dom"
-import { getSeed } from "thetamiddleware"
+const { getSeed, getAllHash } = require('thetamiddleware')
+//import { getSeed } from "thetamiddleware"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -26,6 +27,8 @@ const useStyles = makeStyles((theme) => ({
         height: "70px"
     },
 }));
+
+
 const Login = (props) => {
     // const authentication = {
     //     isLoggedIn: false,
@@ -36,14 +39,16 @@ const Login = (props) => {
     //         return this.isLoggedIn
     //     }
     // }
+
     const handleClick = async () => {
-        setLoggedInStatus(true)
-        var seed = await getSeed(userName, password)
+        //setLoggedInStatus(true)
+        var seed = await getSeed("Username1", "Password1")
         alert(seed)
         console.log(seed)
         //props.history.push('/dashboard')
         // alert(loggedInStatus)
     }
+
     const [userName, SetUserName] = React.useState('');
     const [password, SetPassword] = React.useState('');
     const [loggedInStatus, setLoggedInStatus] = React.useState(false);

@@ -1,7 +1,7 @@
 {
   "name": "thetamiddleware",
-  "version": "2.1.5",
-  "description": "Theta Middleware V-2.1.5",
+  "version": "2.1.4",
+  "description": "Theta Middleware V-2.1.4",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -16,6 +16,7 @@
     "@iota/signing": "^1.0.0-beta.23",
     "crypto": "^1.0.1",
     "dotenv": "^8.2.0",
+    "firebase": "^7.19.1",
     "mongodb": "^3.5.5"
   }
 }

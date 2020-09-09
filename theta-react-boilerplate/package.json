@@ -1,25 +1,14 @@
 {
-  "name": "web-app",
+  "name": "theta-react-boilerplate",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "^4.11.0",
-    "@material-ui/icons": "^4.9.1",
     "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
-    "@testing-library/user-event": "^7.2.1",
-    "chartist": "^0.11.4",
-    "classnames": "^2.2.6",
-    "encoding": "^0.1.13",
-    "modules": "^0.4.0",
-    "mongodb-client-encryption": "^1.1.0",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
     "react": "^16.13.1",
-    "react-chartist": "^0.14.3",
     "react-dom": "^16.13.1",
-    "react-router": "^5.2.0",
-    "react-router-dom": "^5.2.0",
-    "react-scripts": "^3.4.3",
-    "thetamiddleware": "^2.1.4"
+    "react-scripts": "3.4.3"
   },
   "scripts": {
     "start": "react-scripts start",
