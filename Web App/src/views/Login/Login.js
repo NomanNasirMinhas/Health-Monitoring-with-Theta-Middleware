@@ -40,11 +40,25 @@ const Login = (props) => {
     //     }
     // }
 
-    const handleClick = async () => {
+    const handleClick = async (event) => {
         //setLoggedInStatus(true)
-        var seed = await getSeed("Username1", "Password1")
-        alert(seed)
-        console.log(seed)
+        event.preventDefault();
+        var seed = await fetch(`http://localhost:5000/getSeed/${userName}&${password}`);//getSeed("Username1", "Password1")
+        var parsedSeed = await seed.json();
+        //alert((parsedSeed).toString().length)
+        if((parsedSeed).toString().length ===81)
+        {
+            alert("Login Successfull")
+            alert(parsedSeed)
+
+        console.log(parsedSeed)
+
+        }
+        else{
+            alert("Login Failed")
+          //  alert(parsedSeed)
+        }
+
         //props.history.push('/dashboard')
         // alert(loggedInStatus)
     }
@@ -81,7 +95,7 @@ const Login = (props) => {
                                     value={userName}
                                     onChange={e => {
                                         SetUserName(e.target.value)
-                                        console.log(e.target.value)
+                                        console.log(userName)
                                     }}
                                     autoComplete="off"
                                 />
@@ -97,7 +111,7 @@ const Login = (props) => {
                                     value={password}
                                     onChange={e => {
                                         SetPassword(e.target.value)
-                                        console.log(e.target.value)
+                                        console.log(password)
                                     }}
                                     autoComplete="current-password"
                                 />
