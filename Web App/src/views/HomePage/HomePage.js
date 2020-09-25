@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { withStyles, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead, Link } from '@material-ui/core';
 import { TableRow, Paper, Typography, ThemeProvider, Slide } from '@material-ui/core';
 import Header from "../../components/Header/Header"
@@ -51,6 +51,24 @@ const useStyles = makeStyles((theme) => ({
 
 export default function HomePage() {
     const classes = useStyles();
+    useEffect(() => {
+        async function getPatients() { 
+            var seed = (localStorage.getItem('seed') || '')
+            // var seed = 'VLLPIQLDNUXPF9ECVNDQTDQITIQBSTNWJPXSHWEMHSDYHOEZT9CMMRKOIFRZPSJVDBZGJOYMXM9KPJAPY'
+            var addresses = await fetch(`http://localhost:5000/getAllAddresses/${seed}`);
+            var response = await addresses.json()
+            console.log(response[0])
+        }
+        getPatients()
+    }, [])
+    
+
+    // const patients = async () => {
+    //     var seed = (localStorage.getItem('seed') || '')
+    //     var addresses = await fetch(`http://localhost:5000/getAddress/${seed}`);
+    //     alert(addresses[0])
+    // }
+
     return (
         <ThemeProvider theme={theme}>
             <Header />

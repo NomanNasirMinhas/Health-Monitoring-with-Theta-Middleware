@@ -3,8 +3,6 @@ import Typography from "@material-ui/core/Typography"
 import { makeStyles, Grid, Button, AppBar, Toolbar, TextField, Link, ThemeProvider, Slide } from '@material-ui/core'
 import theme from "../../assets/theme/theme"
 import { Link as link } from "react-router-dom"
-const { getSeed, getAllHash } = require('thetamiddleware')
-//import { getSeed } from "thetamiddleware"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -43,29 +41,23 @@ const Login = (props) => {
     const handleClick = async (event) => {
         //setLoggedInStatus(true)
         event.preventDefault();
-        var seed = await fetch(`http://localhost:5000/getSeed/${userName}&${password}`);//getSeed("Username1", "Password1")
+        var seed = await fetch(`http://localhost:5000/getSeed/${userName}&${password}`);
+        //getSeed("Username1", "Password1")
         var parsedSeed = await seed.json();
         //alert((parsedSeed).toString().length)
-        if((parsedSeed).toString().length ===81)
-        {
-            alert("Login Successfull")
-            alert(parsedSeed)
-
-        console.log(parsedSeed)
-
+        if ((parsedSeed).toString().length === 81) {
+            localStorage.setItem('seed', parsedSeed);
+            props.history.push('/dashboard')
         }
-        else{
+        else {
             alert("Login Failed")
-          //  alert(parsedSeed)
+            //  alert(parsedSeed)
         }
-
-        //props.history.push('/dashboard')
         // alert(loggedInStatus)
     }
 
     const [userName, SetUserName] = React.useState('');
     const [password, SetPassword] = React.useState('');
-    const [loggedInStatus, setLoggedInStatus] = React.useState(false);
 
     const classes = useStyles();
     return (
@@ -95,7 +87,6 @@ const Login = (props) => {
                                     value={userName}
                                     onChange={e => {
                                         SetUserName(e.target.value)
-                                        console.log(userName)
                                     }}
                                     autoComplete="off"
                                 />
@@ -111,7 +102,6 @@ const Login = (props) => {
                                     value={password}
                                     onChange={e => {
                                         SetPassword(e.target.value)
-                                        console.log(password)
                                     }}
                                     autoComplete="current-password"
                                 />
@@ -154,5 +144,4 @@ const Login = (props) => {
         </div>
     )
 }
-
 export default Login

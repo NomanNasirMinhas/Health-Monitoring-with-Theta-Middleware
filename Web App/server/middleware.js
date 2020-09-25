@@ -536,6 +536,7 @@ async function getAllAddresses(dbo, seed) {
     for (i = 0; i < info.length; i++) {
       addressAray.push(info[i]);
     }
+    console.log(addressAray)
     return addressAray;
   } catch (err) {
     return err;
