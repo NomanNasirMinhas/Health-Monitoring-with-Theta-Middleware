@@ -3,11 +3,13 @@ import { Button, TextField, Dialog, DialogContent, DialogContentText, DialogTitl
 import { Grid, Typography, makeStyles, Container, Select, MenuItem, InputLabel, FormControl, ThemeProvider } from '@material-ui/core';
 import Header from '../../components/Header/Header';
 import theme from "../../assets/theme/theme"
+import QRCode from "qrcode.react"
 
 const useStyles = makeStyles((theme) => ({
     content: {
         padding: theme.spacing(3),
     },
+    qr: {justifyContent: "center", display: "flex"},
     paper: {
         marginTop: theme.spacing(8),
         display: 'flex',
@@ -41,9 +43,42 @@ const useStyles = makeStyles((theme) => ({
 export default function AddPatient() {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
+    const [name, SetName] = React.useState('');
     const [age, setAge] = React.useState('');
+    const [gender, SetGender] = React.useState('');
+    const [date, SetDate] = React.useState('');
+    const [address, SetAddress] = React.useState('');
+    const [contact, SetContact] = React.useState('');
+    const [DeviceAddress, SetDeviceAddress] = React.useState('');
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
+        var profile = {
+            name: name,
+            age: age,
+            gender: gender,
+            address: address,
+            contact: contact,
+            date: date
+        }
+
+        var seed = (localStorage.getItem('seed') || '')
+
+        await fetch('http://localhost:5000/addAddress/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                seed: seed,
+                deviceNum: 10,
+                secLevel: 3,
+                id: "IDalph19",
+                password: "PASSWORD",
+                info: profile
+            }
+            )
+        }).then((result) => result.json().then((resp) => SetDeviceAddress(resp)))
+
         setOpen(true)
         console.log("Done")
     }
@@ -65,26 +100,17 @@ export default function AddPatient() {
                         <div className={classes.paper}>
                             <form className={classes.form} noValidate>
                                 <Grid container spacing={3}>
-                                    <Grid item xs={12} sm={6}>
+                                    <Grid item xs={12}>
                                         <TextField
-                                            autoComplete="fname"
-                                            name="firstName"
+                                            autoComplete="name"
+                                            name="Name"
                                             variant="outlined"
                                             required
                                             fullWidth
-                                            id="firstName"
-                                            label="First Name"
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                        <TextField
-                                            variant="outlined"
-                                            required
-                                            fullWidth
-                                            id="lastName"
-                                            label="Last Name"
-                                            name="lastName"
-                                            autoComplete="lname"
+                                            id="name"
+                                            label="Name"
+                                            onChange={(event) => { SetName(event.target.value) }}
+                                            value={name}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
@@ -96,6 +122,8 @@ export default function AddPatient() {
                                             id="age"
                                             label="Age in year(s)"
                                             name="age"
+                                            onChange={(event) => { setAge(event.target.value) }}
+                                            value={age}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
@@ -104,9 +132,9 @@ export default function AddPatient() {
                                             <Select
                                                 labelId="demo-simple-select-outlined-label"
                                                 id="demo-simple-select-outlined"
-                                                onChange={(event) => { setAge(event.target.value) }}
-                                                value={age}
                                                 label="Gender"
+                                                onChange={(event) => { SetGender(event.target.value) }}
+                                                value={gender}
                                             >
                                                 <MenuItem value={'male'}>Male</MenuItem>
                                                 <MenuItem value={'female'}>Female</MenuItem>
@@ -121,6 +149,8 @@ export default function AddPatient() {
                                             id="address"
                                             label="Address"
                                             name="address"
+                                            onChange={(event) => { SetAddress(event.target.value) }}
+                                            value={address}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
@@ -132,6 +162,8 @@ export default function AddPatient() {
                                             id="contact"
                                             label="Contact Number"
                                             name="contact"
+                                            onChange={(event) => { SetContact(event.target.value) }}
+                                            value={contact}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
@@ -142,6 +174,8 @@ export default function AddPatient() {
                                             defaultValue="2017-05-24"
                                             fullWidth
                                             className={classes.textField}
+                                            onChange={(event) => { SetDate(event.target.value) }}
+                                            value={date}
                                             InputLabelProps={{
                                                 shrink: true,
                                             }}
@@ -159,7 +193,7 @@ export default function AddPatient() {
                                     Add Patient
                         </Button>
                                 <Dialog
-                                    
+
                                     maxWidth="md"
                                     open={open}
                                     onClose={handleClose}
@@ -167,11 +201,11 @@ export default function AddPatient() {
                                     <DialogTitle>Patient Added Successfully</DialogTitle>
                                     <DialogContent>
                                         <DialogContentText>
-                                            Kindly keep the Address ID safe. Your Patient's Address is: 29021093123 and the QR is:
-                                </DialogContentText>
-                                        <img
-                                            src="https://s3.eu-central-1.amazonaws.com/centaur-wp/econsultancy/prod/content/uploads/archive/images/resized/0002/4236/qr_code-blog-third.png"
-                                            alt="QR Code" />
+                                            Kindly keep the Address ID safe. Your Patient's Address is: {DeviceAddress} and the QR is:
+                                            <div className={classes.qr}>
+                                                <QRCode value={DeviceAddress} />
+                                            </div>
+                                        </DialogContentText>
                                         <DialogActions>
                                             <Button onClick={handleClose} color="primary">
                                                 Save QR

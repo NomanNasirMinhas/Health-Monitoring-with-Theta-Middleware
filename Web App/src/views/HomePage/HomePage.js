@@ -57,7 +57,7 @@ export default function HomePage() {
             // var seed = 'VLLPIQLDNUXPF9ECVNDQTDQITIQBSTNWJPXSHWEMHSDYHOEZT9CMMRKOIFRZPSJVDBZGJOYMXM9KPJAPY'
             var addresses = await fetch(`http://localhost:5000/getAllAddresses/${seed}`);
             var response = await addresses.json()
-            console.log(response[0])
+            console.log(response)
         }
         getPatients()
     }, [])

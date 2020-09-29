@@ -67,7 +67,6 @@ export default function SignUp() {
             )
         });
         var x = await seed.json()
-        console.log(x)
         SetParsedSeed(x)
 
         console.log(parsedSeed)

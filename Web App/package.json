@@ -13,6 +13,7 @@
     "encoding": "^0.1.13",
     "modules": "^0.4.0",
     "mongodb-client-encryption": "^1.1.0",
+    "qrcode.react": "^1.0.0",
     "react": "^16.13.1",
     "react-chartist": "^0.14.3",
     "react-dom": "^16.13.1",
