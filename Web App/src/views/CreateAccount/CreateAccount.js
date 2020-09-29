@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button, TextField, Link, Dialog, DialogContent, DialogContentText, DialogTitle, ThemeProvider } from '@material-ui/core';
-import { Grid, Typography, makeStyles, Container, DialogActions, Slide } from '@material-ui/core';
+import { Button, TextField, Link, Dialog, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core';
+import { Grid, Typography, makeStyles, Container, DialogActions, Slide, ThemeProvider } from '@material-ui/core';
 import { AppBar, Toolbar } from "@material-ui/core"
 import theme from "../../assets/theme/theme"
 import { Link as link } from "react-router-dom"
@@ -34,8 +34,43 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp() {
     const classes = useStyles();
+    const [parsedSeed, SetParsedSeed] = React.useState('')
     const [open, setOpen] = React.useState(false);
-    const handleSubmit = () => {
+    const [userName, SetUserName] = React.useState('');
+    const [password, SetPassword] = React.useState('');
+    const [name, SetName] = React.useState('');
+    const [specialization, SetSpecialization] = React.useState('');
+    const [address, SetAddress] = React.useState('');
+    const [contact, SetContact] = React.useState('');
+    const [email, SetEmail] = React.useState('');
+
+    const handleSubmit = async () => {
+
+        var profile = {
+            name: name,
+            specialization: specialization,
+            address: address,
+            contact: contact,
+            email: email
+        }
+
+        var seed = await fetch('http://localhost:5000/addSeed/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: userName,
+                password: password,
+                info: profile
+            }
+            )
+        });
+        var x = await seed.json()
+        console.log(x)
+        SetParsedSeed(x)
+
+        console.log(parsedSeed)
         setOpen(true)
     }
 
@@ -43,6 +78,7 @@ export default function SignUp() {
         setOpen(false)
     }
 
+    var displaySeed = parsedSeed
     return (
         <ThemeProvider theme={theme}>
             <AppBar position="fixed" className={classes.appBar}>
@@ -60,26 +96,18 @@ export default function SignUp() {
                     <div className={classes.paper}>
                         <form className={classes.form} noValidate>
                             <Grid container spacing={3}>
-                                <Grid item xs={12} sm={6}>
+                                <Grid item xs={12}>
                                     <TextField
-                                        autoComplete="fname"
-                                        name="firstName"
+                                        name="name"
                                         variant="outlined"
                                         required
                                         fullWidth
-                                        id="firstName"
-                                        label="First Name"
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        variant="outlined"
-                                        required
-                                        fullWidth
-                                        id="lastName"
-                                        label="Last Name"
-                                        name="lastName"
-                                        autoComplete="lname"
+                                        id="name"
+                                        label="Full Name"
+                                        value={name}
+                                        onChange={e => {
+                                            SetName(e.target.value)
+                                        }}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -90,6 +118,10 @@ export default function SignUp() {
                                         id="specialization"
                                         label="Specialization"
                                         name="specialization"
+                                        value={specialization}
+                                        onChange={e => {
+                                            SetSpecialization(e.target.value)
+                                        }}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
@@ -101,6 +133,10 @@ export default function SignUp() {
                                         label="Email Address"
                                         name="email"
                                         autoComplete="email"
+                                        value={email}
+                                        onChange={e => {
+                                            SetEmail(e.target.value)
+                                        }}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
@@ -112,18 +148,10 @@ export default function SignUp() {
                                         id="number"
                                         label="Contact Number"
                                         name="number"
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        variant="outlined"
-                                        required
-                                        fullWidth
-                                        name="password"
-                                        label="Password"
-                                        type="password"
-                                        id="password"
-                                        autoComplete="current-password"
+                                        value={contact}
+                                        onChange={e => {
+                                            SetContact(e.target.value)
+                                        }}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
@@ -134,6 +162,42 @@ export default function SignUp() {
                                         id="address"
                                         label="Address"
                                         name="address"
+                                        value={address}
+                                        onChange={e => {
+                                            SetAddress(e.target.value)
+                                        }}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    <TextField
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        name="username"
+                                        label="Username"
+                                        id="username"
+                                        value={userName}
+                                        onChange={e => {
+                                            SetUserName(e.target.value)
+                                        }}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    <TextField
+                                        variant="outlined"
+                                        required
+                                        fullWidth
+                                        name="password"
+                                        label="Password"
+                                        type="password"
+                                        id="password"
+                                        autoComplete="current-password"
+                                        value={password}
+                                        onChange={e => {
+                                            SetPassword(e.target.value)
+                                        }}
                                     />
                                 </Grid>
                             </Grid>
@@ -154,7 +218,7 @@ export default function SignUp() {
                                 <DialogTitle>Account Created Successfully</DialogTitle>
                                 <DialogContent>
                                     <DialogContentText>
-                                        Kindly keep the Seed ID safe. Your Seed ID is: 1213213312114214123. Your QR is:
+                                        Kindly keep the Seed ID safe. Your Seed ID is: {displaySeed}. Your QR is:
                                 </DialogContentText>
                                     <img
                                         src="https://s3.eu-central-1.amazonaws.com/centaur-wp/econsultancy/prod/content/uploads/archive/images/resized/0002/4236/qr_code-blog-third.png"
