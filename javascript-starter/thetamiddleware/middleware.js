@@ -48,16 +48,14 @@ function getNode() {
 }
 
 async function getSeed(id, pass) {
-  //return "QCEVFK9GMHAGLLVWE99EKEWMEGQUPUQXMTTVKEWXV9RVVPANPKNIC9MYZVASV9INYODGBGBPRUJWSKNEF";
-  //var seed=null;
   try {
-    var db = await MongoClient.connect(uri, {useUnifiedTopology:true});
+    var db = await MongoClient.connect(uri);
     var dbo = await db.db("thetamw1");
     var result = await dbo
       .collection("SEEDS")
       .findOne({ $and: [{ ID: id }, { PASSWORD: pass }] });
-    db.close();
-    return result.SEED;
+
+    return result;
   } catch (err) {
     return err;
   }
@@ -70,15 +68,16 @@ async function getSeed(id, pass) {
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
 async function generateSeed(id, password, info) {
+
   var result = "";
   var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ9";
   var charactersLength = characters.length;
   for (var i = 0; i < 81; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
-  console.log("Your New Seed is: " + result);
 
-  await addSeed(id, password, info, result);
+  await addSeed( id, password, info, result);
+
   return result;
 }
 
@@ -89,6 +88,7 @@ async function generateSeed(id, password, info) {
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
 async function generateAddressLocally(
+  
   seed,
   deviceNumber,
   seclevel,
@@ -127,7 +127,7 @@ async function generateAddressLocally(
     finalAddress = seclevel3Address;
   }
 
-  await addAddress(id, password, seed, info, finalAddress);
+  await addAddress( id, password, seed, info, finalAddress);
   return finalAddress;
 }
 
@@ -163,7 +163,7 @@ async function sendPublicTransaction(seed, address, message) {
       return iota.sendTrytes(trytes, depth, minimumWeightMagnitude);
     })
     .then((bundle) => {
-      addTransaction(address, bundle[0].hash);
+      addTransaction( address, bundle[0].hash);
     })
     .catch((err) => {
       console.error(err);
@@ -176,37 +176,13 @@ async function sendPublicTransaction(seed, address, message) {
 //--------------------------------------New Function------------------------------------------//
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-function getSingleData(address, time) {
-  const Iota = require("@iota/core");
-  const Extract = require("@iota/extract-json");
-  const iota = Iota.composeAPI({
-    provider: getNode(),
-  });
-
-  const tailTransactionHash = getSingleHash(address, time);
-  console.log(tailTransactionHash);
-  //     iota.getBundle(tailTransactionHash)
-  // .then(bundle => {
-  //     console.log(JSON.parse(Extract.extractJson(bundle)));
-  // })
-  // .catch(err => {
-  //     console.error(err);
-  // });
-}
-
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-//                                                                                            //
-//--------------------------------------New Function------------------------------------------//
-//                                                                                            //
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
 async function getSingleHash(address, time) {
-  //hash = [];
+
   try {
     var db = await MongoClient.connect(uri);
     var dbo = await db.db("thetamw1");
     var result = await dbo.collection(address).findOne({ timestamp: time });
-    db.close();
     return result.txHash;
   } catch (err) {
     return err;
@@ -228,7 +204,6 @@ async function getAllHash(address, txDate) {
       .collection(address)
       .find({ date: txDate }, { projection: { _id: 1 } })
       .toArray();
-    db.close();
     var i;
     for (i = 0; i < info.length; i++) {
       transactionArray.push(info[i]._id);
@@ -243,7 +218,7 @@ async function getAllHash(address, txDate) {
 //--------------------------------------New Function------------------------------------------//
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-async function addSeed(id, password, info, seed) {
+async function addSeed( id, password, info, seed) {
   try {
     var db = await MongoClient.connect(uri);
     var dbo = await db.db("thetamw1");
@@ -268,7 +243,7 @@ async function addSeed(id, password, info, seed) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function addAddress(id, pass, seed, info, finalAddress) {
+async function addAddress( id, pass, seed, info, finalAddress) {
   try {
     var db = await MongoClient.connect(uri);
     var dbo = await db.db("thetamw1");
@@ -294,7 +269,7 @@ async function addAddress(id, pass, seed, info, finalAddress) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function addTransaction(address, hash) {
+async function addTransaction( address, hash) {
   try {
     var db = await MongoClient.connect(uri);
     var dbo = await db.db("thetamw1");
@@ -304,9 +279,14 @@ async function addTransaction(address, hash) {
       timestamp: timestamp(),
       ADDRESS: address,
       txHash: hash,
+      isLatest: true
     };
+
+    var myquery = { isLatest: true };
+    var newvalues = { $set: { isLatest: false } };
+    await dbo.collection(address).updateOne(myquery, newvalues);
+
     await dbo.collection(address).insertOne(myobj);
-    db.close();
     return true;
   } catch (err) {
     return err;
@@ -324,26 +304,37 @@ async function addTransaction(address, hash) {
 //--------------------------------------New Function------------------------------------------//
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-function publicMAM(msg) {
-  const Mam = require("@iota/mam");
-  const { asciiToTrytes } = require("@iota/converter");
+async function publicMAMpublish() {
+  const Mam = require('@iota/mam');
+const { asciiToTrytes, trytesToAscii } = require('@iota/converter');
+const mode = 'public';
+const provider = getNode();
 
-  let mamState = Mam.init(getNode());
-  mamState = Mam.changeMode(mamState, "public");
+const mamExplorerLink = `https://mam-explorer.firebaseapp.com/?provider=${encodeURIComponent(provider)}&mode=${mode}&root=`;
+let mamState = Mam.init(provider);
+const publish = async packet => {
+  // Create MAM message as a string of trytes
+  const trytes = asciiToTrytes(JSON.stringify(packet));
+  const message = Mam.create(mamState, trytes);
 
-  const publish = async (data) => {
-    const trytes = asciiToTrytes(data);
-    const message = Mam.create(mamState, trytes);
+  // Save your new mamState
+  mamState = message.state;
+  // Attach the message to the Tangle
+  await Mam.attach(message.payload, message.address, 3, 9)
 
-    mamState = message.state;
+  console.log('Published', packet, '\n');
+  return message.root
+}
+return publish;
+}
 
-    await Mam.attach(message.payload, message.address, 3, 10);
-    console.log("Sent message to the Tangle!");
-    console.log("Address: " + message.root);
-  };
-
-  publish("Super public message");
-  publish("Super public message2");
+async function publishMAMmsg(msg){
+  var publish = await publicMAMpublish();
+  var root = await publish({
+    message: msg,
+    timestamp: (new Date()).toLocaleString()
+  });
+  return root;
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
@@ -445,8 +436,36 @@ function fetchPrivateMAM(seed, mamRoot) {
 //--------------------------------------New Function------------------------------------------//
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+function encrypt(seed, address, text) {
+  const crypto = require('crypto');
+  const algorithm = 'aes-256-cbc';
+  const key = seed.slice(0,32);
+  const iv = address.slice(0,16);
+  let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(key), iv);
+  let encrypted = cipher.update(text);
+  encrypted = Buffer.concat([encrypted, cipher.final()]);
+  return { iv: iv.toString('hex'), encryptedData: encrypted.toString('hex') };
+ }
+ 
+ function decrypt(seed, address, text) {
+  const key = seed.slice(0,32);
+ // const iv = address;
+  const crypto = require('crypto');
+  const algorithm = 'aes-256-cbc';
+  let iv = Buffer.from(text.iv, 'hex');
+  let encryptedText = Buffer.from(text.encryptedData, 'hex');
+  let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key), iv);
+  let decrypted = decipher.update(encryptedText);
+  decrypted = Buffer.concat([decrypted, decipher.final()]);
+  return decrypted.toString();
+ }
 
-function sendPrivateTransaction(seed, addresss, msg) {}
+async function sendPrivateTransaction(seed, addresss, msg)
+{
+  const encText = encrypt(seed, addresss, msg);
+  await sendPublicTransaction(seed, addresss, encText);
+
+}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 //                                                                                            //
@@ -454,14 +473,15 @@ function sendPrivateTransaction(seed, addresss, msg) {}
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function deleteAddress(seed, address) {
+async function updateAddressProfile( seed, address, info) {
   try {
+
     var db = await MongoClient.connect(uri);
     var dbo = await db.db("thetamw1");
     var myquery = { ADDRESS: address };
-    var newvalues = { $set: { Profile: null } };
+    var newvalues = { $set: { Profile: info } };
     await dbo.collection(seed).updateOne(myquery, newvalues);
-    db.close();
+
     return true;
   } catch (err) {
     return err;
@@ -474,19 +494,69 @@ async function deleteAddress(seed, address) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function getAllAddresses(seed) {
+async function getAddress( seed, id, pass) {
+  try {
+
+    var db = await MongoClient.connect(uri);
+    var dbo = await db.db("thetamw1");
+    var result = await dbo
+      .collection(seed)
+      .findOne({ $and: [{ ID: id }, { PASSWORD: pass }] });
+
+   console.log(result.ADDRESS);
+    return result;
+  } catch (err) {
+    return err;
+  }
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//                                                                                            //
+//--------------------------------------New Function------------------------------------------//
+//                                                                                            //
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+async function checkAddress( seedID, address) {
+  try {
+    var db = await MongoClient.connect(uri);
+    var dbo = await db.db("thetamw1");
+
+    var seedInfo = await dbo
+      .collection("SEEDS")
+      .findOne({ ID : seedID });
+      console.log(seedInfo);
+
+    var result = await dbo
+      .collection(seedInfo.SEED)
+      .findOne({ ADDRESS:address });
+      console.log(result);
+
+    return result;
+  } catch (err) {
+    return err;
+  }
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//                                                                                            //
+//--------------------------------------New Function------------------------------------------//
+//                                                                                            //
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+async function getAllAddresses( seed) {
   var addressAray = [];
   try {
     var db = await MongoClient.connect(uri);
     var dbo = await db.db("thetamw1");
+
     var info = await dbo
       .collection(seed)
-      .find({}, { projection: { _id: 0, Profile: 1 } })
+      .find({}, { projection: { _id: 0 } })
       .toArray();
-    db.close();
+
     var i;
     for (i = 0; i < info.length; i++) {
-      addressAray.push(info[i].Profile);
+      addressAray.push(info[i]);
     }
     return addressAray;
   } catch (err) {
@@ -500,13 +570,14 @@ async function getAllAddresses(seed) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function getAddressInfo(seed, address) {
-  //var result = [];
+async function getAddressInfo( seed, address) {
+
   try {
     var db = await MongoClient.connect(uri);
     var dbo = await db.db("thetamw1");
+
     var info = await dbo.collection(seed).findOne({ ADDRESS: address });
-    db.close();
+
     return info.Profile;
   } catch (err) {
     return err;
@@ -519,40 +590,93 @@ async function getAddressInfo(seed, address) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-function getLastTransaction(address) {}
+async function getLastTransactionHash( address)
+{
+  try {
+    var db = await MongoClient.connect(uri);
+    var dbo = await db.db("thetamw1");
+
+    var result = await dbo
+      .collection(address)
+      .findOne({ isLatest:true });
+    db.close();
+    return result.txHash;
+  } catch (err) {
+    return err;
+  }
+
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//                                                                                            //
+//--------------------------------------New Function------------------------------------------//
+//                                                                                            //
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+async function getPublicTransactionInfo(hash)
+{
+  try {
+    const Iota = require('@iota/core');
+    const Extract = require('@iota/extract-json');
+    const iota = Iota.composeAPI({
+      provider: getNode()
+      });
+
+      const tailTransactionHash = hash;
+      const Converter = require('@iota/converter');
+
+      var txData = await iota.getBundle(tailTransactionHash);
+      //var txMsg = JSON.parse(Extract.extractJson(txData));
+      var txMsg = Converter.trytesToAscii(txData[0].signatureMessageFragment.substring(0,2186));
+      return txMsg;
+  } catch (err) {
+    return err;
+  }
+
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//                                                                                            //
+//--------------------------------------New Function------------------------------------------//
+//                                                                                            //
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+async function getPrivateTransactionInfo(seed, address, hash)
+{
+  var ecText = getPublicTransactionInfo(hash);
+  var result = decrypt(seed, address, ecText);
+
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////
 
-//sendPublicTransaction(seed, address, "This FYP Demonstration");
-//generateSeed("Username3", "Password3", "Info")
 async function testing() {
   testSeed =
     "VLLPIQLDNUXPF9ECVNDQTDQITIQBSTNWJPXSHWEMHSDYHOEZT9CMMRKOIFRZPSJVDBZGJOYMXM9KPJAPY";
   testAddress =
     "LZK9VJPEJNKHKNADMKYIQVBLWRW9YEXBDPGSYMONHFGVXDHQ9FRLPDPCCHNYAJRCQSJWKWHBFHKYNPCHA";
-
-  var result = await getSingleHash(testAddress, "17:59:19/28-8-2020");
-  console.log(result);
+//await sendPrivateTransaction(testSeed, testAddress, "Enrypted Text")
+  //var lastresult = await getLastTransactionHash(testAddress);
+  //var result = await getPrivateTransactionInfo(testSeed, testAddress, lastresult);
+  //console.log(result);
+ var root = await generateSeed("2", "2", "1")
+ console.log(root);
 }
-//testing()
-//generateAddressLocally(seed, 4, 2, "Username2", "Password2", "Info" )
-//getAddressInfo(seed, address);
-//getSingleData(address, "16:1:59/15-8-2020");
-//var msg = getSeed("Username1", "Password1");
-//console.log(msg);
-//publicMAM("Hello")
-// // console.log("Generated Seed is "+gSeed)
 
 module.exports = {
-  fetchPublicMAM,
-  fetchPrivateMAM,
-  generateAddressLocally,
+  checkAddress,
   generateSeed,
+  getAddress,
+  getAddressInfo,
+  getAllAddresses,
+  getAllHash,
+  getLastTransactionHash,
+  generateAddressLocally,
   getAllHash,
   getSeed,
-  getSingleData,
-  privateMAM,
-  publicMAM,
-  sendPrivateTransaction,
   sendPublicTransaction,
+  getPublicTransactionInfo,
+  getSingleHash,
+  updateAddressProfile
 };
