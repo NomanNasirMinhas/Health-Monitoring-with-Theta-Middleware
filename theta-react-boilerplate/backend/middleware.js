@@ -432,7 +432,7 @@ function encrypt(seed, address, text) {
   encrypted = Buffer.concat([encrypted, cipher.final()]);
   return { iv: iv.toString('hex'), encryptedData: encrypted.toString('hex') };
  }
- 
+
  function decrypt(seed, address, text) {
   const key = seed.slice(0,32);
  // const iv = address;
@@ -587,6 +587,32 @@ async function getLastTransactionHash(dbo, address)
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
+async function getSeedInfo(dbo, seed)
+{
+
+  try {
+
+    var result = await dbo
+      .collection("SEEDS")
+      .findOne({ SEED:seed });
+      console.log(result)
+    var response = {
+      username: result.ID,
+      password: result.PASSWORD
+    }
+    return (response);
+  } catch (err) {
+    return err;
+  }
+
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//                                                                                            //
+//--------------------------------------New Function------------------------------------------//
+//                                                                                            //
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
 async function getPublicTransactionInfo(hash)
 {
   try {
@@ -652,5 +678,6 @@ module.exports = {
   sendPublicTransaction,
   getPublicTransactionInfo,
   getSingleHash,
-  updateAddressProfile
+  updateAddressProfile,
+  getSeedInfo
 };
