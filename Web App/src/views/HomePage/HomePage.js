@@ -18,7 +18,7 @@ const StyledTableCell = withStyles((theme) => ({
 const StyledTableRow = withStyles((theme) => ({
     root: {
         '&:nth-of-type(odd)': {
-            backgroundColor: "#e3f0d3",
+            backgroundColor: "#06c2c892",
         },
     },
 }))(TableRow);
@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
 export default function HomePage() {
     const classes = useStyles();
     useEffect(() => {
-        async function getPatients() { 
+        async function getPatients() {
             var seed = (localStorage.getItem('seed') || '')
             // var seed = 'VLLPIQLDNUXPF9ECVNDQTDQITIQBSTNWJPXSHWEMHSDYHOEZT9CMMRKOIFRZPSJVDBZGJOYMXM9KPJAPY'
             var addresses = await fetch(`http://localhost:5000/getAllAddresses/${seed}`);
@@ -61,7 +61,7 @@ export default function HomePage() {
         }
         getPatients()
     }, [])
-    
+
 
     // const patients = async () => {
     //     var seed = (localStorage.getItem('seed') || '')

@@ -12,6 +12,7 @@ import ViewPatientProfile from './views/ViewPatientProfile/ViewPatientProfile.js
 import YourProfile from './views/YourProfile/YourProfile'
 import LiveReadings from './views/LiveReadings/LiveReadings';
 import AddPatient from './views/AddPatient/AddPatient'
+import './App.css'
 
 // const authentication = {
 //   isLoggedIn: false,

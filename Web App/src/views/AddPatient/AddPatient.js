@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button, TextField, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions, Slide } from '@material-ui/core';
-import { Grid, Typography, makeStyles, Container, Select, MenuItem, InputLabel, FormControl, ThemeProvider } from '@material-ui/core';
+import { Button, TextField, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions, Slide, Input } from '@material-ui/core';
+import { Grid, Typography, makeStyles, InputBase, Container, Select, MenuItem, InputLabel, FormControl, ThemeProvider, withStyles } from '@material-ui/core';
 import Header from '../../components/Header/Header';
 import theme from "../../assets/theme/theme"
 import QRCode from "qrcode.react"
@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
     content: {
         padding: theme.spacing(3),
     },
-    qr: {justifyContent: "center", display: "flex"},
+    qr: { justifyContent: "center", display: "flex" },
     paper: {
         marginTop: theme.spacing(8),
         display: 'flex',
@@ -39,6 +39,50 @@ const useStyles = makeStyles((theme) => ({
         height: "70px"
     },
 }));
+
+const CssTextField = withStyles({
+    root: {
+        '& label': {
+            color: 'white',
+        },
+        '& label.Mui-focused': {
+            color: 'cyan',
+        },
+
+        '& .MuiInput-underline:after': {
+            borderBottomColor: 'cyan',
+        },
+        '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+                borderColor: 'white',
+            },
+            '& ': {
+                color: 'white'
+            },
+            '&:hover fieldset': {
+                borderColor: 'cyan',
+            },
+            '&.Mui-focused fieldset': {
+                borderColor: 'cyan',
+            },
+        },
+    },
+})(TextField);
+
+const CssSelect = withStyles({
+    input: {
+        border: '1px solid #FFFFFF',
+        color: 'white',
+        height: 'auto',
+
+        '& ': {
+            color: '#FFFFFF'
+        },
+        '&:focus': {
+            borderColor: '#FFFFFF'
+        },
+    },
+})(InputBase);
 
 export default function AddPatient() {
     const classes = useStyles();
@@ -70,9 +114,9 @@ export default function AddPatient() {
             },
             body: JSON.stringify({
                 seed: seed,
-                deviceNum: 10,
+                deviceNum: 11,
                 secLevel: 3,
-                id: "IDalph19",
+                id: "IDalph20",
                 password: "PASSWORD",
                 info: profile
             }
@@ -101,7 +145,7 @@ export default function AddPatient() {
                             <form className={classes.form} noValidate>
                                 <Grid container spacing={3}>
                                     <Grid item xs={12}>
-                                        <TextField
+                                        <CssTextField
                                             autoComplete="name"
                                             name="Name"
                                             variant="outlined"
@@ -109,12 +153,13 @@ export default function AddPatient() {
                                             fullWidth
                                             id="name"
                                             label="Name"
+                                            color="white"
                                             onChange={(event) => { SetName(event.target.value) }}
                                             value={name}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
-                                        <TextField
+                                        <CssTextField
                                             variant="outlined"
                                             required
                                             fullWidth
@@ -122,6 +167,7 @@ export default function AddPatient() {
                                             id="age"
                                             label="Age in year(s)"
                                             name="age"
+                                            color="secondary"
                                             onChange={(event) => { setAge(event.target.value) }}
                                             value={age}
                                         />
@@ -133,6 +179,8 @@ export default function AddPatient() {
                                                 labelId="demo-simple-select-outlined-label"
                                                 id="demo-simple-select-outlined"
                                                 label="Gender"
+                                                color="secondary"
+                                                input={<CssSelect />}
                                                 onChange={(event) => { SetGender(event.target.value) }}
                                                 value={gender}
                                             >
@@ -142,19 +190,20 @@ export default function AddPatient() {
                                         </FormControl>
                                     </Grid>
                                     <Grid item xs={12}>
-                                        <TextField
+                                        <CssTextField
                                             variant="outlined"
                                             required
                                             fullWidth
                                             id="address"
                                             label="Address"
                                             name="address"
+                                            color="secondary"
                                             onChange={(event) => { SetAddress(event.target.value) }}
                                             value={address}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
-                                        <TextField
+                                        <CssTextField
                                             variant="outlined"
                                             required
                                             fullWidth
@@ -162,12 +211,13 @@ export default function AddPatient() {
                                             id="contact"
                                             label="Contact Number"
                                             name="contact"
+                                            color="secondary"
                                             onChange={(event) => { SetContact(event.target.value) }}
                                             value={contact}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
-                                        <TextField
+                                        <CssTextField
                                             id="date"
                                             label="Admission Date"
                                             type="date"
@@ -193,7 +243,6 @@ export default function AddPatient() {
                                     Add Patient
                         </Button>
                                 <Dialog
-
                                     maxWidth="md"
                                     open={open}
                                     onClose={handleClose}
@@ -221,6 +270,6 @@ export default function AddPatient() {
                     </Container>
                 </Slide>
             </div>
-        </ThemeProvider>
+        </ThemeProvider >
     );
 }
