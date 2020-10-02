@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Button } from 'react-native';
+import { Text, View, StyleSheet, Button, Alert } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import Profile from './Profile'
 
@@ -14,9 +14,20 @@ export default function qrScanner({navigation}) {
     })();
   }, []);
 
-  const handleBarCodeScanned = ({ type, data }) => {
+  const handleBarCodeScanned = async ({ type, data }) => {
     setScanned(true);
-    navigation.navigate('Profile')
+    var response = await fetch("https://thetamiddleware.herokuapp.com/getAddressInfo/MBNDML9YVMXWKOMQZKYNJZQQRIQUQYLSNNDLSHCEAKKDJYHBPEWXBNXNXWOGQTHYUCBPPECYHVQFTZFOQ&NTWSWV9CBWVKZXKLWSOHFLCJTDWIAMVSYRD9DFDXWJWFBVPWYUYDJQDOOLEWLPOAPHR9CHQKTMEOYRKDC");
+    var resObj = await response.json();
+    var result= JSON.stringify(resObj)
+    if(result.length === 2)
+    Alert.alert("Login Failed")
+
+    else
+    {
+      Alert.alert("Login Passed", result.toString(), )
+      navigation.navigate('Profile', {info: resObj})
+    }
+
   };
 
   if (hasPermission === null) {

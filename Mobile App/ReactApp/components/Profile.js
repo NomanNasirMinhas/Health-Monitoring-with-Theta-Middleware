@@ -1,8 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, Button } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-gesture-handler';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 // import { useFonts, Righteous_400Regular } from '@expo-google-fonts/righteous';
 import { Ionicons, MaterialIcons} from '@expo/vector-icons'
 import { AppLoading } from 'expo';
@@ -16,7 +18,24 @@ const getFonts = () => Font.loadAsync({
 
 export default function Profile({navigation}) {
 
+  // const { info } = route.params;
   const [fontsLoaded, setFontsLoaded] = useState(false);
+  const [patientName, setPatientName] = useState("Loading....")
+  const [patientHR, setPatientHR] = useState("Loading....")
+  const [patientTemp, setPatientTemp] = useState("Loading....")
+  const [patientBPsys, setPatientBPsys] = useState("Loading....")
+  const [patientBPdiast, setPatientBPdiast] = useState("Loading....")
+
+  useEffect(() => {
+    (async () => {
+      var response = await fetch("https://thetamiddleware.herokuapp.com/getAddressInfo/MBNDML9YVMXWKOMQZKYNJZQQRIQUQYLSNNDLSHCEAKKDJYHBPEWXBNXNXWOGQTHYUCBPPECYHVQFTZFOQ&NTWSWV9CBWVKZXKLWSOHFLCJTDWIAMVSYRD9DFDXWJWFBVPWYUYDJQDOOLEWLPOAPHR9CHQKTMEOYRKDC");
+    var resObj = await response.json();
+    setPatientName(resObj.name.toString())
+    })();
+  }, []);
+
+
+
 
   if (!fontsLoaded) {
     return (
@@ -42,7 +61,7 @@ export default function Profile({navigation}) {
         </View>
 
         <View style={styles.infoContainer}>
-            <Text style={[styles.text, {fontWeight:"200", fontSize: 36 }]}>Patient Name</Text>
+      <Text style={[styles.text, {fontWeight:"200", fontSize: 36 }]}>{patientName}</Text>
             <Text style={[styles.text, {color:"white", fontSize: 20 }]}>Patient's Seed</Text>
           </View>
 

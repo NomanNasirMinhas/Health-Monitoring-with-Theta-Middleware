@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import qrScanner from './qrScanner';
 import Readings from './Readings';
+import Profile from './Profile';
 
 const FadeInView = (props) => {
   const fadeAnim = useRef(new Animated.Value(0)).current  // Initial value for opacity: 0
@@ -43,7 +44,7 @@ export default ({navigation}) => {
       </FadeInView>
 
       <FadeInView style={styles.login}>
-      <Button title='Login' onPress={() => navigation.navigate('qrScanner')}></Button>
+      <Button title='Login' onPress={() => navigation.navigate('Profile')}></Button>
       </FadeInView>
     </View>
   )
