@@ -24,7 +24,7 @@ const app = express();
 
 let port = process.env.PORT;
 if (port == null || port == "") {
-  port = 8000;
+  port = 5000;
 }
 
 app.use(cors());

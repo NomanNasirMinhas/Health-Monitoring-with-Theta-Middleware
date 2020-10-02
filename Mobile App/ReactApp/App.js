@@ -50,10 +50,10 @@ function App() {
         options={{
           title: 'Patient Monitoring App',
           headerTitleAlign:'center',
-          backgroundColor: '#141D2B',
+          backgroundColor: '#019490',
           headerShown: false,
           headerStyle: {
-            backgroundColor: '#1A2332',
+            backgroundColor: '#092A33',
           },
           headerTintColor: '#fff',
           headerTitleStyle: {
@@ -68,9 +68,9 @@ function App() {
         component={qrScanner}
         options={{
           title: 'Scan QR to Login',
-          backgroundColor: '#141D2B',
+          backgroundColor: '#019490',
           headerStyle: {
-            backgroundColor: '#1A2332',
+            backgroundColor: '#092A33',
           },
           headerTitleAlign:'center',
           headerTintColor: '#fff',
@@ -91,9 +91,9 @@ function App() {
           title: 'Patients Profile',
           headerLeft:null,
           headerTitleAlign:'center',
-          backgroundColor: '#141D2B',
+          backgroundColor: '#019490',
           headerStyle: {
-            backgroundColor: '#1A2332',
+            backgroundColor: '#092A33',
           },
           headerTintColor: '#fff',
           headerTitleStyle: {
@@ -111,9 +111,9 @@ function App() {
         options={{
           title: 'Patient Vital Readings',
           headerTitleAlign:'center',
-          backgroundColor: '#141D2B',
+          backgroundColor: '#019490',
           headerStyle: {
-            backgroundColor: '#1A2332',
+            backgroundColor: '#092A33',
           },
           headerTintColor: '#fff',
           headerTitleStyle: {
@@ -131,9 +131,9 @@ function App() {
         options={{
           title: 'Patient Readings History',
           headerTitleAlign:'center',
-          backgroundColor: '#141D2B',
+          backgroundColor: '#019490',
           headerStyle: {
-            backgroundColor: '#1A2332',
+            backgroundColor: '#092A33',
           },
           headerTintColor: '#fff',
           headerTitleStyle: {

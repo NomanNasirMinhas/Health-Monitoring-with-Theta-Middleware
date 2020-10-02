@@ -88,7 +88,7 @@ async function generateSeed(id, password, info) {
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
 async function generateAddressLocally(
-  
+
   seed,
   deviceNumber,
   seclevel,
@@ -212,6 +212,33 @@ async function getAllHash(address, txDate) {
   } catch (err) {
     return err;
   }
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//                                                                                            //
+//--------------------------------------New Function------------------------------------------//
+//                                                                                            //
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+async function getSeedInfo(seed)
+{
+
+  try {
+    var db = await MongoClient.connect(uri);
+    var dbo = await db.db("thetamw1");
+    var result = await dbo
+      .collection("SEEDS")
+      .findOne({ SEED:seed });
+      console.log(result)
+    var response = {
+      username: result.ID,
+      password: result.PASSWORD
+    }
+    return (response);
+  } catch (err) {
+    return err;
+  }
+
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 //                                                                                            //
@@ -446,7 +473,7 @@ function encrypt(seed, address, text) {
   encrypted = Buffer.concat([encrypted, cipher.final()]);
   return { iv: iv.toString('hex'), encryptedData: encrypted.toString('hex') };
  }
- 
+
  function decrypt(seed, address, text) {
   const key = seed.slice(0,32);
  // const iv = address;
@@ -678,5 +705,6 @@ module.exports = {
   sendPublicTransaction,
   getPublicTransactionInfo,
   getSingleHash,
-  updateAddressProfile
+  updateAddressProfile,
+  getSeedInfo
 };

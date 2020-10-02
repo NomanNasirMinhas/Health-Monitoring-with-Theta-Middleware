@@ -1,19 +1,22 @@
-const Mam = require('@iota/mam');
-const { asciiToTrytes, trytesToAscii } = require('@iota/converter');
-async function getMsg(root)
+async function getMsg()
 {
-
-    const logData = data => console.log('Fetched and parsed', JSON.parse(trytesToAscii(data)), '\n')
+    const Mam = require('@iota/mam');
+const { asciiToTrytes, trytesToAscii } = require('@iota/converter');
 const mode = 'public';
 const provider = 'https://nodes.devnet.iota.org';
-console.log("Checkpoint 1")
-await Mam.fetch(root, mode, null, logData)
-console.log("Checkpoint 2")
-const result = await Mam.fetch(root, mode)
-console.log(result.messages)
-console.log("Checkpoint 3")
-    // result.messages.forEach(message => console.log('Fetched and parsed', JSON.parse(trytesToAscii(message)), '\n'))
-    console.log("Checkpoint 4")
-}
 
-getMsg('TFKOTT9PNVTGFXCA9NQTVDNPOAQLXW9SQTANMJ9FKZDVQFPXCAEQLXGEIWXPMLAKQOFBOFKMHH9BQYKLT')
+const mamExplorerLink = `https://mam-explorer.firebaseapp.com/?provider=${encodeURIComponent(provider)}&mode=${mode}&root=`;
+
+    // Initialize MAM State
+    let mamState = Mam.init(provider);
+
+
+    // Callback used to pass data out of the fetch
+// Callback used to pass data out of the fetch
+const logData = data => console.log('Fetched and parsed', JSON.parse(trytesToAscii(data)), '\n')
+
+    root='FONGHNBRUBUWMZUTLYLSBGNNHCNORUTMFIXPUXQENYUSXHNRAKOZ9LUURYAXUMX9AMVEWFCMAHVLIJUCW'
+    await Mam.fetch(root, mode, null, logData)
+
+  }
+getMsg()
