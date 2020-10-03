@@ -16,7 +16,7 @@ export default function qrScanner({navigation}) {
 
   const handleBarCodeScanned = async ({ type, data }) => {
     setScanned(true);
-    var response = await fetch("https://thetamiddleware.herokuapp.com/getAddressInfo/MBNDML9YVMXWKOMQZKYNJZQQRIQUQYLSNNDLSHCEAKKDJYHBPEWXBNXNXWOGQTHYUCBPPECYHVQFTZFOQ&NTWSWV9CBWVKZXKLWSOHFLCJTDWIAMVSYRD9DFDXWJWFBVPWYUYDJQDOOLEWLPOAPHR9CHQKTMEOYRKDC");
+    var response = await fetch(`https://thetamiddleware.herokuapp.com/getAddressInfo/${data}`);
     var resObj = await response.json();
     var result= JSON.stringify(resObj)
     if(result.length === 2)

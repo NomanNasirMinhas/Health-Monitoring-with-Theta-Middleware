@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, Button } from 'react-native';
+import { StyleSheet, Text, View, Image, Button, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
@@ -16,21 +16,40 @@ const getFonts = () => Font.loadAsync({
   'Righteous':require('../assets/fonts/Righteous-Regular.ttf')
 });
 
-export default function Profile({navigation}) {
+export default function Profile({route, navigation}) {
 
-  // const { info } = route.params;
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [patientName, setPatientName] = useState("Loading....")
   const [patientHR, setPatientHR] = useState("Loading....")
   const [patientTemp, setPatientTemp] = useState("Loading....")
   const [patientBPsys, setPatientBPsys] = useState("Loading....")
   const [patientBPdiast, setPatientBPdiast] = useState("Loading....")
+  const [patientAddress, setPatientAddress] = useState("Loading....")
+  const [patientDeviceID, setPatientDeviceID] = useState("Loading....")
 
   useEffect(() => {
     (async () => {
-      var response = await fetch("https://thetamiddleware.herokuapp.com/getAddressInfo/MBNDML9YVMXWKOMQZKYNJZQQRIQUQYLSNNDLSHCEAKKDJYHBPEWXBNXNXWOGQTHYUCBPPECYHVQFTZFOQ&NTWSWV9CBWVKZXKLWSOHFLCJTDWIAMVSYRD9DFDXWJWFBVPWYUYDJQDOOLEWLPOAPHR9CHQKTMEOYRKDC");
+      const { info } = route.params;
+      setPatientName(info.Profile.name.toString())
+      setPatientAddress(info.ADDRESS.toString())
+      setPatientDeviceID(info.ID.toString())
+
+    var response = await fetch(`https://thetamiddleware.herokuapp.com/getLastTx/${info.ADDRESS}`);
     var resObj = await response.json();
-    setPatientName(resObj.name.toString())
+    // var lastTxHash = JSON.stringify(resObj)
+    // Alert.alert("Last TX Hash", resObj);
+    var responseTx = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${resObj}`);
+    var resObjTx = await responseTx.json();
+      resObjTx = JSON.parse(resObjTx)
+      // Alert.alert(JSON.stringify(resObjTx))
+    setPatientHR(resObjTx.HR.toString())
+    setPatientTemp(resObjTx.BPM.toString())
+    setPatientBPsys(resObjTx.BP.systolic.toString())
+    setPatientBPdiast(resObjTx.BP.diastolic.toString())
+
+    // Alert.alert(info)
+
+
     })();
   }, []);
 
@@ -62,7 +81,7 @@ export default function Profile({navigation}) {
 
         <View style={styles.infoContainer}>
       <Text style={[styles.text, {fontWeight:"200", fontSize: 36 }]}>{patientName}</Text>
-            <Text style={[styles.text, {color:"white", fontSize: 20 }]}>Patient's Seed</Text>
+      <Text style={[styles.text, {color:"white", fontSize: 20 }]}>Device ID: {patientDeviceID}</Text>
           </View>
 
           <View style={{marginTop:20, alignSelf:'center', }}>
@@ -71,21 +90,21 @@ export default function Profile({navigation}) {
           </View>
           <View style={{marginTop:20, alignSelf:'center', }}>
             {/* <Button style={[styles.button, {marginBottom: 20,}]} title='Get Live Readings' onPress={() => navigation.navigate('Readings')}></Button> */}
-            <Button style={styles.button} title='View History' onPress={() => navigation.navigate('History')}></Button>
+            <Button style={styles.button} title='View History' onPress={() => navigation.navigate('History', {address: patientAddress})}></Button>
           </View>
 
           <View style={styles.statsContainer}>
             <View style={styles.statsBox}>
               <Text style={[styles.text, {fontSize: 20}]}>Heart{"\n"}Beat</Text>
-              <Text style={[styles.text, styles.subText]}>80 BPM</Text>
+              <Text style={[styles.text, styles.subText]}>{patientHR} BPM</Text>
             </View>
             <View style={[styles.statsBox, {borderColor: "#DFD8C8", borderLeftWidth: 2, borderRightWidth: 2}]}>
               <Text style={[styles.text, {fontSize: 20}]}>Body{"\n"}Temp.</Text>
-              <Text style={[styles.text, styles.subText]}>80 BPM</Text>
+              <Text style={[styles.text, styles.subText]}>{patientTemp} F</Text>
             </View>
             <View style={styles.statsBox}>
               <Text style={[styles.text, {fontSize: 20}]}>Blood{"\n"}Pressure</Text>
-              <Text style={[styles.text, styles.subText]}>80 BPM</Text>
+      <Text style={[styles.text, styles.subText]}>{patientBPsys}/{patientBPdiast} Hg</Text>
             </View>
           </View>
          

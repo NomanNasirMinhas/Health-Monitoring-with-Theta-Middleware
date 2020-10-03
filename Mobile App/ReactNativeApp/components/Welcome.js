@@ -44,7 +44,7 @@ export default ({navigation}) => {
       </FadeInView>
 
       <FadeInView style={styles.login}>
-      <Button title='Login' onPress={() => navigation.navigate('Profile')}></Button>
+      <Button title='Login' onPress={() => navigation.navigate('qrScanner')}></Button>
       </FadeInView>
     </View>
   )

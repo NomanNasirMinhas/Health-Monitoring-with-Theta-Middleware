@@ -778,5 +778,8 @@ module.exports = {
   getPublicTransactionInfo,
   getSingleHash,
   updateAddressProfile,
-  getSeedInfo
+  getSeedInfo,
+  getAllSeeds,
+  adminLogin,
+  updateStreamRoot
 };
