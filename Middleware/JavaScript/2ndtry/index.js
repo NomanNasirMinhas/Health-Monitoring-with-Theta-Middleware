@@ -667,6 +667,78 @@ async function getPublicTransactionInfo(hash)
 //--------------------------------------New Function------------------------------------------//
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+async function adminLogin(id, pass) {
+  try {
+    var db = await MongoClient.connect(uri);
+    var dbo = await db.db("thetamw1");
+    var result = await dbo
+      .collection("ADMIN")
+      .findOne({ $and: [{ ID: id }, { PASSWORD: pass }] });
+
+      db.close()
+      if (result == null)
+        return false;
+      else
+      return true
+  } catch (err) {
+    return err;
+  }
+}
+
+async function getAllSeeds(username, password) {
+  var loggedIN = await adminLogin(username, password)
+  if (loggedIN == true){
+    var addressAray = [];
+  try {
+    var db = await MongoClient.connect(uri);
+    var dbo = await db.db("thetamw1");
+
+    var info = await dbo
+      .collection("SEEDS")
+      .find({}, { projection: { _id: 0 } })
+      .toArray();
+
+    var i;
+    for (i = 0; i < info.length; i++) {
+      addressAray.push(info[i]);
+    }
+    return addressAray;
+  } catch (err) {
+    return err;
+  }
+  }
+
+  else
+  return ("Error")
+
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//                                                                                            //
+//--------------------------------------New Function------------------------------------------//
+//                                                                                            //
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+async function updateStreamRoot(address, root) {
+  try {
+
+    var db = await MongoClient.connect(uri);
+    var dbo = await db.db("thetamw1");
+    var myquery = { ADDRESS: address };
+    var newvalues = { $set: { streamRoot: root } };
+    await dbo.collection(seed).updateOne(myquery, newvalues);
+
+    return true;
+  } catch (err) {
+    return err;
+  }
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//                                                                                            //
+//--------------------------------------New Function------------------------------------------//
+//                                                                                            //
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
 async function getPrivateTransactionInfo(seed, address, hash)
 {

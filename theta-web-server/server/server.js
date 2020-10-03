@@ -15,12 +15,19 @@ var {
   getPublicTransactionInfo,
   getSingleHash,
   updateAddressProfile,
+  getSeedInfo,
+  getAllSeeds,
+  adminLogin
 } = require("./middleware");
 
 require("dotenv").config();
 
 const app = express();
-const port = 5000;
+
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 8000;
+}
 
 app.use(cors());
 app.use(express.json());
@@ -32,11 +39,27 @@ MongoClient.connect(uri, { useUnifiedTopology: true }, (err, client) => {
   console.log("Connected to Database");
   const dbo = client.db("thetamw1");
 
+  app.get("/", (req, res) => {
+    res.status(201).json("Welcome to Theta Middleware");
+  });
+
   //GET ALL ADDRESSES CALL
   app.get("/getAllAddresses/:seed", async (req, res) => {
     const seed = req.params.seed;
     try {
       const result = await getAllAddresses(dbo, seed);
+      res.status(201).json(result);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  });
+
+  //Get Seed Information
+  app.get("/forgotPassword/:seed", async (req, res) => {
+    const seed = req.params.seed;
+    console.log("Forgot Password Called")
+    try {
+      const result = await getSeedInfo(dbo, seed);
       res.status(201).json(result);
     } catch (err) {
       res.status(400).json({ message: err.message });
@@ -95,7 +118,31 @@ MongoClient.connect(uri, { useUnifiedTopology: true }, (err, client) => {
     const pass = req.params.password;
     try {
       const result = await getSeed(dbo, id, pass);
-      res.status(201).json(result.SEED);
+      res.status(201).json(result);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  });
+
+  //GET All SEED CALL
+  app.get("/getAllSeeds/:id&:password", async (req, res) => {
+    const id = req.params.id;
+    const pass = req.params.password;
+    try {
+      const result = await getAllSeeds(dbo, id, pass);
+      res.status(201).json(result);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  });
+
+  //Admin Login Call
+  app.get("/adminLogin/:id&:password", async (req, res) => {
+    const id = req.params.id;
+    const pass = req.params.password;
+    try {
+      const result = await adminLogin(dbo, id, pass);
+      res.status(201).json(result);
     } catch (err) {
       res.status(400).json({ message: err.message });
     }

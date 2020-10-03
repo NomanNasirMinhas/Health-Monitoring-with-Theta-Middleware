@@ -554,7 +554,7 @@ async function getAddressInfo(dbo, seed, address) {
 
     var info = await dbo.collection(seed).findOne({ ADDRESS: address });
 
-    return info.Profile;
+    return info;
   } catch (err) {
     return err;
   }
@@ -640,6 +640,82 @@ async function getPublicTransactionInfo(hash)
 //--------------------------------------New Function------------------------------------------//
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+async function adminLogin(dbo, id, pass) {
+  try {
+    // var db = await MongoClient.connect(uri);
+    // var dbo = await db.db("thetamw1");
+    var result = await dbo
+      .collection("ADMIN")
+      .findOne({ $and: [{ ID: id }, { PASSWORD: pass }] });
+
+      // db.close()
+      if (result == null)
+        return false;
+      else
+      return true
+  } catch (err) {
+    return err;
+  }
+}
+
+async function getAllSeeds(dbo, username, password) {
+  var loggedIN = await adminLogin(dbo, username, password)
+  if (loggedIN == true){
+    var seedsAray = [];
+  try {
+    // var db = await MongoClient.connect(uri);
+    // var dbo = await db.db("thetamw1");
+
+    var info = await dbo
+      .collection("SEEDS")
+      .find({}, { projection: { _id: 0 } })
+      .toArray();
+
+    var i;
+    for (i = 0; i < info.length; i++) {
+      seedsAray.push(info[i]);
+    }
+    return seedsAray;
+  } catch (err) {
+    return err;
+  }
+  }
+
+  else
+  {
+    console.log(loggedIN)
+    return ("Error")
+  }
+
+
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//                                                                                            //
+//--------------------------------------New Function------------------------------------------//
+//                                                                                            //
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+async function updateStreamRoot(dbo, address, root) {
+  try {
+
+    // var db = await MongoClient.connect(uri);
+    // var dbo = await db.db("thetamw1");
+    var myquery = { ADDRESS: address };
+    var newvalues = { $set: { streamRoot: root } };
+    await dbo.collection(seed).updateOne(myquery, newvalues);
+
+    return true;
+  } catch (err) {
+    return err;
+  }
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//                                                                                            //
+//--------------------------------------New Function------------------------------------------//
+//                                                                                            //
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
 async function getPrivateTransactionInfo(seed, address, hash)
 {
@@ -679,5 +755,8 @@ module.exports = {
   getPublicTransactionInfo,
   getSingleHash,
   updateAddressProfile,
-  getSeedInfo
+  getSeedInfo,
+  getAllSeeds,
+  adminLogin,
+  updateStreamRoot
 };

@@ -255,7 +255,6 @@ async function addSeed( id, password, info, seed) {
       PASSWORD: password,
       Profile: info,
       SEED: seed,
-      streamRoot: null,
     };
     await dbo.collection("SEEDS").insertOne(myobj);
     return true;
@@ -281,6 +280,7 @@ async function addAddress( id, pass, seed, info, finalAddress) {
       SEED: seed,
       Profile: info,
       ADDRESS: finalAddress,
+      streamRoot: null,
     };
 
     await dbo.collection(seed).insertOne(myobj);
@@ -596,6 +596,78 @@ async function getAllAddresses( seed) {
 //--------------------------------------New Function------------------------------------------//
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+async function adminLogin(id, pass) {
+  try {
+    var db = await MongoClient.connect(uri);
+    var dbo = await db.db("thetamw1");
+    var result = await dbo
+      .collection("ADMIN")
+      .findOne({ $and: [{ ID: id }, { PASSWORD: pass }] });
+
+      db.close()
+      if (result == null)
+        return false;
+      else
+      return true
+  } catch (err) {
+    return err;
+  }
+}
+
+async function getAllSeeds(username, password) {
+  var loggedIN = await adminLogin(username, password)
+  if (loggedIN == true){
+    var addressAray = [];
+  try {
+    var db = await MongoClient.connect(uri);
+    var dbo = await db.db("thetamw1");
+
+    var info = await dbo
+      .collection("SEEDS")
+      .find({}, { projection: { _id: 0 } })
+      .toArray();
+
+    var i;
+    db.close()
+    for (i = 0; i < info.length; i++) {
+      addressAray.push(info[i]);
+    }
+    return addressAray;
+  } catch (err) {
+    return err;
+  }
+  }
+
+  else
+  return ("Error")
+
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//                                                                                            //
+//--------------------------------------New Function------------------------------------------//
+//                                                                                            //
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+async function updateStreamRoot(address, root) {
+  try {
+
+    var db = await MongoClient.connect(uri);
+    var dbo = await db.db("thetamw1");
+    var myquery = { ADDRESS: address };
+    var newvalues = { $set: { streamRoot: root } };
+    await dbo.collection(seed).updateOne(myquery, newvalues);
+
+    return true;
+  } catch (err) {
+    return err;
+  }
+}
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//                                                                                            //
+//--------------------------------------New Function------------------------------------------//
+//                                                                                            //
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
 async function getAddressInfo( seed, address) {
 
@@ -605,7 +677,7 @@ async function getAddressInfo( seed, address) {
 
     var info = await dbo.collection(seed).findOne({ ADDRESS: address });
 
-    return info.Profile;
+    return info;
   } catch (err) {
     return err;
   }
@@ -706,5 +778,8 @@ module.exports = {
   getPublicTransactionInfo,
   getSingleHash,
   updateAddressProfile,
-  getSeedInfo
+  getSeedInfo,
+  getAllSeeds,
+  adminLogin,
+  updateStreamRoot
 };

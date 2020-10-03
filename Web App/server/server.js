@@ -15,7 +15,9 @@ var {
   getPublicTransactionInfo,
   getSingleHash,
   updateAddressProfile,
-  getSeedInfo
+  getSeedInfo,
+  getAllSeeds,
+  adminLogin
 } = require("./middleware");
 
 require("dotenv").config();
@@ -24,7 +26,7 @@ const app = express();
 
 let port = process.env.PORT;
 if (port == null || port == "") {
-  port = 5000;
+  port = 8000;
 }
 
 app.use(cors());
@@ -116,7 +118,31 @@ MongoClient.connect(uri, { useUnifiedTopology: true }, (err, client) => {
     const pass = req.params.password;
     try {
       const result = await getSeed(dbo, id, pass);
-      res.status(201).json(result.SEED);
+      res.status(201).json(result);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  });
+
+  //GET All SEED CALL
+  app.get("/getAllSeeds/:id&:password", async (req, res) => {
+    const id = req.params.id;
+    const pass = req.params.password;
+    try {
+      const result = await getAllSeeds(dbo, id, pass);
+      res.status(201).json(result);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  });
+
+  //Admin Login Call
+  app.get("/adminLogin/:id&:password", async (req, res) => {
+    const id = req.params.id;
+    const pass = req.params.password;
+    try {
+      const result = await adminLogin(dbo, id, pass);
+      res.status(201).json(result);
     } catch (err) {
       res.status(400).json({ message: err.message });
     }
