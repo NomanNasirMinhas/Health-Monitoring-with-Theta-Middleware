@@ -1,5 +1,5 @@
 import React from "react"
-import Typography from "@material-ui/core/Typography"
+import { Typography, withStyles } from "@material-ui/core"
 import { makeStyles, Grid, Button, AppBar, Toolbar, TextField, Link, ThemeProvider, Slide } from '@material-ui/core'
 import theme from "../../assets/theme/theme"
 import { Link as link } from "react-router-dom"
@@ -26,6 +26,35 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+const CssTextField = withStyles({
+    root: {
+        '& label': {
+            color: 'white',
+        },
+        '& label.Mui-focused': {
+            color: 'cyan',
+        },
+
+        '& .MuiInput-underline:after': {
+            borderBottomColor: 'cyan',
+        },
+        '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+                borderColor: 'white',
+            },
+            '& ': {
+                color: 'white'
+            },
+            '&:hover fieldset': {
+                borderColor: 'cyan',
+            },
+            '&.Mui-focused fieldset': {
+                borderColor: 'cyan',
+            },
+        },
+    },
+})(TextField);
+
 
 const Login = (props) => {
     // const authentication = {
@@ -41,12 +70,12 @@ const Login = (props) => {
     const handleClick = async (event) => {
         //setLoggedInStatus(true)
         event.preventDefault();
-        var seed = await fetch(`http://localhost:5000/getSeed/${userName}&${password}`);
+        var seed = await fetch(`https://thetamiddleware.herokuapp.com/getSeed/${userName}&${password}`);
         //getSeed("Username1", "Password1")
         var parsedSeed = await seed.json();
         //alert((parsedSeed).toString().length)
-        if ((parsedSeed).toString().length === 81) {
-            localStorage.setItem('seed', parsedSeed);
+        if ((parsedSeed.SEED).toString().length === 81) {
+            localStorage.setItem('seed', parsedSeed.SEED);
             props.history.push('/dashboard')
         }
         else {
@@ -76,7 +105,7 @@ const Login = (props) => {
                     <main>
                         <div className={classes.paper}>
                             <form className={classes.form} noValidate>
-                                <TextField
+                                <CssTextField
                                     variant="outlined"
                                     margin="normal"
                                     required
@@ -90,7 +119,7 @@ const Login = (props) => {
                                     }}
                                     autoComplete="off"
                                 />
-                                <TextField
+                                <CssTextField
                                     variant="outlined"
                                     margin="normal"
                                     required
@@ -123,6 +152,7 @@ const Login = (props) => {
                                         <Link
                                             component={link}
                                             to="/forgotpassword"
+                                            color="secondary"
                                             variant="body2">
                                             Forgot password?
                                 </Link>
@@ -131,6 +161,7 @@ const Login = (props) => {
                                         <Link
                                             component={link}
                                             to="/createaccount"
+                                            color="secondary"
                                             variant="body2">
                                             {"Create New Account"}
                                         </Link>

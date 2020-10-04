@@ -82,7 +82,7 @@ const ViewPatientProfile = () => {
         <ThemeProvider theme={theme}>
             <Header />
             <div className={classes.content}>
-                <Grid container lg={8}>
+                <Grid container>
                     <Grid container spacing={3}>
                         <Grid item>
                             <Slide direction="down" in={true} timeout={300}>

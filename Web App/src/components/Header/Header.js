@@ -82,6 +82,7 @@ const Header = props => {
   }
 
   const logOut = () => {
+    localStorage.clear()
     props.history.push('/')
   }
   

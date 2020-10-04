@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { withStyles, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead, Link } from '@material-ui/core';
-import { TableRow, Paper, Typography, ThemeProvider, Slide } from '@material-ui/core';
+import { withStyles, makeStyles, Table, TableBody, TableCell, TableHead, Link } from '@material-ui/core';
+import { TableRow, Paper, Typography, ThemeProvider, Slide, TableContainer } from '@material-ui/core';
 import Header from "../../components/Header/Header"
 import theme from "../../assets/theme/theme"
 import { Link as link } from "react-router-dom"
@@ -15,7 +15,7 @@ const StyledTableCell = withStyles((theme) => ({
     }
 }))(TableCell);
 
-const StyledTableRow = withStyles((theme) => ({
+const StyledTableRow = withStyles(() => ({
     root: {
         '&:nth-of-type(odd)': {
             backgroundColor: "#06c2c892",
@@ -50,18 +50,24 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function HomePage() {
+    const [Response, SetResponse] = React.useState([]);
     const classes = useStyles();
     useEffect(() => {
-        async function getPatients() {
+        async function getPatient() {
             var seed = (localStorage.getItem('seed') || '')
-            // var seed = 'VLLPIQLDNUXPF9ECVNDQTDQITIQBSTNWJPXSHWEMHSDYHOEZT9CMMRKOIFRZPSJVDBZGJOYMXM9KPJAPY'
-            var addresses = await fetch(`http://localhost:5000/getAllAddresses/${seed}`);
-            var response = await addresses.json()
-            console.log(response)
+            var obj = await fetch(`https://thetamiddleware.herokuapp.com/getAllAddresses/${seed}`)
+            obj = await obj.json()
+            // fetch(`https://thetamiddleware.herokuapp.com/getAllAddresses/${seed}`)
+            //     .then(resp => resp.json())
+            //     .then(response => SetResponse(response))
+            SetResponse(obj)
         }
-        getPatients()
+        getPatient()
     }, [])
 
+    useEffect(() => {
+        //console.log(Response[0].ID)
+    }, [Response])
 
     // const patients = async () => {
     //     var seed = (localStorage.getItem('seed') || '')
@@ -74,7 +80,13 @@ export default function HomePage() {
             <Header />
             <Slide direction="down" in={true} timeout={300}>
                 <div className={classes.content}>
-                    <Typography variant="h2" align="center" color="secondary" className={classes.titletext}>Current Patients</Typography>
+                    <Typography
+                        variant="h2"
+                        align="center"
+                        color="secondary"
+                        className={classes.titletext}>
+                        Current Patients
+                    </Typography>
                     <Slide direction="up" in={true} timeout={300}>
                         <TableContainer component={Paper}>
                             <Table className={classes.table}>
@@ -83,6 +95,9 @@ export default function HomePage() {
                                         <StyledTableCell align="center">Patient's ID</StyledTableCell>
                                         <StyledTableCell align="center">Name</StyledTableCell>
                                         <StyledTableCell align="center">Age</StyledTableCell>
+                                        <StyledTableCell align="center">Gender</StyledTableCell>
+                                        <StyledTableCell align="center">Date of Submission</StyledTableCell>
+                                        <StyledTableCell align="center">Contact</StyledTableCell>
                                         <StyledTableCell align="center">Action</StyledTableCell>
                                     </TableRow>
                                 </TableHead>

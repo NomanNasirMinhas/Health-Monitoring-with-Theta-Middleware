@@ -1,6 +1,11 @@
 import React from 'react';
-import { Button, TextField, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions, Slide, Input } from '@material-ui/core';
+import { Button, TextField, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions, Slide } from '@material-ui/core';
 import { Grid, Typography, makeStyles, InputBase, Container, Select, MenuItem, InputLabel, FormControl, ThemeProvider, withStyles } from '@material-ui/core';
+import DateFnsUtils from '@date-io/date-fns';
+import {
+    MuiPickersUtilsProvider,
+    KeyboardDatePicker,
+} from '@material-ui/pickers';
 import Header from '../../components/Header/Header';
 import theme from "../../assets/theme/theme"
 import QRCode from "qrcode.react"
@@ -90,10 +95,14 @@ export default function AddPatient() {
     const [name, SetName] = React.useState('');
     const [age, setAge] = React.useState('');
     const [gender, SetGender] = React.useState('');
-    const [date, SetDate] = React.useState('');
+    const [date, SetDate] = React.useState(new Date('2020-08-18'));
     const [address, SetAddress] = React.useState('');
     const [contact, SetContact] = React.useState('');
     const [DeviceAddress, SetDeviceAddress] = React.useState('');
+
+    const handleDateChange = (date) => {
+        SetDate(date);
+    };
 
     const handleSubmit = async () => {
         var profile = {
@@ -153,7 +162,6 @@ export default function AddPatient() {
                                             fullWidth
                                             id="name"
                                             label="Name"
-                                            color="white"
                                             onChange={(event) => { SetName(event.target.value) }}
                                             value={name}
                                         />
@@ -217,19 +225,22 @@ export default function AddPatient() {
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
-                                        <CssTextField
-                                            id="date"
-                                            label="Admission Date"
-                                            type="date"
-                                            defaultValue="2017-05-24"
-                                            fullWidth
-                                            className={classes.textField}
-                                            onChange={(event) => { SetDate(event.target.value) }}
-                                            value={date}
-                                            InputLabelProps={{
-                                                shrink: true,
-                                            }}
-                                        />
+                                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                            <KeyboardDatePicker
+                                                disableToolbar
+                                                variant="inline"
+                                                color="secondary"
+                                                style={{ color: '#FFFFFF' }}
+                                                format="dd/MM/yyyy"
+                                                id="date-picker-inline"
+                                                label="Date"
+                                                value={date}
+                                                onChange={handleDateChange}
+                                                KeyboardButtonProps={{
+                                                    'aria-label': 'change date',
+                                                }}
+                                            />
+                                        </MuiPickersUtilsProvider>
                                     </Grid>
                                 </Grid>
                                 <Button
