@@ -4,13 +4,13 @@ import './index.css';
 import App from './App';
 import Login from './Components/Login';
 import Homepage from './Components/Homepage';
-import Navbar from './Components/Navbar';
+import Configure from './Components/Configure';
 
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Navbar/>
+    <Homepage/>
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -1,19 +1,19 @@
 import React from "react";
-import { Card, CardActions, CardContent } from "@material-ui/core";
+import Navbar from "./Navbar";
+import Grid from "@material-ui/core/Grid";
+import {
+  Card,
+  CardActions,
+  CardContent,
+  Button,
+  Typography,
+} from "@material-ui/core";
 import {
   createMuiTheme,
   withStyles,
   makeStyles,
   ThemeProvider,
 } from "@material-ui/core/styles";
-//******* HEADER ******/
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 
 //**** TABLE ******/
 import Table from "@material-ui/core/Table";
@@ -53,6 +53,16 @@ const rows = [
   { id: 7, name: "Dr. Altamash", assigned_devices: 3 },
 ];
 
+const Devices_rows = [
+  { device_id: 123, name: "Dr. Altamash", seed: 'xyz' },
+  { device_id: 124, name: "Dr. Altamash" , seed: 'xyz' },
+  { device_id: 125, name: "Dr. Sidq", seed: 'xyz'  },
+  { device_id: 127, name: "Dr. Altamash", seed: 'xyz' },
+  { device_id: 128, name: "None" , seed: 'xyz' },
+  { device_id: 129, name: "Dr. Altamash" , seed: 'xyz' },
+  { device_id: 130, name: "Dr. Altamash", seed: 'xyz' },
+];
+
 const useStylesTable = makeStyles({
   table: {
     maxWidth: 650,
@@ -72,103 +82,72 @@ function Homepage() {
   const classes = useStyles();
   const classesTable = useStylesTable();
   return (
-    <ThemeProvider theme={theme}>
-      <AppBar position="static" style={{ backgroundColor: "#0ea80e" }}>
-        <Toolbar>
-          <Typography variant="h4" className={classes.title}>
-            <ArrowForwardIcon />
-            <strong>Welcome Admin </strong>
-          </Typography>
-          <Button
-            color="inherit"
-            startIcon={<AddCircleOutlineIcon fontSize="small" />}
-          >
-            {" "}
-            Add Device
-          </Button>
-          <Button
-            color="inherit"
-            startIcon={<ExitToAppIcon fontSize="small" />}
-          >
-            {" "}
-            logout
-          </Button>
-        </Toolbar>
-      </AppBar>
+    <ThemeProvider>
+
+      <Navbar />
 
       {/* TABLE START*/}
 
-      <TableContainer className={classesTable.paper}>
-        <Paper
-          elevation={5}
-          style={{
-            width: 650,
-            margin: "auto",
-            marginTop: "5%",
-            border: "solid grey 0.9px",
-          }}
-        >
-          <Typography
-            variant="h3"
-            component="h2"
-            style={{
-              textAlign: "center",
-              backgroundColor: "#0ea80e",
-              color: "white",
-              alignSelf: "center",
-            }}
-          >
-            <b>Doctors</b>
-          </Typography>
+      <Grid container spacing={1}>
+        <Grid item xs={3}></Grid>
+        <Grid item xs={6}>
+          <TableContainer className={classesTable.paper}>
+            <Paper
+              elevation={5}
+              style={{
+                width: 400,
+                margin: "auto",
+                marginTop: "7%",
+                border: "solid grey 0.9px",
+              }}
+            >
+              <Typography
+                variant="h3"
+                component="h2"
+                style={{
+                  textAlign: "center",
+                  backgroundColor: "#0ea80e",
+                  color: "white",
+                  alignSelf: "center",
+                }}
+              >
+                <b>Devices</b>
+              </Typography>
 
-          <Table className={classesTable.table} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell align="center">
-                  <strong>Doctors ID</strong>
-                </TableCell>
-                <TableCell align="center">
-                  <strong>Name</strong>
-                </TableCell>
-                <TableCell align="center">
-                  <strong>Assigned Devices</strong>
-                </TableCell>
+              <Table className={classesTable.table} aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center">
+                      <strong>Device ID</strong>
+                    </TableCell>
+                    <TableCell align="center">
+                      <strong>Assigned to</strong>
+                    </TableCell>
+                    <TableCell align="center">
+                      <strong>Seed</strong>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {Devices_rows.map((obj) => (
+                    <TableRow hover key={obj.name}>
+                      <TableCell component="th" scope="row">
+                        {obj.device_id}
+                      </TableCell>
+                      <TableCell align="center">{obj.name}</TableCell>
+                      <TableCell align="center">{obj.seed}</TableCell>
 
-                <TableCell align="center">
-                  <strong>Actions</strong>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.map((obj) => (
-                <TableRow hover key={obj.name}>
-                  <TableCell component="th" scope="row">
-                    {obj.id}
-                  </TableCell>
-                  <TableCell align="center">{obj.name}</TableCell>
-                  <TableCell align="center">{obj.assigned_devices}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Paper>
+          </TableContainer>
+        </Grid>
 
-                  <TableCell align="center">
-                    {
-                      <Button
-                        className={classesTable.hover}
-                        color="inherit"
-                        startIcon={<SettingsIcon fontSize="small" />}
-                      >
-                        {" "}
-                        Configure
-                      </Button>
-                    }
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Paper>
-      </TableContainer>
-
-      <br />
-      <br />
+        <Grid item xs={3}></Grid>
+        {/********************* */}
+        </Grid>
     </ThemeProvider>
   );
 }

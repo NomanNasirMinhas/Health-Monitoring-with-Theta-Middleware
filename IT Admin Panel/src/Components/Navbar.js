@@ -6,7 +6,7 @@ import {
     ThemeProvider,
   } from "@material-ui/core/styles";
 
-
+//******* HEADER ******/
   import AppBar from "@material-ui/core/AppBar";
   import Toolbar from "@material-ui/core/Toolbar";
   import Typography from "@material-ui/core/Typography";
@@ -14,6 +14,8 @@ import {
   import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
   import ExitToAppIcon from "@material-ui/icons/ExitToApp";
   import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
+  import HomeIcon from '@material-ui/icons/Home';
+  import PersonIcon from '@material-ui/icons/Person';
 import { configure } from '@testing-library/react';
    
 
@@ -46,6 +48,23 @@ function Navbar(){
               <ArrowForwardIcon />
               <strong>Welcome Admin </strong>
             </Typography>
+
+            <Button
+              color="inherit"
+              startIcon={<HomeIcon fontSize="small" />}
+            >
+              {" "}
+              Home
+            </Button>
+
+            <Button
+              color="inherit"
+              startIcon={<PersonIcon fontSize="small" />}
+            >
+              {" "}
+              Doctors
+            </Button>
+
             <Button
               color="inherit"
               startIcon={<AddCircleOutlineIcon fontSize="small" />}
