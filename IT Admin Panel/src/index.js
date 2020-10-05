@@ -5,12 +5,13 @@ import App from './App';
 import Login from './Components/Login';
 import Homepage from './Components/Homepage';
 import Configure from './Components/Configure';
+import Doctors from './Components/Doctors';
 
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Homepage/>
+    <Doctors/>
   </React.StrictMode>,
   document.getElementById('root')
 );

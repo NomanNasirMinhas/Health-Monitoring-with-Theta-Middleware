@@ -43,15 +43,6 @@ const theme = createMuiTheme({
   },
 });
 
-const rows = [
-  { id: 1, name: "Dr. Altamash", assigned_devices: 3 },
-  { id: 2, name: "Dr. Altamash", assigned_devices: 0 },
-  { id: 3, name: "Dr. Altamash", assigned_devices: 3 },
-  { id: 4, name: "Dr. Altamash", assigned_devices: 3 },
-  { id: 5, name: "Dr. Altamash", assigned_devices: 3 },
-  { id: 6, name: "Dr. Altamash", assigned_devices: 3 },
-  { id: 7, name: "Dr. Altamash", assigned_devices: 3 },
-];
 
 const Devices_rows = [
   { device_id: 123, name: "Dr. Altamash", seed: 'xyz' },
