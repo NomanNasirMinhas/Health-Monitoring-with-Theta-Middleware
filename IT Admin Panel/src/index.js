@@ -11,7 +11,7 @@ import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Doctors/>
+    <Login/>
   </React.StrictMode>,
   document.getElementById('root')
 );

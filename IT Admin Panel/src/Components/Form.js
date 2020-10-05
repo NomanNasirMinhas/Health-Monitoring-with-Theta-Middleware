@@ -55,6 +55,8 @@ const theme = createMuiTheme({
   },
 });
 
+
+
 export const Form = () => {
   const classes = useStyles();
   return (
@@ -88,7 +90,7 @@ export const Form = () => {
                 </label>
 
                
-                <br />
+                <br /><br />
 
                 <TextField
                   id="outlined-basic"
@@ -106,7 +108,7 @@ export const Form = () => {
                   <LockOpenRoundedIcon fontSize="small" /> <strong >Password</strong>{" "}
                 </label>
                
-                <br />
+                <br /><br />
                 <TextField
                   id="outlined-basic"
                   label="Password"
@@ -118,26 +120,24 @@ export const Form = () => {
                 <br />
                 <a href="www.google.com">Forgot Password?</a>
               </div>
-              <br />
+              <br /><br />
              
                 <Button
                   variant="contained"
                   color="primary"
-                  startIcon={<VpnKeyIcon fontSize="small" />}
-                >
+        startIcon={<VpnKeyIcon fontSize="small"/> }
+       // onClick={login}
+        style={{marginLeft:"30%"}}
+        >
+                  
+                
+                
                  
                   Login
                 </Button>
                 
-                <br /> <br />
-              <Button
               
-                variant="contained"
-                color="primary"
-                startIcon={<AddCircleIcon fontSize="small" />}
-              >
-                Register
-              </Button>
+              
               <br /> <br />
             </div>
           </form>
