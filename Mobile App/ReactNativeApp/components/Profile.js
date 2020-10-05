@@ -1,5 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
+import Spinner from 'react-native-loading-spinner-overlay';
 import { StyleSheet, Text, View, Image, Button, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -20,17 +21,25 @@ export default function Profile({route, navigation}) {
 
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [patientName, setPatientName] = useState("Loading....")
+  const [patientAge, setPatientAge] = useState("Loading....")
+  const [patientGender, setPatientGender] = useState("Loading....")
+  const [patientDate, setPatientDate] = useState("Loading....")
   const [patientHR, setPatientHR] = useState("Loading....")
   const [patientTemp, setPatientTemp] = useState("Loading....")
   const [patientBPsys, setPatientBPsys] = useState("Loading....")
   const [patientBPdiast, setPatientBPdiast] = useState("Loading....")
   const [patientAddress, setPatientAddress] = useState("Loading....")
   const [patientDeviceID, setPatientDeviceID] = useState("Loading....")
+  var [finished, setFinished]=useState(false)
 
   useEffect(() => {
     (async () => {
       const { info } = route.params;
       setPatientName(info.Profile.name.toString())
+      setPatientAge(info.Profile.age.toString())
+      setPatientGender(info.Profile.gender.toString())
+      setPatientDate(info.Profile.date.toString())
+
       setPatientAddress(info.ADDRESS.toString())
       setPatientDeviceID(info.ID.toString())
 
@@ -46,8 +55,8 @@ export default function Profile({route, navigation}) {
     setPatientTemp(resObjTx.BPM.toString())
     setPatientBPsys(resObjTx.BP.systolic.toString())
     setPatientBPdiast(resObjTx.BP.diastolic.toString())
-
-    // Alert.alert(info)
+      setFinished(true)
+    // Alert.alert(JSON.stringify(info))
 
 
     })();
@@ -67,6 +76,11 @@ export default function Profile({route, navigation}) {
 
   return (
     <View style={styles.container}>
+      <Spinner
+          visible={!finished}
+          textContent={'Fetching from IoTA...\nPlease Wait...'}
+          textStyle={styles.text}
+        />
       <ScrollView horizontal={false} showsVerticalScrollIndicator={false} >
         {/* <View style={styles.titleBar}>
           <Ionicons name="ios-arrow-back" size={24} color="#52575D"></Ionicons>
@@ -91,6 +105,21 @@ export default function Profile({route, navigation}) {
           <View style={{marginTop:20, alignSelf:'center', }}>
             {/* <Button style={[styles.button, {marginBottom: 20,}]} title='Get Live Readings' onPress={() => navigation.navigate('Readings')}></Button> */}
             <Button style={styles.button} title='View History' onPress={() => navigation.navigate('History', {address: patientAddress})}></Button>
+          </View>
+
+          <View style={styles.statsContainer}>
+            <View style={styles.statsBox}>
+              <Text style={[styles.text, {fontSize: 20}]}>Age</Text>
+              <Text style={[styles.text, styles.subText]}>{patientAge}</Text>
+            </View>
+            <View style={[styles.statsBox, {borderColor: "#DFD8C8", borderLeftWidth: 2, borderRightWidth: 2}]}>
+              <Text style={[styles.text, {fontSize: 20}]}>Gender</Text>
+              <Text style={[styles.text, styles.subText]}>{patientGender.toUpperCase()}</Text>
+            </View>
+            <View style={styles.statsBox}>
+              <Text style={[styles.text, {fontSize: 20}]}>Admitted</Text>
+      <Text style={[styles.text, styles.subText]}>{patientDate}</Text>
+            </View>
           </View>
 
           <View style={styles.statsContainer}>
