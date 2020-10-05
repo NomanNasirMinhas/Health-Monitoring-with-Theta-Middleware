@@ -1,4 +1,5 @@
 import React from "react";
+import {useState, useEffect} from 'react';
 import Header from './Header';
 import {
   Button,
@@ -55,6 +56,18 @@ const theme = createMuiTheme({
   },
 });
 
+
+const [logged_in, setLoggedIn] = useState(false);
+
+
+
+async function login(){
+  const response = await fetch('https://jsonplaceholder.typicode.com/todos/1');
+  console.log("response =",   response);
+  const fetched_data= await response.json();
+  console.log("data =", fetched_data);
+
+}
 
 
 export const Form = () => {
@@ -126,7 +139,7 @@ export const Form = () => {
                   variant="contained"
                   color="primary"
         startIcon={<VpnKeyIcon fontSize="small"/> }
-       // onClick={login}
+        onClick={login}
         style={{marginLeft:"30%"}}
         >
                   
