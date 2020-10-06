@@ -26,6 +26,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+const seedInfo = JSON.parse((localStorage.getItem('seedInfo') || ''))
+
 const YourProfile = () => {
     const classes = useStyles();
     return (
@@ -43,25 +45,23 @@ const YourProfile = () => {
                                     src="https://www.publicdomainpictures.net/pictures/210000/velka/doctor-1490804718D0I.jpg"
                                     alt="Avatar" />
                             </CardAvatar>
-                            <CardHeader profile>
-                                <Typography
-                                    variant="h4"
-                                >
-                                    Dr. Gia Adams
-                        </Typography>
+                            <CardHeader >
+                                <Typography variant="h4">
+                                    {seedInfo.Profile.name}
+                                </Typography>
                             </CardHeader>
                             <Divider />
                             <CardBody profile>
                                 <Typography>
-                                    Dermatologist, Laser Specialist
-                            </Typography>
+                                    {seedInfo.Profile.specialization}
+                                </Typography>
                                 <div className={classes.card}>
                                     <PhoneIcon fontSize="large" />
-                                    <Typography variant="h6">0334-121212</Typography>
+                                    <Typography variant="h6">{seedInfo.Profile.contact}</Typography>
                                     <BusinessIcon fontSize="large" />
-                                    <Typography variant="h6">Room no. 7, Bahria Hospital, Rawalpindi</Typography>
+                                    <Typography variant="h6">{seedInfo.Profile.address}</Typography>
                                     <EmailIcon fontSize="large" />
-                                    <Typography variant="h6">gia@gmail.com</Typography>
+                                    <Typography variant="h6">{seedInfo.Profile.email}</Typography>
                                 </div>
                             </CardBody>
                         </Card>
