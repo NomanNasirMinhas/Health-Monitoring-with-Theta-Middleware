@@ -1,6 +1,7 @@
 import React from "react";
 import {useState, useEffect} from 'react';
 import Header from './Header';
+import { useHistory } from "react-router-dom";
 import {
   Button,
   Typography,
@@ -61,17 +62,49 @@ const theme = createMuiTheme({
 
 
 
-async function login(){
-  const response = await fetch('https://jsonplaceholder.typicode.com/todos/1');
-  console.log("response =",   response);
-  const fetched_data= await response.json();
-  console.log("data =", fetched_data);
 
-}
 
 
 export const Form = () => {
   const classes = useStyles();
+  const [username, setUsername ] = useState(null);
+  const [password, setPassword ] = useState(null);
+  
+
+ const changePassword =(event) =>{
+   setPassword(event.target.value);
+ }
+
+ const changeUsername= (event) => {
+   setUsername(event.target.value);
+ }
+ let history = useHistory();
+
+  async function login(){
+    console.log(username);
+    console.log(password);
+    
+    const response = await fetch(`https://thetamiddleware.herokuapp.com/adminLogin/${username}&${password}`);
+    console.log("response =",   response);
+    const fetched_data= await response.json();
+    console.log("data =", fetched_data);
+
+    if(fetched_data==true){
+      const credentials ={"username": username, "password": password};
+      localStorage.setItem('credentails', JSON.stringify(credentials));
+      console.log(credentials);
+
+      history.push("/home")
+
+    }
+    else{
+      alert("Login Failed");
+    }
+    //console.log(username);
+    //console.log(password);
+    
+  }
+
   return (
     //#757575
     
@@ -111,6 +144,8 @@ export const Form = () => {
                   type="email"
                   variant="outlined"
                   color="primary"
+                  value={username}
+                  onChange={changeUsername}
                   required
                 />
               </div>
@@ -127,6 +162,10 @@ export const Form = () => {
                   label="Password"
                   type="password"
                   variant="outlined"
+                  value={password}
+                  onChange={changePassword}
+
+                  
                   required
                 />
 
