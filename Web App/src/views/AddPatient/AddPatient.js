@@ -90,6 +90,7 @@ const CssSelect = withStyles({
 })(InputBase);
 
 export default function AddPatient() {
+    //{$seed}&{address}
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
     const [name, SetName] = React.useState('');
@@ -99,6 +100,7 @@ export default function AddPatient() {
     const [address, SetAddress] = React.useState('');
     const [contact, SetContact] = React.useState('');
     const [DeviceAddress, SetDeviceAddress] = React.useState('');
+    const seed = (localStorage.getItem('seed') || '')
 
     const handleDateChange = (date) => {
         SetDate(date);
@@ -114,18 +116,16 @@ export default function AddPatient() {
             date: date
         }
 
-        var seed = (localStorage.getItem('seed') || '')
-
-        await fetch('http://localhost:5000/addAddress/', {
+        await fetch('https://thetamiddleware.herokuapp.com/addAddress/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 seed: seed,
-                deviceNum: 11,
+                deviceNum: 12,
                 secLevel: 3,
-                id: "IDalph20",
+                id: "IDalph70",
                 password: "PASSWORD",
                 info: profile
             }
@@ -252,7 +252,7 @@ export default function AddPatient() {
                                     className={classes.submit}
                                 >
                                     Add Patient
-                        </Button>
+                                </Button>
                                 <Dialog
                                     maxWidth="md"
                                     open={open}
@@ -263,16 +263,16 @@ export default function AddPatient() {
                                         <DialogContentText>
                                             Kindly keep the Address ID safe. Your Patient's Address is: {DeviceAddress} and the QR is:
                                             <div className={classes.qr}>
-                                                <QRCode value={DeviceAddress} />
+                                                <QRCode value={`${seed}&${DeviceAddress}`} />
                                             </div>
                                         </DialogContentText>
                                         <DialogActions>
                                             <Button onClick={handleClose} color="primary">
                                                 Save QR
-                                    </Button>
+                                            </Button>
                                             <Button onClick={handleClose} color="primary">
                                                 Close
-                                    </Button>
+                                            </Button>
                                         </DialogActions>
                                     </DialogContent>
                                 </Dialog>

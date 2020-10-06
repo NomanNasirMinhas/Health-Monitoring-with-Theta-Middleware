@@ -15,7 +15,7 @@ const mamExplorerLink = `https://mam-explorer.firebaseapp.com/?provider=${encode
 // Callback used to pass data out of the fetch
 const logData = data => console.log('Fetched and parsed', JSON.parse(trytesToAscii(data)), '\n')
 
-    root='FONGHNBRUBUWMZUTLYLSBGNNHCNORUTMFIXPUXQENYUSXHNRAKOZ9LUURYAXUMX9AMVEWFCMAHVLIJUCW'
+    root='SLIRCQROLZJXYFSBGZWJU9CVJXNPCHIHUAEFEKOCGEMN9UGKGY9XCYNNOXJJFVBANUBRIRQTOWYTLSGJY'
     await Mam.fetch(root, mode, null, logData)
 
   }

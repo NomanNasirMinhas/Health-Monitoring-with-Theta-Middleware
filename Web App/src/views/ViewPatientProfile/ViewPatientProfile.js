@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { Typography, makeStyles, Grid, Card, Button, Dialog, Slide } from "@material-ui/core"
 import { DialogTitle, DialogContentText, DialogContent, DialogActions, ThemeProvider } from "@material-ui/core"
 import AssessmentIcon from '@material-ui/icons/Assessment';
@@ -7,7 +7,7 @@ import HistoryIcon from '@material-ui/icons/History';
 import TimelineIcon from '@material-ui/icons/Timeline';
 import Header from "../../components/Header/Header"
 import theme from "../../assets/theme/theme"
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -38,8 +38,8 @@ const useStyles = makeStyles((theme) => ({
         color: "#959595"
     },
     tileBottomText: {
-        textAlign:"right",
-        marginTop:"60px",
+        textAlign: "right",
+        marginTop: "60px",
         marginRight: "10px",
         fontSize: "30px",
         fontWeight: "normal",
@@ -73,11 +73,41 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const ViewPatientProfile = () => {
 
-    const classes = useStyles();
+const ViewPatientProfile = () => {
+    let { address } = useParams();
+    const [Response, SetResponse] = React.useState();
+    const [LastReading, SetLastReading] = React.useState();
+    useEffect(() => {
+        async function getPatient() {
+            var seed = (localStorage.getItem('seed') || '')
+            var obj = await fetch(`https://thetamiddleware.herokuapp.com/getAddressInfo/${seed}&${address}`)
+            obj = await obj.json()
+
+            //Returns Hash
+            var response = await fetch(`https://thetamiddleware.herokuapp.com/getLastTx/${address}`);
+            var resObj = await response.json();
+
+            //Passing Hash of transaction
+            var responseTx = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${resObj}`);
+            var resObjTx = await responseTx.json();
+            resObjTx = JSON.parse(resObjTx)
+
+            SetLastReading(resObjTx)
+            console.log(resObjTx)
+            SetResponse(obj)
+        }
+        getPatient()
+    }, [])
+
+    useEffect(() => {
+        // var x = Response?.Profile.name
+        // console.log(x)
+    }, [Response])
+
     const [openGenerateReport, setOpenGenerateReport] = React.useState(false);
     const [openDischarge, setOpenDischarge] = React.useState(false);
+    const classes = useStyles();
     return (
         <ThemeProvider theme={theme}>
             <Header />
@@ -102,8 +132,8 @@ const ViewPatientProfile = () => {
                                  </Typography>
                             </Grid>
                             <Grid item>
-                                <Typography variant="h4" >
-                                    Wahaj Mustakeem
+                                <Typography variant="h4">
+                                    {Response?.Profile.name}
                                 </Typography>
                             </Grid>
                         </Grid>
@@ -117,8 +147,8 @@ const ViewPatientProfile = () => {
                             </Grid>
                             <Grid item>
                                 <Typography variant="h4">
-                                    69
-                    </Typography>
+                                    {Response?.Profile.age}
+                                </Typography>
                             </Grid>
                         </Grid>
                     </Slide>
@@ -132,17 +162,17 @@ const ViewPatientProfile = () => {
                         <Grid container>
                             <Card className={classes.cardBody}>
                                 <Card className={classes.minicard}>
-                                    <Typography variant="h6" style={{ color: '#0A7A0F' }} className={classes.tileTopText}>Temperature</Typography>
-                                    <Typography variant="h6" className={classes.tileBottomText}>100 F</Typography>
+                                    <Typography variant="h6" style={{ color: '#0A7A0F' }} className={classes.tileTopText}>Heart Rate</Typography>
+                                    <Typography variant="h6" className={classes.tileBottomText}>{LastReading?.HR}</Typography>
                                 </Card>
                                 <Card className={classes.minicard}>
                                     <Typography variant="h6" style={{ color: '#0A7A0F' }} className={classes.tileTopText}>BPM</Typography>
-                                    <Typography variant="h6" className={classes.tileBottomText}>85</Typography>
+                                    <Typography variant="h6" className={classes.tileBottomText}>{LastReading?.BPM}</Typography>
                                 </Card>
 
                                 <Card className={classes.minicard}>
                                     <Typography variant="h6" style={{ color: '#0A7A0F' }} className={classes.tileTopText}>BP (mm/Hg)</Typography>
-                                    <Typography variant="h6" className={classes.tileBottomText}>120/80</Typography>
+                                    <Typography variant="h6" className={classes.tileBottomText}>{`${LastReading?.BP.diastolic}/${LastReading?.BP.systolic}`}</Typography>
                                 </Card>
                             </Card>
                         </Grid>

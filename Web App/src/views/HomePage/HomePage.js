@@ -23,20 +23,6 @@ const StyledTableRow = withStyles(() => ({
     },
 }))(TableRow);
 
-function createData(id, name, age) {
-    return { id, name, age };
-}
-
-const rows = [
-    createData(1, "Ahmad Bin Suleman", 22),
-    createData(2, "Aamna Ahmad", 23),
-    createData(3, "Mirza Jamshed", 40),
-    createData(4, "Wahaj Mustakeem", 69),
-    createData(5, "Inaam Shehzaad", 42),
-    createData(6, "Fatima Umar", 34),
-    createData(7, "Fatima Malik", 66),
-];
-
 const useStyles = makeStyles((theme) => ({
     content: {
         padding: theme.spacing(3)
@@ -66,7 +52,8 @@ export default function HomePage() {
     }, [])
 
     useEffect(() => {
-        //console.log(Response[0].ID)
+        // var x = Response && Response[0]?.Profile.name
+        // console.log(x)
     }, [Response])
 
     // const patients = async () => {
@@ -96,30 +83,54 @@ export default function HomePage() {
                                         <StyledTableCell align="center">Name</StyledTableCell>
                                         <StyledTableCell align="center">Age</StyledTableCell>
                                         <StyledTableCell align="center">Gender</StyledTableCell>
-                                        <StyledTableCell align="center">Date of Submission</StyledTableCell>
+                                        <StyledTableCell align="center">Date of Admission</StyledTableCell>
                                         <StyledTableCell align="center">Contact</StyledTableCell>
                                         <StyledTableCell align="center">Action</StyledTableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {rows.map((row) => (
-                                        <StyledTableRow key={row.id}>
-                                            <StyledTableCell align="center" component="th" scope="row">
-                                                {row.id}
-                                            </StyledTableCell>
-                                            <StyledTableCell align="center">{row.name}</StyledTableCell>
-                                            <StyledTableCell align="center">{row.age}</StyledTableCell>
-                                            <StyledTableCell align="center">
-                                                <Link
-                                                    component={link}
-                                                    to="/viewpatientprofile"
-                                                    variant="body2"
-                                                >
-                                                    View Profile
-                                        </Link>
-                                            </StyledTableCell>
-                                        </StyledTableRow>
-                                    ))}
+                                    {
+                                        // rows.map((row) => (
+                                        //     <StyledTableRow key={row.id}>
+                                        //         <StyledTableCell align="center" component="th" scope="row">
+                                        //             {row.id}
+                                        //         </StyledTableCell>
+                                        //         <StyledTableCell align="center">{row.name}</StyledTableCell>
+                                        //         <StyledTableCell align="center">{row.age}</StyledTableCell>
+                                        //         <StyledTableCell align="center">
+                                        //             <Link
+                                        //                 component={link}
+                                        //                 to="/viewpatientprofile"
+                                        //                 variant="body2"
+                                        //             >
+                                        //                 View Profile
+                                        //             </Link>
+                                        //         </StyledTableCell>
+                                        //     </StyledTableRow>
+                                        // ))
+
+                                        Response.map((row) => (
+                                            <StyledTableRow key={row.ID}>
+                                                <StyledTableCell align="center" component="th" scope="row">
+                                                    {row.ID}
+                                                </StyledTableCell>
+                                                <StyledTableCell align="center">{row.Profile.name}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.Profile.age}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.Profile.gender}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.Profile.date}</StyledTableCell>
+                                                <StyledTableCell align="center">{row.Profile.contact}</StyledTableCell>
+                                                <StyledTableCell align="center">
+                                                    <Link
+                                                        component={link}
+                                                        to={`/viewpatientprofile/${row.ADDRESS}`}
+                                                        variant="body2"
+                                                    >
+                                                        View Profile
+                                                     </Link>
+                                                </StyledTableCell>
+                                            </StyledTableRow>
+                                        ))
+                                    }
                                 </TableBody>
                             </Table>
                         </TableContainer>

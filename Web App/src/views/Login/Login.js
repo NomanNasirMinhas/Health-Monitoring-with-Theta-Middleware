@@ -58,15 +58,6 @@ const CssTextField = withStyles({
 
 
 const Login = (props) => {
-    // const authentication = {
-    //     isLoggedIn: false,
-    //     onAuthentication() {
-    //         this.isLoggedIn = true
-    //     },
-    //     getLoggedInStatus() {
-    //         return this.isLoggedIn
-    //     }
-    // }
 
     const handleClick = async (event) => {
         //setLoggedInStatus(true)
@@ -74,6 +65,7 @@ const Login = (props) => {
         var seed = await fetch(`https://thetamiddleware.herokuapp.com/getSeed/${userName}&${password}`);
         //getSeed("Username1", "Password1")
         var parsedSeed = await seed.json();
+        localStorage.setItem('seedInfo', JSON.stringify(parsedSeed));
         //alert((parsedSeed).toString().length)
         if ((parsedSeed.SEED).toString().length === 81) {
             localStorage.setItem('seed', parsedSeed.SEED);

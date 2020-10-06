@@ -41,7 +41,7 @@ ReactDOM.render(
       <Route path="/forgotpassword" component={ForgotPassword} />
       <Route path="/createaccount" component={CreateAccount} />
       <SecuredRoute path="/dashboard" component={HomePage}/>
-      <Route path="/viewpatientprofile" component={ViewPatientProfile}/>
+      <Route path="/viewpatientprofile/:address" component={ViewPatientProfile}/>
       <Route path="/yourprofile" component={YourProfile}/>
       <Route path="/livereadings" component={LiveReadings}/>
       <Route path="/addpatient" component={AddPatient}/>

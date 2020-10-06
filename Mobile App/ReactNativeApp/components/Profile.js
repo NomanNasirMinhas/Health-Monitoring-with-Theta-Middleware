@@ -24,10 +24,10 @@ export default function Profile({route, navigation}) {
   const [patientAge, setPatientAge] = useState("Loading....")
   const [patientGender, setPatientGender] = useState("Loading....")
   const [patientDate, setPatientDate] = useState("Loading....")
-  const [patientHR, setPatientHR] = useState("Loading....")
-  const [patientTemp, setPatientTemp] = useState("Loading....")
-  const [patientBPsys, setPatientBPsys] = useState("Loading....")
-  const [patientBPdiast, setPatientBPdiast] = useState("Loading....")
+  const [patientHR, setPatientHR] = useState("Not Found")
+  const [patientTemp, setPatientTemp] = useState("Not Found")
+  const [patientBPsys, setPatientBPsys] = useState("Not Found")
+  const [patientBPdiast, setPatientBPdiast] = useState("Not Found")
   const [patientAddress, setPatientAddress] = useState("Loading....")
   const [patientDeviceID, setPatientDeviceID] = useState("Loading....")
   var [finished, setFinished]=useState(false)
@@ -47,7 +47,9 @@ export default function Profile({route, navigation}) {
     var resObj = await response.json();
     // var lastTxHash = JSON.stringify(resObj)
     // Alert.alert("Last TX Hash", resObj);
-    var responseTx = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${resObj}`);
+    if (resObj.toString().length !== 0)
+    {
+      var responseTx = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${resObj}`);
     var resObjTx = await responseTx.json();
       resObjTx = JSON.parse(resObjTx)
       // Alert.alert(JSON.stringify(resObjTx))
@@ -55,6 +57,8 @@ export default function Profile({route, navigation}) {
     setPatientTemp(resObjTx.BPM.toString())
     setPatientBPsys(resObjTx.BP.systolic.toString())
     setPatientBPdiast(resObjTx.BP.diastolic.toString())
+    }
+
       setFinished(true)
     // Alert.alert(JSON.stringify(info))
 
