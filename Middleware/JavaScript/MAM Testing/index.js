@@ -4,7 +4,7 @@ const { asciiToTrytes, trytesToAscii } = require('@iota/converter');
 const mode = 'public';
 const provider = 'https://nodes.devnet.iota.org';
 
-const mamExplorerLink = `https://mam-explorer.firebaseapp.com/?provider=${encodeURIComponent(provider)}&mode=${mode}&root=`;
+// const mamExplorerLink = `https://mam-explorer.firebaseapp.com/?provider=${encodeURIComponent(provider)}&mode=${mode}&root=`;
 
 let mamState = Mam.init(provider);
 
@@ -18,17 +18,18 @@ const publish = async packet => {
     // Attach the message to the Tangle
     await Mam.attach(message.payload, message.address, 3, 9)
 
-    console.log('Published', packet, '\n');
+    console.log('Published', packet);
+    console.log('Root = ', message.root, '\n');
     return message.root
 }
 
-const publishAll = async () => {
+const publishAll = async (func) => {
     var root=null;
     var initial=true
     while(true)
     {
 
-        var msg = ("Message from Loop")
+        var msg = func()
         if(initial)
         {
             root = await publish({
@@ -53,7 +54,14 @@ const publishAll = async () => {
     return root
   }
 
+  function getMsg(){
+    return "Hello from Function"
+  }
+
   async function pAll(){
-    await publishAll()
+    // while(true){
+      await publishAll(getMsg)
+    // }
+
   }
 pAll()
