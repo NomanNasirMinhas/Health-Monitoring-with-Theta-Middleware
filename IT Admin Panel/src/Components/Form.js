@@ -21,6 +21,7 @@ import {
   makeStyles,
   ThemeProvider,
 } from "@material-ui/core/styles";
+import swal from 'sweetalert';
 import TextField from "@material-ui/core/TextField";
 //import { makeStyles } from '@material-ui/core/styles';
 import { green } from "@material-ui/core/colors";
@@ -78,8 +79,10 @@ export const Form = () => {
  const changeUsername= (event) => {
    setUsername(event.target.value);
  }
+ //routing history 
  let history = useHistory();
 
+ // Login handler
   async function login(){
     console.log(username);
     console.log(password);
@@ -93,12 +96,17 @@ export const Form = () => {
       const credentials ={"username": username, "password": password};
       localStorage.setItem('credentails', JSON.stringify(credentials));
       console.log(credentials);
-
+      //swal("Login!", "You clicked the button!", "success");
+      swal({text: "Success!", timer: 2000, icon:"success",
+     buttons:false
+      });
+     
       history.push("/home")
 
     }
     else{
-      alert("Login Failed");
+     //alert("Login Failed");
+     swal({text:" Invalid email and password", timer: 2000, icon: "error" , buttons:false});
     }
     //console.log(username);
     //console.log(password);
