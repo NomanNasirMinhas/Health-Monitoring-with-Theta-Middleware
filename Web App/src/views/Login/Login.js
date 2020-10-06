@@ -1,4 +1,5 @@
-import React from "react"
+import React from "react";
+
 import { Typography, withStyles } from "@material-ui/core"
 import { makeStyles, Grid, Button, AppBar, Toolbar, TextField, Link, ThemeProvider, Slide } from '@material-ui/core'
 import theme from "../../assets/theme/theme"

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import Navbar from "./Navbar";
 import Grid from "@material-ui/core/Grid";
 import {
@@ -44,6 +44,7 @@ const theme = createMuiTheme({
 });
 
 
+
 const Devices_rows = [
   { device_id: 123, name: "Dr. Altamash", seed: 'xyz' },
   { device_id: 124, name: "Dr. Altamash" , seed: 'xyz' },
@@ -72,26 +73,68 @@ const useStylesTable = makeStyles({
 function Homepage() {
   const classes = useStyles();
   const classesTable = useStylesTable();
+  const [seeds, setSeeds] = useState([])
+
+  useEffect(async ()=>{
+    async function getData(){
+      const credentials= localStorage.getItem('credentials');
+      const data= JSON.parse(credentials);
+         const username= data.username;
+         const password= data.password;
+         const response = await fetch(`https://thetamiddleware.herokuapp.com/getAllSeeds/${username}&${password}`);
+        //  console.log("response =",   seeds);
+         const fetched_data= await response.json();
+         console.log("fetched-data =", fetched_data);
+         setSeeds(fetched_data);
+  //console.log("Seeds =", seeds);
+    }
+    await getData()
+    
+  },[])
+
+  useEffect(()=>{
+    console.log(seeds)
+  },[seeds])
+  // async function getSeeds(){
+  //   const credentials= localStorage.getItem('credentails');
+  //   const data= JSON.parse(credentials);
+  //      const username= data.username;
+  //      const password= data.password;
+  //      const seeds = await fetch(`https://thetamiddleware.herokuapp.com/getAllSeeds/${username}&${password}`);
+  //      console.log("response =",   seeds);
+  //      const fetched_data= await seeds.json();
+  //      console.log("data =", fetched_data);
+
+  //      return fetched_data;
+  //  }
+  //  const dataReturned= getSeeds();
+   
+if (seeds===null){
+
+}
+
   return (
     <ThemeProvider>
 
       <Navbar />
 
       {/* TABLE START*/}
-
+    
       <Grid container spacing={1}>
         <Grid item xs={3}></Grid>
         <Grid item xs={6}>
-          <TableContainer className={classesTable.paper}>
-            <Paper
+        <Paper
               elevation={5}
               style={{
-                width: 400,
+                maxWidth: "100%",
+                width: "100%",
                 margin: "auto",
                 marginTop: "7%",
                 border: "solid grey 0.9px",
               }}
             >
+          <TableContainer className={classesTable.paper}>
+           
               <Typography
                 variant="h3"
                 component="h2"
@@ -102,38 +145,41 @@ function Homepage() {
                   alignSelf: "center",
                 }}
               >
-                <b>Devices</b>
+                <b>Doctors</b>
               </Typography>
 
               <Table className={classesTable.table} aria-label="simple table">
                 <TableHead>
                   <TableRow>
-                    <TableCell align="center">
-                      <strong>Device ID</strong>
+                    <TableCell align="left">
+                      <strong>Doctor's Name</strong>
+                    </TableCell>
+                    <TableCell align="left">
+                      <strong>Specialization</strong>
                     </TableCell>
                     <TableCell align="center">
-                      <strong>Assigned to</strong>
+                      <strong>Contact</strong>
                     </TableCell>
-                    <TableCell align="center">
-                      <strong>Seed</strong>
+                    <TableCell align="left">
+                      <strong>email</strong>
                     </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {Devices_rows.map((obj) => (
+                {seeds.map((obj) => (
                     <TableRow hover key={obj.name}>
                       <TableCell component="th" scope="row">
-                        {obj.device_id}
+                        {obj.ID}
                       </TableCell>
-                      <TableCell align="center">{obj.name}</TableCell>
-                      <TableCell align="center">{obj.seed}</TableCell>
-
+                      <TableCell align="center">{obj.PASSWORD}</TableCell>
+                      <TableCell align="center">{obj.SEED}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
-            </Paper>
+        
           </TableContainer>
+          </Paper>
         </Grid>
 
         <Grid item xs={3}></Grid>

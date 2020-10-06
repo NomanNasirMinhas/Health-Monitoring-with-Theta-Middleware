@@ -84,17 +84,17 @@ export const Form = () => {
 
  // Login handler
   async function login(){
-    console.log(username);
-    console.log(password);
+    // console.log(username);
+    // console.log(password);
     
     const response = await fetch(`https://thetamiddleware.herokuapp.com/adminLogin/${username}&${password}`);
-    console.log("response =",   response);
+    // console.log("response =",   response);
     const fetched_data= await response.json();
-    console.log("data =", fetched_data);
+     console.log("data =", fetched_data);
 
     if(fetched_data==true){
       const credentials ={"username": username, "password": password};
-      localStorage.setItem('credentails', JSON.stringify(credentials));
+      localStorage.setItem('credentials', JSON.stringify(credentials));
       console.log(credentials);
       //swal("Login!", "You clicked the button!", "success");
       swal({text: "Success!", timer: 2000, icon:"success",

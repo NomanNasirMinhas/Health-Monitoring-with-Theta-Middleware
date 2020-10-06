@@ -5,6 +5,7 @@ import {
     makeStyles,
     ThemeProvider,
   } from "@material-ui/core/styles";
+  import { useHistory } from "react-router-dom";
 
 //******* HEADER ******/
   import AppBar from "@material-ui/core/AppBar";
@@ -40,9 +41,24 @@ const useStyles = makeStyles((theme) => ({
 
 function Navbar(){
     const classes = useStyles();
+    let history = useHistory();
+
+  function Doctors(){
+    history.push("/Doctors")
+  }
+
+  function goHome(){
+    history.push("/home");
+  }
+  function Logout(){
+    localStorage.clear();
+    history.push("/")
+  }
+
+  
     return(
         <ThemeProvider theme={theme}>
-        <AppBar position="static" style={{ backgroundColor: "#0ea80e" }}>
+        <AppBar position="static" style={{marginLeft:"0%", backgroundColor: "#0ea80e" }}>
           <Toolbar>
             <Typography variant="h4" className={classes.title}>
               <ArrowForwardIcon />
@@ -52,6 +68,7 @@ function Navbar(){
             <Button
               color="inherit"
               startIcon={<HomeIcon fontSize="small" />}
+              onClick={goHome}
             >
               {" "}
               Home
@@ -60,6 +77,7 @@ function Navbar(){
             <Button
               color="inherit"
               startIcon={<PersonIcon fontSize="small" />}
+              onClick={Doctors}
             >
               {" "}
               Doctors
@@ -75,6 +93,7 @@ function Navbar(){
             <Button
               color="inherit"
               startIcon={<ExitToAppIcon fontSize="small" />}
+              onClick={Logout}
             >
               {" "}
               logout
