@@ -1,31 +1,29 @@
 const { adminLogin, getAllSeeds, getSeed, getAllHash,getLastTransaction, sendPublicTransaction } = require('./thetamiddleware/middleware');
 
 async function testing() {
-  var result = await adminLogin("Admin_ID", "Admin_Password")
-  console.log(result)
-    // testSeed =
-    //   "MBNDML9YVMXWKOMQZKYNJZQQRIQUQYLSNNDLSHCEAKKDJYHBPEWXBNXNXWOGQTHYUCBPPECYHVQFTZFOQ";
-    // testAddress =
-    //   "WIHQJPVOYYGNT9ELDNVUGVEYGYWOBKES9ASIGIZEHIAOZUWBOBFSWPQMYSNMWKRUJQLOTLRKVXRZKKKPC";
-    //   var count=0;
-    //   var readings=null;
-    //   // var msg = await getLastTransaction(testAddress)
-    //   // console.log(msg)
-    //   while(true){
-    //     count++;
-    //     readings={
-    //       HR: getHeartRate(50,70),
-    //       BPM: getBPM(70,90),
-    //       BP:{
-    //         systolic: getBPsys(60,90),
-    //         diastolic: getBPdias(100,130)
-    //       }
-    //     }
-    //     readings=JSON.stringify(readings);
-    //     console.log(readings)
-    //     var result = await sendPublicTransaction(testSeed, testAddress, readings);
-    // console.log(count);
-    //   }
+    testSeed =
+      "MBNDML9YVMXWKOMQZKYNJZQQRIQUQYLSNNDLSHCEAKKDJYHBPEWXBNXNXWOGQTHYUCBPPECYHVQFTZFOQ";
+    testAddress =
+      "DHYBATJDVKBNRJRTS9CILIJRLEOVHFKNHBMTDRGKQAI9DFWMBJEJDIXHROLLODCMENPSHNXFHLWNDHWMZ";
+      var count=0;
+      var readings=null;
+      // var msg = await getLastTransaction(testAddress)
+      // console.log(msg)
+      while(true){
+        count++;
+        readings={
+          HR: getHeartRate(50,70),
+          Temp: getBPM(70,90),
+          BP:{
+            systolic: getBPsys(60,90),
+            diastolic: getBPdias(100,130)
+          }
+        }
+        readings=JSON.stringify(readings);
+        console.log(readings)
+        var result = await sendPublicTransaction(testSeed, testAddress, readings);
+    console.log(count);
+      }
 
   }
 

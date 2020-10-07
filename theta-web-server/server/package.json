@@ -7,21 +7,25 @@
     "start": "nodemon server.js"
   },
   "keywords": [],
+  "engines": {
+    "node": "12.14.1"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.19.0",
-    "cors": "^2.8.5",
-    "dotenv": "^8.0.0",
-    "express": "^4.16.4",
-    "mongodb": "^3.6.1",
-    "mongoose": "^5.5.7",
-    "nodemon": "^2.0.4",
     "@iota/converter": "^1.0.0-beta.23",
     "@iota/core": "^1.0.0-beta.30",
     "@iota/extract-json": "^1.0.0-beta.23",
     "@iota/mam": "^0.7.3",
     "@iota/signing": "^1.0.0-beta.23",
-    "crypto": "^1.0.1"
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "date-fns": "^2.16.1",
+    "dotenv": "^8.0.0",
+    "express": "^4.16.4",
+    "mongodb": "^3.6.1",
+    "mongoose": "^5.5.7",
+    "nodemon": "^2.0.4"
   }
 }

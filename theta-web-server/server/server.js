@@ -17,7 +17,11 @@ var {
   updateAddressProfile,
   getSeedInfo,
   getAllSeeds,
-  adminLogin
+  adminLogin,
+  publishMAMmsg,
+  fetchPublicMAM,
+  dropAddress
+
 } = require("./middleware");
 
 require("dotenv").config();
@@ -33,6 +37,9 @@ app.use(cors());
 app.use(express.json());
 
 const uri = process.env.MONGO_URI;
+
+var message = () =>{return "Message from Function"}
+
 
 MongoClient.connect(uri, { useUnifiedTopology: true }, (err, client) => {
   if (err) return console.error(err);
@@ -60,6 +67,20 @@ MongoClient.connect(uri, { useUnifiedTopology: true }, (err, client) => {
     console.log("Forgot Password Called")
     try {
       const result = await getSeedInfo(dbo, seed);
+      res.status(201).json(result);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  });
+
+  //Get Seed Information
+  app.get("/dropAddress/:seed&:address", async (req, res) => {
+    const seed = req.params.seed;
+    const address = req.params.address;
+
+    console.log("Forgot Password Called")
+    try {
+      const result = await dropAddress(dbo, seed, address);
       res.status(201).json(result);
     } catch (err) {
       res.status(400).json({ message: err.message });
@@ -130,6 +151,30 @@ MongoClient.connect(uri, { useUnifiedTopology: true }, (err, client) => {
     const pass = req.params.password;
     try {
       const result = await getAllSeeds(dbo, id, pass);
+      res.status(201).json(result);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  });
+
+  //GET All SEED CALL
+  app.get("/publishMAM/:seed&:address", async (req, res) => {
+    const seed = req.params.seed;
+    const address = req.params.address;
+    try {
+      const result = await publishMAMmsg(dbo, message, seed, address);
+      res.status(201).json(result);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  });
+
+  //GET All SEED CALL
+  app.get("/getMAM/:seed&:address", async (req, res) => {
+    const seed = req.params.seed;
+    const address = req.params.address;
+    try {
+      const result = await fetchPublicMAM(dbo, seed, address);
       res.status(201).json(result);
     } catch (err) {
       res.status(400).json({ message: err.message });

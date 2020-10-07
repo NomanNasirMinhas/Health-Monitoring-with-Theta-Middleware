@@ -1,9 +1,15 @@
-//const { asTransactionTrytes } = require('@iota/core/typings/core/src/createPrepareTransfers');
-require('dotenv').config();
 const { address } = require("@iota/signing");
-
 const MongoClient = require("mongodb").MongoClient;
-const uri = process.env.MONGO_URI;
+const { format, compareAsc } = require('date-fns');
+const { get } = require("http");
+const { connect } = require("http2");
+require('dotenv').config();
+const Mam = require('@iota/mam');
+  const { asciiToTrytes, trytesToAscii } = require('@iota/converter');
+  const uri = process.env.MONGO_URI;
+
+// const uri =
+  // "mongodb+srv://spidy_admin:CsIcBnIcP786@thetamiddleware-pi0h1.gcp.mongodb.net/test?retryWrites=true&w=majority";
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 //                                                                                            //
@@ -29,11 +35,8 @@ function timestamp() {
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
 function getDate() {
-  var today = new Date();
-  var date =
-    today.getDate() + "-" + (today.getMonth() + 1) + "-" + today.getFullYear();
-  console.log("Current Date is " + date);
-  return date;
+  var today = format(new Date(), 'dd-MM-yyyy')
+  return today;
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
@@ -54,8 +57,11 @@ async function getSeed(id, pass) {
     var result = await dbo
       .collection("SEEDS")
       .findOne({ $and: [{ ID: id }, { PASSWORD: pass }] });
+    if(result == null)
+    return [false, null]
 
-    return result;
+    else
+    return [true, result];
   } catch (err) {
     return err;
   }
@@ -255,7 +261,6 @@ async function addSeed( id, password, info, seed) {
       PASSWORD: password,
       Profile: info,
       SEED: seed,
-      streamRoot: null,
     };
     await dbo.collection("SEEDS").insertOne(myobj);
     return true;
@@ -281,6 +286,7 @@ async function addAddress( id, pass, seed, info, finalAddress) {
       SEED: seed,
       Profile: info,
       ADDRESS: finalAddress,
+      streamRoot: null,
     };
 
     await dbo.collection(seed).insertOne(myobj);
@@ -298,6 +304,7 @@ async function addAddress( id, pass, seed, info, finalAddress) {
 
 async function addTransaction( address, hash) {
   try {
+    // console.log("Uri is ", uri)
     var db = await MongoClient.connect(uri);
     var dbo = await db.db("thetamw1");
     var myobj = {
@@ -318,180 +325,6 @@ async function addTransaction( address, hash) {
   } catch (err) {
     return err;
   }
-}
-
-//********************************************************************************************//
-//                                                                                            //
-//--------------------------------------Code Under Development--------------------------------//
-//                                                                                            //
-//********************************************************************************************//
-
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-//                                                                                            //
-//--------------------------------------New Function------------------------------------------//
-//                                                                                            //
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-async function publicMAMpublish() {
-  const Mam = require('@iota/mam');
-const { asciiToTrytes, trytesToAscii } = require('@iota/converter');
-const mode = 'public';
-const provider = getNode();
-
-const mamExplorerLink = `https://mam-explorer.firebaseapp.com/?provider=${encodeURIComponent(provider)}&mode=${mode}&root=`;
-let mamState = Mam.init(provider);
-const publish = async packet => {
-  // Create MAM message as a string of trytes
-  const trytes = asciiToTrytes(JSON.stringify(packet));
-  const message = Mam.create(mamState, trytes);
-
-  // Save your new mamState
-  mamState = message.state;
-  // Attach the message to the Tangle
-  await Mam.attach(message.payload, message.address, 3, 9)
-
-  console.log('Published', packet, '\n');
-  return message.root
-}
-return publish;
-}
-
-async function publishMAMmsg(msg){
-  var publish = await publicMAMpublish();
-  var root = await publish({
-    message: msg,
-    timestamp: (new Date()).toLocaleString()
-  });
-  return root;
-}
-
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-//                                                                                            //
-//--------------------------------------New Function------------------------------------------//
-//                                                                                            //
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-
-function privateMAM(seed, msg) {
-  const Mam = require("@iota/mam");
-  const { asciiToTrytes } = require("@iota/converter");
-
-  let mamState = Mam.init(getNode());
-
-  const mamType = "restricted";
-  const mamSecret = seed;
-
-  mamState = Mam.changeMode(mamState, mamType, mamSecret);
-
-  const publish = async (data) => {
-    const trytes = asciiToTrytes(data);
-    const message = Mam.create(mamState, trytes);
-
-    mamState = message.state;
-
-    await Mam.attach(message.payload, message.address, 3, 10);
-    console.log("Sent message to the Tangle!");
-    console.log("Address: " + message.root);
-  };
-
-  publish("Message 1");
-  publish("Message 2");
-}
-
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-//                                                                                            //
-//--------------------------------------New Function------------------------------------------//
-//                                                                                            //
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-
-function fetchPublicMAM(mamRoot) {
-  const Mam = require("@iota/mam");
-  const { asciiToTrytes, trytesToAscii } = require("@iota/converter");
-
-  // Enter root of the
-  const root = mamRoot;
-
-  async function initMam() {
-    console.log("\r\n\r\n");
-    console.log("Listening to MAM stream...");
-    console.log("\r\n");
-    await Mam.init(getNode());
-  }
-
-  async function checkMam() {
-    if (root !== nextRoot) {
-      root = nextRoot;
-    }
-
-    const data = await Mam.fetch(root, "public", null, showData);
-    nextRoot = data.nextRoot;
-
-    // Check again in 5 seconds
-    setTimeout(checkMam, 5000);
-  }
-
-  // Start the monitoring!
-  initMam();
-  checkMam();
-}
-
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-//                                                                                            //
-//--------------------------------------New Function------------------------------------------//
-//                                                                                            //
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-
-function fetchPrivateMAM(seed, mamRoot) {
-  const Mam = require("@iota/mam");
-  const { trytesToAscii } = require("@iota/converter");
-
-  // Init State
-  let root = mamRoot;
-  const mamType = "restricted";
-  const mamSecret = seed;
-
-  let mamState = Mam.init(getNode());
-
-  const logData = (data) => console.log(trytesToAscii(data));
-
-  const execute = async () => {
-    const resp = await Mam.fetch(root, mamType, mamSecret, logData);
-  };
-  execute();
-}
-
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-//                                                                                            //
-//--------------------------------------New Function------------------------------------------//
-//                                                                                            //
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-function encrypt(seed, address, text) {
-  const crypto = require('crypto');
-  const algorithm = 'aes-256-cbc';
-  const key = seed.slice(0,32);
-  const iv = address.slice(0,16);
-  let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(key), iv);
-  let encrypted = cipher.update(text);
-  encrypted = Buffer.concat([encrypted, cipher.final()]);
-  return { iv: iv.toString('hex'), encryptedData: encrypted.toString('hex') };
- }
-
- function decrypt(seed, address, text) {
-  const key = seed.slice(0,32);
- // const iv = address;
-  const crypto = require('crypto');
-  const algorithm = 'aes-256-cbc';
-  let iv = Buffer.from(text.iv, 'hex');
-  let encryptedText = Buffer.from(text.encryptedData, 'hex');
-  let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key), iv);
-  let decrypted = decipher.update(encryptedText);
-  decrypted = Buffer.concat([decrypted, decipher.final()]);
-  return decrypted.toString();
- }
-
-async function sendPrivateTransaction(seed, addresss, msg)
-{
-  const encText = encrypt(seed, addresss, msg);
-  await sendPublicTransaction(seed, addresss, encText);
-
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
@@ -570,7 +403,7 @@ async function checkAddress( seedID, address) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function getAllAddresses( seed) {
+async function getAllAddresses(seed) {
   var addressAray = [];
   try {
     var db = await MongoClient.connect(uri);
@@ -597,6 +430,126 @@ async function getAllAddresses( seed) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
+async function dropAddress(seed, address) {
+
+  try {
+    var db = await MongoClient.connect(uri);
+    var dbo = await db.db("thetamw1");
+
+    await dbo.collection(seed).deleteOne({ ADDRESS: address });
+    await dbo.collection(seed).drop();
+
+    return true
+
+  } catch (err) {
+    return err;
+  }
+}
+
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//                                                                                            //
+//--------------------------------------New Function------------------------------------------//
+//                                                                                            //
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+async function adminLogin(id, pass) {
+  try {
+    var db = await MongoClient.connect(uri);
+    var dbo = await db.db("thetamw1");
+    var result = await dbo
+      .collection("ADMIN")
+      .findOne({ $and: [{ ID: id }, { PASSWORD: pass }] });
+
+      db.close()
+      if (result == null)
+        return false;
+      else
+      return true
+  } catch (err) {
+    return err;
+  }
+}
+
+async function getAllSeeds(username, password) {
+  var loggedIN = await adminLogin(username, password)
+  if (loggedIN == true){
+    var addressAray = [];
+  try {
+    var db = await MongoClient.connect(uri);
+    var dbo = await db.db("thetamw1");
+
+    var info = await dbo
+      .collection("SEEDS")
+      .find({}, { projection: { _id: 0 } })
+      .toArray();
+
+    var i;
+    db.close()
+    for (i = 0; i < info.length; i++) {
+      addressAray.push(info[i]);
+    }
+    return addressAray;
+  } catch (err) {
+    return err;
+  }
+  }
+
+  else
+  return ("Error")
+
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//                                                                                            //
+//--------------------------------------New Function------------------------------------------//
+//                                                                                            //
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+async function updateStreamRoot(address, root) {
+  try {
+
+    var db = await MongoClient.connect(uri);
+    var dbo = await db.db("thetamw1");
+    var myquery = { ADDRESS: address };
+    var newvalues = { $set: { streamRoot: root } };
+    await dbo.collection(seed).updateOne(myquery, newvalues);
+
+    return true;
+  } catch (err) {
+    return err;
+  }
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//                                                                                            //
+//--------------------------------------New Function------------------------------------------//
+//                                                                                            //
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+async function getStreamRoot(seed, address) {
+  try {
+
+    var db = await MongoClient.connect(uri);
+    var dbo = await db.db("thetamw1");
+    var result = await dbo
+      .collection(seed)
+      .findOne({ ADDRESS:address });
+    if(result.streamRoot.toString().length === 0)
+    return false;
+
+    else
+    return result.streamRoot;
+  } catch (err) {
+    return err;
+  }
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//                                                                                            //
+//--------------------------------------New Function------------------------------------------//
+//                                                                                            //
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
 async function getAddressInfo( seed, address) {
 
   try {
@@ -605,7 +558,7 @@ async function getAddressInfo( seed, address) {
 
     var info = await dbo.collection(seed).findOne({ ADDRESS: address });
 
-    return info.Profile;
+    return info;
   } catch (err) {
     return err;
   }
@@ -667,78 +620,6 @@ async function getPublicTransactionInfo(hash)
 //--------------------------------------New Function------------------------------------------//
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-async function adminLogin(id, pass) {
-  try {
-    var db = await MongoClient.connect(uri);
-    var dbo = await db.db("thetamw1");
-    var result = await dbo
-      .collection("ADMIN")
-      .findOne({ $and: [{ ID: id }, { PASSWORD: pass }] });
-
-      db.close()
-      if (result == null)
-        return false;
-      else
-      return true
-  } catch (err) {
-    return err;
-  }
-}
-
-async function getAllSeeds(username, password) {
-  var loggedIN = await adminLogin(username, password)
-  if (loggedIN == true){
-    var addressAray = [];
-  try {
-    var db = await MongoClient.connect(uri);
-    var dbo = await db.db("thetamw1");
-
-    var info = await dbo
-      .collection("SEEDS")
-      .find({}, { projection: { _id: 0 } })
-      .toArray();
-
-    var i;
-    for (i = 0; i < info.length; i++) {
-      addressAray.push(info[i]);
-    }
-    return addressAray;
-  } catch (err) {
-    return err;
-  }
-  }
-
-  else
-  return ("Error")
-
-}
-
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-//                                                                                            //
-//--------------------------------------New Function------------------------------------------//
-//                                                                                            //
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-
-async function updateStreamRoot(address, root) {
-  try {
-
-    var db = await MongoClient.connect(uri);
-    var dbo = await db.db("thetamw1");
-    var myquery = { ADDRESS: address };
-    var newvalues = { $set: { streamRoot: root } };
-    await dbo.collection(seed).updateOne(myquery, newvalues);
-
-    return true;
-  } catch (err) {
-    return err;
-  }
-}
-
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-//                                                                                            //
-//--------------------------------------New Function------------------------------------------//
-//                                                                                            //
-//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
 async function getPrivateTransactionInfo(seed, address, hash)
 {
@@ -746,6 +627,190 @@ async function getPrivateTransactionInfo(seed, address, hash)
   var result = decrypt(seed, address, ecText);
 
 }
+//********************************************************************************************//
+//                                                                                            //
+//--------------------------------------Code Under Development--------------------------------//
+//                                                                                            //
+//********************************************************************************************//
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//                                                                                            //
+//--------------------------------------New Function------------------------------------------//
+//                                                                                            //
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+async function publishMAMmsg(dbo, func, seed, address) {
+  const Mam = require('@iota/mam');
+const { asciiToTrytes, trytesToAscii } = require('@iota/converter');
+const mode = 'public';
+const provider = 'https://nodes.devnet.iota.org';
+
+let mamState = Mam.init(provider);
+
+const publish = async packet => {
+    // Create MAM message as a string of trytes
+    const trytes = asciiToTrytes(JSON.stringify(packet));
+    const message = Mam.create(mamState, trytes);
+
+    // Save your new mamState
+    mamState = message.state;
+    // Attach the message to the Tangle
+    await Mam.attach(message.payload, message.address, 3, 9)
+
+    console.log('Published', packet);
+    // console.log('Root = ', message.root, '\n');
+    return message.root
+}
+
+const publishAll = async (func) => {
+    var root=null;
+    var initial=true
+    while(true)
+    {
+
+        var msg = func()
+        if(initial)
+        {
+            root = await publish({
+                message: msg,
+                timestamp: (new Date()).toLocaleString()
+              })
+              updateStreamRoot(dbo, seed, address, root)
+              console.log("Root is ", root)
+
+        }
+        else{
+            await publish({
+                message: msg,
+                timestamp: (new Date()).toLocaleString()
+              })
+        }
+        initial=false
+
+    }
+
+    console.log("Root is ", root)
+
+    return root
+  }
+
+  publishAll(func)
+
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//                                                                                            //
+//--------------------------------------New Function------------------------------------------//
+//                                                                                            //
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+function privateMAM(seed, msg) {
+  const Mam = require("@iota/mam");
+  const { asciiToTrytes } = require("@iota/converter");
+
+  let mamState = Mam.init(getNode());
+
+  const mamType = "restricted";
+  const mamSecret = seed;
+
+  mamState = Mam.changeMode(mamState, mamType, mamSecret);
+
+  const publish = async (data) => {
+    const trytes = asciiToTrytes(data);
+    const message = Mam.create(mamState, trytes);
+
+    mamState = message.state;
+
+    await Mam.attach(message.payload, message.address, 3, 10);
+    console.log("Sent message to the Tangle!");
+    console.log("Address: " + message.root);
+  };
+
+  publish("Message 1");
+  publish("Message 2");
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//                                                                                            //
+//--------------------------------------New Function------------------------------------------//
+//                                                                                            //
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+async function fetchPublicMAM(dbo, seed, address) {
+
+  const mode = 'public';
+  const provider = getNode();
+
+      // Initialize MAM State
+      let mamState = Mam.init(provider);
+  const logData = data => console.log('Fetched and parsed', JSON.parse(trytesToAscii(data)), '\n')
+    console.log("Getting Root")
+    root=await getStreamRoot(dbo, seed, address)
+    console.log("MAM Root is =", root)
+    await Mam.fetch(root.toString(), mode, null, logData)
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//                                                                                            //
+//--------------------------------------New Function------------------------------------------//
+//                                                                                            //
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+function fetchPrivateMAM(seed, mamRoot) {
+  const Mam = require("@iota/mam");
+  const { trytesToAscii } = require("@iota/converter");
+
+  // Init State
+  let root = mamRoot;
+  const mamType = "restricted";
+  const mamSecret = seed;
+
+  let mamState = Mam.init(getNode());
+
+  const logData = (data) => console.log(trytesToAscii(data));
+
+  const execute = async () => {
+    const resp = await Mam.fetch(root, mamType, mamSecret, logData);
+  };
+  execute();
+}
+
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+//                                                                                            //
+//--------------------------------------New Function------------------------------------------//
+//                                                                                            //
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+function encrypt(seed, address, text) {
+  const crypto = require('crypto');
+  const algorithm = 'aes-256-cbc';
+  const key = seed.slice(0,32);
+  const iv = address.slice(0,16);
+  let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(key), iv);
+  let encrypted = cipher.update(text);
+  encrypted = Buffer.concat([encrypted, cipher.final()]);
+  return { iv: iv.toString('hex'), encryptedData: encrypted.toString('hex') };
+ }
+
+ function decrypt(seed, address, text) {
+  const key = seed.slice(0,32);
+ // const iv = address;
+  const crypto = require('crypto');
+  const algorithm = 'aes-256-cbc';
+  let iv = Buffer.from(text.iv, 'hex');
+  let encryptedText = Buffer.from(text.encryptedData, 'hex');
+  let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key), iv);
+  let decrypted = decipher.update(encryptedText);
+  decrypted = Buffer.concat([decrypted, decipher.final()]);
+  return decrypted.toString();
+ }
+
+async function sendPrivateTransaction(seed, addresss, msg)
+{
+  const encText = encrypt(seed, addresss, msg);
+  await sendPublicTransaction(seed, addresss, encText);
+
+}
+
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -781,5 +846,8 @@ module.exports = {
   getSeedInfo,
   getAllSeeds,
   adminLogin,
-  updateStreamRoot
+  updateStreamRoot,
+  publishMAMmsg,
+  fetchPublicMAM,
+  dropAddress
 };
