@@ -73,7 +73,7 @@ const useStylesTable = makeStyles({
 function Homepage() {
   const classes = useStyles();
   const classesTable = useStylesTable();
-  const [seeds, setSeeds] = useState([])
+  const [seeds, setSeeds] = useState(null)
 
   useEffect(async ()=>{
     async function getData(){
@@ -110,8 +110,47 @@ function Homepage() {
   //  const dataReturned= getSeeds();
    
 if (seeds===null){
+  return (
+    <ThemeProvider>
 
-}
+    <Navbar />
+
+    <Grid container spacing={1}>
+        <Grid item xs={3}></Grid>
+        <Grid item xs={6}>
+        <Paper
+              elevation={5}
+              style={{
+                maxWidth: "100%",
+                width: "100%",
+                margin: "auto",
+                marginTop: "7%",
+                border: "solid grey 0.9px",
+              }}
+            >
+              <Typography
+                variant="h3"
+                component="h2"
+                style={{
+                  textAlign: "center",
+                  backgroundColor: "#0ea80e",
+                  color: "white",
+                  alignSelf: "center",
+                }}
+              >
+                <b>Doctors</b>
+              </Typography>
+              </Paper>
+              </Grid>
+              </Grid>
+    
+
+    <Typography variant="h1" > Loading...</Typography>
+
+
+
+    </ThemeProvider>
+  )};
 
   return (
     <ThemeProvider>
