@@ -86,7 +86,10 @@ export const Form = () => {
   async function login(){
     // console.log(username);
     // console.log(password);
-    
+    if(username==null || password==null){
+      swal({text:" Please enter your email/password", timer: 2000, icon: "error" , buttons:false}); 
+    }
+    else{
     const response = await fetch(`https://thetamiddleware.herokuapp.com/adminLogin/${username}&${password}`);
     // console.log("response =",   response);
     const fetched_data= await response.json();
@@ -112,7 +115,7 @@ export const Form = () => {
     //console.log(password);
     
   }
-
+  }
   return (
     //#757575
     
@@ -123,7 +126,7 @@ export const Form = () => {
       <div className={classes.root}>
       
         <Paper
-          elevation={7}
+          elevation={2}
           style={{
             width: "30%",
             height: "50%",
@@ -187,7 +190,7 @@ export const Form = () => {
                   color="primary"
         startIcon={<VpnKeyIcon fontSize="small"/> }
         onClick={login}
-        style={{marginLeft:"30%"}}
+      
         >
                   
                 

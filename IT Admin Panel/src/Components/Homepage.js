@@ -133,8 +133,6 @@ if (seeds===null){
                 border: "solid grey 0.9px",
               }}
             >
-          <TableContainer className={classesTable.paper}>
-           
               <Typography
                 variant="h3"
                 component="h2"
@@ -147,6 +145,9 @@ if (seeds===null){
               >
                 <b>Doctors</b>
               </Typography>
+          <TableContainer className={classesTable.paper}>
+           
+              
 
               <Table className={classesTable.table} aria-label="simple table">
                 <TableHead>
@@ -160,9 +161,7 @@ if (seeds===null){
                     <TableCell align="center">
                       <strong>Contact</strong>
                     </TableCell>
-                    <TableCell align="left">
-                      <strong>email</strong>
-                    </TableCell>
+                  
                   </TableRow>
                 </TableHead>
                 <TableBody>
