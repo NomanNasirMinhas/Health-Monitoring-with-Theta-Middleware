@@ -45,7 +45,7 @@ ReactDOM.render(
       <Route path="/yourprofile" component={YourProfile}/>
       <Route path="/livereadings" component={LiveReadings}/>
       <Route path="/addpatient" component={AddPatient}/>
-      <Route path="/viewhistory" component={ViewHistory}/>
+      <Route path="/viewhistory/:name&:age&:address" component={ViewHistory}/>
 
       <Route path="*" component={() => "404 NOT FOUND"} />
     </Switch>

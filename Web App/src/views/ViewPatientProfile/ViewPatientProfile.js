@@ -73,36 +73,45 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-
 const ViewPatientProfile = () => {
     let { address } = useParams();
     const [Response, SetResponse] = React.useState();
     const [LastReading, SetLastReading] = React.useState();
+    const [name, SetName] = React.useState()
+    const [age, SetAge] = React.useState()
+
+    const dischargePatient = async () => {
+
+    }
+
     useEffect(() => {
-        async function getPatient() {
+        async function getProfile() {
             var seed = (localStorage.getItem('seed') || '')
             var obj = await fetch(`https://thetamiddleware.herokuapp.com/getAddressInfo/${seed}&${address}`)
             obj = await obj.json()
-
+            SetName(obj.Profile.name)
+            SetAge(obj.Profile.age)
             //Returns Hash
             var response = await fetch(`https://thetamiddleware.herokuapp.com/getLastTx/${address}`);
             var resObj = await response.json();
-
-            //Passing Hash of transaction
-            var responseTx = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${resObj}`);
-            var resObjTx = await responseTx.json();
-            resObjTx = JSON.parse(resObjTx)
-
-            SetLastReading(resObjTx)
-            console.log(resObjTx)
-            SetResponse(obj)
+            if (resObj !== false) {
+                //Passing Hash of transaction
+                var responseTx = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${resObj}`);
+                var resObjTx = await responseTx.json();
+                resObjTx = JSON.parse(resObjTx)
+                if (resObjTx !== null) {
+                    SetLastReading(resObjTx)
+                    SetResponse(obj)
+                }
+            }
+            else {
+                console.log("anday waala burger")
+            }
         }
-        getPatient()
+        getProfile()
     }, [])
 
     useEffect(() => {
-        // var x = Response?.Profile.name
-        // console.log(x)
     }, [Response])
 
     const [openGenerateReport, setOpenGenerateReport] = React.useState(false);
@@ -133,7 +142,7 @@ const ViewPatientProfile = () => {
                             </Grid>
                             <Grid item>
                                 <Typography variant="h4">
-                                    {Response?.Profile.name}
+                                    {name}
                                 </Typography>
                             </Grid>
                         </Grid>
@@ -147,7 +156,7 @@ const ViewPatientProfile = () => {
                             </Grid>
                             <Grid item>
                                 <Typography variant="h4">
-                                    {Response?.Profile.age}
+                                    {age}
                                 </Typography>
                             </Grid>
                         </Grid>
@@ -163,11 +172,11 @@ const ViewPatientProfile = () => {
                             <Card className={classes.cardBody}>
                                 <Card className={classes.minicard}>
                                     <Typography variant="h6" style={{ color: '#0A7A0F' }} className={classes.tileTopText}>Heart Rate</Typography>
-                                    <Typography variant="h6" className={classes.tileBottomText}>{LastReading?.HR}</Typography>
+                                    <Typography variant="h6" className={classes.tileBottomText}>{LastReading?.HR} BPM</Typography>
                                 </Card>
                                 <Card className={classes.minicard}>
-                                    <Typography variant="h6" style={{ color: '#0A7A0F' }} className={classes.tileTopText}>BPM</Typography>
-                                    <Typography variant="h6" className={classes.tileBottomText}>{LastReading?.BPM}</Typography>
+                                    <Typography variant="h6" style={{ color: '#0A7A0F' }} className={classes.tileTopText}>Temperature</Typography>
+                                    <Typography variant="h6" className={classes.tileBottomText}>{LastReading?.Temp} F</Typography>
                                 </Card>
 
                                 <Card className={classes.minicard}>
@@ -201,14 +210,12 @@ const ViewPatientProfile = () => {
                         <Grid item>
                             <Button
                                 component={Link}
-                                to="/viewhistory"
+                                to={`/viewhistory/${Response?.Profile.name.toString()}&${Response?.Profile.age.toString()}&${address}`}
                                 variant="outlined"
                                 startIcon={<HistoryIcon />}
                                 color="primary"
-                                className={classes.sideButton}
-                            >
-                                View History
-                        </Button>
+                                className={classes.sideButton}>
+                                View History</Button>
                         </Grid>
                         <Grid item>
                             <Button

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, TextField, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions } from '@material-ui/core';
 import { Grid, Typography, makeStyles, Container, ThemeProvider, Slide } from '@material-ui/core';
-import { AppBar, Toolbar } from "@material-ui/core"
+import { AppBar, Toolbar, withStyles } from "@material-ui/core"
 import theme from "../../assets/theme/theme"
 
 const useStyles = makeStyles((theme) => ({
@@ -29,6 +29,35 @@ const useStyles = makeStyles((theme) => ({
         height: "70px"
     }
 }));
+
+const CssTextField = withStyles({
+    root: {
+        '& label': {
+            color: 'white',
+        },
+        '& label.Mui-focused': {
+            color: 'cyan',
+        },
+
+        '& .MuiInput-underline:after': {
+            borderBottomColor: 'cyan',
+        },
+        '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+                borderColor: 'white',
+            },
+            '& ': {
+                color: 'white'
+            },
+            '&:hover fieldset': {
+                borderColor: 'cyan',
+            },
+            '&.Mui-focused fieldset': {
+                borderColor: 'cyan',
+            },
+        },
+    },
+})(TextField);
 
 export default function ForgotPassword() {
     const classes = useStyles();
@@ -60,7 +89,7 @@ export default function ForgotPassword() {
                         <form className={classes.form} noValidate>
                             <Grid container spacing={3}>
                                 <Grid item xs={12}>
-                                    <TextField
+                                    <CssTextField
                                         autoComplete="fname"
                                         name="enterSeed"
                                         variant="outlined"

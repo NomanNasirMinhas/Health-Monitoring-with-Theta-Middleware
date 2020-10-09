@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, TextField, Link, Dialog, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core';
-import { Grid, Typography, makeStyles, Container, DialogActions, Slide, ThemeProvider } from '@material-ui/core';
+import { Grid, Typography, makeStyles, Container, DialogActions, Slide, ThemeProvider, withStyles } from '@material-ui/core';
 import { AppBar, Toolbar } from "@material-ui/core"
 import theme from "../../assets/theme/theme"
 import { Link as link } from "react-router-dom"
@@ -20,8 +20,7 @@ const useStyles = makeStyles((theme) => ({
         minHeight: "180px",
     },
     appBar: {
-        alignItems: "center",
-        background: '#00a152'
+        alignItems: "center"
     },
     marginTopAppBar: {
         marginTop: theme.spacing(24)
@@ -31,6 +30,36 @@ const useStyles = makeStyles((theme) => ({
         height: "70px"
     }
 }));
+
+const CssTextField = withStyles({
+    root: {
+        '& label': {
+            color: 'white',
+        },
+        '& label.Mui-focused': {
+            color: 'cyan',
+        },
+
+        '& .MuiInput-underline:after': {
+            borderBottomColor: 'cyan',
+        },
+        '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+                borderColor: 'white',
+            },
+            '& ': {
+                color: 'white'
+            },
+            '&:hover fieldset': {
+                borderColor: 'cyan',
+            },
+            '&.Mui-focused fieldset': {
+                borderColor: 'cyan',
+            },
+        },
+    },
+})(TextField);
+
 
 export default function SignUp() {
     const classes = useStyles();
@@ -96,7 +125,7 @@ export default function SignUp() {
                         <form className={classes.form} noValidate>
                             <Grid container spacing={3}>
                                 <Grid item xs={12}>
-                                    <TextField
+                                    <CssTextField
                                         name="name"
                                         variant="outlined"
                                         required
@@ -110,7 +139,7 @@ export default function SignUp() {
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <TextField
+                                    <CssTextField
                                         variant="outlined"
                                         required
                                         fullWidth
@@ -124,7 +153,7 @@ export default function SignUp() {
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
-                                    <TextField
+                                    <CssTextField
                                         variant="outlined"
                                         required
                                         fullWidth
@@ -139,7 +168,7 @@ export default function SignUp() {
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
-                                    <TextField
+                                    <CssTextField
                                         variant="outlined"
                                         required
                                         fullWidth
@@ -154,7 +183,7 @@ export default function SignUp() {
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <TextField
+                                    <CssTextField
                                         variant="outlined"
                                         required
                                         fullWidth
@@ -169,7 +198,7 @@ export default function SignUp() {
                                 </Grid>
 
                                 <Grid item xs={12}>
-                                    <TextField
+                                    <CssTextField
                                         variant="outlined"
                                         required
                                         fullWidth
@@ -184,7 +213,7 @@ export default function SignUp() {
                                 </Grid>
 
                                 <Grid item xs={12}>
-                                    <TextField
+                                    <CssTextField
                                         variant="outlined"
                                         required
                                         fullWidth
@@ -204,7 +233,8 @@ export default function SignUp() {
                                 onClick={handleSubmit}
                                 fullWidth
                                 variant="contained"
-                                style={{ background: '#00a152', color: '#FFFFFF', fontSize: 20 }}
+                                color="primary"
+                                style={{fontSize: 20 }}
                                 className={classes.submit}
                             >
                                 Sign Up
@@ -237,6 +267,7 @@ export default function SignUp() {
                                     <Link
                                         to="/"
                                         component={link}
+                                        color="secondary"
                                         variant="body2">
                                         Already have an account? Sign in
                                 </Link>

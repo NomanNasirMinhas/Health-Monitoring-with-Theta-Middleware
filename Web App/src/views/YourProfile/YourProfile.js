@@ -8,7 +8,7 @@ import Divider from "@material-ui/core/Divider/Divider"
 import PhoneIcon from '@material-ui/icons/Phone'
 import Header from "../../components/Header/Header"
 import BusinessIcon from '@material-ui/icons/Business'
-import EmailIcon from '@material-ui/icons/Email';
+import EmailIcon from '@material-ui/icons/Email'
 import theme from "../../assets/theme/theme"
 
 const useStyles = makeStyles((theme) => ({
@@ -26,10 +26,11 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const seedInfo = JSON.parse((localStorage.getItem('seedInfo') || ''))
-
 const YourProfile = () => {
     const classes = useStyles();
+    var seedInfo = localStorage.getItem('seedInfo')
+    seedInfo = JSON.parse(seedInfo)
+    console.log(seedInfo)
     return (
         <ThemeProvider theme={theme}>
             <Header />
@@ -47,21 +48,21 @@ const YourProfile = () => {
                             </CardAvatar>
                             <CardHeader >
                                 <Typography variant="h4">
-                                    {seedInfo.Profile.name}
+                                    {seedInfo?.Profile.name}
                                 </Typography>
                             </CardHeader>
                             <Divider />
                             <CardBody profile>
                                 <Typography>
-                                    {seedInfo.Profile.specialization}
+                                    {seedInfo?.Profile.specialization}
                                 </Typography>
                                 <div className={classes.card}>
                                     <PhoneIcon fontSize="large" />
-                                    <Typography variant="h6">{seedInfo.Profile.contact}</Typography>
+                                    <Typography variant="h6">{seedInfo?.Profile.contact}</Typography>
                                     <BusinessIcon fontSize="large" />
-                                    <Typography variant="h6">{seedInfo.Profile.address}</Typography>
+                                    <Typography variant="h6">{seedInfo?.Profile.address}</Typography>
                                     <EmailIcon fontSize="large" />
-                                    <Typography variant="h6">{seedInfo.Profile.email}</Typography>
+                                    <Typography variant="h6">{seedInfo?.Profile.email}</Typography>
                                 </div>
                             </CardBody>
                         </Card>

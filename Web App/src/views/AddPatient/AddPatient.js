@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, TextField, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions, Slide } from '@material-ui/core';
 import { Grid, Typography, makeStyles, InputBase, Container, Select, MenuItem, InputLabel, FormControl, ThemeProvider, withStyles } from '@material-ui/core';
 import DateFnsUtils from '@date-io/date-fns';
+import { format } from "date-fns";
 import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
@@ -96,7 +97,7 @@ export default function AddPatient() {
     const [name, SetName] = React.useState('');
     const [age, setAge] = React.useState('');
     const [gender, SetGender] = React.useState('');
-    const [date, SetDate] = React.useState(new Date('2020-08-18'));
+    const [date, SetDate] = React.useState(format(new Date(), "dd-MM-yyyy"));
     const [address, SetAddress] = React.useState('');
     const [contact, SetContact] = React.useState('');
     const [DeviceAddress, SetDeviceAddress] = React.useState('');
@@ -123,9 +124,9 @@ export default function AddPatient() {
             },
             body: JSON.stringify({
                 seed: seed,
-                deviceNum: 12,
+                deviceNum: 13,
                 secLevel: 3,
-                id: "IDalph70",
+                id: "IDalph71",
                 password: "PASSWORD",
                 info: profile
             }
@@ -188,7 +189,7 @@ export default function AddPatient() {
                                                 id="demo-simple-select-outlined"
                                                 label="Gender"
                                                 color="secondary"
-                                                input={<CssSelect />}
+                                                //input={<CssSelect />}
                                                 onChange={(event) => { SetGender(event.target.value) }}
                                                 value={gender}
                                             >
@@ -231,7 +232,7 @@ export default function AddPatient() {
                                                 variant="inline"
                                                 color="secondary"
                                                 style={{ color: '#FFFFFF' }}
-                                                format="dd/MM/yyyy"
+                                                format="dd-MM-yyyy"
                                                 id="date-picker-inline"
                                                 label="Date"
                                                 value={date}

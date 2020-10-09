@@ -60,22 +60,17 @@ const CssTextField = withStyles({
 const Login = (props) => {
 
     const handleClick = async (event) => {
-        //setLoggedInStatus(true)
         event.preventDefault();
         var seed = await fetch(`https://thetamiddleware.herokuapp.com/getSeed/${userName}&${password}`);
-        //getSeed("Username1", "Password1")
         var parsedSeed = await seed.json();
-        localStorage.setItem('seedInfo', JSON.stringify(parsedSeed));
-        //alert((parsedSeed).toString().length)
-        if ((parsedSeed.SEED).toString().length === 81) {
-            localStorage.setItem('seed', parsedSeed.SEED);
+        localStorage.setItem('seedInfo', JSON.stringify(parsedSeed[1]));
+        if (parsedSeed[0]) {
+            localStorage.setItem('seed', parsedSeed[1].SEED);
             props.history.push('/dashboard')
         }
         else {
             alert("Login Failed")
-            //  alert(parsedSeed)
         }
-        // alert(loggedInStatus)
     }
 
     const [userName, SetUserName] = React.useState('');
@@ -83,7 +78,6 @@ const Login = (props) => {
 
     const classes = useStyles();
     return (
-        <div className={classes.content}>
             <ThemeProvider theme={theme}>
                 <AppBar position="fixed" className={classes.appBar}>
                     <Toolbar className={classes.toolBar}>
@@ -165,7 +159,6 @@ const Login = (props) => {
                     </main>
                 </Slide>
             </ThemeProvider>
-        </div>
     )
 }
 export default Login
