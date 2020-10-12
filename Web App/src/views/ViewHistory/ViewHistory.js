@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { TextField, withStyles, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead } from '@material-ui/core';
+import { withStyles, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead } from '@material-ui/core';
 import { TableRow, Paper, Typography, Grid, ThemeProvider, Slide } from '@material-ui/core';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@material-ui/core"
 import Header from "../../components/Header/Header"
 import theme from "../../assets/theme/theme"
 import DateFnsUtils from '@date-io/date-fns';
-import MomentUtils from "@date-io/moment";
-import { format } from "date-fns";
 import moment from "moment";
 import {
     MuiPickersUtilsProvider,
@@ -56,7 +54,6 @@ export default function ViewHistory() {
     const onDateChange = (date, value) => {
         setDate(value);
         setInputValue(value);
-        console.log(value)
     };
     const getProfile = async () => {
         setHistoryDate(false)

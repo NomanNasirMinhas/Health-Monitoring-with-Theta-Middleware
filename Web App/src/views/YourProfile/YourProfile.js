@@ -30,7 +30,7 @@ const YourProfile = () => {
     const classes = useStyles();
     var seedInfo = localStorage.getItem('seedInfo')
     seedInfo = JSON.parse(seedInfo)
-    console.log(seedInfo)
+
     return (
         <ThemeProvider theme={theme}>
             <Header />

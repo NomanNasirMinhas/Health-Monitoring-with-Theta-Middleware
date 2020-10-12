@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, TextField, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions, Slide } from '@material-ui/core';
-import { Grid, Typography, makeStyles, InputBase, Container, Select, MenuItem, InputLabel, FormControl, ThemeProvider, withStyles } from '@material-ui/core';
+import { Grid, Typography, makeStyles, Container, Select, MenuItem, InputLabel, FormControl, ThemeProvider, withStyles } from '@material-ui/core';
+// import { InputBase } from "@material-ui/core"
 import DateFnsUtils from '@date-io/date-fns';
 import { format } from "date-fns";
 import {
@@ -75,20 +76,20 @@ const CssTextField = withStyles({
     },
 })(TextField);
 
-const CssSelect = withStyles({
-    input: {
-        border: '1px solid #FFFFFF',
-        color: 'white',
-        height: 'auto',
+// const CssSelect = withStyles({
+//     input: {
+//         border: '1px solid #FFFFFF',
+//         color: 'white',
+//         height: 'auto',
 
-        '& ': {
-            color: '#FFFFFF'
-        },
-        '&:focus': {
-            borderColor: '#FFFFFF'
-        },
-    },
-})(InputBase);
+//         '& ': {
+//             color: '#FFFFFF'
+//         },
+//         '&:focus': {
+//             borderColor: '#FFFFFF'
+//         },
+//     },
+// })(InputBase);
 
 export default function AddPatient() {
     //{$seed}&{address}
@@ -124,9 +125,9 @@ export default function AddPatient() {
             },
             body: JSON.stringify({
                 seed: seed,
-                deviceNum: 13,
+                deviceNum: 5,
                 secLevel: 3,
-                id: "IDalph71",
+                id: "IDalph5",
                 password: "PASSWORD",
                 info: profile
             }
@@ -206,6 +207,7 @@ export default function AddPatient() {
                                             id="address"
                                             label="Address"
                                             name="address"
+                                            defaultValue="undefined"
                                             color="secondary"
                                             onChange={(event) => { SetAddress(event.target.value) }}
                                             value={address}
@@ -220,6 +222,7 @@ export default function AddPatient() {
                                             id="contact"
                                             label="Contact Number"
                                             name="contact"
+                                            defaultValue="undefined"
                                             color="secondary"
                                             onChange={(event) => { SetContact(event.target.value) }}
                                             value={contact}

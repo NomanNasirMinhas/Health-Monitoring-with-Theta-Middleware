@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { withStyles, makeStyles, Table, TableBody, TableCell, TableHead, Link } from '@material-ui/core';
+import { withStyles, makeStyles, Table, TableBody, TableCell, TableHead, Link, CircularProgress } from '@material-ui/core';
 import { TableRow, Paper, Typography, ThemeProvider, Slide, TableContainer } from '@material-ui/core';
 import Header from "../../components/Header/Header"
 import theme from "../../assets/theme/theme"
@@ -65,6 +65,7 @@ export default function HomePage() {
     return (
         <ThemeProvider theme={theme}>
             <Header />
+            <CircularProgress color="secondary"/>
             <Slide direction="down" in={true} timeout={300}>
                 <div className={classes.content}>
                     <Typography

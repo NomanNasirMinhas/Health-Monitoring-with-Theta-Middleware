@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, TextField, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions } from '@material-ui/core';
 import { Grid, Typography, makeStyles, Container, ThemeProvider, Slide } from '@material-ui/core';
 import { AppBar, Toolbar, withStyles } from "@material-ui/core"
@@ -61,10 +61,15 @@ const CssTextField = withStyles({
 
 export default function ForgotPassword() {
     const classes = useStyles();
+    const [seed, SetSeed] = useState('')
+    const [Password, SetPassword] = useState('')
     const [open, setOpen] = React.useState(false);
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         setOpen(true)
-        console.log("Done")
+        var obj = await fetch(`https://thetamiddleware.herokuapp.com/forgotPassword/${seed}`);
+        var newObj = await obj.json();
+        SetPassword(newObj.password)
+        console.log(newObj.password)
     }
 
     const handleClose = () => {
@@ -94,6 +99,8 @@ export default function ForgotPassword() {
                                         name="enterSeed"
                                         variant="outlined"
                                         required
+                                        value={seed}
+                                        onChange={e => SetSeed(e.target.value)}
                                         fullWidth
                                         id="enterSeed"
                                         label="Enter Seed"
@@ -119,8 +126,8 @@ export default function ForgotPassword() {
                                 <DialogTitle>Password Received</DialogTitle>
                                 <DialogContent>
                                     <DialogContentText>
-                                        Your Password is: abc123
-                                </DialogContentText>
+                                        {Password !== undefined ? `Your Password is ${Password}` : 'Invalid Seed'}
+                                    </DialogContentText>
                                     <DialogActions>
                                         <Button onClick={handleClose} color="primary">
                                             Close

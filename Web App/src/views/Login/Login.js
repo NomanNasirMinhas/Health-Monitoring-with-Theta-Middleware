@@ -1,7 +1,9 @@
 import React from "react";
-
 import { Typography, withStyles } from "@material-ui/core"
 import { makeStyles, Grid, Button, AppBar, Toolbar, TextField, Link, ThemeProvider, Slide } from '@material-ui/core'
+import { OutlinedInput, CircularProgress, InputAdornment, IconButton } from '@material-ui/core'
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import theme from "../../assets/theme/theme"
 import { Link as link } from "react-router-dom"
 
@@ -56,10 +58,10 @@ const CssTextField = withStyles({
     },
 })(TextField);
 
-
 const Login = (props) => {
 
     const handleClick = async (event) => {
+        setVisible(true)
         event.preventDefault();
         var seed = await fetch(`https://thetamiddleware.herokuapp.com/getSeed/${userName}&${password}`);
         var parsedSeed = await seed.json();
@@ -73,92 +75,117 @@ const Login = (props) => {
         }
     }
 
+    const [visible, setVisible] = React.useState(false);
     const [userName, SetUserName] = React.useState('');
     const [password, SetPassword] = React.useState('');
 
-    const classes = useStyles();
-    return (
-            <ThemeProvider theme={theme}>
-                <AppBar position="fixed" className={classes.appBar}>
-                    <Toolbar className={classes.toolBar}>
-                        <Slide direction="down" in={true} timeout={300}>
-                            <Typography variant="h3" className={classes.title}>
-                                LOGIN TO PORTAL
-                            </Typography>
-                        </Slide>
-                    </Toolbar>
-                </AppBar>
-                <Slide direction="down" in={true} timeout={300}>
-                    <main>
-                        <div className={classes.paper}>
-                            <form className={classes.form} noValidate>
-                                <CssTextField
-                                    variant="outlined"
-                                    margin="normal"
-                                    required
-                                    fullWidth
-                                    id="username"
-                                    label="Username"
-                                    name="username"
-                                    value={userName}
-                                    onChange={e => {
-                                        SetUserName(e.target.value)
-                                    }}
-                                    autoComplete="off"
-                                />
-                                <CssTextField
-                                    variant="outlined"
-                                    margin="normal"
-                                    required
-                                    fullWidth
-                                    name="password"
-                                    label="Password"
-                                    type="password"
-                                    id="password"
-                                    value={password}
-                                    onChange={e => {
-                                        SetPassword(e.target.value)
-                                    }}
-                                    autoComplete="current-password"
-                                />
+    const [showPassword, setShowPassword] = React.useState(true);
 
-                                <Button
-                                    type="submit"
-                                    fullWidth
-                                    variant="contained"
-                                    color="primary"
-                                    style={{ fontSize: 20 }}
-                                    className={classes.submit}
-                                    onClick={handleClick}
-                                >
-                                    Log In
+    const handleClickShowPassword = () => {
+        setShowPassword(!showPassword);
+    };
+
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
+    const classes = useStyles();
+    const forgotPassword = visible ? '#' : '/forgotpassword';
+    const createAccount = visible ? '#' : '/createaccount';
+    return (
+        <ThemeProvider theme={theme}>
+            <AppBar position="fixed" className={classes.appBar}>
+                <Toolbar className={classes.toolBar}>
+                    <Slide direction="down" in={true} timeout={300}>
+                        <Typography variant="h3" className={classes.title}>
+                            LOGIN TO PORTAL
+                            </Typography>
+                    </Slide>
+                </Toolbar>
+            </AppBar>
+            <Slide direction="down" in={true} timeout={300}>
+                <main>
+                    <div className={classes.paper}>
+                        <form className={classes.form} noValidate>
+                            <CssTextField
+                                variant="outlined"
+                                margin="normal"
+                                disabled={visible}
+                                required
+                                fullWidth
+                                id="username"
+                                label="Username"
+                                name="username"
+                                value={userName}
+                                onChange={e => {
+                                    SetUserName(e.target.value)
+                                }}
+                                autoComplete="off"
+                            />
+                            <OutlinedInput
+                                variant="outlined"
+                                id="standard-adornment-password"
+                                disabled={visible}
+                                type={showPassword ? 'text' : 'password'}
+                                value={password}
+                                style={{ marginTop: "30px" }}
+                                onChange={e => { SetPassword(e.target.value) }}
+                                color="secondary"
+                                fullWidth
+                                label="Password"
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={handleClickShowPassword}
+                                            onMouseDown={handleMouseDownPassword}
+                                        >
+                                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                            />
+
+                            <Button
+                                type="submit"
+                                fullWidth
+                                disabled={visible}
+                                variant="contained"
+                                color="primary"
+                                style={{ fontSize: 20 }}
+                                className={classes.submit}
+                                onClick={handleClick}
+                            >
+                                {visible ? <CircularProgress color="secondary"/> : 'Log in'}
+
                          </Button>
 
-                                <Grid container>
-                                    <Grid item xs>
-                                        <Link
-                                            component={link}
-                                            to="/forgotpassword"
-                                            color="secondary"
-                                            variant="body2">
-                                            Forgot password?
+                            <Grid container>
+                                <Grid item xs>
+                                    <Link
+                                        component={link}
+                                        disabled={visible}
+                                        to={forgotPassword}
+                                        color="secondary"
+                                        variant="body2">
+                                        Forgot password?
                                 </Link>
-                                    </Grid>
-                                    <Grid item>
-                                        <Link
-                                            component={link}
-                                            to="/createaccount"
-                                            color="secondary"
-                                            variant="body2">
-                                            {"Create New Account"}
-                                        </Link>
-                                    </Grid>
                                 </Grid>
-                            </form>
-                        </div>
-                    </main>
-                </Slide>
-            </ThemeProvider>
+                                <Grid item>
+                                    <Link
+                                        component={link}
+                                        disabled={visible}
+                                        to={createAccount}
+                                        color="secondary"
+                                        variant="body2">
+                                        {"Create New Account"}
+                                    </Link>
+                                </Grid>
+                            </Grid>
+                        </form>
+                    </div>
+                </main>
+            </Slide>
+        </ThemeProvider>
     )
 }
 export default Login

@@ -83,7 +83,7 @@ export default function SignUp() {
             email: email
         }
 
-        var seed = await fetch('http://localhost:5000/addSeed/', {
+        var seed = await fetch('https://thetamiddleware.herokuapp.com/addSeed/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -234,7 +234,7 @@ export default function SignUp() {
                                 fullWidth
                                 variant="contained"
                                 color="primary"
-                                style={{fontSize: 20 }}
+                                style={{ fontSize: 20 }}
                                 className={classes.submit}
                             >
                                 Sign Up
