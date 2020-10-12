@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
         fontSize: "25px",
         fontWeight: "normal",
         lineHeight: "35px",
-        color: "#959595"
+        color: "#FFFFFF"
     },
     tileBottomText: {
         textAlign: "right",
@@ -60,21 +60,35 @@ const useStyles = makeStyles((theme) => ({
         flexWrap: 'wrap',
         width: '530px',
         height: '400px',
-        background: '#b7deb8',
-        border: '2px solid #6fbf73',
+        background: '#08696b',
+        border: '2px solid #23adc1',
         boxShadow: ' 0px 0px 7px rgba(0, 0, 0, 0.28)',
         borderRadius: '12px',
     },
     minicard: {
         position: "relative",
         margin: '11%',
-        background: '#CEFDD0',
+        background: '#23adc1',
         borderRadius: '6px'
-    }
+    },
+    CircularProgress: {
+        position: "absolute",
+        top: "40%",
+        left: "46%",
+    },
 }));
+
+const ErrorMessage = () => {
+    return(
+        <div style={{fontSize:"2rem", color: "#FFFFFF"}}>
+            Currently, there are no readings
+        </div>
+    )
+}
 
 const ViewPatientProfile = (props) => {
     let { address } = useParams();
+    const [circularVisible, SetCircularVisible] = React.useState(true)
     const [openGenerateReport, setOpenGenerateReport] = React.useState(false);
     const [openDischarge, setOpenDischarge] = React.useState(false);
     const [dischargeDialogue, SetDischargeDialogue] = React.useState(false);
@@ -83,6 +97,7 @@ const ViewPatientProfile = (props) => {
     const [LastReading, SetLastReading] = React.useState();
     const [name, SetName] = React.useState()
     const [age, SetAge] = React.useState()
+    const [Empty, SetEmpty] = React.useState(false)
     const seed = (localStorage.getItem('seed') || '')
 
     const dischargePatient = async () => {
@@ -111,12 +126,16 @@ const ViewPatientProfile = (props) => {
                 var resObjTx = await responseTx.json();
                 resObjTx = JSON.parse(resObjTx)
                 if (resObjTx !== null) {
+                    SetEmpty(false)
+                    SetCircularVisible(false)
                     SetLastReading(resObjTx)
                     SetResponse(obj)
                 }
             }
             else {
-                console.log("anday waala burger")
+                SetEmpty(true)
+                console.log("Yahan kuch nahi hai bhai")
+                SetCircularVisible(false)
             }
         }
         getProfile()
@@ -129,186 +148,194 @@ const ViewPatientProfile = (props) => {
     return (
         <ThemeProvider theme={theme}>
             <Header />
-            <div className={classes.content}>
-                <Grid container>
-                    <Grid container spacing={3}>
-                        <Grid item>
-                            <Slide direction="down" in={true} timeout={300}>
-                                <Typography
-                                    variant="h2"
-                                    color="secondary">
-                                    Patient's Profile
+            {circularVisible ? <CircularProgress className={classes.CircularProgress} color="secondary" size={100} /> :
+                <div className={classes.content}>
+                    <Grid container>
+                        <Grid container spacing={3}>
+                            <Grid item>
+                                <Slide direction="down" in={true} timeout={300}>
+                                    <Typography
+                                        variant="h2"
+                                        color="secondary">
+                                        Patient's Profile
                                     </Typography>
-                            </Slide>
+                                </Slide>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                    <Slide direction="down" in={true} timeout={300}>
-                        <Grid container className={classes.labels}>
-                            <Grid item>
-                                <Typography variant="h4" className={classes.headerText} color="secondary">
-                                    Patient's Name:
+                        <Slide direction="down" in={true} timeout={300}>
+                            <Grid container className={classes.labels}>
+                                <Grid item>
+                                    <Typography variant="h4" className={classes.headerText} color="secondary">
+                                        Patient's Name:
                                  </Typography>
+                                </Grid>
+                                <Grid item>
+                                    <Typography variant="h4">
+                                        {name}
+                                    </Typography>
+                                </Grid>
                             </Grid>
-                            <Grid item>
-                                <Typography variant="h4">
-                                    {name}
-                                </Typography>
-                            </Grid>
-                        </Grid>
-                    </Slide>
-                    <Slide direction="down" in={true} timeout={300}>
-                        <Grid container className={classes.labels}>
-                            <Grid item>
-                                <Typography variant="h4" className={classes.headerText} color="secondary">
-                                    Patient's Age:
+                        </Slide>
+                        <Slide direction="down" in={true} timeout={300}>
+                            <Grid container className={classes.labels}>
+                                <Grid item>
+                                    <Typography variant="h4" className={classes.headerText} color="secondary">
+                                        Patient's Age:
                     </Typography>
+                                </Grid>
+                                <Grid item>
+                                    <Typography variant="h4">
+                                        {age}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                        </Slide>
+
+                        <Slide direction="right" in={true} timeout={300}>
+                            <Grid item>
+                                <Typography variant="h2" color="secondary" className={[classes.headerText, classes.labels].join(' ')}>Vitals</Typography>
+                            </Grid>
+                        </Slide>
+                        <Slide direction="right" in={true} timeout={300}>
+                            <Grid container>
+                                <Card className={classes.cardBody}>
+                                    {Empty ? <ErrorMessage/> :
+                                        <>
+                                            <Card className={classes.minicard}>
+                                                <Typography variant="h6" className={classes.tileTopText}>Heart Rate</Typography>
+                                                <Typography variant="h6" className={classes.tileBottomText}>{LastReading?.HR} BPM</Typography>
+                                            </Card>
+                                            <Card className={classes.minicard}>
+                                                <Typography variant="h6" className={classes.tileTopText}>Temperature</Typography>
+                                                <Typography variant="h6" className={classes.tileBottomText}>{LastReading?.Temp} F</Typography>
+                                            </Card>
+
+                                            <Card className={classes.minicard}>
+                                                <Typography variant="h6" className={classes.tileTopText}>BP (mm/Hg)</Typography>
+                                                <Typography variant="h6" className={classes.tileBottomText}>{`${LastReading?.BP.diastolic}/${LastReading?.BP.systolic}`}</Typography>
+                                            </Card>
+                                        </>
+                                    }
+                                </Card>
+                            </Grid>
+                        </Slide>
+                    </Grid>
+                    <Slide direction="left" in={true} timeout={500}>
+                        <Grid container className={classes.rightBar}>
+                            <Grid item>
+                                <Button
+                                    variant="outlined"
+                                    startIcon={<AssessmentIcon />}
+                                    className={classes.sideButton}
+                                    disabled={Empty}
+                                    color="primary"
+                                    onClick={() => { setOpenGenerateReport(true) }}>
+                                    Generate Report</Button>
                             </Grid>
                             <Grid item>
-                                <Typography variant="h4">
-                                    {age}
-                                </Typography>
+                                <Button
+                                    variant="outlined"
+                                    startIcon={<AssignmentTurnedInIcon />}
+                                    className={classes.sideButton}
+                                    color="primary"
+                                    onClick={() => { setOpenDischarge(true) }}>
+                                    Discharge</Button>
+                            </Grid>
+                            <Grid item>
+                                <Button
+                                    component={Link}
+                                    to={`/viewhistory/${name}&${age}&${address}`}
+                                    variant="outlined"
+                                    disabled={Empty}
+                                    startIcon={<HistoryIcon />}
+                                    color="primary"
+                                    className={classes.sideButton}>
+                                    View History</Button>
+                            </Grid>
+                            <Grid item>
+                                <Button
+                                    component={Link}
+                                    disabled={Empty}
+                                    to="/livereadings"
+                                    variant="outlined"
+                                    startIcon={<TimelineIcon />}
+                                    className={classes.sideButton}>
+                                    Live Statistics
+                    </Button>
                             </Grid>
                         </Grid>
                     </Slide>
 
-                    <Slide direction="right" in={true} timeout={300}>
-                        <Grid item>
-                            <Typography variant="h2" color="secondary" className={[classes.headerText, classes.labels].join(' ')}>Vitals</Typography>
-                        </Grid>
-                    </Slide>
-                    <Slide direction="right" in={true} timeout={300}>
-                        <Grid container>
-                            <Card className={classes.cardBody}>
-                                <Card className={classes.minicard}>
-                                    <Typography variant="h6" style={{ color: '#0A7A0F' }} className={classes.tileTopText}>Heart Rate</Typography>
-                                    <Typography variant="h6" className={classes.tileBottomText}>{LastReading?.HR} BPM</Typography>
-                                </Card>
-                                <Card className={classes.minicard}>
-                                    <Typography variant="h6" style={{ color: '#0A7A0F' }} className={classes.tileTopText}>Temperature</Typography>
-                                    <Typography variant="h6" className={classes.tileBottomText}>{LastReading?.Temp} F</Typography>
-                                </Card>
-
-                                <Card className={classes.minicard}>
-                                    <Typography variant="h6" style={{ color: '#0A7A0F' }} className={classes.tileTopText}>BP (mm/Hg)</Typography>
-                                    <Typography variant="h6" className={classes.tileBottomText}>{`${LastReading?.BP.diastolic}/${LastReading?.BP.systolic}`}</Typography>
-                                </Card>
-                            </Card>
-                        </Grid>
-                    </Slide>
-                </Grid>
-                <Slide direction="left" in={true} timeout={500}>
-                    <Grid container className={classes.rightBar}>
-                        <Grid item>
-                            <Button
-                                variant="outlined"
-                                startIcon={<AssessmentIcon />}
-                                className={classes.sideButton}
-                                color="primary"
-                                onClick={() => { setOpenGenerateReport(true) }}>
-                                Generate Report</Button>
-                        </Grid>
-                        <Grid item>
-                            <Button
-                                variant="outlined"
-                                startIcon={<AssignmentTurnedInIcon />}
-                                className={classes.sideButton}
-                                color="primary"
-                                onClick={() => { setOpenDischarge(true) }}>
-                                Discharge</Button>
-                        </Grid>
-                        <Grid item>
-                            <Button
-                                component={Link}
-                                to={`/viewhistory/${name}&${age}&${address}`}
-                                variant="outlined"
-                                startIcon={<HistoryIcon />}
-                                color="primary"
-                                className={classes.sideButton}>
-                                View History</Button>
-                        </Grid>
-                        <Grid item>
-                            <Button
-                                component={Link}
-                                to="/livereadings"
-                                variant="outlined"
-                                startIcon={<TimelineIcon />}
-                                style={{ backgroundColor: '#00a152', color: '#FFFFFF' }}
-                                className={classes.sideButton}>
-                                Live Statistics
-                    </Button>
-                        </Grid>
-                    </Grid>
-                </Slide>
-
-                <Dialog
-                    fullWidth
-                    maxWidth="sm"
-                    open={openGenerateReport}
-                    onClose={() => { setOpenGenerateReport(false) }}
-                >
-                    <DialogTitle>Generate Report</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            Temperature: 100F
+                    <Dialog
+                        fullWidth
+                        maxWidth="sm"
+                        open={openGenerateReport}
+                        onClose={() => { setOpenGenerateReport(false) }}
+                    >
+                        <DialogTitle>Generate Report</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                Temperature: 100F
                             {<br />}
                             BPM: 85
                             {<br />}
                             Blood Pressure: 120/80
                         </DialogContentText>
 
-                        <DialogActions>
-                            <Button onClick={() => { setOpenGenerateReport(false) }} color="primary">
-                                Download Report
+                            <DialogActions>
+                                <Button onClick={() => { setOpenGenerateReport(false) }} color="primary">
+                                    Download Report
                             </Button>
-                            <Button onClick={() => { setOpenGenerateReport(false) }} color="primary">
-                                Cancel
+                                <Button onClick={() => { setOpenGenerateReport(false) }} color="primary">
+                                    Cancel
                             </Button>
-                        </DialogActions>
-                    </DialogContent>
-                </Dialog>
+                            </DialogActions>
+                        </DialogContent>
+                    </Dialog>
 
-                <Dialog
-                    fullWidth
-                    maxWidth="sm"
-                    open={openDischarge}
-                    onClose={() => { setOpenDischarge(false) }}
-                >
-                    <DialogTitle>Discharge Patient</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            Are you sure you want to discharge this patient{"?"}
+                    <Dialog
+                        fullWidth
+                        maxWidth="sm"
+                        open={openDischarge}
+                        onClose={() => { setOpenDischarge(false) }}
+                    >
+                        <DialogTitle>Discharge Patient</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                Are you sure you want to discharge this patient{"?"}
+                            </DialogContentText>
+
+                            <DialogActions>
+                                <Button onClick={dischargePatient} color="primary" disabled={visible}>
+                                    {visible ? <CircularProgress /> : 'Confirm'}
+                                </Button>
+                                <Button onClick={() => { setOpenDischarge(false) }} color="primary" disabled={visible}>
+                                    Cancel
+                            </Button>
+                            </DialogActions>
+                        </DialogContent>
+                    </Dialog>
+
+                    <Dialog
+                        maxWidth="md"
+                        open={dischargeDialogue}
+                        onClose={() => SetDischargeDialogue(false)}
+                    >
+                        <DialogTitle>Notification</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                Patient discharged successfully
                         </DialogContentText>
 
-                        <DialogActions>
-                            <Button onClick={dischargePatient} color="primary" disabled={visible}>
-                                {visible ? <CircularProgress /> : 'Confirm'}
+                            <DialogActions>
+                                <Button onClick={redirect} color="primary">
+                                    Close
                             </Button>
-                            <Button onClick={() => { setOpenDischarge(false) }} color="primary" disabled={visible}>
-                                Cancel
-                            </Button>
-                        </DialogActions>
-                    </DialogContent>
-                </Dialog>
-
-                <Dialog
-                    maxWidth="md"
-                    open={dischargeDialogue}
-                    onClose={() => SetDischargeDialogue(false)}
-                >
-                    <DialogTitle>Notification</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            Patient discharged successfully
-                        </DialogContentText>
-
-                        <DialogActions>
-                            <Button onClick={redirect} color="primary">
-                                Close
-                            </Button>
-                        </DialogActions>
-                    </DialogContent>
-                </Dialog>
-            </div>
+                            </DialogActions>
+                        </DialogContent>
+                    </Dialog>
+                </div>
+            }
         </ThemeProvider>
     )
 }

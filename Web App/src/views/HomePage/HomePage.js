@@ -35,8 +35,8 @@ const useStyles = makeStyles((theme) => ({
     },
     CircularProgress:{
         position: "absolute",
-        top: "40%",
-        left: "50%"
+        top: "45%", 
+        left: "46%"
     }
 }));
 
