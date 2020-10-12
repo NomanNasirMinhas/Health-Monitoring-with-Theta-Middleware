@@ -32,11 +32,17 @@ const useStyles = makeStyles((theme) => ({
     },
     titletext: {
         marginBottom: "40px"
+    },
+    CircularProgress:{
+        position: "absolute",
+        top: "40%",
+        left: "50%"
     }
 }));
 
 export default function HomePage() {
     const [Response, SetResponse] = React.useState([]);
+    const [visible, setVisible] = React.useState(true);
     const classes = useStyles();
     useEffect(() => {
         async function getPatient() {
@@ -47,6 +53,7 @@ export default function HomePage() {
             //     .then(resp => resp.json())
             //     .then(response => SetResponse(response))
             SetResponse(obj)
+            setVisible(false)
         }
         getPatient()
     }, [])
@@ -65,79 +72,79 @@ export default function HomePage() {
     return (
         <ThemeProvider theme={theme}>
             <Header />
-            <CircularProgress color="secondary"/>
-            <Slide direction="down" in={true} timeout={300}>
-                <div className={classes.content}>
-                    <Typography
-                        variant="h2"
-                        align="center"
-                        color="secondary"
-                        className={classes.titletext}>
-                        Current Patients
+            {visible ? <CircularProgress className={classes.CircularProgress} color="secondary" size={100}/> :
+                <Slide direction="down" in={true} timeout={300}>
+                    <div className={classes.content}>
+                        <Typography
+                            variant="h2"
+                            align="center"
+                            color="secondary"
+                            className={classes.titletext}>
+                            Current Patients
                     </Typography>
-                    <Slide direction="up" in={true} timeout={300}>
-                        <TableContainer component={Paper}>
-                            <Table className={classes.table}>
-                                <TableHead>
-                                    <TableRow>
-                                        <StyledTableCell align="center">Patient's ID</StyledTableCell>
-                                        <StyledTableCell align="center">Name</StyledTableCell>
-                                        <StyledTableCell align="center">Age</StyledTableCell>
-                                        <StyledTableCell align="center">Gender</StyledTableCell>
-                                        <StyledTableCell align="center">Date of Admission</StyledTableCell>
-                                        <StyledTableCell align="center">Contact</StyledTableCell>
-                                        <StyledTableCell align="center">Action</StyledTableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {
-                                        // rows.map((row) => (
-                                        //     <StyledTableRow key={row.id}>
-                                        //         <StyledTableCell align="center" component="th" scope="row">
-                                        //             {row.id}
-                                        //         </StyledTableCell>
-                                        //         <StyledTableCell align="center">{row.name}</StyledTableCell>
-                                        //         <StyledTableCell align="center">{row.age}</StyledTableCell>
-                                        //         <StyledTableCell align="center">
-                                        //             <Link
-                                        //                 component={link}
-                                        //                 to="/viewpatientprofile"
-                                        //                 variant="body2"
-                                        //             >
-                                        //                 View Profile
-                                        //             </Link>
-                                        //         </StyledTableCell>
-                                        //     </StyledTableRow>
-                                        // ))
+                        <Slide direction="up" in={true} timeout={300}>
+                            <TableContainer component={Paper}>
+                                <Table className={classes.table}>
+                                    <TableHead>
+                                        <TableRow>
+                                            <StyledTableCell align="center">Patient's ID</StyledTableCell>
+                                            <StyledTableCell align="center">Name</StyledTableCell>
+                                            <StyledTableCell align="center">Age</StyledTableCell>
+                                            <StyledTableCell align="center">Gender</StyledTableCell>
+                                            <StyledTableCell align="center">Date of Admission</StyledTableCell>
+                                            <StyledTableCell align="center">Contact</StyledTableCell>
+                                            <StyledTableCell align="center">Action</StyledTableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {
+                                            // rows.map((row) => (
+                                            //     <StyledTableRow key={row.id}>
+                                            //         <StyledTableCell align="center" component="th" scope="row">
+                                            //             {row.id}
+                                            //         </StyledTableCell>
+                                            //         <StyledTableCell align="center">{row.name}</StyledTableCell>
+                                            //         <StyledTableCell align="center">{row.age}</StyledTableCell>
+                                            //         <StyledTableCell align="center">
+                                            //             <Link
+                                            //                 component={link}
+                                            //                 to="/viewpatientprofile"
+                                            //                 variant="body2"
+                                            //             >
+                                            //                 View Profile
+                                            //             </Link>
+                                            //         </StyledTableCell>
+                                            //     </StyledTableRow>
+                                            // ))
 
-                                        Response.map((row) => (
-                                            <StyledTableRow key={row.ID}>
-                                                <StyledTableCell align="center" component="th" scope="row">
-                                                    {row.ID}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">{row.Profile.name}</StyledTableCell>
-                                                <StyledTableCell align="center">{row.Profile.age}</StyledTableCell>
-                                                <StyledTableCell align="center">{row.Profile.gender}</StyledTableCell>
-                                                <StyledTableCell align="center">{row.Profile.date}</StyledTableCell>
-                                                <StyledTableCell align="center">{row.Profile.contact}</StyledTableCell>
-                                                <StyledTableCell align="center">
-                                                    <Link
-                                                        component={link}
-                                                        to={`/viewpatientprofile/${row.ADDRESS}`}
-                                                        variant="body2"
-                                                    >
-                                                        View Profile
+                                            Response.map((row) => (
+                                                <StyledTableRow key={row.ID}>
+                                                    <StyledTableCell align="center" component="th" scope="row">
+                                                        {row.ID}
+                                                    </StyledTableCell>
+                                                    <StyledTableCell align="center">{row.Profile.name}</StyledTableCell>
+                                                    <StyledTableCell align="center">{row.Profile.age}</StyledTableCell>
+                                                    <StyledTableCell align="center">{row.Profile.gender}</StyledTableCell>
+                                                    <StyledTableCell align="center">{row.Profile.date}</StyledTableCell>
+                                                    <StyledTableCell align="center">{row.Profile.contact}</StyledTableCell>
+                                                    <StyledTableCell align="center">
+                                                        <Link
+                                                            component={link}
+                                                            to={`/viewpatientprofile/${row.ADDRESS}`}
+                                                            variant="body2"
+                                                        >
+                                                            View Profile
                                                      </Link>
-                                                </StyledTableCell>
-                                            </StyledTableRow>
-                                        ))
-                                    }
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                    </Slide>
-                </div>
-            </Slide>
+                                                    </StyledTableCell>
+                                                </StyledTableRow>
+                                            ))
+                                        }
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                        </Slide>
+                    </div>
+                </Slide>}
         </ThemeProvider>
     );
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, TextField, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions, Slide } from '@material-ui/core';
+import { Button, TextField, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions, Slide, CircularProgress } from '@material-ui/core';
 import { Grid, Typography, makeStyles, Container, Select, MenuItem, InputLabel, FormControl, ThemeProvider, withStyles } from '@material-ui/core';
 // import { InputBase } from "@material-ui/core"
 import DateFnsUtils from '@date-io/date-fns';
@@ -94,6 +94,7 @@ const CssTextField = withStyles({
 export default function AddPatient() {
     //{$seed}&{address}
     const classes = useStyles();
+    const [visible, setVisible] = React.useState(false);
     const [open, setOpen] = React.useState(false);
     const [name, SetName] = React.useState('');
     const [age, setAge] = React.useState('');
@@ -109,6 +110,7 @@ export default function AddPatient() {
     };
 
     const handleSubmit = async () => {
+        setVisible(true)
         var profile = {
             name: name,
             age: age,
@@ -125,9 +127,9 @@ export default function AddPatient() {
             },
             body: JSON.stringify({
                 seed: seed,
-                deviceNum: 5,
+                deviceNum: 6,
                 secLevel: 3,
-                id: "IDalph5",
+                id: "IDalph6",
                 password: "PASSWORD",
                 info: profile
             }
@@ -140,6 +142,7 @@ export default function AddPatient() {
 
     const handleClose = () => {
         setOpen(false)
+        window.location.reload(false);
     }
 
     return (
@@ -158,6 +161,7 @@ export default function AddPatient() {
                                     <Grid item xs={12}>
                                         <CssTextField
                                             autoComplete="name"
+                                            disabled={visible}
                                             name="Name"
                                             variant="outlined"
                                             required
@@ -172,6 +176,7 @@ export default function AddPatient() {
                                         <CssTextField
                                             variant="outlined"
                                             required
+                                            disabled={visible}
                                             fullWidth
                                             type="number"
                                             id="age"
@@ -186,6 +191,7 @@ export default function AddPatient() {
                                         <FormControl variant="outlined" fullWidth>
                                             <InputLabel id="demo-simple-select-outlined-label">Gender</InputLabel>
                                             <Select
+                                                disabled={visible}
                                                 labelId="demo-simple-select-outlined-label"
                                                 id="demo-simple-select-outlined"
                                                 label="Gender"
@@ -201,13 +207,13 @@ export default function AddPatient() {
                                     </Grid>
                                     <Grid item xs={12}>
                                         <CssTextField
+                                            disabled={visible}
                                             variant="outlined"
                                             required
                                             fullWidth
                                             id="address"
                                             label="Address"
                                             name="address"
-                                            defaultValue="undefined"
                                             color="secondary"
                                             onChange={(event) => { SetAddress(event.target.value) }}
                                             value={address}
@@ -215,6 +221,7 @@ export default function AddPatient() {
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
                                         <CssTextField
+                                            disabled={visible}
                                             variant="outlined"
                                             required
                                             fullWidth
@@ -222,7 +229,6 @@ export default function AddPatient() {
                                             id="contact"
                                             label="Contact Number"
                                             name="contact"
-                                            defaultValue="undefined"
                                             color="secondary"
                                             onChange={(event) => { SetContact(event.target.value) }}
                                             value={contact}
@@ -231,6 +237,7 @@ export default function AddPatient() {
                                     <Grid item xs={12} sm={6}>
                                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                             <KeyboardDatePicker
+                                                disabled={visible}
                                                 disableToolbar
                                                 variant="inline"
                                                 color="secondary"
@@ -248,6 +255,7 @@ export default function AddPatient() {
                                     </Grid>
                                 </Grid>
                                 <Button
+                                    disabled={visible}
                                     onClick={handleSubmit}
                                     fullWidth
                                     variant="contained"
@@ -255,7 +263,7 @@ export default function AddPatient() {
                                     color="primary"
                                     className={classes.submit}
                                 >
-                                    Add Patient
+                                    {visible ? <CircularProgress color="secondary"/> : 'Add Patient'}
                                 </Button>
                                 <Dialog
                                     maxWidth="md"

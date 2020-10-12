@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, TextField, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions } from '@material-ui/core';
+import { Button, TextField, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions, CircularProgress } from '@material-ui/core';
 import { Grid, Typography, makeStyles, Container, ThemeProvider, Slide } from '@material-ui/core';
 import { AppBar, Toolbar, withStyles } from "@material-ui/core"
 import theme from "../../assets/theme/theme"
@@ -61,12 +61,14 @@ const CssTextField = withStyles({
 
 export default function ForgotPassword() {
     const classes = useStyles();
+    const [visible, setVisible] = React.useState(false);
     const [seed, SetSeed] = useState('')
     const [Password, SetPassword] = useState('')
     const [open, setOpen] = React.useState(false);
     const handleSubmit = async () => {
-        setOpen(true)
+        setVisible(true)
         var obj = await fetch(`https://thetamiddleware.herokuapp.com/forgotPassword/${seed}`);
+        setOpen(true)
         var newObj = await obj.json();
         SetPassword(newObj.password)
         console.log(newObj.password)
@@ -74,6 +76,7 @@ export default function ForgotPassword() {
 
     const handleClose = () => {
         setOpen(false)
+        window.location.reload(false);
     }
 
     return (
@@ -110,12 +113,13 @@ export default function ForgotPassword() {
                             <Button
                                 onClick={handleSubmit}
                                 fullWidth
+                                disabled={visible}
                                 variant="contained"
                                 style={{ fontSize: 20 }}
                                 color="primary"
                                 className={classes.submit}
                             >
-                                Get Password
+                                {visible ? <CircularProgress color="secondary"/> : 'Get Password'}
                         </Button>
                             <Dialog
                                 fullWidth
@@ -126,7 +130,7 @@ export default function ForgotPassword() {
                                 <DialogTitle>Password Received</DialogTitle>
                                 <DialogContent>
                                     <DialogContentText>
-                                        {Password !== undefined ? `Your Password is ${Password}` : 'Invalid Seed'}
+                                        {Password !== undefined ? `Your Password is: ${Password}` : 'Invalid Seed'}
                                     </DialogContentText>
                                     <DialogActions>
                                         <Button onClick={handleClose} color="primary">

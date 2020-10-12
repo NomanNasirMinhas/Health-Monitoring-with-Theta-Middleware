@@ -1,9 +1,10 @@
 import React from 'react';
-import { Button, TextField, Link, Dialog, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core';
+import { Button, TextField, Link, Dialog, DialogContent, DialogContentText, DialogTitle, CircularProgress } from '@material-ui/core';
 import { Grid, Typography, makeStyles, Container, DialogActions, Slide, ThemeProvider, withStyles } from '@material-ui/core';
 import { AppBar, Toolbar } from "@material-ui/core"
 import theme from "../../assets/theme/theme"
 import { Link as link } from "react-router-dom"
+import QRCode from "qrcode.react"
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -61,8 +62,9 @@ const CssTextField = withStyles({
 })(TextField);
 
 
-export default function SignUp() {
+export default function SignUp(props) {
     const classes = useStyles();
+    const [visible, setVisible] = React.useState(false);
     const [parsedSeed, SetParsedSeed] = React.useState('')
     const [open, setOpen] = React.useState(false);
     const [userName, SetUserName] = React.useState('');
@@ -72,9 +74,10 @@ export default function SignUp() {
     const [address, SetAddress] = React.useState('');
     const [contact, SetContact] = React.useState('');
     const [email, SetEmail] = React.useState('');
+    const signIn = visible ? '#' : '/';
 
     const handleSubmit = async () => {
-
+        setVisible(true)
         var profile = {
             name: name,
             specialization: specialization,
@@ -104,6 +107,7 @@ export default function SignUp() {
 
     const handleClose = () => {
         setOpen(false)
+        props.history.push('/')
     }
 
     var displaySeed = parsedSeed
@@ -127,6 +131,7 @@ export default function SignUp() {
                                 <Grid item xs={12}>
                                     <CssTextField
                                         name="name"
+                                        disabled={visible}
                                         variant="outlined"
                                         required
                                         fullWidth
@@ -140,6 +145,7 @@ export default function SignUp() {
                                 </Grid>
                                 <Grid item xs={12}>
                                     <CssTextField
+                                        disabled={visible}
                                         variant="outlined"
                                         required
                                         fullWidth
@@ -154,6 +160,7 @@ export default function SignUp() {
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <CssTextField
+                                        disabled={visible}
                                         variant="outlined"
                                         required
                                         fullWidth
@@ -169,6 +176,7 @@ export default function SignUp() {
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
                                     <CssTextField
+                                        disabled={visible}
                                         variant="outlined"
                                         required
                                         fullWidth
@@ -184,6 +192,7 @@ export default function SignUp() {
                                 </Grid>
                                 <Grid item xs={12}>
                                     <CssTextField
+                                        disabled={visible}
                                         variant="outlined"
                                         required
                                         fullWidth
@@ -199,6 +208,7 @@ export default function SignUp() {
 
                                 <Grid item xs={12}>
                                     <CssTextField
+                                        disabled={visible}
                                         variant="outlined"
                                         required
                                         fullWidth
@@ -214,6 +224,7 @@ export default function SignUp() {
 
                                 <Grid item xs={12}>
                                     <CssTextField
+                                        disabled={visible}
                                         variant="outlined"
                                         required
                                         fullWidth
@@ -230,6 +241,7 @@ export default function SignUp() {
                                 </Grid>
                             </Grid>
                             <Button
+                                disabled={visible}
                                 onClick={handleSubmit}
                                 fullWidth
                                 variant="contained"
@@ -237,7 +249,7 @@ export default function SignUp() {
                                 style={{ fontSize: 20 }}
                                 className={classes.submit}
                             >
-                                Sign Up
+                                {visible ? <CircularProgress color="secondary"/> : 'Sign Up'}
                         </Button>
                             <Dialog
                                 maxWidth="md"
@@ -249,9 +261,7 @@ export default function SignUp() {
                                     <DialogContentText>
                                         Kindly keep the Seed ID safe. Your Seed ID is: {displaySeed}. Your QR is:
                                 </DialogContentText>
-                                    <img
-                                        src="https://s3.eu-central-1.amazonaws.com/centaur-wp/econsultancy/prod/content/uploads/archive/images/resized/0002/4236/qr_code-blog-third.png"
-                                        alt="QR Code" />
+                                    <QRCode value={displaySeed} />
                                     <DialogActions>
                                         <Button onClick={handleClose} color="primary">
                                             Save QR
@@ -265,7 +275,7 @@ export default function SignUp() {
                             <Grid container justify="flex-end">
                                 <Grid item>
                                     <Link
-                                        to="/"
+                                        to={signIn}
                                         component={link}
                                         color="secondary"
                                         variant="body2">
