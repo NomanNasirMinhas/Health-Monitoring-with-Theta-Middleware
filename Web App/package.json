@@ -14,6 +14,7 @@
     "classnames": "^2.2.6",
     "date-fns": "^2.16.1",
     "encoding": "^0.1.13",
+    "formik": "^2.2.0",
     "modules": "^0.4.0",
     "moment": "^2.29.1",
     "mongodb-client-encryption": "^1.1.0",
@@ -24,7 +25,8 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.3",
-    "thetamiddleware": "^2.1.4"
+    "thetamiddleware": "^2.1.4",
+    "yup": "^0.29.3"
   },
   "scripts": {
     "start": "react-scripts start",

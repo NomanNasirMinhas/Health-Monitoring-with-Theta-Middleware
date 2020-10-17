@@ -1,11 +1,11 @@
 import React from "react";
 import { Typography, withStyles } from "@material-ui/core"
-import { makeStyles, Grid, Button, AppBar, Toolbar, TextField, Link, ThemeProvider, Slide } from '@material-ui/core'
-import { OutlinedInput, CircularProgress, InputAdornment, IconButton } from '@material-ui/core'
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import { makeStyles, Grid, Button, AppBar, Toolbar, TextField, Link, ThemeProvider, Slide, CircularProgress } from '@material-ui/core'
+import { Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions } from '@material-ui/core'
 import theme from "../../assets/theme/theme"
 import { Link as link } from "react-router-dom"
+import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -58,36 +58,36 @@ const CssTextField = withStyles({
     },
 })(TextField);
 
+const LoginSchema = Yup.object().shape({
+    Username: Yup.string()
+        .min(2, 'Too Short!')
+        .max(50, 'Too Long!')
+        .required('Required'),
+    Password: Yup.string()
+        .min(2, 'Too Short!')
+        .max(50, 'Too Long!')
+        .required('Required')
+});
+
 const Login = (props) => {
 
-    const handleClick = async (event) => {
-        setVisible(true)
-        event.preventDefault();
-        var seed = await fetch(`https://thetamiddleware.herokuapp.com/getSeed/${userName}&${password}`);
-        var parsedSeed = await seed.json();
-        localStorage.setItem('seedInfo', JSON.stringify(parsedSeed[1]));
-        if (parsedSeed[0]) {
-            localStorage.setItem('seed', parsedSeed[1].SEED);
-            props.history.push('/dashboard')
-        }
-        else {
-            alert("Login Failed")
-        }
-    }
+    // const handleClick = async (event) => {
+    //     setVisible(true)
+    //     var seed = await fetch(`https://thetamiddleware.herokuapp.com/getSeed/${userName}&${password}`);
+    //     var parsedSeed = await seed.json();
+    //     localStorage.setItem('seedInfo', JSON.stringify(parsedSeed[1]));
+    //     if (parsedSeed[0]) {
+    //         localStorage.setItem('seed', parsedSeed[1].SEED);
+    //         props.history.push('/dashboard')
+    //     }
+    //     else {
+    //         SetOpenError(true)
+    //     }
+    // }
 
     const [visible, setVisible] = React.useState(false);
-    const [userName, SetUserName] = React.useState('');
-    const [password, SetPassword] = React.useState('');
+    const [openError, SetOpenError] = React.useState(false);
 
-    const [showPassword, setShowPassword] = React.useState(true);
-
-    const handleClickShowPassword = () => {
-        setShowPassword(!showPassword);
-    };
-
-    const handleMouseDownPassword = (event) => {
-        event.preventDefault();
-    };
     const classes = useStyles();
     const forgotPassword = visible ? '#' : '/forgotpassword';
     const createAccount = visible ? '#' : '/createaccount';
@@ -105,87 +105,120 @@ const Login = (props) => {
             <Slide direction="down" in={true} timeout={300}>
                 <main>
                     <div className={classes.paper}>
-                        <form className={classes.form} noValidate>
-                            <CssTextField
-                                variant="outlined"
-                                margin="normal"
-                                disabled={visible}
-                                required
-                                fullWidth
-                                id="username"
-                                label="Username"
-                                name="username"
-                                value={userName}
-                                onChange={e => {
-                                    SetUserName(e.target.value)
-                                }}
-                                autoComplete="off"
-                            />
-                            <OutlinedInput
-                                variant="outlined"
-                                id="standard-adornment-password"
-                                disabled={visible}
-                                type={showPassword ? 'text' : 'password'}
-                                value={password}
-                                style={{ marginTop: "30px" }}
-                                onChange={e => { SetPassword(e.target.value) }}
-                                color="secondary"
-                                fullWidth
-                                label="Password"
-                                endAdornment={
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            aria-label="toggle password visibility"
-                                            onClick={handleClickShowPassword}
-                                            onMouseDown={handleMouseDownPassword}
-                                        >
-                                            {showPassword ? <Visibility /> : <VisibilityOff />}
-                                        </IconButton>
-                                    </InputAdornment>
+                        <Formik
+                            initialValues={{
+                                Username: '',
+                                Password: '',
+                            }}
+                            validationSchema={LoginSchema}
+                            onSubmit={async (values) => {
+                                setVisible(true)
+                                var seed = await fetch(`https://thetamiddleware.herokuapp.com/getSeed/${values.Username}&${values.Password}`);
+                                var parsedSeed = await seed.json();
+                                localStorage.setItem('seedInfo', JSON.stringify(parsedSeed[1]));
+                                if (parsedSeed[0]) {
+                                    localStorage.setItem('seed', parsedSeed[1].SEED);
+                                    props.history.push('/dashboard')
                                 }
-                            />
-
-                            <Button
-                                type="submit"
-                                fullWidth
-                                disabled={visible}
-                                variant="contained"
-                                color="primary"
-                                style={{ fontSize: 20 }}
-                                className={classes.submit}
-                                onClick={handleClick}
-                            >
-                                {visible ? <CircularProgress color="secondary"/> : 'Log in'}
-
-                         </Button>
-
-                            <Grid container>
-                                <Grid item xs>
-                                    <Link
-                                        component={link}
+                                else {
+                                    SetOpenError(true)
+                                }
+                            }}
+                        >
+                            {({ errors, touched, values, handleBlur, handleChange, handleSubmit }) => (
+                                <Form onSubmit={handleSubmit}>
+                                    <CssTextField
+                                        variant="outlined"
+                                        margin="normal"
                                         disabled={visible}
-                                        to={forgotPassword}
-                                        color="secondary"
-                                        variant="body2">
-                                        Forgot password?
+                                        required
+                                        fullWidth
+                                        id="Username"
+                                        label="Username"
+                                        value={values.Username}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        helperText={touched.Username ? errors.Username : ""}
+                                        error={touched.Username && Boolean(errors.Username)}
+                                        autoComplete="off"
+                                    />
+                                    <CssTextField
+                                        variant="outlined"
+                                        // type="password"
+                                        margin="normal"
+                                        disabled={visible}
+                                        required
+                                        fullWidth
+                                        id="Password"
+                                        label="Password"
+                                        value={values.Password}
+                                        onChange={handleChange}
+                                        onBlur={handleBlur}
+                                        helperText={touched.Password ? errors.Password : ""}
+                                        error={touched.Password && Boolean(errors.Password)}
+                                        autoComplete="off"
+                                    />
+
+                                    <Button
+                                        type="submit"
+                                        fullWidth
+                                        disabled={visible}
+                                        variant="contained"
+                                        color="primary"
+                                        style={{ fontSize: 20 }}
+                                        className={classes.submit}
+                                    >
+                                        {visible ? <CircularProgress color="secondary" /> : 'Log in'}
+
+                                    </Button>
+
+                                    <Grid container>
+                                        <Grid item xs>
+                                            <Link
+                                                component={link}
+                                                disabled={visible}
+                                                to={forgotPassword}
+                                                color="secondary"
+                                                variant="body2">
+                                                Forgot password?
                                 </Link>
-                                </Grid>
-                                <Grid item>
-                                    <Link
-                                        component={link}
-                                        disabled={visible}
-                                        to={createAccount}
-                                        color="secondary"
-                                        variant="body2">
-                                        {"Create New Account"}
-                                    </Link>
-                                </Grid>
-                            </Grid>
-                        </form>
+                                        </Grid>
+                                        <Grid item>
+                                            <Link
+                                                component={link}
+                                                disabled={visible}
+                                                to={createAccount}
+                                                color="secondary"
+                                                variant="body2">
+                                                {"Create New Account"}
+                                            </Link>
+                                        </Grid>
+                                    </Grid>
+                                    <Dialog
+                                        maxWidth="md"
+                                        open={openError}
+                                        onClose={() => { window.location.reload(false) }}
+                                    >
+                                        <DialogTitle>Invalid Credentials</DialogTitle>
+                                        <DialogContent>
+                                            <DialogContentText>
+                                                Please verify the Username and/or Password
+                                    </DialogContentText>
+                                            <DialogActions>
+                                                <Button onClick={() => { window.location.reload(false) }} color="primary">
+                                                    Okay
+                                        </Button>
+                                            </DialogActions>
+                                        </DialogContent>
+                                    </Dialog>
+                                </Form>
+                            )}
+                        </Formik>
                     </div>
                 </main>
             </Slide>
         </ThemeProvider>
     )
 }
+
 export default Login

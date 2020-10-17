@@ -11,6 +11,7 @@ import {
 import Header from '../../components/Header/Header';
 import theme from "../../assets/theme/theme"
 import QRCode from "qrcode.react"
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
     content: {
@@ -104,9 +105,11 @@ export default function AddPatient() {
     const [contact, SetContact] = React.useState('');
     const [DeviceAddress, SetDeviceAddress] = React.useState('');
     const seed = (localStorage.getItem('seed') || '')
+    const [inputValue, setInputValue] = React.useState(moment().format("DD-MM-YYYY"));
 
-    const handleDateChange = (date) => {
-        SetDate(date);
+    const onDateChange = (date, value) => {
+        SetDate(value);
+        setInputValue(value);
     };
 
     const handleSubmit = async () => {
@@ -134,9 +137,18 @@ export default function AddPatient() {
                 info: profile
             }
             )
-        }).then((result) => result.json().then((resp) => SetDeviceAddress(resp)))
+        }).then((result) => result.json()
+            .then((resp) => {
+                if (resp[0] === true) {
+                    SetDeviceAddress(resp[1])
+                    setOpen(true)
+                }
+                else{
+                    alert("Issue occured while adding patient. Contact administrator")
+                    window.location.reload(false);
+                }
+            }))
 
-        setOpen(true)
         console.log("Done")
     }
 
@@ -235,21 +247,18 @@ export default function AddPatient() {
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={6}>
-                                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                        <MuiPickersUtilsProvider libInstance={moment} utils={DateFnsUtils}>
                                             <KeyboardDatePicker
                                                 disabled={visible}
-                                                disableToolbar
-                                                variant="inline"
+                                                fullWidth
                                                 color="secondary"
-                                                style={{ color: '#FFFFFF' }}
-                                                format="dd-MM-yyyy"
-                                                id="date-picker-inline"
-                                                label="Date"
+                                                inputVariant="outlined"
+                                                autoOk={true}
                                                 value={date}
-                                                onChange={handleDateChange}
-                                                KeyboardButtonProps={{
-                                                    'aria-label': 'change date',
-                                                }}
+                                                label="Admission Date"
+                                                inputValue={inputValue}
+                                                onChange={onDateChange}
+                                                format="dd-MM-yyyy"
                                             />
                                         </MuiPickersUtilsProvider>
                                     </Grid>
@@ -263,7 +272,7 @@ export default function AddPatient() {
                                     color="primary"
                                     className={classes.submit}
                                 >
-                                    {visible ? <CircularProgress color="secondary"/> : 'Add Patient'}
+                                    {visible ? <CircularProgress color="secondary" /> : 'Add Patient'}
                                 </Button>
                                 <Dialog
                                     maxWidth="md"
