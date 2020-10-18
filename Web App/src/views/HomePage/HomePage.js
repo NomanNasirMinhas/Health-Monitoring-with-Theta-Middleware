@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 const ErrorMessage = () => {
     return (
-        <div style={{ fontSize: "2rem", color: "#6af2fd"}}>
+        <div style={{ fontSize: "2rem", color: "#6af2fd" }}>
             Currently, there are no patients under your supervision
         </div>
     )
@@ -56,27 +56,19 @@ export default function HomePage() {
             var seed = (localStorage.getItem('seed') || '')
             var obj = await fetch(`https://thetamiddleware.herokuapp.com/getAllAddresses/${seed}`)
             obj = await obj.json()
-            if (obj.length === 0)
+            console.log(obj)
+            if (obj === false)
                 SetEmpty(true)
-            // fetch(`https://thetamiddleware.herokuapp.com/getAllAddresses/${seed}`)
-            //     .then(resp => resp.json())
-            //     .then(response => SetResponse(response))
             SetResponse(obj)
+            console.log(empty)
             setVisible(false)
         }
         getPatient()
     }, [])
 
     useEffect(() => {
-        // var x = Response && Response[0]?.Profile.name
-        // console.log(x)
+        //console.log(Response)
     }, [Response])
-
-    // const patients = async () => {
-    //     var seed = (localStorage.getItem('seed') || '')
-    //     var addresses = await fetch(`http://localhost:5000/getAddress/${seed}`);
-    //     alert(addresses[0])
-    // }
 
     return (
         <ThemeProvider theme={theme}>

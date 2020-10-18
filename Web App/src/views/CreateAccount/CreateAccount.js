@@ -5,6 +5,8 @@ import { AppBar, Toolbar } from "@material-ui/core"
 import theme from "../../assets/theme/theme"
 import { Link as link } from "react-router-dom"
 import QRCode from "qrcode.react"
+import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -61,48 +63,74 @@ const CssTextField = withStyles({
     },
 })(TextField);
 
+const SignUpSchema = Yup.object().shape({
+    Name: Yup.string()
+        .matches(/^[A-Za-z ]+$/, 'No special characters or numbers allowed')
+        .min(2, 'Too Short!')
+        .max(20, 'Too Long!')
+        .required('Required'),
+    Specialization: Yup.string()
+        .matches(/^[A-Za-z ]+$/, 'No special characters or numbers allowed')
+        .min(2, 'Too Short!')
+        .max(20, 'Too Long!')
+        .required('Required'),
+    Email: Yup.string()
+        .email("Please enter a valid e-mail address")
+        .required("Please enter e-mail address"),
+    Address: Yup.string().required("Please state your address"),
+    Contact: Yup.string()
+        .required("Please state your contact number")
+        .test('len', 'Invalid contact detail', val => val && val.toString().length === 10),
+    Username: Yup.string()
+        .required("Please enter your desired username")
+        .matches(/^[A-Za-z]+$/, 'No special characters or numbers allowed')
+        .min(2, 'Too Short!')
+        .max(20, 'Too Long!')
+        .required('Required'),
+    Password: Yup.string()
+        .required("Enter your password")
+        .min(8, "Password must contain at least 8 characters"),
+    confirmPassword: Yup.string()
+        .required("Confirm your password")
+        .oneOf([Yup.ref("Password")], "Password does not match")
+});
 
 export default function SignUp(props) {
     const classes = useStyles();
     const [visible, setVisible] = React.useState(false);
     const [parsedSeed, SetParsedSeed] = React.useState('')
     const [open, setOpen] = React.useState(false);
-    const [userName, SetUserName] = React.useState('');
-    const [password, SetPassword] = React.useState('');
-    const [name, SetName] = React.useState('');
-    const [specialization, SetSpecialization] = React.useState('');
-    const [address, SetAddress] = React.useState('');
-    const [contact, SetContact] = React.useState('');
-    const [email, SetEmail] = React.useState('');
     const signIn = visible ? '#' : '/';
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (values, actions) => {
         setVisible(true)
         var profile = {
-            name: name,
-            specialization: specialization,
-            address: address,
-            contact: contact,
-            email: email
+            name: values.Name,
+            specialization: values.Specialization,
+            address: values.Address,
+            contact: values.Contact,
+            email: values.Email
         }
-
+        console.log("anday waala burger")
         var seed = await fetch('https://thetamiddleware.herokuapp.com/addSeed/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                id: userName,
-                password: password,
+                id: values.Username,
+                password: values.Password,
                 info: profile
             }
             )
         });
         var x = await seed.json()
-        SetParsedSeed(x)
-
-        console.log(parsedSeed)
+        console.log(x)
+        SetParsedSeed(x) 
+        actions.setSubmitting(false)
+        console.log("Done")
         setOpen(true)
+        actions.handleReset()
     }
 
     const handleClose = () => {
@@ -126,164 +154,196 @@ export default function SignUp(props) {
             <Slide direction="down" in={true} timeout={300}>
                 <Container component="main" maxWidth="sm">
                     <div className={classes.paper}>
-                        <form className={classes.form} noValidate>
-                            <Grid container spacing={3}>
-                                <Grid item xs={12}>
-                                    <CssTextField
-                                        name="name"
-                                        disabled={visible}
-                                        variant="outlined"
-                                        required
-                                        fullWidth
-                                        id="name"
-                                        label="Full Name"
-                                        value={name}
-                                        onChange={e => {
-                                            SetName(e.target.value)
-                                        }}
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <CssTextField
-                                        disabled={visible}
-                                        variant="outlined"
-                                        required
-                                        fullWidth
-                                        id="specialization"
-                                        label="Specialization"
-                                        name="specialization"
-                                        value={specialization}
-                                        onChange={e => {
-                                            SetSpecialization(e.target.value)
-                                        }}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <CssTextField
-                                        disabled={visible}
-                                        variant="outlined"
-                                        required
-                                        fullWidth
-                                        id="email"
-                                        label="Email Address"
-                                        name="email"
-                                        autoComplete="email"
-                                        value={email}
-                                        onChange={e => {
-                                            SetEmail(e.target.value)
-                                        }}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <CssTextField
-                                        disabled={visible}
-                                        variant="outlined"
-                                        required
-                                        fullWidth
-                                        type="number"
-                                        id="number"
-                                        label="Contact Number"
-                                        name="number"
-                                        value={contact}
-                                        onChange={e => {
-                                            SetContact(e.target.value)
-                                        }}
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <CssTextField
-                                        disabled={visible}
-                                        variant="outlined"
-                                        required
-                                        fullWidth
-                                        id="address"
-                                        label="Address"
-                                        name="address"
-                                        value={address}
-                                        onChange={e => {
-                                            SetAddress(e.target.value)
-                                        }}
-                                    />
-                                </Grid>
+                        <Formik
+                            initialValues={{
+                                Name: '',
+                                Age: '',
+                                Email: '',
+                                Specialization: '',
+                                Address: '',
+                                Contact: '',
+                                Username: '',
+                                Password: '',
+                                confirmPassword: '',
+                            }}
+                            validationSchema={SignUpSchema}
+                            onSubmit={handleSubmit}
+                        >
+                            {({ errors, touched, values, handleBlur, handleChange, handleSubmit, isSubmitting, handleReset }) => (
+                                <Form onSubmit={handleSubmit}>
+                                    <Grid container spacing={3}>
+                                        <Grid item xs={12}>
+                                            <CssTextField
+                                                disabled={isSubmitting}
+                                                variant="outlined"
+                                                fullWidth
+                                                id="Name"
+                                                label="Full Name"
+                                                value={values.Name}
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                helperText={touched.Name ? errors.Name : ""}
+                                                error={touched.Name && Boolean(errors.Name)}
+                                                autoComplete="off"
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <CssTextField
+                                                disabled={isSubmitting}
+                                                variant="outlined"
+                                                fullWidth
+                                                id="Specialization"
+                                                label="Specialization"
+                                                value={values.Specialization}
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                helperText={touched.Specialization ? errors.Specialization : ""}
+                                                error={touched.Specialization && Boolean(errors.Specialization)}
+                                                autoComplete="off"
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <CssTextField
+                                                disabled={isSubmitting}
+                                                variant="outlined"
+                                                fullWidth
+                                                id="Email"
+                                                label="Email Address"
+                                                autoComplete="email"
+                                                value={values.Email}
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                helperText={touched.Email ? errors.Email : ""}
+                                                error={touched.Email && Boolean(errors.Email)}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <CssTextField
+                                                disabled={isSubmitting}
+                                                variant="outlined"
+                                                fullWidth
+                                                type="number"
+                                                id="Contact"
+                                                label="Contact Number"
+                                                value={values.Contact}
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                helperText={touched.Contact ? errors.Contact : ""}
+                                                error={touched.Contact && Boolean(errors.Contact)}
+                                                autoComplete="off"
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <CssTextField
+                                                disabled={isSubmitting}
+                                                variant="outlined"
+                                                fullWidth
+                                                id="Address"
+                                                label="Address"
+                                                value={values.Address}
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                helperText={touched.Address ? errors.Address : ""}
+                                                error={touched.Address && Boolean(errors.Address)}
+                                                autoComplete="off"
+                                            />
+                                        </Grid>
 
-                                <Grid item xs={12}>
-                                    <CssTextField
-                                        disabled={visible}
-                                        variant="outlined"
-                                        required
-                                        fullWidth
-                                        name="username"
-                                        label="Username"
-                                        id="username"
-                                        value={userName}
-                                        onChange={e => {
-                                            SetUserName(e.target.value)
-                                        }}
-                                    />
-                                </Grid>
+                                        <Grid item xs={12}>
+                                            <CssTextField
+                                                disabled={isSubmitting}
+                                                variant="outlined"
+                                                fullWidth
+                                                label="Username"
+                                                id="Username"
+                                                value={values.Username}
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                helperText={touched.Username ? errors.Username : ""}
+                                                error={touched.Username && Boolean(errors.Username)}
+                                                autoComplete="off"
+                                            />
+                                        </Grid>
 
-                                <Grid item xs={12}>
-                                    <CssTextField
-                                        disabled={visible}
-                                        variant="outlined"
-                                        required
+                                        <Grid item xs={12}>
+                                            <CssTextField
+                                                disabled={isSubmitting}
+                                                variant="outlined"
+                                                fullWidth
+                                                label="Password"
+                                                type="password"
+                                                id="Password"
+                                                value={values.Password}
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                helperText={touched.Password ? errors.Password : ""}
+                                                error={touched.Password && Boolean(errors.Password)}
+                                                autoComplete="off"
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <CssTextField
+                                                disabled={isSubmitting}
+                                                variant="outlined"
+                                                fullWidth
+                                                label="Confirm Password"
+                                                type="password"
+                                                id="confirmPassword"
+                                                value={values.confirmPassword}
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                helperText={touched.confirmPassword ? errors.confirmPassword : ""}
+                                                error={touched.confirmPassword && Boolean(errors.confirmPassword)}
+                                                autoComplete="off"
+                                            />
+                                        </Grid>
+                                    </Grid>
+                                    <Button
+                                        type="submit"
+                                        disabled={isSubmitting}
                                         fullWidth
-                                        name="password"
-                                        label="Password"
-                                        type="password"
-                                        id="password"
-                                        autoComplete="current-password"
-                                        value={password}
-                                        onChange={e => {
-                                            SetPassword(e.target.value)
-                                        }}
-                                    />
-                                </Grid>
-                            </Grid>
-                            <Button
-                                disabled={visible}
-                                onClick={handleSubmit}
-                                fullWidth
-                                variant="contained"
-                                color="primary"
-                                style={{ fontSize: 20 }}
-                                className={classes.submit}
-                            >
-                                {visible ? <CircularProgress color="secondary"/> : 'Sign Up'}
-                        </Button>
-                            <Dialog
-                                maxWidth="md"
-                                open={open}
-                                onClose={handleClose}
-                            >
-                                <DialogTitle>Account Created Successfully</DialogTitle>
-                                <DialogContent>
-                                    <DialogContentText>
-                                        Kindly keep the Seed ID safe. Your Seed ID is: {displaySeed}. Your QR is:
-                                </DialogContentText>
-                                    <QRCode value={displaySeed} />
-                                    <DialogActions>
-                                        <Button onClick={handleClose} color="primary">
-                                            Save QR
+                                        variant="contained"
+                                        color="primary"
+                                        style={{ fontSize: 20 }}
+                                        className={classes.submit}
+                                    >
+                                        {isSubmitting ? <CircularProgress color="secondary" /> : 'Sign Up'}
                                     </Button>
-                                        <Button onClick={handleClose} color="primary">
-                                            Close
-                                    </Button>
-                                    </DialogActions>
-                                </DialogContent>
-                            </Dialog>
-                            <Grid container justify="flex-end">
-                                <Grid item>
-                                    <Link
-                                        to={signIn}
-                                        component={link}
-                                        color="secondary"
-                                        variant="body2">
-                                        Already have an account? Sign in
-                                </Link>
-                                </Grid>
-                            </Grid>
-                        </form>
+                                    <Dialog
+                                        maxWidth="md"
+                                        open={open}
+                                        onClose={handleClose}
+                                    >
+                                        <DialogTitle>Account Created Successfully</DialogTitle>
+                                        <DialogContent>
+                                            <DialogContentText>
+                                                Kindly keep the Seed ID safe. Your Seed ID is: {displaySeed}. Your QR is:
+                                            </DialogContentText>
+                                            <QRCode value={displaySeed} />
+                                            <DialogActions>
+                                                <Button onClick={handleClose} color="primary">
+                                                    Save QR
+                                                </Button>
+                                                <Button onClick={handleClose} color="primary">
+                                                    Close
+                                                </Button>
+                                            </DialogActions>
+                                        </DialogContent>
+                                    </Dialog>
+                                    <Grid container justify="flex-end">
+                                        <Grid item>
+                                            <Link
+                                                to={signIn}
+                                                component={link}
+                                                color="secondary"
+                                                variant="body2">
+                                                Already have an account? Sign in
+                                            </Link>
+                                        </Grid>
+                                    </Grid>
+                                </Form>
+                            )}
+                        </Formik>
                     </div>
                 </Container>
             </Slide>

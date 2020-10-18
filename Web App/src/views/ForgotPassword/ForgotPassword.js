@@ -65,7 +65,8 @@ export default function ForgotPassword() {
     const [seed, SetSeed] = useState('')
     const [Password, SetPassword] = useState('')
     const [open, setOpen] = React.useState(false);
-    const handleSubmit = async () => {
+    const handleSubmit = async (event) => {
+        event.preventDefault()
         setVisible(true)
         var obj = await fetch(`https://thetamiddleware.herokuapp.com/forgotPassword/${seed}`);
         setOpen(true)
@@ -94,7 +95,7 @@ export default function ForgotPassword() {
             <Slide direction="down" in={true} timeout={300}>
                 <Container component="main" maxWidth="sm">
                     <div className={classes.paper}>
-                        <form className={classes.form} noValidate>
+                        <form className={classes.form} onSubmit={handleSubmit}>
                             <Grid container spacing={3}>
                                 <Grid item xs={12}>
                                     <CssTextField
@@ -111,7 +112,7 @@ export default function ForgotPassword() {
                                 </Grid>
                             </Grid>
                             <Button
-                                onClick={handleSubmit}
+                                type="submit"
                                 fullWidth
                                 disabled={visible}
                                 variant="contained"
