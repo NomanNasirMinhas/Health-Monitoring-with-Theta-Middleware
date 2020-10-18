@@ -1,9 +1,8 @@
 import React from 'react';
 import { Button, TextField, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions, Slide, CircularProgress } from '@material-ui/core';
-import { Grid, Typography, makeStyles, Container, Select, MenuItem, InputLabel, FormControl, ThemeProvider, withStyles } from '@material-ui/core';
+import { Grid, Typography, makeStyles, Container, MenuItem, ThemeProvider, withStyles } from '@material-ui/core';
 // import { InputBase } from "@material-ui/core"
 import DateFnsUtils from '@date-io/date-fns';
-import { format } from "date-fns";
 import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
@@ -12,6 +11,8 @@ import Header from '../../components/Header/Header';
 import theme from "../../assets/theme/theme"
 import QRCode from "qrcode.react"
 import moment from "moment";
+import * as Yup from 'yup';
+import { Formik, Form } from 'formik';
 
 const useStyles = makeStyles((theme) => ({
     content: {
@@ -77,6 +78,23 @@ const CssTextField = withStyles({
     },
 })(TextField);
 
+const AddPatientSchema = Yup.object().shape({
+    Name: Yup.string()
+        .matches(/^[A-Za-z ]+$/, 'No special characters or numbers allowed')
+        .min(2, 'Too Short!')
+        .max(20, 'Too Long!')
+        .required('Required'),
+    Age: Yup.number()
+        .positive("Age is invalid")
+        .max(150, 'Too Long!')
+        .required('Required'),
+    Gender: Yup.string().required("Please specify your gender"),
+    Address: Yup.string().required("Please state your address"),
+    Contact: Yup.string()
+        .required("Please state your contact number")
+        .test('len', 'Invalid contact detail', val => val && val.toString().length === 10),
+});
+
 // const CssSelect = withStyles({
 //     input: {
 //         border: '1px solid #FFFFFF',
@@ -95,66 +113,56 @@ const CssTextField = withStyles({
 export default function AddPatient() {
     //{$seed}&{address}
     const classes = useStyles();
-    const [visible, setVisible] = React.useState(false);
     const [open, setOpen] = React.useState(false);
-    const [name, SetName] = React.useState('');
-    const [age, setAge] = React.useState('');
-    const [gender, SetGender] = React.useState('');
-    const [date, SetDate] = React.useState(format(new Date(), "dd-MM-yyyy"));
-    const [address, SetAddress] = React.useState('');
-    const [contact, SetContact] = React.useState('');
+    const [date, SetDate] = React.useState(moment().format("DD-MM-YYYY"));
     const [DeviceAddress, SetDeviceAddress] = React.useState('');
     const seed = (localStorage.getItem('seed') || '')
-    const [inputValue, setInputValue] = React.useState(moment().format("DD-MM-YYYY"));
-
     const onDateChange = (date, value) => {
         SetDate(value);
-        setInputValue(value);
     };
 
-    const handleSubmit = async () => {
-        setVisible(true)
-        var profile = {
-            name: name,
-            age: age,
-            gender: gender,
-            address: address,
-            contact: contact,
-            date: date
-        }
+    // const handleSubmit = async () => {
+    //     setVisible(true)
+    //     var profile = {
+    //         name: name,
+    //         age: age,
+    //         gender: gender,
+    //         address: address,
+    //         contact: contact,
+    //         date: date
+    //     }
 
-        await fetch('https://thetamiddleware.herokuapp.com/addAddress/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                seed: seed,
-                deviceNum: 6,
-                secLevel: 3,
-                id: "IDalph6",
-                password: "PASSWORD",
-                info: profile
-            }
-            )
-        }).then((result) => result.json()
-            .then((resp) => {
-                if (resp[0] === true) {
-                    SetDeviceAddress(resp[1])
-                    setOpen(true)
-                }
-                else{
-                    alert("Issue occured while adding patient. Contact administrator")
-                    window.location.reload(false);
-                }
-            }))
+    //     await fetch('https://thetamiddleware.herokuapp.com/addAddress/', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify({
+    //             seed: seed,
+    //             deviceNum: 6,
+    //             secLevel: 3,
+    //             id: "IDalph6",
+    //             password: "PASSWORD",
+    //             info: profile
+    //         }
+    //         )
+    //     }).then((result) => result.json()
+    //         .then((resp) => {
+    //             if (resp[0] === true) {
+    //                 SetDeviceAddress(resp[1])
+    //                 setOpen(true)
+    //             }
+    //             else {
+    //                 alert("Issue occured while adding patient. Contact administrator")
+    //                 window.location.reload(false);
+    //             }
+    //         }))
 
-        console.log("Done")
-    }
+    //     console.log("Done")
+    // }
 
     const handleClose = () => {
         setOpen(false)
-        window.location.reload(false);
     }
 
     return (
@@ -168,136 +176,209 @@ export default function AddPatient() {
                 <Slide direction="down" in={true} timeout={300}>
                     <Container component="main" maxWidth="sm">
                         <div className={classes.paper}>
-                            <form className={classes.form} noValidate>
-                                <Grid container spacing={3}>
-                                    <Grid item xs={12}>
-                                        <CssTextField
-                                            autoComplete="name"
-                                            disabled={visible}
-                                            name="Name"
-                                            variant="outlined"
-                                            required
+                            <Formik
+                                initialValues={{
+                                    Name: '',
+                                    Age: '',
+                                    Gender: '',
+                                    Address: '',
+                                    Contact: '',
+                                }}
+                                validationSchema={AddPatientSchema}
+
+                                onSubmit={async (values, actions) => {
+                                    var profile = {
+                                        name: values.Name,
+                                        age: values.Age,
+                                        gender: values.Gender,
+                                        address: values.Address,
+                                        contact: values.Contact,
+                                        date: date
+                                    }
+
+                                    await fetch('https://thetamiddleware.herokuapp.com/addAddress/', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify({
+                                            seed: seed,
+                                            deviceNum: 6,
+                                            secLevel: 3,
+                                            id: "IDalph6",
+                                            password: "PASSWORD",
+                                            info: profile
+                                        }
+                                        )
+                                    }).then((result) => result.json()
+                                        .then((resp) => {
+                                            if (resp[0] === true) {
+                                                SetDeviceAddress(resp[1])
+                                                setOpen(true)
+                                            }
+                                            else {
+                                                alert("Issue occured while adding patient. Contact administrator")
+                                                window.location.reload(false);
+                                            }
+                                        }))
+
+                                    actions.setSubmitting(false)
+                                    actions.handleReset()
+                                    console.log("Done")
+                                }}
+                            >
+                                {({ errors, touched, values, handleBlur, handleChange, handleSubmit, isSubmitting, handleReset }) => (
+                                    <Form onSubmit={handleSubmit}>
+                                        <Grid container spacing={3}>
+                                            <Grid item xs={12}>
+                                                <CssTextField
+                                                    disabled={isSubmitting}
+                                                    autoComplete="off"
+                                                    variant="outlined"
+                                                    fullWidth
+                                                    id="Name"
+                                                    label="Name"
+                                                    value={values.Name}
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    helperText={touched.Name ? errors.Name : ""}
+                                                    error={touched.Name && Boolean(errors.Name)}
+                                                   
+                                                />
+                                            </Grid>
+                                            <Grid item xs={12} sm={6}>
+                                                <CssTextField
+                                                    variant="outlined"
+                                                    disabled={isSubmitting}
+                                                    fullWidth
+                                                    type="number"
+                                                    id="Age"
+                                                    label="Age in year(s)"
+                                                    color="secondary"
+                                                    value={values.Age}
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    helperText={touched.Age ? errors.Age : ""}
+                                                    error={touched.Age && Boolean(errors.Age)}
+                                                />
+                                            </Grid>
+                                            <Grid item xs={12} sm={6}>
+                                                <CssTextField
+                                                    select
+                                                    fullWidth
+                                                    variant="outlined"
+                                                    disabled={isSubmitting}
+                                                    id="Gender"
+                                                    label="Gender"
+                                                    color="secondary"
+                                                    value={values.Gender}
+                                                    onChange={handleChange("Gender")}
+                                                    onBlur={handleBlur("Gender")}
+                                                    helperText={touched.Gender ? errors.Gender : ""}
+                                                    error={touched.Gender && Boolean(errors.Gender)}
+                                                    autoComplete="off"
+                                                >
+                                                    <MenuItem value={"male"}>Male</MenuItem>
+                                                    <MenuItem value={"female"}>Female</MenuItem>
+                                                </CssTextField>
+                                            </Grid>
+                                            <Grid item xs={12}>
+                                                <CssTextField
+                                                    disabled={isSubmitting}
+                                                    variant="outlined"
+                                                    fullWidth
+                                                    id="Address"
+                                                    label="Address"
+                                                    color="secondary"
+                                                    value={values.Address}
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    helperText={touched.Address ? errors.Address : ""}
+                                                    error={touched.Address && Boolean(errors.Address)}
+                                                    autoComplete="off"
+                                                />
+                                            </Grid>
+                                            <Grid item xs={12} sm={6}>
+                                                <CssTextField
+                                                    disabled={isSubmitting}
+                                                    variant="outlined"
+                                                    fullWidth
+                                                    type="number"
+                                                    id="Contact"
+                                                    label="Contact Number"
+                                                    color="secondary"
+                                                    value={values.Contact}
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                    helperText={touched.Contact ? errors.Contact : ""}
+                                                    error={touched.Contact && Boolean(errors.Contact)}
+                                                    autoComplete="off"
+                                                />
+                                            </Grid>
+                                            <Grid item xs={12} sm={6}>
+                                                <MuiPickersUtilsProvider libInstance={moment} utils={DateFnsUtils}>
+                                                    <KeyboardDatePicker
+                                                        disabled={isSubmitting}
+                                                        fullWidth
+                                                        maxDate={new Date()}
+                                                        id="admissionDate"
+                                                        color="secondary"
+                                                        inputVariant="outlined"
+                                                        autoOk={true}
+                                                        format="dd-MM-yyyy"
+                                                        label="Admission Date"
+                                                        inputValue={date}
+                                                        onChange={onDateChange}
+                                                    />
+                                                </MuiPickersUtilsProvider>
+                                            </Grid>
+                                        </Grid>
+                                        <Button
+                                            type="submit"
+                                            disabled={isSubmitting}
                                             fullWidth
-                                            id="name"
-                                            label="Name"
-                                            onChange={(event) => { SetName(event.target.value) }}
-                                            value={name}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                        <CssTextField
-                                            variant="outlined"
-                                            required
-                                            disabled={visible}
-                                            fullWidth
-                                            type="number"
-                                            id="age"
-                                            label="Age in year(s)"
-                                            name="age"
-                                            color="secondary"
-                                            onChange={(event) => { setAge(event.target.value) }}
-                                            value={age}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                        <FormControl variant="outlined" fullWidth>
-                                            <InputLabel id="demo-simple-select-outlined-label">Gender</InputLabel>
-                                            <Select
-                                                disabled={visible}
-                                                labelId="demo-simple-select-outlined-label"
-                                                id="demo-simple-select-outlined"
-                                                label="Gender"
-                                                color="secondary"
-                                                //input={<CssSelect />}
-                                                onChange={(event) => { SetGender(event.target.value) }}
-                                                value={gender}
-                                            >
-                                                <MenuItem value={'male'}>Male</MenuItem>
-                                                <MenuItem value={'female'}>Female</MenuItem>
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <CssTextField
-                                            disabled={visible}
-                                            variant="outlined"
-                                            required
-                                            fullWidth
-                                            id="address"
-                                            label="Address"
-                                            name="address"
-                                            color="secondary"
-                                            onChange={(event) => { SetAddress(event.target.value) }}
-                                            value={address}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                        <CssTextField
-                                            disabled={visible}
-                                            variant="outlined"
-                                            required
-                                            fullWidth
-                                            type="number"
-                                            id="contact"
-                                            label="Contact Number"
-                                            name="contact"
-                                            color="secondary"
-                                            onChange={(event) => { SetContact(event.target.value) }}
-                                            value={contact}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                        <MuiPickersUtilsProvider libInstance={moment} utils={DateFnsUtils}>
-                                            <KeyboardDatePicker
-                                                disabled={visible}
-                                                fullWidth
-                                                color="secondary"
-                                                inputVariant="outlined"
-                                                autoOk={true}
-                                                value={date}
-                                                label="Admission Date"
-                                                inputValue={inputValue}
-                                                onChange={onDateChange}
-                                                format="dd-MM-yyyy"
-                                            />
-                                        </MuiPickersUtilsProvider>
-                                    </Grid>
-                                </Grid>
-                                <Button
-                                    disabled={visible}
-                                    onClick={handleSubmit}
-                                    fullWidth
-                                    variant="contained"
-                                    style={{ fontSize: 20 }}
-                                    color="primary"
-                                    className={classes.submit}
-                                >
-                                    {visible ? <CircularProgress color="secondary" /> : 'Add Patient'}
-                                </Button>
-                                <Dialog
-                                    maxWidth="md"
-                                    open={open}
-                                    onClose={handleClose}
-                                >
-                                    <DialogTitle>Patient Added Successfully</DialogTitle>
-                                    <DialogContent>
-                                        <DialogContentText>
-                                            Kindly keep the Address ID safe. Your Patient's Address is: {DeviceAddress} and the QR is:
-                                            <div className={classes.qr}>
-                                                <QRCode value={`${seed}&${DeviceAddress}`} />
-                                            </div>
-                                        </DialogContentText>
-                                        <DialogActions>
-                                            <Button onClick={handleClose} color="primary">
-                                                Save QR
-                                            </Button>
-                                            <Button onClick={handleClose} color="primary">
-                                                Close
-                                            </Button>
-                                        </DialogActions>
-                                    </DialogContent>
-                                </Dialog>
-                            </form>
+                                            variant="contained"
+                                            style={{ fontSize: 20 }}
+                                            color="primary"
+                                            className={classes.submit}
+                                        >
+                                            {isSubmitting ? <CircularProgress color="secondary" /> : 'Add Patient'}
+                                        </Button>
+                                        <Dialog
+                                            maxWidth="md"
+                                            open={open}
+                                            onClose={() => {
+                                                handleReset()
+                                                handleClose()
+                                            }}
+                                        >
+                                            <DialogTitle>Patient Added Successfully</DialogTitle>
+                                            <DialogContent>
+                                                <DialogContentText>
+                                                    Kindly keep the Address ID safe. Your Patient's Address is: {DeviceAddress} and the QR is:
+                                                    <div className={classes.qr}>
+                                                        <QRCode value={`${seed}&${DeviceAddress}`} />
+                                                    </div>
+                                                </DialogContentText>
+                                                <DialogActions>
+                                                    <Button onClick={handleClose} color="primary">
+                                                        Save QR
+                                                    </Button>
+                                                    <Button
+                                                        onClick={() => {
+                                                            handleClose();
+                                                            handleReset();
+                                                        }
+                                                        }
+                                                        color="primary">
+                                                        Close
+                                                    </Button>
+                                                </DialogActions>
+                                            </DialogContent>
+                                        </Dialog>
+                                    </Form>
+                                )}
+                            </Formik>
                         </div>
                     </Container>
                 </Slide>

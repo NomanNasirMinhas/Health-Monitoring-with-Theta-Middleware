@@ -111,7 +111,7 @@ const Login = (props) => {
                                 Password: '',
                             }}
                             validationSchema={LoginSchema}
-                            onSubmit={async (values) => {
+                            onSubmit={async (values, actions) => {
                                 setVisible(true)
                                 var seed = await fetch(`https://thetamiddleware.herokuapp.com/getSeed/${values.Username}&${values.Password}`);
                                 var parsedSeed = await seed.json();
@@ -119,18 +119,19 @@ const Login = (props) => {
                                 if (parsedSeed[0]) {
                                     localStorage.setItem('seed', parsedSeed[1].SEED);
                                     props.history.push('/dashboard')
+                                    actions.setSubmitting(false)
                                 }
                                 else {
                                     SetOpenError(true)
                                 }
                             }}
                         >
-                            {({ errors, touched, values, handleBlur, handleChange, handleSubmit }) => (
+                            {({ errors, touched, values, handleBlur, handleChange, handleSubmit, isSubmitting, handleReset }) => (
                                 <Form onSubmit={handleSubmit}>
                                     <CssTextField
                                         variant="outlined"
                                         margin="normal"
-                                        disabled={visible}
+                                        disabled={isSubmitting}
                                         required
                                         fullWidth
                                         id="Username"
@@ -146,7 +147,7 @@ const Login = (props) => {
                                         variant="outlined"
                                         // type="password"
                                         margin="normal"
-                                        disabled={visible}
+                                        disabled={isSubmitting}
                                         required
                                         fullWidth
                                         id="Password"
@@ -162,13 +163,13 @@ const Login = (props) => {
                                     <Button
                                         type="submit"
                                         fullWidth
-                                        disabled={visible}
+                                        disabled={isSubmitting}
                                         variant="contained"
                                         color="primary"
                                         style={{ fontSize: 20 }}
                                         className={classes.submit}
                                     >
-                                        {visible ? <CircularProgress color="secondary" /> : 'Log in'}
+                                        {isSubmitting ? <CircularProgress color="secondary" /> : 'Log in'}
 
                                     </Button>
 
@@ -181,7 +182,7 @@ const Login = (props) => {
                                                 color="secondary"
                                                 variant="body2">
                                                 Forgot password?
-                                </Link>
+                                            </Link>
                                         </Grid>
                                         <Grid item>
                                             <Link
@@ -197,17 +198,25 @@ const Login = (props) => {
                                     <Dialog
                                         maxWidth="md"
                                         open={openError}
-                                        onClose={() => { window.location.reload(false) }}
+                                        onClose={() => {
+                                            SetOpenError(false)
+                                            handleReset()
+                                        }}
                                     >
                                         <DialogTitle>Invalid Credentials</DialogTitle>
                                         <DialogContent>
                                             <DialogContentText>
                                                 Please verify the Username and/or Password
-                                    </DialogContentText>
+                                            </DialogContentText>
                                             <DialogActions>
-                                                <Button onClick={() => { window.location.reload(false) }} color="primary">
+                                                <Button
+                                                    onClick={() => {
+                                                        SetOpenError(false);
+                                                        handleReset()
+                                                    }}
+                                                    color="primary">
                                                     Okay
-                                        </Button>
+                                                </Button>
                                             </DialogActions>
                                         </DialogContent>
                                     </Dialog>
