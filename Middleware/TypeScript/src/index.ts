@@ -50,7 +50,7 @@ function getNode() {
   return node;
 }
 
-async function getSeed(id, pass) {
+async function getSeed(id:String, pass:String) {
   try {
     var db = await MongoClient.connect(uri);
     var dbo = await db.db("thetamw1");
@@ -73,7 +73,7 @@ async function getSeed(id, pass) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function generateSeed(id, password, info) {
+async function generateSeed(id:String, password:String, info:Object) {
 
   var result = "";
   var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ9";
@@ -95,12 +95,12 @@ async function generateSeed(id, password, info) {
 
 async function generateAddressLocally(
 
-  seed,
-  deviceNumber,
-  seclevel,
-  id,
-  password,
-  info
+  seed:String,
+  deviceNumber:Number,
+  seclevel:Number,
+  id:String,
+  password:String,
+  info:Object
 ) {
   const Iota = require("@iota/core");
   const Converter = require("@iota/converter");
@@ -143,7 +143,7 @@ async function generateAddressLocally(
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function sendPublicTransaction(seed, address, message) {
+async function sendPublicTransaction(seed:String, address:String, message:String) {
   const Iota = require("@iota/core");
   const Converter = require("@iota/converter");
 
@@ -165,13 +165,13 @@ async function sendPublicTransaction(seed, address, message) {
 
   await iota
     .prepareTransfers(seed, transfers)
-    .then((trytes) => {
+    .then((trytes:any) => {
       return iota.sendTrytes(trytes, depth, minimumWeightMagnitude);
     })
-    .then((bundle) => {
+    .then((bundle:any) => {
       addTransaction( address, bundle[0].hash);
     })
-    .catch((err) => {
+    .catch((err:any) => {
       console.error(err);
     });
   return true;
@@ -183,7 +183,7 @@ async function sendPublicTransaction(seed, address, message) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function getSingleHash(address, time) {
+async function getSingleHash(address:String, time:String) {
 
   try {
     var db = await MongoClient.connect(uri);
@@ -201,7 +201,7 @@ async function getSingleHash(address, time) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function getAllHash(address, txDate) {
+async function getAllHash(address:String, txDate:String) {
   var transactionArray = [];
   try {
     var db = await MongoClient.connect(uri);
@@ -226,7 +226,7 @@ async function getAllHash(address, txDate) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function getSeedInfo(seed)
+async function getSeedInfo(seed:String)
 {
 
   try {
@@ -251,7 +251,7 @@ async function getSeedInfo(seed)
 //--------------------------------------New Function------------------------------------------//
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-async function addSeed( id, password, info, seed) {
+async function addSeed( id:String, password:String, info:Object, seed:String) {
   try {
     var db = await MongoClient.connect(uri);
     var dbo = await db.db("thetamw1");
@@ -275,7 +275,7 @@ async function addSeed( id, password, info, seed) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function addAddress( id, pass, seed, info, finalAddress) {
+async function addAddress( id:String, pass:String, seed:String, info:Object, finalAddress:String) {
   try {
     var db = await MongoClient.connect(uri);
     var dbo = await db.db("thetamw1");
@@ -302,7 +302,7 @@ async function addAddress( id, pass, seed, info, finalAddress) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function addTransaction( address, hash) {
+async function addTransaction( address:String, hash:String) {
   try {
     // console.log("Uri is ", uri)
     var db = await MongoClient.connect(uri);
@@ -333,7 +333,7 @@ async function addTransaction( address, hash) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function updateAddressProfile( seed, address, info) {
+async function updateAddressProfile( seed:String, address:String, info:Object) {
   try {
 
     var db = await MongoClient.connect(uri);
@@ -354,7 +354,7 @@ async function updateAddressProfile( seed, address, info) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function getAddress( seed, id, pass) {
+async function getAddress( seed:String, id:String, pass:String) {
   try {
 
     var db = await MongoClient.connect(uri);
@@ -376,7 +376,7 @@ async function getAddress( seed, id, pass) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function checkAddress( seedID, address) {
+async function checkAddress( seedID:String, address:String) {
   try {
     var db = await MongoClient.connect(uri);
     var dbo = await db.db("thetamw1");
@@ -403,7 +403,7 @@ async function checkAddress( seedID, address) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function getAllAddresses(seed) {
+async function getAllAddresses(seed:String) {
   var addressAray = [];
   try {
     var db = await MongoClient.connect(uri);
@@ -430,7 +430,7 @@ async function getAllAddresses(seed) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function dropAddress(seed, address) {
+async function dropAddress(seed:String, address:String) {
 
   try {
     var db = await MongoClient.connect(uri);
@@ -452,7 +452,7 @@ async function dropAddress(seed, address) {
 //--------------------------------------New Function------------------------------------------//
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-async function adminLogin(id, pass) {
+async function adminLogin(id:String, pass:String) {
   try {
     var db = await MongoClient.connect(uri);
     var dbo = await db.db("thetamw1");
@@ -470,7 +470,7 @@ async function adminLogin(id, pass) {
   }
 }
 
-async function getAllSeeds(username, password) {
+async function getAllSeeds(username:String, password:String) {
   var loggedIN = await adminLogin(username, password)
   if (loggedIN == true){
     var addressAray = [];
@@ -505,7 +505,7 @@ async function getAllSeeds(username, password) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function updateStreamRoot(address, root) {
+async function updateStreamRoot(seed:String, address:String, root:String) {
   try {
 
     var db = await MongoClient.connect(uri);
@@ -526,7 +526,7 @@ async function updateStreamRoot(address, root) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function getStreamRoot(seed, address) {
+async function getStreamRoot(seed:String, address:String) {
   try {
 
     var db = await MongoClient.connect(uri);
@@ -550,7 +550,7 @@ async function getStreamRoot(seed, address) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function getAddressInfo( seed, address) {
+async function getAddressInfo( seed:String, address:String) {
 
   try {
     var db = await MongoClient.connect(uri);
@@ -570,7 +570,7 @@ async function getAddressInfo( seed, address) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function getLastTransactionHash( address)
+async function getLastTransactionHash( address:String)
 {
   try {
     var db = await MongoClient.connect(uri);
@@ -596,7 +596,7 @@ async function getLastTransactionHash( address)
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function getPublicTransactionInfo(hash)
+async function getPublicTransactionInfo(hash:String)
 {
   try {
     const Iota = require('@iota/core');
@@ -624,12 +624,12 @@ async function getPublicTransactionInfo(hash)
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function getPrivateTransactionInfo(seed, address, hash)
-{
-  var ecText = getPublicTransactionInfo(hash);
-  var result = decrypt(seed, address, ecText);
+// async function getPrivateTransactionInfo(seed:String, address:String, hash:String)
+// {
+//   var ecText = getPublicTransactionInfo(hash);
+//   var result = decrypt(seed, address, ecText);
 
-}
+// }
 //********************************************************************************************//
 //                                                                                            //
 //--------------------------------------Code Under Development--------------------------------//
@@ -641,7 +641,7 @@ async function getPrivateTransactionInfo(seed, address, hash)
 //--------------------------------------New Function------------------------------------------//
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-async function publishMAMmsg(dbo, func, seed, address) {
+async function publishMAMmsg(func:Function, seed:String, address:String) {
   const Mam = require('@iota/mam');
 const { asciiToTrytes, trytesToAscii } = require('@iota/converter');
 const mode = 'public';
@@ -649,7 +649,7 @@ const provider = 'https://nodes.devnet.iota.org';
 
 let mamState = Mam.init(provider);
 
-const publish = async packet => {
+const publish = async (packet:any) => {
     // Create MAM message as a string of trytes
     const trytes = asciiToTrytes(JSON.stringify(packet));
     const message = Mam.create(mamState, trytes);
@@ -664,8 +664,8 @@ const publish = async packet => {
     return message.root
 }
 
-const publishAll = async (func) => {
-    var root=null;
+const publishAll = async (func:Function) => {
+    var root:String;
     var initial=true
     while(true)
     {
@@ -677,7 +677,7 @@ const publishAll = async (func) => {
                 message: msg,
                 timestamp: (new Date()).toLocaleString()
               })
-              updateStreamRoot(dbo, seed, address, root)
+              updateStreamRoot(seed, address, root)
               console.log("Root is ", root)
 
         }
@@ -706,7 +706,7 @@ const publishAll = async (func) => {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-function privateMAM(seed, msg) {
+function privateMAM(seed:String, msg:String) {
   const Mam = require("@iota/mam");
   const { asciiToTrytes } = require("@iota/converter");
 
@@ -717,7 +717,7 @@ function privateMAM(seed, msg) {
 
   mamState = Mam.changeMode(mamState, mamType, mamSecret);
 
-  const publish = async (data) => {
+  const publish = async (data:any) => {
     const trytes = asciiToTrytes(data);
     const message = Mam.create(mamState, trytes);
 
@@ -738,16 +738,16 @@ function privateMAM(seed, msg) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function fetchPublicMAM(dbo, seed, address) {
+async function fetchPublicMAM(seed:String, address:String) {
 
   const mode = 'public';
   const provider = getNode();
 
       // Initialize MAM State
       let mamState = Mam.init(provider);
-  const logData = data => console.log('Fetched and parsed', JSON.parse(trytesToAscii(data)), '\n')
+  const logData = (data:any) => console.log('Fetched and parsed', JSON.parse(trytesToAscii(data)), '\n')
     console.log("Getting Root")
-    root=await getStreamRoot(dbo, seed, address)
+    var root:String=await getStreamRoot(seed, address)
     console.log("MAM Root is =", root)
     await Mam.fetch(root.toString(), mode, null, logData)
 }
@@ -758,7 +758,7 @@ async function fetchPublicMAM(dbo, seed, address) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-function fetchPrivateMAM(seed, mamRoot) {
+function fetchPrivateMAM(seed:String, mamRoot:String) {
   const Mam = require("@iota/mam");
   const { trytesToAscii } = require("@iota/converter");
 
@@ -769,7 +769,7 @@ function fetchPrivateMAM(seed, mamRoot) {
 
   let mamState = Mam.init(getNode());
 
-  const logData = (data) => console.log(trytesToAscii(data));
+  const logData = (data:any) => console.log(trytesToAscii(data));
 
   const execute = async () => {
     const resp = await Mam.fetch(root, mamType, mamSecret, logData);
@@ -782,36 +782,36 @@ function fetchPrivateMAM(seed, mamRoot) {
 //--------------------------------------New Function------------------------------------------//
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-function encrypt(seed, address, text) {
-  const crypto = require('crypto');
-  const algorithm = 'aes-256-cbc';
-  const key = seed.slice(0,32);
-  const iv = address.slice(0,16);
-  let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(key), iv);
-  let encrypted = cipher.update(text);
-  encrypted = Buffer.concat([encrypted, cipher.final()]);
-  return { iv: iv.toString('hex'), encryptedData: encrypted.toString('hex') };
- }
+// function encrypt(seed:String, address:String, text:String) {
+//   const crypto = require('crypto');
+//   const algorithm = 'aes-256-cbc';
+//   const key = seed.slice(0,32);
+//   const iv = address.slice(0,16);
+//   let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(key), iv);
+//   let encrypted = cipher.update(text);
+//   encrypted = Buffer.concat([encrypted, cipher.final()]);
+//   return { iv: iv.toString(), encryptedData: encrypted.toString('hex') };
+//  }
 
- function decrypt(seed, address, text) {
-  const key = seed.slice(0,32);
- // const iv = address;
-  const crypto = require('crypto');
-  const algorithm = 'aes-256-cbc';
-  let iv = Buffer.from(text.iv, 'hex');
-  let encryptedText = Buffer.from(text.encryptedData, 'hex');
-  let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key), iv);
-  let decrypted = decipher.update(encryptedText);
-  decrypted = Buffer.concat([decrypted, decipher.final()]);
-  return decrypted.toString();
- }
+//  function decrypt(seed:String, address:String, text:String) {
+//   const key = seed.slice(0,32);
+//  // const iv = address;
+//   const crypto = require('crypto');
+//   const algorithm = 'aes-256-cbc';
+//   let iv = Buffer.from(text.iv, 'hex');
+//   let encryptedText = Buffer.from(text.encryptedData, 'hex');
+//   let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key), iv);
+//   let decrypted = decipher.update(encryptedText);
+//   decrypted = Buffer.concat([decrypted, decipher.final()]);
+//   return decrypted.toString();
+//  }
 
-async function sendPrivateTransaction(seed, addresss, msg)
-{
-  const encText = encrypt(seed, addresss, msg);
-  await sendPublicTransaction(seed, addresss, encText);
+// async function sendPrivateTransaction(seed, addresss, msg)
+// {
+//   const encText = encrypt(seed, addresss, msg);
+//   await sendPublicTransaction(seed, addresss, encText);
 
-}
+// }
 
 
 
@@ -819,9 +819,9 @@ async function sendPrivateTransaction(seed, addresss, msg)
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 async function testing() {
-  testSeed =
+  var testSeed =
     "VLLPIQLDNUXPF9ECVNDQTDQITIQBSTNWJPXSHWEMHSDYHOEZT9CMMRKOIFRZPSJVDBZGJOYMXM9KPJAPY";
-  testAddress =
+  var testAddress =
     "LZK9VJPEJNKHKNADMKYIQVBLWRW9YEXBDPGSYMONHFGVXDHQ9FRLPDPCCHNYAJRCQSJWKWHBFHKYNPCHA";
 //await sendPrivateTransaction(testSeed, testAddress, "Enrypted Text")
   //var lastresult = await getLastTransactionHash(testAddress);
@@ -837,7 +837,6 @@ module.exports = {
   getAddress,
   getAddressInfo,
   getAllAddresses,
-  getAllHash,
   getLastTransactionHash,
   generateAddressLocally,
   getAllHash,

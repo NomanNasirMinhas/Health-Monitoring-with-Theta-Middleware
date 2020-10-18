@@ -15,8 +15,9 @@ const provider = 'https://nodes.devnet.iota.org';
 // Callback used to pass data out of the fetch
 const logData = data => console.log('Fetched and parsed', JSON.parse(trytesToAscii(data)), '\n')
 
-    root='X9THML9ATBQGSMVFNHLTFRACMSCTBXAKX9TOYOMAYKBMKNPVC9QHQDEGPDQERLRET9DAYOMVMESXAPPKE'
+    root='A9RPTMXACYAWXUTDBLCZF9ZXFXMEDJFTDOHQWKQBUCKOYVUTWVABQKXSFAGYLYHOIXWIOAKPWKEYMMTFU'
     await Mam.fetch(root, mode, null, logData)
 
   }
-getMsg()
+var stream = getMsg()
+// console.log(stream)

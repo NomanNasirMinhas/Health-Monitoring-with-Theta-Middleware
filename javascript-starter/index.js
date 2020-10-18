@@ -4,7 +4,7 @@ async function testing() {
     testSeed =
       "MBNDML9YVMXWKOMQZKYNJZQQRIQUQYLSNNDLSHCEAKKDJYHBPEWXBNXNXWOGQTHYUCBPPECYHVQFTZFOQ";
     testAddress =
-      "DHYBATJDVKBNRJRTS9CILIJRLEOVHFKNHBMTDRGKQAI9DFWMBJEJDIXHROLLODCMENPSHNXFHLWNDHWMZ";
+      "NTWSWV9CBWVKZXKLWSOHFLCJTDWIAMVSYRD9DFDXWJWFBVPWYUYDJQDOOLEWLPOAPHR9CHQKTMEOYRKDC";
       var count=0;
       var readings=null;
       // var msg = await getLastTransaction(testAddress)
@@ -12,6 +12,7 @@ async function testing() {
       while(true){
         count++;
         readings={
+          TimeStamp: timestamp(),
           HR: getHeartRate(50,70),
           Temp: getBPM(70,90),
           BP:{
@@ -43,4 +44,14 @@ async function testing() {
     return Math.floor(Math.random() * (max - min + 1) ) + min;
   }
 
+  function timestamp() {
+    var today = new Date();
+    var date =
+      today.getDate() + "-" + (today.getMonth() + 1) + "-" + today.getFullYear();
+    var time =
+      today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    var dateTime = time + "/" + date;
+    // console.log("Current time is " + dateTime);
+    return dateTime;
+  }
   testing()

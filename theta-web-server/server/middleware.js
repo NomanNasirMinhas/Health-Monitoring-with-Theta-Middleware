@@ -1,13 +1,12 @@
 const { address } = require("@iota/signing");
-const { format, compareAsc } = require('date-fns');
+const { format, compareAsc } = require("date-fns");
 const { get } = require("http");
 const { connect } = require("http2");
-require('dotenv').config();
-const Mam = require('@iota/mam');
-  const { asciiToTrytes, trytesToAscii } = require('@iota/converter');
+require("dotenv").config();
+const Mam = require("@iota/mam");
+const { asciiToTrytes, trytesToAscii } = require("@iota/converter");
 
-
-var publishing=false
+var publishing = false;
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 //                                                                                            //
@@ -37,7 +36,7 @@ function getDate() {
   // var date =
   //   today.getDate() + "-" + (today.getMonth() + 1) + "-" + today.getFullYear();
   // console.log("Current Date is " + date);
-  var today = format(new Date(), 'dd-MM-yyyy')
+  var today = format(new Date(), "dd-MM-yyyy");
   return today;
 }
 
@@ -52,20 +51,21 @@ function getNode() {
   return node;
 }
 
+function getProvider() {
+  const node = process.env.MAM_Provider;
+  return node;
+}
+
 
 async function getSeed(dbo, id, pass) {
   try {
-
     var result = await dbo
       .collection("SEEDS")
       .findOne({ $and: [{ ID: id }, { PASSWORD: pass }] });
-    if(result == null)
-    return [false, null]
-
-    else
-    return [true, result];
+    if (result == null) return [false, null];
+    else return [true, result];
   } catch (err) {
-    return err;
+    return [false, err];
   }
 }
 
@@ -83,9 +83,11 @@ async function generateSeed(dbo, id, password, info) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
 
-  await addSeed(dbo, id, password, info, result);
+  var resp = await addSeed(dbo, id, password, info, result);
+  if(resp == true)
+  return [true, result];
 
-  return result;
+  else return false;
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
@@ -134,8 +136,11 @@ async function generateAddressLocally(
     finalAddress = seclevel3Address;
   }
 
-  await addAddress(dbo, id, password, seed, info, finalAddress);
-  return finalAddress;
+  var response = await addAddress(dbo, id, password, seed, info, finalAddress);
+  if (response == true)
+  return [true, finalAddress];
+
+  else return response;
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
@@ -163,7 +168,7 @@ async function sendPublicTransaction(dbo, seed, address, message) {
       message: messageInTrytes,
     },
   ];
-
+  try{
   await iota
     .prepareTransfers(seed, transfers)
     .then((trytes) => {
@@ -177,6 +182,11 @@ async function sendPublicTransaction(dbo, seed, address, message) {
     });
   return true;
 }
+catch(e)
+{
+  return [false, e]
+}
+}
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 //                                                                                            //
@@ -185,13 +195,14 @@ async function sendPublicTransaction(dbo, seed, address, message) {
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
 async function getSingleHash(dbo, address, time) {
-
   try {
     var result = await dbo.collection(address).findOne({ timestamp: time });
-    console.log(result)
+    // console.log(result);
+    if(result == null) return false;
+    else
     return result.txHash;
   } catch (err) {
-    return err;
+    return [false, err];
   }
 }
 
@@ -208,13 +219,18 @@ async function getAllHash(dbo, address, txDate) {
       .collection(address)
       .find({ date: txDate }, { projection: { _id: 1 } })
       .toArray();
+
+    if(info.length == 0)
+    return false;
+    else{
     var i;
     for (i = 0; i < info.length; i++) {
       transactionArray.push(info[i]._id);
     }
     return transactionArray;
+  }
   } catch (err) {
-    return err;
+    return [false, err];
   }
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
@@ -230,12 +246,11 @@ async function addSeed(dbo, id, password, info, seed) {
       PASSWORD: password,
       Profile: info,
       SEED: seed,
-      streamRoot: null,
     };
     await dbo.collection("SEEDS").insertOne(myobj);
     return true;
   } catch (err) {
-    return err;
+    return [false, err];
   }
 }
 
@@ -246,21 +261,29 @@ async function addSeed(dbo, id, password, info, seed) {
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
 async function addAddress(dbo, id, pass, seed, info, finalAddress) {
-  try {
-    var myobj = {
-      _id: id,
-      ID: id,
-      PASSWORD: pass,
-      SEED: seed,
-      Profile: info,
-      ADDRESS: finalAddress,
-      streamRoot: null
-    };
 
-    await dbo.collection(seed).insertOne(myobj);
-    return true;
+  try {
+    var result = await dbo.collection(seed).findOne({ ID: id });
+    // console.log(result);
+    if(result == null){
+      var myobj = {
+        _id: finalAddress,
+        ID: id,
+        PASSWORD: pass,
+        SEED: seed,
+        Profile: info,
+        ADDRESS: finalAddress,
+        streamRoot: null,
+      };
+  
+      await dbo.collection(seed).insertOne(myobj);
+      return true;
+    }
+    else
+    return [false, "Same ID exists"];
+
   } catch (err) {
-    return err;
+    return [false, err];
   }
 }
 
@@ -278,7 +301,7 @@ async function addTransaction(dbo, address, hash) {
       timestamp: timestamp(),
       ADDRESS: address,
       txHash: hash,
-      isLatest: true
+      isLatest: true,
     };
 
     var myquery = { isLatest: true };
@@ -288,7 +311,7 @@ async function addTransaction(dbo, address, hash) {
     await dbo.collection(address).insertOne(myobj);
     return true;
   } catch (err) {
-    return err;
+    return [false, err];
   }
 }
 
@@ -300,14 +323,13 @@ async function addTransaction(dbo, address, hash) {
 
 async function updateAddressProfile(dbo, seed, address, info) {
   try {
-
     var myquery = { ADDRESS: address };
     var newvalues = { $set: { Profile: info } };
     await dbo.collection(seed).updateOne(myquery, newvalues);
 
     return true;
   } catch (err) {
-    return err;
+    return [false, err];
   }
 }
 
@@ -319,15 +341,17 @@ async function updateAddressProfile(dbo, seed, address, info) {
 
 async function getAddress(dbo, seed, id, pass) {
   try {
-
     var result = await dbo
       .collection(seed)
       .findOne({ $and: [{ ID: id }, { PASSWORD: pass }] });
 
-   console.log(result.ADDRESS);
+    if(result == null) return false;
+    else{
+    console.log(result.ADDRESS);
     return result;
+  }
   } catch (err) {
-    return err;
+    return [false, err];
   }
 }
 
@@ -339,20 +363,21 @@ async function getAddress(dbo, seed, id, pass) {
 
 async function checkAddress(dbo, seedID, address) {
   try {
-
-    var seedInfo = await dbo
-      .collection("SEEDS")
-      .findOne({ ID : seedID });
-      console.log(seedInfo);
+    var seedInfo = await dbo.collection("SEEDS").findOne({ ID: seedID });
+    console.log(seedInfo);
 
     var result = await dbo
       .collection(seedInfo.SEED)
-      .findOne({ ADDRESS:address });
-      console.log(result);
+      .findOne({ ADDRESS: address });
 
+    if(result == null) return false;
+
+    else{
+    console.log(result);
     return result;
+    }
   } catch (err) {
-    return err;
+    return [false, err];
   }
 }
 
@@ -365,19 +390,22 @@ async function checkAddress(dbo, seedID, address) {
 async function getAllAddresses(dbo, seed) {
   var addressAray = [];
   try {
-
     var info = await dbo
       .collection(seed)
       .find({}, { projection: { _id: 0 } })
       .toArray();
 
+    if(info.length == 0) return false;
+
+    else{
     var i;
     for (i = 0; i < info.length; i++) {
       addressAray.push(info[i]);
     }
     return addressAray;
+  }
   } catch (err) {
-    return err;
+    return [false, err];
   }
 }
 
@@ -388,14 +416,14 @@ async function getAllAddresses(dbo, seed) {
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
 async function getAddressInfo(dbo, seed, address) {
-
   try {
-
     var info = await dbo.collection(seed).findOne({ ADDRESS: address });
 
-    return info;
+    if(info == null) return false;
+
+    else return info;
   } catch (err) {
-    return err;
+    return [false, err];
   }
 }
 
@@ -406,16 +434,13 @@ async function getAddressInfo(dbo, seed, address) {
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
 async function dropAddress(dbo, seed, address) {
-
   try {
-
     await dbo.collection(seed).deleteOne({ ADDRESS: address });
-    await dbo.collection(seed).drop();
+    // await dbo.collection(seed).drop();
 
-    return true
-
+    return true;
   } catch (err) {
-    return err;
+    return [false, err];
   }
 }
 
@@ -425,19 +450,15 @@ async function dropAddress(dbo, seed, address) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function getLastTransactionHash(dbo, address)
-{
+async function getLastTransactionHash(dbo, address) {
   try {
-
-    var result = await dbo
-      .collection(address)
-      .findOne({ isLatest:true });
-
-    return result.txHash;
+    var result = await dbo.collection(address).findOne({ isLatest: true });
+    console.log(result);
+    if (result == null) return false;
+    else return result.txHash;
   } catch (err) {
-    return err;
+    return [false, err];
   }
-
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
@@ -446,24 +467,20 @@ async function getLastTransactionHash(dbo, address)
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function getSeedInfo(dbo, seed)
-{
-
+async function getSeedInfo(dbo, seed) {
   try {
-
-    var result = await dbo
-      .collection("SEEDS")
-      .findOne({ SEED:seed });
-      console.log(result)
+    var result = await dbo.collection("SEEDS").findOne({ SEED: seed });
+    console.log(result);
     var response = {
       username: result.ID,
-      password: result.PASSWORD
-    }
-    return (response);
-  } catch (err) {
-    return err;
-  }
+      password: result.PASSWORD,
+    };
 
+    if(response == null) return false;
+    else return response;
+  } catch (err) {
+    return [false, err];
+  }
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
@@ -472,26 +489,26 @@ async function getSeedInfo(dbo, seed)
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function getPublicTransactionInfo(hash)
-{
+async function getPublicTransactionInfo(hash) {
   try {
-    const Iota = require('@iota/core');
-    const Extract = require('@iota/extract-json');
+    const Iota = require("@iota/core");
+    const Extract = require("@iota/extract-json");
     const iota = Iota.composeAPI({
-      provider: getNode()
-      });
+      provider: getNode(),
+    });
 
-      const tailTransactionHash = hash;
-      const Converter = require('@iota/converter');
+    const tailTransactionHash = hash;
+    const Converter = require("@iota/converter");
 
-      var txData = await iota.getBundle(tailTransactionHash);
-      //var txMsg = JSON.parse(Extract.extractJson(txData));
-      var txMsg = Converter.trytesToAscii(txData[0].signatureMessageFragment.substring(0,2186));
-      return txMsg;
+    var txData = await iota.getBundle(tailTransactionHash);
+    //var txMsg = JSON.parse(Extract.extractJson(txData));
+    var txMsg = Converter.trytesToAscii(
+      txData[0].signatureMessageFragment.substring(0, 2186)
+    );
+    return txMsg;
   } catch (err) {
-    return err;
+    return [false, err];
   }
-
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
@@ -507,46 +524,43 @@ async function adminLogin(dbo, id, pass) {
       .collection("ADMIN")
       .findOne({ $and: [{ ID: id }, { PASSWORD: pass }] });
 
-      // db.close()
-      if (result == null)
-        return false;
-      else
-      return true
+    // db.close()
+    if (result == null) return false;
+    else return true;
   } catch (err) {
-    return err;
+    return [false, err];
   }
 }
 
 async function getAllSeeds(dbo, username, password) {
-  var loggedIN = await adminLogin(dbo, username, password)
-  if (loggedIN == true){
+  var loggedIN = await adminLogin(dbo, username, password);
+  if (loggedIN == true) {
     var seedsAray = [];
-  try {
-    // var db = await MongoClient.connect(uri);
-    // var dbo = await db.db("thetamw1");
+    try {
+      // var db = await MongoClient.connect(uri);
+      // var dbo = await db.db("thetamw1");
 
-    var info = await dbo
-      .collection("SEEDS")
-      .find({}, { projection: { _id: 0 } })
-      .toArray();
+      var info = await dbo
+        .collection("SEEDS")
+        .find({}, { projection: { _id: 0 } })
+        .toArray();
 
-    var i;
-    for (i = 0; i < info.length; i++) {
-      seedsAray.push(info[i]);
+        if(info == null) return false;
+        else{
+
+      var i;
+      for (i = 0; i < info.length; i++) {
+        seedsAray.push(info[i]);
+      }
+      return seedsAray;
     }
-    return seedsAray;
-  } catch (err) {
-    return err;
+    } catch (err) {
+      return err;
+    }
+  } else {
+    console.log(loggedIN);
+    return "Error";
   }
-  }
-
-  else
-  {
-    console.log(loggedIN)
-    return ("Error")
-  }
-
-
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
@@ -557,16 +571,15 @@ async function getAllSeeds(dbo, username, password) {
 
 async function updateStreamRoot(dbo, seed, address, root) {
   try {
-
     // var db = await MongoClient.connect(uri);
     // var dbo = await db.db("thetamw1");
     var myquery = { ADDRESS: address };
     var newvalues = { $set: { streamRoot: root } };
     await dbo.collection(seed).updateOne(myquery, newvalues);
-    console.log("MAM Stream Root Updated")
+    console.log("MAM Stream Root Updated");
     return true;
   } catch (err) {
-    return err;
+    return [false, err];
   }
 }
 
@@ -578,17 +591,11 @@ async function updateStreamRoot(dbo, seed, address, root) {
 
 async function getStreamRoot(dbo, seed, address) {
   try {
-
-    var result = await dbo
-      .collection(seed)
-      .findOne({ ADDRESS:address });
-    if(result.streamRoot.toString().length === 0)
-    return false;
-
-    else
-    return result.streamRoot;
+    var result = await dbo.collection(seed).findOne({ ADDRESS: address });
+    if (result == null) return false;
+    else return result.streamRoot;
   } catch (err) {
-    return err;
+    return [false, err];
   }
 }
 
@@ -598,11 +605,9 @@ async function getStreamRoot(dbo, seed, address) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function getPrivateTransactionInfo(seed, address, hash)
-{
+async function getPrivateTransactionInfo(seed, address, hash) {
   var ecText = getPublicTransactionInfo(hash);
   var result = decrypt(seed, address, ecText);
-
 }
 
 //********************************************************************************************//
@@ -622,7 +627,6 @@ async function getPrivateTransactionInfo(seed, address, hash)
 // mamState = Mam.init(provider);
 // }
 
-
 // async function publish (packet) {
 //   // Create MAM message as a string of trytes
 //   console.log("Publish Check 1")
@@ -641,14 +645,14 @@ async function getPrivateTransactionInfo(seed, address, hash)
 // }
 
 async function publishMAMmsg(dbo, func, seed, address) {
-  const Mam = require('@iota/mam');
-const { asciiToTrytes, trytesToAscii } = require('@iota/converter');
-const mode = 'public';
-const provider = 'https://nodes.devnet.iota.org';
+  const Mam = require("@iota/mam");
+  const { asciiToTrytes, trytesToAscii } = require("@iota/converter");
+  const mode = "public";
+  const provider = getProvider();
 
-let mamState = Mam.init(provider);
+  let mamState = Mam.init(provider);
 
-const publish = async packet => {
+  const publish = async (packet) => {
     // Create MAM message as a string of trytes
     const trytes = asciiToTrytes(JSON.stringify(packet));
     const message = Mam.create(mamState, trytes);
@@ -656,49 +660,41 @@ const publish = async packet => {
     // Save your new mamState
     mamState = message.state;
     // Attach the message to the Tangle
-    await Mam.attach(message.payload, message.address, 3, 9)
+    await Mam.attach(message.payload, message.address, 3, 9);
 
-    console.log('Published', packet);
+    console.log("Published", packet);
     // console.log('Root = ', message.root, '\n');
-    return message.root
-}
+    return message.root;
+  };
 
-const publishAll = async (func) => {
-    var root=null;
-    var initial=true
-    while(true)
-    {
-
-        var msg = func()
-        if(initial)
-        {
-            root = await publish({
-                message: msg,
-                timestamp: (new Date()).toLocaleString()
-              })
-              updateStreamRoot(dbo, seed, address, root)
-              console.log("Root is ", root)
-
-        }
-        else{
-            await publish({
-                message: msg,
-                timestamp: (new Date()).toLocaleString()
-              })
-        }
-        initial=false
-
+  const publishAll = async (func) => {
+    var root = null;
+    var initial = true;
+    while (true) {
+      var msg = func();
+      if (initial) {
+        root = await publish({
+          message: msg,
+          timestamp: new Date().toLocaleString(),
+        });
+        updateStreamRoot(dbo, seed, address, root);
+        console.log("Root is ", root);
+      } else {
+        await publish({
+          message: msg,
+          timestamp: new Date().toLocaleString(),
+        });
+      }
+      initial = false;
     }
 
-    console.log("Root is ", root)
+    console.log("Root is ", root);
 
-    return root
-  }
+    return root;
+  };
 
-  publishAll(func)
-
+  publishAll(func);
 }
-
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 //                                                                                            //
@@ -739,17 +735,18 @@ const publishAll = async (func) => {
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
 async function fetchPublicMAM(dbo, seed, address) {
+  const Mam = require("@iota/mam");
+  const { asciiToTrytes, trytesToAscii } = require("@iota/converter");
+  const mode = "public";
+  const provider = getProvider();
 
-  const mode = 'public';
-  const provider = getNode();
+  let mamState = Mam.init(provider);
 
-      // Initialize MAM State
-      let mamState = Mam.init(provider);
-  const logData = data => console.log('Fetched and parsed', JSON.parse(trytesToAscii(data)), '\n')
-    console.log("Getting Root")
-    root=await getStreamRoot(dbo, seed, address)
-    console.log("MAM Root is =", root)
-    await Mam.fetch(root.toString(), mode, null, logData)
+  const logData = (data) =>
+    console.log("Fetched and parsed", JSON.parse(trytesToAscii(data)), "\n");
+
+  root = await getStreamRoot(dbo, seed, address);
+  await Mam.fetch(root, mode, null, logData);
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
@@ -783,37 +780,33 @@ async function fetchPublicMAM(dbo, seed, address) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 function encrypt(seed, address, text) {
-  const crypto = require('crypto');
-  const algorithm = 'aes-256-cbc';
-  const key = seed.slice(0,32);
-  const iv = address.slice(0,16);
-  let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(key), iv);
+  const crypto = require("crypto");
+  const algorithm = "aes-256-cbc";
+  const key = seed.slice(0, 32);
+  const iv = address.slice(0, 16);
+  let cipher = crypto.createCipheriv("aes-256-cbc", Buffer.from(key), iv);
   let encrypted = cipher.update(text);
   encrypted = Buffer.concat([encrypted, cipher.final()]);
-  return { iv: iv.toString('hex'), encryptedData: encrypted.toString('hex') };
- }
+  return { iv: iv.toString("hex"), encryptedData: encrypted.toString("hex") };
+}
 
- function decrypt(seed, address, text) {
-  const key = seed.slice(0,32);
- // const iv = address;
-  const crypto = require('crypto');
-  const algorithm = 'aes-256-cbc';
-  let iv = Buffer.from(text.iv, 'hex');
-  let encryptedText = Buffer.from(text.encryptedData, 'hex');
-  let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key), iv);
+function decrypt(seed, address, text) {
+  const key = seed.slice(0, 32);
+  // const iv = address;
+  const crypto = require("crypto");
+  const algorithm = "aes-256-cbc";
+  let iv = Buffer.from(text.iv, "hex");
+  let encryptedText = Buffer.from(text.encryptedData, "hex");
+  let decipher = crypto.createDecipheriv("aes-256-cbc", Buffer.from(key), iv);
   let decrypted = decipher.update(encryptedText);
   decrypted = Buffer.concat([decrypted, decipher.final()]);
   return decrypted.toString();
- }
-
-async function sendPrivateTransaction(seed, addresss, msg)
-{
-  const encText = encrypt(seed, addresss, msg);
-  await sendPublicTransaction(seed, addresss, encText);
-
 }
 
-
+async function sendPrivateTransaction(seed, addresss, msg) {
+  const encText = encrypt(seed, addresss, msg);
+  await sendPublicTransaction(seed, addresss, encText);
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -849,5 +842,5 @@ module.exports = {
   updateStreamRoot,
   publishMAMmsg,
   fetchPublicMAM,
-  dropAddress
+  dropAddress,
 };
