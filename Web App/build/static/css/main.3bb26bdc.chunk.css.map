@@ -1,0 +1,1 @@
+{"version":3,"sources":["App.css"],"names":[],"mappings":"AAAA,KACI,wBAAyB,CACzB,4DAAiE,CAEjE,qBAAsB,CACtB,wBACJ","file":"main.3bb26bdc.chunk.css","sourcesContent":["body{\r\n    background-color: #05e8ba;\r\n    background-image: linear-gradient(315deg, #092f37 0%,#019591 90%);\r\n    \r\n    background-size: cover;\r\n    background-repeat: repeat;\r\n}\r\n"]}
