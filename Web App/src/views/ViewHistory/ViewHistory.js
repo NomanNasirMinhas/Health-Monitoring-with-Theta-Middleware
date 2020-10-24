@@ -1,8 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { withStyles, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead } from '@material-ui/core';
-import { TableRow, Paper, Typography, Grid, ThemeProvider, Slide, CircularProgress } from '@material-ui/core';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@material-ui/core"
+import {
+    withStyles,
+    makeStyles,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead
+} from '@material-ui/core';
+import {
+    TableRow,
+    Paper,
+    Typography,
+    Grid,
+    ThemeProvider,
+    Slide,
+    CircularProgress
+} from '@material-ui/core';
+import {
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    Button
+} from "@material-ui/core"
 import Header from "../../components/Header/Header"
 import theme from "../../assets/theme/theme"
 import DateFnsUtils from '@date-io/date-fns';
@@ -25,7 +47,7 @@ const StyledTableCell = withStyles((theme) => ({
 const StyledTableRow = withStyles((theme) => ({
     root: {
         '&:nth-of-type(odd)': {
-            backgroundColor: "#06c2c892",
+            backgroundColor: "#99c1e5",
         },
     },
 }))(TableRow);
@@ -47,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function ViewHistory() {
+export default function ViewHistory({ history }) {
     const classes = useStyles();
     const [circularVisible, SetCircularVisible] = React.useState(true)
     const [Empty, SetEmpty] = React.useState(false)
@@ -64,11 +86,13 @@ export default function ViewHistory() {
     };
     const getProfile = async () => {
         setHistoryDate(false)
+        SetCircularVisible(true)
         var response = await fetch(`https://thetamiddleware.herokuapp.com/getAllHash/${address}&${date}`);
         var resObj = await response.json();
-        if (resObj.length === 0) {
+        console.log(resObj)
+        if (!resObj)
             SetEmpty(true)
-        }
+
         // Alert.alert("All Hashes", JSON.stringify(resObj.length));
         for (var i = 0; i < resObj.length; i++) {
             var responseTx = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${resObj[i].toString()}`);
@@ -79,14 +103,12 @@ export default function ViewHistory() {
         setArray(historyArray)
         SetCircularVisible(false)
     }
-    useEffect(() => {
-    }, [array])
-
     return (
         <ThemeProvider theme={theme}>
             <Header />
             <Dialog
                 fullWidth
+                disableBackdropClick
                 maxWidth="sm"
                 open={historyDate}
                 onClose={() => { setHistoryDate(false) }}
@@ -107,7 +129,12 @@ export default function ViewHistory() {
                             onClick={getProfile}
                             color="primary">
                             Confirm
-                            </Button>
+                        </Button>
+                        <Button
+                            onClick={() => history.goBack()}
+                            color="primary">
+                            Go back
+                        </Button>
                     </DialogActions>
                 </DialogContent>
             </Dialog>
@@ -115,15 +142,22 @@ export default function ViewHistory() {
                 fullWidth
                 maxWidth="sm"
                 open={Empty}
-                onClose={() => window.location.reload(false)}
+                onClose={() => {
+                    SetEmpty(false)
+                    setHistoryDate(true)
+                }}
             >
                 <DialogTitle>There are no values for the desired date.</DialogTitle>
                 <DialogContent align="center">
                     <DialogActions>
                         <Button
-                            onClick={() => window.location.reload(false)}
+                            onClick={() => {
+                                SetEmpty(false)
+                                setHistoryDate(true)
+                                console.log("anday waala burger " + circularVisible)
+                            }}
                             color="primary">
-                            Go Back
+                            Re-enter Date
                         </Button>
                     </DialogActions>
                 </DialogContent>
@@ -161,7 +195,7 @@ export default function ViewHistory() {
                             <Grid item>
                                 <Typography variant="h4" className={classes.headerText} color="secondary">
                                     Patient's Age:
-                    </Typography>
+                                </Typography>
                             </Grid>
 
                             <Grid item>

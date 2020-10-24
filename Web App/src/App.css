@@ -1,7 +1,5 @@
-body{
-    background-color: #05e8ba;
-    background-image: linear-gradient(315deg, #092f37 0%,#019591 90%);
-    
-    background-size: cover;
-    background-repeat: repeat;
+body {
+    background: rgb(0, 100, 191);
+    background: radial-gradient(circle, rgba(0, 100, 191, 1) 0%, rgba(0, 79, 106, 1) 65%);
+    background-attachment: fixed;
 }

@@ -34,25 +34,30 @@ import './App.css'
 //   )
 // }
 ReactDOM.render(
-  <Router>
-    <Switch>
-      <Route path="/" exact component={Login} />
-      <Route path="/forgotpassword" component={ForgotPassword} />
-      <Route path="/createaccount" component={CreateAccount} />
-      <Route path="/dashboard" component={HomePage} />
-      <Route path="/viewpatientprofile/:address" component={ViewPatientProfile} />
-      <Route path="/yourprofile" component={YourProfile} />
-      <Route path="/livereadings" component={LiveReadings} />
-      <Route path="/addpatient" component={AddPatient} />
-      <Route path="/viewhistory/:name&:age&:address" component={ViewHistory} />
-
-      <Route path="*" component={() => "404 NOT FOUND"} />
-    </Switch>
-  </Router>,
-  document.getElementById('root')
+    <Router>
+        <Switch>
+            <Route path="/"
+                exact component={Login} />
+            <Route path="/forgotpassword"
+                component={ForgotPassword} />
+            <Route path="/createaccount"
+                component={CreateAccount} />
+            <Route path="/dashboard"
+                component={HomePage} />
+            <Route path="/viewpatientprofile/:address"
+                component={ViewPatientProfile} />
+            <Route path="/yourprofile"
+                component={YourProfile} />
+            <Route path="/livereadings"
+                component={LiveReadings} />
+            <Route path="/addpatient"
+                component={AddPatient} />
+            <Route path="/viewhistory/:name&:age&:address"
+                component={ViewHistory} />
+            <Route path="*"
+                component={() => "404 NOT FOUND"} />
+        </Switch>
+    </Router>,
+    document.getElementById('root')
 );
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();

@@ -1,7 +1,25 @@
 import React from "react";
 import { Typography, withStyles } from "@material-ui/core"
-import { makeStyles, Grid, Button, AppBar, Toolbar, TextField, Link, ThemeProvider, Slide, CircularProgress } from '@material-ui/core'
-import { Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions } from '@material-ui/core'
+import {
+    makeStyles,
+    Grid,
+    Button,
+    AppBar,
+    Toolbar,
+    TextField,
+    Link,
+    ThemeProvider,
+    Slide,
+    CircularProgress
+} from '@material-ui/core'
+import {
+    Dialog,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    DialogActions
+} from '@material-ui/core'
+
 import theme from "../../assets/theme/theme"
 import { Link as link } from "react-router-dom"
 import { Formik, Form } from 'formik';
@@ -71,20 +89,6 @@ const LoginSchema = Yup.object().shape({
 
 const Login = (props) => {
 
-    // const handleClick = async (event) => {
-    //     setVisible(true)
-    //     var seed = await fetch(`https://thetamiddleware.herokuapp.com/getSeed/${userName}&${password}`);
-    //     var parsedSeed = await seed.json();
-    //     localStorage.setItem('seedInfo', JSON.stringify(parsedSeed[1]));
-    //     if (parsedSeed[0]) {
-    //         localStorage.setItem('seed', parsedSeed[1].SEED);
-    //         props.history.push('/dashboard')
-    //     }
-    //     else {
-    //         SetOpenError(true)
-    //     }
-    // }
-
     const [visible, setVisible] = React.useState(false);
     const [openError, SetOpenError] = React.useState(false);
 
@@ -113,7 +117,9 @@ const Login = (props) => {
                             validationSchema={LoginSchema}
                             onSubmit={async (values, actions) => {
                                 setVisible(true)
-                                var seed = await fetch(`https://thetamiddleware.herokuapp.com/getSeed/${values.Username}&${values.Password}`);
+                                var seed =
+                                    await
+                                        fetch(`https://thetamiddleware.herokuapp.com/getSeed/${values.Username}&${values.Password}`);
                                 var parsedSeed = await seed.json();
                                 localStorage.setItem('seedInfo', JSON.stringify(parsedSeed[1]));
                                 if (parsedSeed[0]) {
@@ -126,102 +132,105 @@ const Login = (props) => {
                                 }
                             }}
                         >
-                            {({ errors, touched, values, handleBlur, handleChange, handleSubmit, isSubmitting, handleReset }) => (
-                                <Form onSubmit={handleSubmit}>
-                                    <CssTextField
-                                        variant="outlined"
-                                        margin="normal"
-                                        disabled={isSubmitting}
-                                        required
-                                        fullWidth
-                                        id="Username"
-                                        label="Username"
-                                        value={values.Username}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        helperText={touched.Username ? errors.Username : ""}
-                                        error={touched.Username && Boolean(errors.Username)}
-                                        autoComplete="off"
-                                    />
-                                    <CssTextField
-                                        variant="outlined"
-                                        // type="password"
-                                        margin="normal"
-                                        disabled={isSubmitting}
-                                        required
-                                        fullWidth
-                                        id="Password"
-                                        label="Password"
-                                        value={values.Password}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        helperText={touched.Password ? errors.Password : ""}
-                                        error={touched.Password && Boolean(errors.Password)}
-                                        autoComplete="off"
-                                    />
-
-                                    <Button
-                                        type="submit"
-                                        fullWidth
-                                        disabled={isSubmitting}
-                                        variant="contained"
-                                        color="primary"
-                                        style={{ fontSize: 20 }}
-                                        className={classes.submit}
-                                    >
-                                        {isSubmitting ? <CircularProgress color="secondary" /> : 'Log in'}
-
-                                    </Button>
-
-                                    <Grid container>
-                                        <Grid item xs>
-                                            <Link
-                                                component={link}
-                                                disabled={visible}
-                                                to={forgotPassword}
-                                                color="secondary"
-                                                variant="body2">
-                                                Forgot password?
+                            {({
+                                errors,
+                                touched,
+                                values,
+                                handleBlur,
+                                handleChange,
+                                handleSubmit,
+                                isSubmitting,
+                                handleReset }) => (
+                                    <Form onSubmit={handleSubmit}>
+                                        <CssTextField
+                                            variant="outlined"
+                                            margin="normal"
+                                            disabled={isSubmitting}
+                                            fullWidth
+                                            id="Username"
+                                            label="Username"
+                                            value={values.Username}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            helperText={touched.Username ? errors.Username : ""}
+                                            error={touched.Username && Boolean(errors.Username)}
+                                            autoComplete="off"
+                                        />
+                                        <CssTextField
+                                            variant="outlined"
+                                            // type="password"
+                                            margin="normal"
+                                            disabled={isSubmitting}
+                                            fullWidth
+                                            id="Password"
+                                            label="Password"
+                                            value={values.Password}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            helperText={touched.Password ? errors.Password : ""}
+                                            error={touched.Password && Boolean(errors.Password)}
+                                            autoComplete="off"
+                                        />
+                                        <Button
+                                            type="submit"
+                                            fullWidth
+                                            disabled={isSubmitting}
+                                            variant="contained"
+                                            color="primary"
+                                            style={{ fontSize: 20 }}
+                                            className={classes.submit}
+                                        >
+                                            {isSubmitting ? <CircularProgress color="secondary" /> : 'Log in'}
+                                        </Button>
+                                        <Grid container>
+                                            <Grid item xs>
+                                                <Link
+                                                    component={link}
+                                                    disabled={visible}
+                                                    to={forgotPassword}
+                                                    color="secondary"
+                                                    variant="body2">
+                                                    Forgot password?
                                             </Link>
+                                            </Grid>
+                                            <Grid item>
+                                                <Link
+                                                    component={link}
+                                                    disabled={visible}
+                                                    to={createAccount}
+                                                    color="secondary"
+                                                    variant="body2">
+                                                    {"Create New Account"}
+                                                </Link>
+                                            </Grid>
                                         </Grid>
-                                        <Grid item>
-                                            <Link
-                                                component={link}
-                                                disabled={visible}
-                                                to={createAccount}
-                                                color="secondary"
-                                                variant="body2">
-                                                {"Create New Account"}
-                                            </Link>
-                                        </Grid>
-                                    </Grid>
-                                    <Dialog
-                                        maxWidth="md"
-                                        open={openError}
-                                        onClose={() => {
-                                            SetOpenError(false)
-                                            handleReset()
-                                        }}
-                                    >
-                                        <DialogTitle>Invalid Credentials</DialogTitle>
-                                        <DialogContent>
-                                            <DialogContentText>
-                                                Please verify the Username and/or Password
+                                        <Dialog
+                                            maxWidth="md"
+                                            open={openError}
+                                            onClose={() => {
+                                                SetOpenError(false)
+                                                handleReset()
+                                            }}
+                                        >
+                                            <DialogTitle>Invalid Credentials</DialogTitle>
+                                            <DialogContent>
+                                                <DialogContentText>
+                                                    Please verify the Username and/or Password
                                             </DialogContentText>
-                                            <DialogActions>
-                                                <Button
-                                                    onClick={() => {
-                                                        SetOpenError(false);
-                                                        handleReset()
-                                                    }}
-                                                    color="primary">
-                                                    Okay
+                                                <DialogActions>
+                                                    <Button
+                                                        onClick={() => {
+                                                            SetOpenError(false);
+                                                            handleReset()
+                                                        }}
+                                                        color="primary">
+                                                        Okay
                                                 </Button>
-                                            </DialogActions>
-                                        </DialogContent>
-                                    </Dialog>
-                                </Form>
-                            )}
+                                                </DialogActions>
+                                            </DialogContent>
+                                        </Dialog>
+                                    </Form>
+                                )}
                         </Formik>
                     </div>
                 </main>

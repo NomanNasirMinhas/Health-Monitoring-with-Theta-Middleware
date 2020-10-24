@@ -125,11 +125,15 @@ export default function SignUp(props) {
             )
         });
         var x = await seed.json()
-        console.log(x)
-        SetParsedSeed(x) 
-        actions.setSubmitting(false)
-        console.log("Done")
-        setOpen(true)
+        if (x[0] === true) {
+            SetParsedSeed(x[1])
+            actions.setSubmitting(false)
+            console.log("Done")
+            setOpen(true)
+        }
+        else {
+            alert("Unknown error occured. Try contacting administrator")
+        }
         actions.handleReset()
     }
 

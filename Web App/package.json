@@ -15,6 +15,7 @@
     "date-fns": "^2.16.1",
     "encoding": "^0.1.13",
     "formik": "^2.2.0",
+    "material-ui-phone-number": "^2.2.6",
     "modules": "^0.4.0",
     "moment": "^2.29.1",
     "mongodb-client-encryption": "^1.1.0",
@@ -24,7 +25,7 @@
     "react-dom": "^16.13.1",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^3.4.3",
+    "react-scripts": "^3.4.4",
     "thetamiddleware": "^2.1.4",
     "yup": "^0.29.3"
   },

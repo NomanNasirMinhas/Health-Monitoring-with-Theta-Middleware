@@ -1,6 +1,23 @@
 import React, { useEffect } from 'react';
-import { withStyles, makeStyles, Table, TableBody, TableCell, TableHead, Link, CircularProgress } from '@material-ui/core';
-import { TableRow, Paper, Typography, ThemeProvider, Slide, TableContainer } from '@material-ui/core';
+import {
+    withStyles,
+    makeStyles,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    CircularProgress,
+    Button
+} from '@material-ui/core';
+import {
+    TableRow,
+    Paper,
+    Typography,
+    ThemeProvider,
+    Slide,
+    TableContainer
+} from '@material-ui/core';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 import Header from "../../components/Header/Header"
 import theme from "../../assets/theme/theme"
 import { Link as link } from "react-router-dom"
@@ -9,19 +26,19 @@ const StyledTableCell = withStyles((theme) => ({
     head: {
         backgroundColor: theme.palette.primary.main,
         color: theme.palette.common.white,
+        fontFamily: 'Roboto Condensed',
+        borderColor: "rgba(255, 255, 255, 0.12)",
+        fontWeight: "bold"
     },
     body: {
+        backgroundColor: "rgba(60, 60, 70, 1)",
+        borderColor: "rgba(255, 255, 255, 0.12)",
+        opacity: "100%",
+        color: "rgba(255, 255, 255, 1)",
         fontSize: 14,
+        fontFamily: 'Roboto Condensed',
     }
 }))(TableCell);
-
-const StyledTableRow = withStyles(() => ({
-    root: {
-        '&:nth-of-type(odd)': {
-            backgroundColor: "#06c2c892",
-        },
-    },
-}))(TableRow);
 
 const useStyles = makeStyles((theme) => ({
     content: {
@@ -29,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
     },
     table: {
         minWidth: 700,
+        fontFamily: 'Roboto Condensed',
     },
     titletext: {
         marginBottom: "40px"
@@ -56,19 +74,13 @@ export default function HomePage() {
             var seed = (localStorage.getItem('seed') || '')
             var obj = await fetch(`https://thetamiddleware.herokuapp.com/getAllAddresses/${seed}`)
             obj = await obj.json()
-            console.log(obj)
             if (obj === false)
                 SetEmpty(true)
             SetResponse(obj)
-            console.log(empty)
             setVisible(false)
         }
         getPatient()
     }, [])
-
-    useEffect(() => {
-        //console.log(Response)
-    }, [Response])
 
     return (
         <ThemeProvider theme={theme}>
@@ -85,7 +97,7 @@ export default function HomePage() {
                     </Typography>
                         {empty ? <ErrorMessage /> :
                             <Slide direction="up" in={true} timeout={300}>
-                                <TableContainer component={Paper}>
+                                <TableContainer className={classes.fonts} component={Paper}>
                                     <Table className={classes.table}>
                                         <TableHead>
                                             <TableRow>
@@ -100,27 +112,8 @@ export default function HomePage() {
                                         </TableHead>
                                         <TableBody>
                                             {
-                                                // rows.map((row) => (
-                                                //     <StyledTableRow key={row.id}>
-                                                //         <StyledTableCell align="center" component="th" scope="row">
-                                                //             {row.id}
-                                                //         </StyledTableCell>
-                                                //         <StyledTableCell align="center">{row.name}</StyledTableCell>
-                                                //         <StyledTableCell align="center">{row.age}</StyledTableCell>
-                                                //         <StyledTableCell align="center">
-                                                //             <Link
-                                                //                 component={link}
-                                                //                 to="/viewpatientprofile"
-                                                //                 variant="body2"
-                                                //             >
-                                                //                 View Profile
-                                                //             </Link>
-                                                //         </StyledTableCell>
-                                                //     </StyledTableRow>
-                                                // ))
-
                                                 Response.map((row) => (
-                                                    <StyledTableRow key={row.ID}>
+                                                    <TableRow key={row.ID}>
                                                         <StyledTableCell align="center" component="th" scope="row">
                                                             {row.ID}
                                                         </StyledTableCell>
@@ -130,15 +123,17 @@ export default function HomePage() {
                                                         <StyledTableCell align="center">{row.Profile.date}</StyledTableCell>
                                                         <StyledTableCell align="center">{row.Profile.contact}</StyledTableCell>
                                                         <StyledTableCell align="center">
-                                                            <Link
+                                                            <Button
                                                                 component={link}
+                                                                color="secondary"
+                                                                disableElevation
+                                                                variant="outlined"
                                                                 to={`/viewpatientprofile/${row.ADDRESS}`}
-                                                                variant="body2"
-                                                            >
+                                                                startIcon={<VisibilityIcon />}>
                                                                 View Profile
-                                                     </Link>
+                                                            </Button>
                                                         </StyledTableCell>
-                                                    </StyledTableRow>
+                                                    </TableRow>
                                                 ))
                                             }
                                         </TableBody>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Typography, makeStyles, ThemeProvider, Slide } from "@material-ui/core"
+import { Typography, makeStyles, ThemeProvider, Slide, Grid } from "@material-ui/core"
 import Card from '../../components/Card/Card'
 import CardAvatar from '../../components/Card/CardAvatar'
 import CardHeader from '../../components/Card/CardHeader'
@@ -40,32 +40,36 @@ const YourProfile = () => {
                 </Slide>
                 <Slide direction="left" in={true} timeout={300}>
                     <main>
-                        <Card profile>
-                            <CardAvatar profile>
-                                <img
-                                    src="https://www.publicdomainpictures.net/pictures/210000/velka/doctor-1490804718D0I.jpg"
-                                    alt="Avatar" />
-                            </CardAvatar>
-                            <CardHeader >
-                                <Typography variant="h4">
-                                    {seedInfo?.Profile.name}
-                                </Typography>
-                            </CardHeader>
-                            <Divider />
-                            <CardBody profile>
-                                <Typography>
-                                    {seedInfo?.Profile.specialization}
-                                </Typography>
-                                <div className={classes.card}>
-                                    <PhoneIcon fontSize="large" />
-                                    <Typography variant="h6">{seedInfo?.Profile.contact}</Typography>
-                                    <BusinessIcon fontSize="large" />
-                                    <Typography variant="h6">{seedInfo?.Profile.address}</Typography>
-                                    <EmailIcon fontSize="large" />
-                                    <Typography variant="h6">{seedInfo?.Profile.email}</Typography>
-                                </div>
-                            </CardBody>
-                        </Card>
+                        <Grid container style={{ justifyContent: "center" }}>
+                            <Grid item xs={12} md={6}>
+                                <Card profile>
+                                    <CardAvatar profile>
+                                        <img
+                                            src="https://www.publicdomainpictures.net/pictures/210000/velka/doctor-1490804718D0I.jpg"
+                                            alt="Avatar" />
+                                    </CardAvatar>
+                                    <CardHeader >
+                                        <Typography variant="h4">
+                                            {seedInfo?.Profile.name}
+                                        </Typography>
+                                        <Typography>
+                                            {seedInfo?.Profile.specialization}
+                                        </Typography>
+                                    </CardHeader>
+                                    <Divider />
+                                    <CardBody profile>
+                                        <div className={classes.card}>
+                                            <PhoneIcon fontSize="large" />
+                                            <Typography variant="h6">{seedInfo?.Profile.contact}</Typography>
+                                            <BusinessIcon fontSize="large" />
+                                            <Typography variant="h6">{seedInfo?.Profile.address}</Typography>
+                                            <EmailIcon fontSize="large" />
+                                            <Typography variant="h6">{seedInfo?.Profile.email}</Typography>
+                                        </div>
+                                    </CardBody>
+                                </Card>
+                            </Grid>
+                        </Grid>
                     </main>
                 </Slide>
             </div>

@@ -4,15 +4,16 @@ const theme = createMuiTheme({
 
     palette: {
         primary: {
-            main: '#08696b'
+            main: '#0064bf'
         },
         secondary: {
             main: '#FFFFFF'
         }
     },
     typography: {
+        fontFamily: "Commissioner",
         h2: {
-            fontFamily: 'Roboto Slab'
+            fontFamily: 'Nanum Gothic',
         }
     },
 })

@@ -1,6 +1,22 @@
 import React, { useEffect } from "react"
-import { Typography, makeStyles, Grid, Card, Button, Dialog, Slide, CircularProgress } from "@material-ui/core"
-import { DialogTitle, DialogContentText, DialogContent, DialogActions, ThemeProvider } from "@material-ui/core"
+import {
+    Typography,
+    makeStyles,
+    Grid,
+    Card,
+    Button,
+    Dialog,
+    Slide,
+    CircularProgress
+} from "@material-ui/core"
+import {
+    DialogTitle,
+    DialogContentText,
+    DialogContent,
+    DialogActions,
+    ThemeProvider
+} from "@material-ui/core"
+
 import AssessmentIcon from '@material-ui/icons/Assessment';
 import AssignmentTurnedInIcon from '@material-ui/icons/AssignmentTurnedIn';
 import HistoryIcon from '@material-ui/icons/History';
@@ -21,6 +37,8 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(3)
     },
     sideButton: {
+        position: "relative",
+        justifyContent: "space-between",
         fontSize: "large",
         marginRight: "20px",
         width: "361px",
@@ -79,9 +97,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ErrorMessage = () => {
-    return(
-        <div style={{fontSize:"2rem", color: "#FFFFFF"}}>
-            Currently, there are no readings
+    return (
+        <div style={{ fontSize: "2rem", color: "#FFFFFF" }}>
+            <Typography variant="h3">Currently, there are no readings</Typography>
         </div>
     )
 }
@@ -93,7 +111,6 @@ const ViewPatientProfile = (props) => {
     const [openDischarge, setOpenDischarge] = React.useState(false);
     const [dischargeDialogue, SetDischargeDialogue] = React.useState(false);
     const [visible, setVisible] = React.useState(false)
-    const [Response, SetResponse] = React.useState();
     const [LastReading, SetLastReading] = React.useState();
     const [name, SetName] = React.useState()
     const [age, SetAge] = React.useState()
@@ -129,26 +146,28 @@ const ViewPatientProfile = (props) => {
                     SetEmpty(false)
                     SetCircularVisible(false)
                     SetLastReading(resObjTx)
-                    SetResponse(obj)
                 }
             }
             else {
                 SetEmpty(true)
-                console.log("Yahan kuch nahi hai bhai")
                 SetCircularVisible(false)
             }
         }
         getProfile()
-    }, [])
+    })
 
-    useEffect(() => {
-    }, [Response])
 
     const classes = useStyles();
     return (
         <ThemeProvider theme={theme}>
             <Header />
-            {circularVisible ? <CircularProgress className={classes.CircularProgress} color="secondary" size={100} /> :
+            {circularVisible ?
+                <CircularProgress
+                    className={classes.CircularProgress}
+                    color="secondary"
+                    size={100}
+                />
+                :
                 <div className={classes.content}>
                     <Grid container>
                         <Grid container spacing={3}>
@@ -165,9 +184,12 @@ const ViewPatientProfile = (props) => {
                         <Slide direction="down" in={true} timeout={300}>
                             <Grid container className={classes.labels}>
                                 <Grid item>
-                                    <Typography variant="h4" className={classes.headerText} color="secondary">
+                                    <Typography
+                                        variant="h4"
+                                        className={classes.headerText}
+                                        color="secondary">
                                         Patient's Name:
-                                 </Typography>
+                                    </Typography>
                                 </Grid>
                                 <Grid item>
                                     <Typography variant="h4">
@@ -179,40 +201,71 @@ const ViewPatientProfile = (props) => {
                         <Slide direction="down" in={true} timeout={300}>
                             <Grid container className={classes.labels}>
                                 <Grid item>
-                                    <Typography variant="h4" className={classes.headerText} color="secondary">
+                                    <Typography
+                                        variant="h4"
+                                        className={classes.headerText}
+                                        color="secondary">
                                         Patient's Age:
-                    </Typography>
+                                    </Typography>
                                 </Grid>
                                 <Grid item>
-                                    <Typography variant="h4">
-                                        {age}
-                                    </Typography>
+                                    <Typography variant="h4">{age}</Typography>
                                 </Grid>
                             </Grid>
                         </Slide>
 
                         <Slide direction="right" in={true} timeout={300}>
                             <Grid item>
-                                <Typography variant="h2" color="secondary" className={[classes.headerText, classes.labels].join(' ')}>Vitals</Typography>
+                                <Typography
+                                    variant="h2"
+                                    color="secondary"
+                                    className={[classes.headerText, classes.labels].join(' ')}>
+                                    Vitals
+                                </Typography>
                             </Grid>
                         </Slide>
                         <Slide direction="right" in={true} timeout={300}>
                             <Grid container>
                                 <Card className={classes.cardBody}>
-                                    {Empty ? <ErrorMessage/> :
+                                    {Empty ? <ErrorMessage /> :
                                         <>
                                             <Card className={classes.minicard}>
-                                                <Typography variant="h6" className={classes.tileTopText}>Heart Rate</Typography>
-                                                <Typography variant="h6" className={classes.tileBottomText}>{LastReading?.HR} BPM</Typography>
-                                            </Card>
-                                            <Card className={classes.minicard}>
-                                                <Typography variant="h6" className={classes.tileTopText}>Temperature</Typography>
-                                                <Typography variant="h6" className={classes.tileBottomText}>{LastReading?.Temp} F</Typography>
+                                                <Typography
+                                                    variant="h6"
+                                                    className={classes.tileTopText}>
+                                                    Heart Rate
+                                                </Typography>
+                                                <Typography
+                                                    variant="h6"
+                                                    className={classes.tileBottomText}>
+                                                    {LastReading?.HR} BPM
+                                                </Typography>
                                             </Card>
 
                                             <Card className={classes.minicard}>
-                                                <Typography variant="h6" className={classes.tileTopText}>BP (mm/Hg)</Typography>
-                                                <Typography variant="h6" className={classes.tileBottomText}>{`${LastReading?.BP.diastolic}/${LastReading?.BP.systolic}`}</Typography>
+                                                <Typography
+                                                    variant="h6"
+                                                    className={classes.tileTopText}>
+                                                    Temperature
+                                                </Typography>
+                                                <Typography
+                                                    variant="h6"
+                                                    className={classes.tileBottomText}>
+                                                    {LastReading?.Temp} F
+                                                </Typography>
+                                            </Card>
+
+                                            <Card className={classes.minicard}>
+                                                <Typography
+                                                    variant="h6"
+                                                    className={classes.tileTopText}>
+                                                    BP (mm/Hg)
+                                                </Typography>
+                                                <Typography
+                                                    variant="h6"
+                                                    className={classes.tileBottomText}>
+                                                    {`${LastReading?.BP.diastolic}/${LastReading?.BP.systolic}`}
+                                                </Typography>
                                             </Card>
                                         </>
                                     }
@@ -225,21 +278,23 @@ const ViewPatientProfile = (props) => {
                             <Grid item>
                                 <Button
                                     variant="outlined"
-                                    startIcon={<AssessmentIcon />}
+                                    startIcon={<AssessmentIcon style={{ fontSize: 40 }} />}
                                     className={classes.sideButton}
                                     disabled={Empty}
                                     color="primary"
                                     onClick={() => { setOpenGenerateReport(true) }}>
-                                    Generate Report</Button>
+                                    Generate Report
+                                </Button>
                             </Grid>
                             <Grid item>
                                 <Button
                                     variant="outlined"
-                                    startIcon={<AssignmentTurnedInIcon />}
+                                    startIcon={<AssignmentTurnedInIcon style={{ fontSize: 40 }} />}
                                     className={classes.sideButton}
                                     color="primary"
                                     onClick={() => { setOpenDischarge(true) }}>
-                                    Discharge</Button>
+                                    Discharge
+                                </Button>
                             </Grid>
                             <Grid item>
                                 <Button
@@ -247,10 +302,11 @@ const ViewPatientProfile = (props) => {
                                     to={`/viewhistory/${name}&${age}&${address}`}
                                     variant="outlined"
                                     disabled={Empty}
-                                    startIcon={<HistoryIcon />}
+                                    startIcon={<HistoryIcon style={{ fontSize: 40 }} />}
                                     color="primary"
                                     className={classes.sideButton}>
-                                    View History</Button>
+                                    View History
+                                </Button>
                             </Grid>
                             <Grid item>
                                 <Button
@@ -258,10 +314,10 @@ const ViewPatientProfile = (props) => {
                                     disabled={Empty}
                                     to="/livereadings"
                                     variant="outlined"
-                                    startIcon={<TimelineIcon />}
+                                    startIcon={<TimelineIcon style={{ fontSize: 40 }} />}
                                     className={classes.sideButton}>
                                     Live Statistics
-                    </Button>
+                                </Button>
                             </Grid>
                         </Grid>
                     </Slide>
@@ -280,15 +336,19 @@ const ViewPatientProfile = (props) => {
                             BPM: 85
                             {<br />}
                             Blood Pressure: 120/80
-                        </DialogContentText>
+                            </DialogContentText>
 
                             <DialogActions>
-                                <Button onClick={() => { setOpenGenerateReport(false) }} color="primary">
+                                <Button
+                                    onClick={() => { setOpenGenerateReport(false) }}
+                                    color="primary">
                                     Download Report
-                            </Button>
-                                <Button onClick={() => { setOpenGenerateReport(false) }} color="primary">
+                                </Button>
+                                <Button
+                                    onClick={() => { setOpenGenerateReport(false) }}
+                                    color="primary">
                                     Cancel
-                            </Button>
+                                </Button>
                             </DialogActions>
                         </DialogContent>
                     </Dialog>
@@ -297,8 +357,8 @@ const ViewPatientProfile = (props) => {
                         fullWidth
                         maxWidth="sm"
                         open={openDischarge}
-                        onClose={() => { setOpenDischarge(false) }}
-                    >
+                        onClose={() => { setOpenDischarge(false) }}>
+
                         <DialogTitle>Discharge Patient</DialogTitle>
                         <DialogContent>
                             <DialogContentText>
@@ -306,12 +366,17 @@ const ViewPatientProfile = (props) => {
                             </DialogContentText>
 
                             <DialogActions>
-                                <Button onClick={dischargePatient} color="primary" disabled={visible}>
+                                <Button
+                                    onClick={dischargePatient}
+                                    color="primary"
+                                    disabled={visible}>
                                     {visible ? <CircularProgress /> : 'Confirm'}
                                 </Button>
-                                <Button onClick={() => { setOpenDischarge(false) }} color="primary" disabled={visible}>
+                                <Button
+                                    onClick={() => { setOpenDischarge(false) }}
+                                    color="primary" disabled={visible}>
                                     Cancel
-                            </Button>
+                                </Button>
                             </DialogActions>
                         </DialogContent>
                     </Dialog>
@@ -325,12 +390,12 @@ const ViewPatientProfile = (props) => {
                         <DialogContent>
                             <DialogContentText>
                                 Patient discharged successfully
-                        </DialogContentText>
+                            </DialogContentText>
 
                             <DialogActions>
                                 <Button onClick={redirect} color="primary">
                                     Close
-                            </Button>
+                                </Button>
                             </DialogActions>
                         </DialogContent>
                     </Dialog>
