@@ -7,7 +7,7 @@ import CreateAccount from "./views/CreateAccount/CreateAccount"
 import ForgotPassword from './views/ForgotPassword/ForgotPassword';
 import HomePage from './views/HomePage/HomePage';
 import ViewHistory from './views/ViewHistory/ViewHistory'
-import ViewPatientProfile from './views/ViewPatientProfile/ViewPatientProfile.js'
+import ViewPatientProfile from './views/ViewPatientProfile/ViewPatientProfile'
 import YourProfile from './views/YourProfile/YourProfile'
 import LiveReadings from './views/LiveReadings/LiveReadings';
 import AddPatient from './views/AddPatient/AddPatient'
