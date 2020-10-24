@@ -9,6 +9,7 @@ import PhoneIcon from '@material-ui/icons/Phone'
 import Header from "../../components/Header/Header"
 import BusinessIcon from '@material-ui/icons/Business'
 import EmailIcon from '@material-ui/icons/Email'
+import FaceIcon from '@material-ui/icons/Face';
 import theme from "../../assets/theme/theme"
 
 const useStyles = makeStyles((theme) => ({
@@ -44,15 +45,13 @@ const YourProfile = () => {
                             <Grid item xs={12} md={6}>
                                 <Card profile>
                                     <CardAvatar profile>
-                                        <img
-                                            src="https://www.publicdomainpictures.net/pictures/210000/velka/doctor-1490804718D0I.jpg"
-                                            alt="Avatar" />
+                                        <FaceIcon style={{ backgroundColor: "white", fontSize: "120px" }} />
                                     </CardAvatar>
                                     <CardHeader >
                                         <Typography variant="h4">
                                             {seedInfo?.Profile.name}
                                         </Typography>
-                                        <Typography>
+                                        <Typography variant="overline">
                                             {seedInfo?.Profile.specialization}
                                         </Typography>
                                     </CardHeader>

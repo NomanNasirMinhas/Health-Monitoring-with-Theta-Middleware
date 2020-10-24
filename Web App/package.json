@@ -14,6 +14,7 @@
     "classnames": "^2.2.6",
     "date-fns": "^2.16.1",
     "encoding": "^0.1.13",
+    "file-loader": "^6.1.1",
     "formik": "^2.2.0",
     "material-ui-phone-number": "^2.2.6",
     "modules": "^0.4.0",

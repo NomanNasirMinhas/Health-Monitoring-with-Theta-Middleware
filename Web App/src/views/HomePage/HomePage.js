@@ -94,7 +94,7 @@ export default function HomePage() {
                             color="secondary"
                             className={classes.titletext}>
                             Current Patients
-                    </Typography>
+                        </Typography>
                         {empty ? <ErrorMessage /> :
                             <Slide direction="up" in={true} timeout={300}>
                                 <TableContainer className={classes.fonts} component={Paper}>

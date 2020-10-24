@@ -1,7 +1,23 @@
 import React, { useState } from 'react';
-import { Button, TextField, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions, CircularProgress } from '@material-ui/core';
-import { Grid, Typography, makeStyles, Container, ThemeProvider, Slide } from '@material-ui/core';
-import { AppBar, Toolbar, withStyles } from "@material-ui/core"
+import {
+    Button,
+    TextField,
+    Dialog,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    DialogActions,
+    CircularProgress,
+    Grid,
+    Typography,
+    makeStyles,
+    Container,
+    ThemeProvider,
+    Slide,
+    AppBar,
+    Toolbar,
+} from '@material-ui/core';
+
 import theme from "../../assets/theme/theme"
 
 const useStyles = makeStyles((theme) => ({
@@ -16,48 +32,23 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(3),
     },
     toolBar: {
-        minHeight: "180px",
+        minHeight: "130px",
+
     },
     appBar: {
         alignItems: "center",
+        borderRadius: '15px',
+        border: '2px solid #FFFFFF',
     },
     marginTopAppBar: {
         marginTop: theme.spacing(35)
     },
     submit: {
+        textTransform: "none",
         margin: theme.spacing(6, 0, 2),
         height: "70px"
     }
 }));
-
-const CssTextField = withStyles({
-    root: {
-        '& label': {
-            color: 'white',
-        },
-        '& label.Mui-focused': {
-            color: 'cyan',
-        },
-
-        '& .MuiInput-underline:after': {
-            borderBottomColor: 'cyan',
-        },
-        '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-                borderColor: 'white',
-            },
-            '& ': {
-                color: 'white'
-            },
-            '&:hover fieldset': {
-                borderColor: 'cyan',
-            },
-            '&.Mui-focused fieldset': {
-                borderColor: 'cyan',
-            },
-        },
-    },
-})(TextField);
 
 export default function ForgotPassword() {
     const classes = useStyles();
@@ -85,7 +76,7 @@ export default function ForgotPassword() {
             <AppBar position="fixed" className={classes.appBar}>
                 <Toolbar className={classes.toolBar}>
                     <Slide direction="down" in={true} timeout={300}>
-                        <Typography variant="h3" className={classes.title}>
+                        <Typography variant="h5">
                             FORGOT PASSWORD
                          </Typography>
                     </Slide>
@@ -98,8 +89,9 @@ export default function ForgotPassword() {
                         <form className={classes.form} onSubmit={handleSubmit}>
                             <Grid container spacing={3}>
                                 <Grid item xs={12}>
-                                    <CssTextField
+                                    <TextField
                                         autoComplete="fname"
+                                        color="secondary"
                                         name="enterSeed"
                                         variant="outlined"
                                         required
@@ -120,8 +112,8 @@ export default function ForgotPassword() {
                                 color="primary"
                                 className={classes.submit}
                             >
-                                {visible ? <CircularProgress color="secondary"/> : 'Get Password'}
-                        </Button>
+                                {visible ? <CircularProgress color="secondary" /> : 'Get Password'}
+                            </Button>
                             <Dialog
                                 fullWidth
                                 maxWidth="sm"

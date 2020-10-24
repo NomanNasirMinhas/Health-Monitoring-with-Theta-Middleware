@@ -87,7 +87,11 @@ export default function ViewHistory({ history }) {
     const getProfile = async () => {
         setHistoryDate(false)
         SetCircularVisible(true)
-        var response = await fetch(`https://thetamiddleware.herokuapp.com/getAllHash/${address}&${date}`);
+        try {
+            var response = await fetch(`https://thetamiddleware.herokuapp.com/getAllHash/${address}&${date}`);
+        } catch (error) {
+           alert(error)
+        }
         var resObj = await response.json();
         console.log(resObj)
         if (!resObj)

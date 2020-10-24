@@ -1,5 +1,6 @@
+* {
+    margin: 0%;
+}
 body {
-    background: rgb(0, 100, 191);
-    background: radial-gradient(circle, rgba(0, 100, 191, 1) 0%, rgba(0, 79, 106, 1) 65%);
-    background-attachment: fixed;
+    background: rgba(113, 182, 252, 0.884);
 }

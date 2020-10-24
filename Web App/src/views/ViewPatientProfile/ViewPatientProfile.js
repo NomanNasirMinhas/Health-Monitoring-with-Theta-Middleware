@@ -132,15 +132,20 @@ const ViewPatientProfile = (props) => {
         async function getProfile() {
             var obj = await fetch(`https://thetamiddleware.herokuapp.com/getAddressInfo/${seed}&${address}`)
             obj = await obj.json()
+            console.log(obj)
             SetName(obj.Profile.name)
             SetAge(obj.Profile.age)
             //Returns Hash
             var response = await fetch(`https://thetamiddleware.herokuapp.com/getLastTx/${address}`);
+
             var resObj = await response.json();
+            console.log(resObj)
             if (resObj !== false) {
                 //Passing Hash of transaction
                 var responseTx = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${resObj}`);
                 var resObjTx = await responseTx.json();
+                console.log("response")
+                console.log(responseTx)
                 resObjTx = JSON.parse(resObjTx)
                 if (resObjTx !== null) {
                     SetEmpty(false)
@@ -154,7 +159,7 @@ const ViewPatientProfile = (props) => {
             }
         }
         getProfile()
-    })
+    }, [])
 
 
     const classes = useStyles();
@@ -174,8 +179,8 @@ const ViewPatientProfile = (props) => {
                             <Grid item>
                                 <Slide direction="down" in={true} timeout={300}>
                                     <Typography
-                                        variant="h2"
-                                        color="secondary">
+                                        variant="h4"
+                                         >
                                         Patient's Profile
                                     </Typography>
                                 </Slide>
