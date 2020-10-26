@@ -146,8 +146,9 @@ const ViewPatientProfile = (props) => {
                 var resObjTx = await responseTx.json();
                 console.log("response")
                 console.log(responseTx)
+
                 resObjTx = JSON.parse(resObjTx)
-                if (resObjTx !== null) {
+                if (resObjTx !== false) {
                     SetEmpty(false)
                     SetCircularVisible(false)
                     SetLastReading(resObjTx)
