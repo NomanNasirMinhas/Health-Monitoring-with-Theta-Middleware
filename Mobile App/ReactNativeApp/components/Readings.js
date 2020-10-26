@@ -44,7 +44,7 @@ export default function Readings({navigation}) {
           </Text>
           <LineChart
             data={heartRateData}
-            width={300} 
+            width={300}
             height={300}
             yAxisLabel={''}
             chartConfig={{
@@ -63,7 +63,7 @@ export default function Readings({navigation}) {
               borderRadius: 16
             }}
           />
-          
+
         </View>
 
         <View style={styles.card}>
@@ -79,7 +79,7 @@ export default function Readings({navigation}) {
               backgroundColor: '#e26a00',
               backgroundGradientFrom: '#1860FB',
               backgroundGradientTo: '#22D0D8',
-              decimalPlaces: 1, 
+              decimalPlaces: 1,
               color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
               style: {
                 borderRadius: 20,
@@ -91,7 +91,7 @@ export default function Readings({navigation}) {
               borderRadius: 16
             }}
           />
-          
+
         </View>
 
         <View style={styles.card}>
@@ -121,7 +121,7 @@ export default function Readings({navigation}) {
               borderRadius: 16
             }}
           />
-          
+
         </View>
       </ScrollView>
     </View>
@@ -131,7 +131,7 @@ export default function Readings({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#141D2B',
+    backgroundColor: '#E8F8F5',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     borderColor: 'white',
     borderWidth:3,
-    
+
   },
 
   mediaImageContainer: {
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: "50%",
     marginTop: -50,
-    marginLeft: 100, 
+    marginLeft: 100,
     width: 100,
     height: 100,
     alignItems: "center",
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
 
   text: {
   //  fontFamily: "Righteous",
-    color: "white",
+    color: "#154360",
     textAlign: "center",
     fontWeight: 'bold'
   },

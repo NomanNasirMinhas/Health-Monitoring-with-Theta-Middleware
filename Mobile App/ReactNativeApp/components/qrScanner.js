@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Button, Alert } from 'react-native';
+import {Text, View, StyleSheet, Button, Alert } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import Spinner from 'react-native-loading-spinner-overlay';
 import Profile from './Profile'
@@ -17,23 +17,31 @@ export default function qrScanner({navigation}) {
   }, []);
 
   const handleBarCodeScanned = async ({ type, data }) => {
-    setScanned(true);
+    try{
+
+      setScanned(true);
     var response = await fetch(`https://thetamiddleware.herokuapp.com/getAddressInfo/${data}`);
     var resObj = await response.json();
     var result= JSON.stringify(resObj)
-    if(result.length === 2)
+    if(resObj == false)
     {
       setFinished(true)
     Alert.alert("Login Failed")
     }
 
-
     else
     {
       setFinished(true)
-      // Alert.alert("Login Passed")
+      // Alert.alert(resObj.toString())
       navigation.navigate('Profile', {info: resObj})
     }
+
+    } catch(e)
+    {
+      setFinished(true)
+      Alert.alert("An Error Has Occured", JSON.stringify(e))
+    }
+
 
   };
 
@@ -50,19 +58,22 @@ export default function qrScanner({navigation}) {
         flex: 1,
         flexDirection: 'column',
         justifyContent: 'flex-end',
-        backgroundColor: '#141D2B'
+        backgroundColor: '#E8F8F5'
       }}>
         <Spinner
           visible={scanned && !finished}
           textContent={'Authenticating...\nPlease Wait...'}
           textStyle={styles.text}
         />
+        <Text style={styles.text}>
+          Please Scan QR Code on Patient's Machine to Login
+        </Text>
       <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-        style={StyleSheet.absoluteFillObject}
+        style={styles.container}
       />
 
-      {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
+      {scanned && <Button style={styles.button} title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
     </View>
   );
 }
@@ -73,18 +84,26 @@ const styles = StyleSheet.create({
     backgroundColor: '#141D2B',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop:30
+    marginTop:50,
+    marginBottom:50,
+    borderRadius:100,
+    borderColor: "#DFD8C8",
+    borderLeftWidth: 2,
+    borderRightWidth: 2
   },
 
   text: {
-   // fontFamily: "Righteous",
-    color: "white",
+    // paddingHorizontal:20,
+    marginTop:20,
+    fontSize:20,
+    fontWeight:"bold",
+    color: "#154360",
     textAlign: "center"
   },
 
   subText:{
     fontSize:12,
-    color: "#AEB5BC",
+    color: "#154360",
     textTransform: "capitalize",
     fontWeight:"500"
   },
@@ -94,7 +113,7 @@ const styles = StyleSheet.create({
     width: undefined,
     height: undefined
   },
-  
+
   profileImage: {
     width: 150,
     height: 150,
@@ -113,7 +132,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginTop: 32,
     width:350
-    
+
   },
 
   statsBox: {

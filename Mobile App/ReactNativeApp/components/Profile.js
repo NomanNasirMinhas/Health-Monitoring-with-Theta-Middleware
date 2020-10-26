@@ -34,32 +34,43 @@ export default function Profile({route, navigation}) {
 
   useEffect(() => {
     (async () => {
-      const { info } = route.params;
-      setPatientName(info.Profile.name.toString())
-      setPatientAge(info.Profile.age.toString())
-      setPatientGender(info.Profile.gender.toString())
-      setPatientDate(info.Profile.date.toString())
+      try{
 
-      setPatientAddress(info.ADDRESS.toString())
-      setPatientDeviceID(info.ID.toString())
+        const { info } = route.params;
+        // Alert.alert(JSON.stringify(info))
+        setPatientName(info.Profile.name.toString())
+        setPatientAge(info.Profile.age.toString())
+        setPatientGender(info.Profile.gender.toString())
+        setPatientDate(info.Profile.date.toString())
 
-    var response = await fetch(`https://thetamiddleware.herokuapp.com/getLastTx/${info.ADDRESS}`);
-    var resObj = await response.json();
-    // var lastTxHash = JSON.stringify(resObj)
-    // Alert.alert("Last TX Hash", resObj);
-    if (resObj.toString().length !== 0)
-    {
-      var responseTx = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${resObj}`);
-    var resObjTx = await responseTx.json();
-      resObjTx = JSON.parse(resObjTx)
-      // Alert.alert(JSON.stringify(resObjTx))
-    setPatientHR(resObjTx.HR.toString())
-    setPatientTemp(resObjTx.BPM.toString())
-    setPatientBPsys(resObjTx.BP.systolic.toString())
-    setPatientBPdiast(resObjTx.BP.diastolic.toString())
-    }
+        setPatientAddress(info.ADDRESS.toString())
+        setPatientDeviceID(info.ID.toString())
 
-      setFinished(true)
+      var response = await fetch(`https://thetamiddleware.herokuapp.com/getLastTx/${info.ADDRESS}`);
+      var resObj = await response.json();
+      // Alert.alert(resObj.toString())
+      // var lastTxHash = JSON.stringify(resObj)
+      // Alert.alert("Last TX Hash", resObj);
+      if (resObj !== false)
+      {
+        var responseTx = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${resObj}`);
+      var resObjTx = await responseTx.json();
+        resObjTx = JSON.parse(resObjTx)
+        // Alert.alert(JSON.stringify(resObjTx))
+      setPatientHR(resObjTx.HR.toString())
+      setPatientTemp(resObjTx.Temp.toString())
+      setPatientBPsys(resObjTx.BP.systolic.toString())
+      setPatientBPdiast(resObjTx.BP.diastolic.toString())
+      }
+        // alert("Finished")
+        setFinished(true)
+
+      }
+       catch(e)
+       {
+         setFinished(true)
+         Alert.alert("Error has Ocurred", JSON.stringify(e))
+       }
     // Alert.alert(JSON.stringify(info))
 
 
@@ -71,7 +82,7 @@ export default function Profile({route, navigation}) {
 
   if (!fontsLoaded) {
     return (
-    <AppLoading 
+    <AppLoading
     startAsync={getFonts}
     onFinish = {()=> setFontsLoaded(true)}
     />
@@ -98,8 +109,8 @@ export default function Profile({route, navigation}) {
         </View>
 
         <View style={styles.infoContainer}>
-      <Text style={[styles.text, {fontWeight:"200", fontSize: 36 }]}>{patientName}</Text>
-      <Text style={[styles.text, {color:"white", fontSize: 20 }]}>Device ID: {patientDeviceID}</Text>
+      <Text style={[styles.text, {fontWeight:"900", fontSize: 36 }]}>{patientName}</Text>
+      <Text style={[styles.text, {color:"#154360", fontSize: 20 }]}>Device ID: {patientDeviceID}</Text>
           </View>
 
           <View style={{marginTop:20, alignSelf:'center', }}>
@@ -140,7 +151,7 @@ export default function Profile({route, navigation}) {
       <Text style={[styles.text, styles.subText]}>{patientBPsys}/{patientBPdiast} Hg</Text>
             </View>
           </View>
-         
+
 
       </ScrollView>
     </View>
@@ -150,7 +161,7 @@ export default function Profile({route, navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#141D2B',
+    backgroundColor: '#E8F8F5',
     alignItems: 'center',
     justifyContent: 'center',
     paddingTop:30
@@ -158,13 +169,14 @@ const styles = StyleSheet.create({
 
   text: {
    // fontFamily: "Righteous",
-    color: "white",
-    textAlign: "center"
+    color: "black",
+    textAlign: "center",
+    fontWeight: "900"
   },
 
   subText:{
     fontSize:12,
-    color: "#AEB5BC",
+    color: "#154360",
     textTransform: "capitalize",
     fontWeight:"500"
   },
@@ -174,7 +186,7 @@ const styles = StyleSheet.create({
     width: undefined,
     height: undefined
   },
-  
+
   profileImage: {
     width: 150,
     height: 150,
@@ -193,7 +205,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginTop: 32,
     width:350
-    
+
   },
 
   statsBox: {
@@ -202,7 +214,7 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    //fontFamily: "Righteous",
+    // fontFamily: "Righteous",
     color: "#52575D",
     textAlign: "center",
     marginRight: 30,

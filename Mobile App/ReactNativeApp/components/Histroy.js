@@ -18,10 +18,11 @@ export default function Readings({route, navigation}) {
 
   useEffect(() => {
     (async () => {
-      const { address } = route.params;
 
+      try{
+        const { address } = route.params;
 
-    var response = await fetch(`https://thetamiddleware.herokuapp.com/getAllHash/${address.toString()}&29-9-2020`);
+    var response = await fetch(`https://thetamiddleware.herokuapp.com/getAllHash/${address.toString()}&07-10-2020`);
     var resObj = await response.json();
     // Alert.alert("All Hashes", JSON.stringify(resObj.length));
     setHashArray(resObj)
@@ -31,9 +32,11 @@ export default function Readings({route, navigation}) {
       var responseTx = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${resObj[i].toString()}`);
     var resObjTx = await responseTx.json();
     var parsed = JSON.parse(resObjTx)
+    // Alert.alert(JSON.stringify(parsed))
     setTxInfo(txInfo.push(parsed))
 
     }
+    Alert.alert("Fetched",JSON.stringify(txInfo))
 
     for(var i=0; i<txInfo.length; i++)
     {
@@ -49,6 +52,13 @@ export default function Readings({route, navigation}) {
     setTableState(tableData)
     setFinished(true)
     // Alert.alert(JSON.stringify(tableData))
+      }
+      catch(e){
+        setFinished(true)
+        // Alert.alert("Error Has Occurred")
+      }
+
+
 
     })();
   }, []);
@@ -77,7 +87,7 @@ export default function Readings({route, navigation}) {
 
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#141D2B' },
-  head: { height: 40, backgroundColor: 'black' },
-  text: { margin: 6, color: "white", alignSelf: 'center', },
+  container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#E8F8F5' },
+  head: { height: 40, backgroundColor: '#154360' },
+  text: { margin: 6, color: "black", alignSelf: 'center', },
 });

@@ -44,8 +44,8 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Welcome">
-        <Stack.Screen 
-        name="ThetaMiddleware" 
+        <Stack.Screen
+        name="ThetaMiddleware"
         component={Welcome}
         options={{
           title: 'Patient Monitoring App',
@@ -53,7 +53,7 @@ function App() {
           backgroundColor: '#019490',
           headerShown: false,
           headerStyle: {
-            backgroundColor: '#092A33',
+            backgroundColor: '#154360',
           },
           headerTintColor: '#fff',
           headerTitleStyle: {
@@ -63,14 +63,14 @@ function App() {
           },
         }} />
 
-        <Stack.Screen 
-        name="qrScanner" 
+        <Stack.Screen
+        name="qrScanner"
         component={qrScanner}
         options={{
           title: 'Scan QR to Login',
           backgroundColor: '#019490',
           headerStyle: {
-            backgroundColor: '#092A33',
+            backgroundColor: '#154360',
           },
           headerTitleAlign:'center',
           headerTintColor: '#fff',
@@ -83,17 +83,17 @@ function App() {
           },
         }}
          />
-        
-        <Stack.Screen 
-        name="Profile" 
-        component={Profile} 
+
+        <Stack.Screen
+        name="Profile"
+        component={Profile}
         options={{
           title: 'Patients Profile',
           headerLeft:null,
           headerTitleAlign:'center',
           backgroundColor: '#019490',
           headerStyle: {
-            backgroundColor: '#092A33',
+            backgroundColor: '#154360',
           },
 
           headerTintColor: '#fff',
@@ -112,7 +112,7 @@ function App() {
             />
           ),
         }} />
-        
+
         <Stack.Screen
         name="Readings"
         component={Readings}
@@ -121,7 +121,7 @@ function App() {
           headerTitleAlign:'center',
           backgroundColor: '#019490',
           headerStyle: {
-            backgroundColor: '#092A33',
+            backgroundColor: '#154360',
           },
           headerTintColor: '#fff',
           headerTitleStyle: {
@@ -148,7 +148,7 @@ function App() {
           headerTitleAlign:'center',
           backgroundColor: '#019490',
           headerStyle: {
-            backgroundColor: '#092A33',
+            backgroundColor: '#154360',
           },
           headerTintColor: '#fff',
           headerTitleStyle: {

@@ -36,7 +36,7 @@ export default ({navigation}) => {
   return (
     <View style={styles.container}>
        <FadeInView style={styles.text}>
-  <Text style={[styles.text, {fontWeight:"bold", fontSize: 36 }]}>Patient Monitoring App</Text>
+  <Text style={[styles.text, {fontWeight:"900", fontSize: 36 }]}>Patient Monitoring App</Text>
       </FadeInView>
 
       <FadeInView style={{width: '100%', height: '60%'}}>
@@ -53,31 +53,31 @@ export default ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#141D2B',
+    backgroundColor: '#E8F8F5',
     alignItems: 'center',
     justifyContent: 'center',
   },
 
   text: {
    // fontFamily: "Righteous",
-    color: "white",
+    color: "#154360",
     textAlign: "center"
   },
 
   login: {
     fontFamily: "Righteous",
-    color: "#52575D",
+    color: "#154360",
     textAlign: "center",
     width: '40%',
     borderStyle: "solid",
     borderWidth: 2,
     borderColor: 'white',
-    
+
   },
 
   subText:{
     fontSize:12,
-    color: "#AEB5BC",
+    color: "#154360",
     textTransform: "capitalize",
     fontWeight:"500"
   },
