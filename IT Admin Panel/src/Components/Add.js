@@ -1,10 +1,8 @@
 import React from "react";
-import {useEffect, useState} from "react";
+import {useState, useEffect} from 'react';
 import Navbar from "./Navbar";
-
 import Grid from "@material-ui/core/Grid";
 import PropTypes from 'prop-types';
-import { Link as link } from "react-router-dom";
 
 import {
   Card,
@@ -35,11 +33,8 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import IconButton from '@material-ui/core/IconButton';
 import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-import ListIcon from '@material-ui/icons/List';
-
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
-
 
 const theme = createMuiTheme({
   primary: {
@@ -48,21 +43,20 @@ const theme = createMuiTheme({
 });
 
 const rows = [
-  { id: 1, name: "home", assigned_devices: 3 },
-  { id: 2, name: "wahaj", assigned_devices: 0 },
-  { id: 3, name: "mubeen", assigned_devices: 3 },
-  { id: 4, name: "Kltamash", assigned_devices: 3 },
-  { id: 5, name: "Dr. Lltamash", assigned_devices: 3 },
+  { id: 1, name: "Dr. wahaj", assigned_devices: 3 },
+  { id: 2, name: "Dr. hasnain", assigned_devices: 0 },
+  { id: 3, name: "Dr. no-man", assigned_devices: 3 },
+  { id: 4, name: "Dr. denial", assigned_devices: 3 },
+  { id: 5, name: "Dr. wahab", assigned_devices: 3 },
   { id: 6, name: "Dr. Vltamash", assigned_devices: 3 },
   { id: 7, name: "Dr. Oltamash", assigned_devices: 3 },
 ];
 const useStylesTable = makeStyles({
   table: {
-    maxWidth: "100%",
+    maxWidth: 650,
   },
-  cell: { color: "white" },
   paper: {
-    maxwidth: "100%",
+    maxwidth: 650,
   },
   hover: {
     backgroundColor: "#2FC243",
@@ -142,10 +136,12 @@ TablePaginationActions.propTypes = {
 
 
 
-function Doctors(props) {
+function Add() {
   const classesTable = useStylesTable();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [seeds, setSeeds]=useState(null);
+  const [addresses, setAddresses]= useState(null);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -156,109 +152,116 @@ function Doctors(props) {
     setPage(0);
   };
 
-
-  const [seeds, setSeeds] = useState([])
-
-  
-    async function getData(){ 
-      try{
-      const credentials= localStorage.getItem('credentials');
-      const data= JSON.parse(credentials);
-         const username= data.username;
-         const password= data.password;
-         
+  useEffect( ()=>{
+    async function getData(){
+      const data= localStorage.getItem('credentials');
+      const abc= JSON.parse(data);
+         const username= abc.username;
+         //console.log("Parsed_name"+username);
+         //console.log('data'+ credentials)
+         const password= abc.password;
+        // console.log("Parsed_password"+password);
          const response = await fetch(`https://thetamiddleware.herokuapp.com/getAllSeeds/${username}&${password}`);
         //  console.log("response =",   seeds);
          const fetched_data= await response.json();
          console.log("fetched-data =", fetched_data);
          setSeeds(fetched_data);
-        console.log("Seeds =", seeds);}
-        catch(e){}
+
+
+  //console.log("Seeds =", seeds);
     }
-    useEffect (()=>{
-      getData()
+
+    async function getAddress(){
+      
+      
+      const address_response = await fetch(`https://thetamiddleware.herokuapp.com/getAllAddresses/${"MBNDML9YVMXWKOMQZKYNJZQQRIQUQYLSNNDLSHCEAKKDJYHBPEWXBNXNXWOGQTHYUCBPPECYHVQFTZFOQ"}`);
+      const fetched_addresses= await address_response.json();
+      console.log("fetched-addresses=", fetched_addresses);
+      setAddresses(fetched_addresses);
+      console.log("Addresses =" , fetched_addresses); 
+
+    }
+     getData();
+     getAddress();
     
   },[])
 
-  useEffect(() => {
-    console.log("username=", seeds);
-    if (seeds != null) {
-      console.log("SEED=", seeds.SEED);
-    }
-  }, [seeds]);
+  useEffect(()=>{
+   // console.log("username=",seeds)
+  },[seeds])
 
-  //Navigate to patients
-  function Patients(props, SEED) {
-    console.log("anday waala burger");
-    props.history.push(`/ViewPatient/${SEED}`);
-    
-  }
+  useEffect(()=>{
+    // console.log("username=",seeds)
+   },[addresses])
+ 
 
 
-
-//IF FETCHING DATA------>
-
-if (seeds === null) {
-  return (
-    <ThemeProvider>
+  if (seeds===null){
+    return (
+      <ThemeProvider>
+  
       <Navbar />
-      <Typography
-        variant="h3"
-        style={{ marginTop: "2%", color: "#B4B4B4", fontWeight: "bold" }}
-      >
-        Doctors{" "}
-      </Typography>
-
+  
       <Grid container spacing={1}>
-        {/**  <Grid item xs={0.5}></Grid> */}
-        <Grid item xs={12}>
+          <Grid item xs={3}></Grid>
+          <Grid item xs={6}>
           <Paper
-            elevation={5}
-            style={{
-              maxWidth: "100%",
-              width: "100%",
-              margin: "auto",
-              marginTop: "2%",
-              border: "solid grey 0.9px",
-            }}
-          ></Paper>
-        </Grid>
-        {/**  <Grid item xs={0.5}></Grid> */}
-      </Grid>
+                elevation={5}
+                style={{
+                  maxWidth: "100%",
+                  width: "100%",
+                  margin: "auto",
+                  marginTop: "7%",
+                  border: "solid grey 0.9px",
+                }}
+              >
+                <Typography
+                  variant="h3"
+                  component="h2"
+                  style={{
+                    textAlign: "center",
+                    backgroundColor: "#0ea80e",
+                    color: "white",
+                    alignSelf: "center",
+                  }}
+                >
+                  <b>Doctors</b>
+                </Typography>
+                </Paper>
+                </Grid>
+                </Grid>
+      
+  
+      <Typography variant="h1" > Loading...</Typography>
+  
+  
+  
+      </ThemeProvider>
+    )};
+  
 
-      <Typography variant="h1"> Loading...</Typography>
-    </ThemeProvider>
-  );
-}
 
-// IF DATA IS FETCHED---->
+
 
 
   return (
     <ThemeProvider>
       <Navbar />
 
-      <Typography
-        variant="h3"
-        style={{ marginTop: "1%", color: "#B4B4B4", fontWeight: "bold" }}
-      >
-        Doctors{" "}
-      </Typography>
       <Grid container spacing={1}>
-    
-        <Grid item xs={12} style={{ flaot: "right" }}>
-        <Paper
+        <Grid item xs={3}></Grid>
+        <Grid item xs={6} style={{ flaot: "right" }}>
+          <TableContainer className={classesTable.paper}>
+            <Paper
               elevation={5}
               style={{
-                width: "100%",
+                width: 650,
                 margin: "auto",
-                marginTop: "2%",
+                marginTop: "5%",
                 border: "solid grey 0.9px",
               }}
             >
-            
-           {/** 
-            <Typography
+              <Typography
                 variant="h3"
                 component="h2"
                 style={{
@@ -270,46 +273,37 @@ if (seeds === null) {
               >
                 <b>Doctors</b>
               </Typography>
-*/}
-          <TableContainer className={classesTable.paper}>
-             
+
               <Table className={classesTable.table} aria-label="simple table">
-                <TableHead style={{ backgroundColor: "#0ea80e"}}>
-                  <TableRow style={{color:"white"}}>
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center">
+                      <strong>Doctors ID</strong>
+                    </TableCell>
                     <TableCell align="center">
                       <strong>Name</strong>
                     </TableCell>
                     <TableCell align="center">
-                      <strong>Specialization</strong>
-                    </TableCell>
-                    <TableCell align="center">
-                      <strong>Contact</strong>
+                      <strong>Assigned Devices</strong>
                     </TableCell>
 
                     <TableCell align="center">
-                      <strong>Seed</strong>
+                      <strong>Actions</strong>
                     </TableCell>
-                    <TableCell align="center">
-                      <strong>Patients</strong>
-                    </TableCell>
-
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {(rowsPerPage > 0
-            ? seeds.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : seeds
+            ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : rows
           ).map((obj) => (
                     <TableRow hover key={obj.name}>
                       <TableCell component="th" scope="row">
-                        {obj.ID}
+                        {obj.id}
                       </TableCell>
-                      <TableCell align="center">{obj.Profile.specialization}</TableCell>
+                      <TableCell align="center">{obj.name}</TableCell>
                       <TableCell align="center">
-                        {obj.Profile.contact}
-                      </TableCell>
-                      <TableCell align="center">
-                        {obj.SEED}
+                        {obj.assigned_devices}
                       </TableCell>
 
                       <TableCell align="center">
@@ -317,33 +311,28 @@ if (seeds === null) {
                           <Button
                             className={classesTable.hover}
                             color="inherit"
-                            onClick={() => Patients(props, obj.SEED)}
-                            startIcon={
-                              <ListIcon
-                                fontSize="small"
-                               // component={link}
-                                //to={`/ViewPatient/${obj.SEED}`}
-                              />
-                            }
+                            startIcon={<SettingsIcon fontSize="small" />}
+                            
                           >
                             {" "}
-                            View Patients
+                            Configure
                           </Button>
                         }
                       </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
-                <TableFooter style={{maxwidth:"100%"}}>
+                <TableFooter>
                   <TableRow>
                     <TablePagination
                       rowsPerPageOptions={[
                         5,
                         10,
                         25,
+
                         { label: "All", value: -1 },
                       ]}
-                      colSpan={12}
+                      colSpan={3}
               count={rows.length}
               rowsPerPage={rowsPerPage}
               page={page}
@@ -358,15 +347,13 @@ if (seeds === null) {
                   </TableRow>
                 </TableFooter>
               </Table>
-            
+            </Paper>
           </TableContainer>
-          </Paper>
         </Grid>
 
-        
+        <Grid item xs={3}></Grid>
       </Grid>
-
     </ThemeProvider>
   );
 }
-export default Doctors;
+export default Add;

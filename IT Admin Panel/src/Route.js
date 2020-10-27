@@ -10,6 +10,10 @@ import {
   import Homepage from './Components/Homepage';
   import Configure from './Components/Configure';
   import Doctors from './Components/Doctors';
+  import Add from './Components/Add';
+  import ViewPatient from './Components/ViewPatient';
+ 
+  //import Dashboard from './Components/Dashboard';
 
 // import {TransactionContext, TransactionProvider} from './cartContext';
 
@@ -23,7 +27,12 @@ function RouteConfig() {
           <Route exact path="/" component={Login}></Route>
           <Route exact path="/home" component={Homepage}></Route>
           <Route exact path="/configure" component={Configure}></Route>
+          
           <Route exact path="/doctors" component={Doctors}></Route>
+          <Route exact path="/add_device" component={Add}></Route>
+          <Route exact path="/ViewPatient/:SEED" exact component={ViewPatient}>
+         {/**   <Route exact path="/Dashboard" component={Dashboard}></Route> */}
+          </Route>
           {/* <Route exact path="*" component={NotFound}></Route> */}
         </Switch>
 

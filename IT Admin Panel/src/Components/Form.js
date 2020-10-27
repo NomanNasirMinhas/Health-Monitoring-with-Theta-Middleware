@@ -1,6 +1,6 @@
 import React from "react";
-import {useState, useEffect} from 'react';
-import Header from './Header';
+import { useState, useEffect } from "react";
+import Header from "./Header";
 import { useHistory } from "react-router-dom";
 import {
   Button,
@@ -21,7 +21,7 @@ import {
   makeStyles,
   ThemeProvider,
 } from "@material-ui/core/styles";
-import swal from 'sweetalert';
+import swal from "sweetalert";
 import TextField from "@material-ui/core/TextField";
 //import { makeStyles } from '@material-ui/core/styles';
 import { green } from "@material-ui/core/colors";
@@ -58,73 +58,102 @@ const theme = createMuiTheme({
   },
 });
 
-
 //const [logged_in, setLoggedIn] = useState(false);
-
-
-
-
-
 
 export const Form = () => {
   const classes = useStyles();
-  const [username, setUsername ] = useState(null);
-  const [password, setPassword ] = useState(null);
-  
+  const [username, setUsername] = useState(null);
+  const [password, setPassword] = useState(null);
 
- const changePassword =(event) =>{
-   setPassword(event.target.value);
- }
-
- const changeUsername= (event) => {
-   setUsername(event.target.value);
- }
- //routing history 
- let history = useHistory();
-
- // Login handler
-  async function login(){
-    // console.log(username);
-    // console.log(password);
-    if(username==null || password==null){
-      swal({text:" Please enter your email/password", timer: 2000, icon: "error" , buttons:false}); 
-    }
-    else{
-    const response = await fetch(`https://thetamiddleware.herokuapp.com/adminLogin/${username}&${password}`);
-    // console.log("response =",   response);
-    const fetched_data= await response.json();
-     console.log("data =", fetched_data);
-
-    if(fetched_data==true){
-      const credentials ={"username": username, "password": password};
-      localStorage.setItem('credentials', JSON.stringify(credentials));
-      console.log(credentials);
-      //swal("Login!", "You clicked the button!", "success");
-      swal({text: "Success!", timer: 2000, icon:"success",
-     buttons:false
-      });
-     
-      history.push("/home")
-
-    }
-    else{
-     //alert("Login Failed");
-     swal({text:" Invalid email and password", timer: 2000, icon: "error" , buttons:false});
-    }
-    //console.log(username);
-    //console.log(password);
+  const changePassword = (event) => {
+ 
+      setPassword(event.target.value);
     
+  };
+
+  const changeUsername = (event) => {
+  
+   setUsername(event.target.value); 
+  };
+  //routing history
+  let history = useHistory();
+  
+  
+  
+  // Login handler
+  async function login() {
+    //refs.btn.setAttribute("disabled","disbaled");
+    
+    console.log("username =", username);
+    console.log("password =", password);
+    if (
+      username == null ||
+      password == null ||
+      (username == null && password == null)
+    ) {
+      swal({
+        text: " Please enter your email/password",
+        timer: 2000,
+        icon: "error",
+        buttons: false,
+      });
+    } else {
+      try{
+      const response = await fetch(
+        `https://thetamiddleware.herokuapp.com/adminLogin/${username}&${password}`
+      );
+      // console.log("response =",   response);
+      const fetched_data = await response.json();
+      console.log("data =", fetched_data);
+    
+
+      if (fetched_data == true) {
+        const credentials = { username: username, password: password };
+        localStorage.setItem("credentials", JSON.stringify(credentials));
+        console.log(credentials);
+        //swal("Login!", "You clicked the button!", "success");
+        swal({
+          text: "Success!",
+          timer: 2000,
+          icon: "success",
+          buttons: false,
+        });
+
+        history.push("/home");
+      } else {
+        //alert("Login Failed");
+        // setUsername(null);
+        // setPassword(null);
+        swal({
+          text: " Invalid email and password",
+          timer: 2000,
+          icon: "error",
+          buttons: false,
+        });
+      }
+      //console.log(username);
+      //console.log(password);
+    }
+    catch(e){
+      swal({
+        text: "No response from the server",
+        timer: 2000,
+        icon: "error",
+        buttons: false,
+      });
+    
+    }
   }
+  
   }
   return (
     //#757575
-    
 
+    
     // <input   style={{padding:"10px"}} type="text" placeholder="Enter email"/>
     <ThemeProvider theme={theme}>
-     
+    
       <div className={classes.root}>
-      
         <Paper
           elevation={2}
           style={{
@@ -136,18 +165,18 @@ export const Form = () => {
           }}
         >
           <form style={{ color: "black", marginTop: "20px" }}>
-              <div style={{margin:"auto" ,  textAlign:"center"}}>
-            <h2 >Login</h2>
+            <div style={{ margin: "auto", textAlign: "center" }}>
+              <h2>Login</h2>
             </div>
             <div style={{ marginLeft: "25%", width: "50%" }}>
               <div>
                 <label style={{ padding: "10px" }}>
                   {" "}
-                  <EmailIcon fontSize="small"/> <strong>Email</strong>{" "}
+                  <EmailIcon fontSize="small" /> <strong>Email</strong>{" "}
                 </label>
 
-               
-                <br /><br />
+                <br />
+                <br />
 
                 <TextField
                   id="outlined-basic"
@@ -164,10 +193,12 @@ export const Form = () => {
               <div>
                 <label style={{ padding: "10px" }}>
                   {" "}
-                  <LockOpenRoundedIcon fontSize="small" /> <strong >Password</strong>{" "}
+                  <LockOpenRoundedIcon fontSize="small" />{" "}
+                  <strong>Password</strong>{" "}
                 </label>
-               
-                <br /><br />
+
+                <br />
+                <br />
                 <TextField
                   id="outlined-basic"
                   label="Password"
@@ -175,32 +206,23 @@ export const Form = () => {
                   variant="outlined"
                   value={password}
                   onChange={changePassword}
-
-                  
                   required
                 />
 
                 <br />
                 <a href="www.google.com">Forgot Password?</a>
               </div>
-              <br /><br />
-             
-                <Button
-                  variant="contained"
-                  color="primary"
-        startIcon={<VpnKeyIcon fontSize="small"/> }
-        onClick={login}
-      
-        >
-                  
+              <br />
+              <br />
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<VpnKeyIcon fontSize="small" />}
+                onClick={login}
                 
-                
-                 
-                  Login
-                </Button>
-                
-              
-              
+              >
+                Login
+              </Button>
               <br /> <br />
             </div>
           </form>

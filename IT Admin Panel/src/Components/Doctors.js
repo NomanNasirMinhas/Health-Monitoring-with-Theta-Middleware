@@ -1,8 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
-import Grid from "@material-ui/core/Grid";
+import { Link as link } from "react-router-dom";
 import PropTypes from 'prop-types';
 
+import ListIcon from '@material-ui/icons/List';
+import SettingsIcon from "@material-ui/icons/Settings";
+import IconButton from '@material-ui/core/IconButton';
+import FirstPageIcon from '@material-ui/icons/FirstPage';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
+import LastPageIcon from '@material-ui/icons/LastPage';
+import { useHistory } from "react-router-dom";
+
+import Grid from "@material-ui/core/Grid";
 import {
   Card,
   CardActions,
@@ -15,25 +25,31 @@ import {
   withStyles,
   makeStyles,
   ThemeProvider,
-  useTheme
 } from "@material-ui/core/styles";
 
 //**** TABLE ******/
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
-import TableFooter from '@material-ui/core/TableFooter';
+import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import SettingsIcon from "@material-ui/icons/Settings";
-import IconButton from '@material-ui/core/IconButton';
-import FirstPageIcon from '@material-ui/icons/FirstPage';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import LastPageIcon from '@material-ui/icons/LastPage';
+//import SettingsIcon from "@material-ui/icons/Settings";
+
+
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  },
+}));
 
 const theme = createMuiTheme({
   primary: {
@@ -41,21 +57,35 @@ const theme = createMuiTheme({
   },
 });
 
-const rows = [
-  { id: 1, name: "Dr. Altamash", assigned_devices: 3 },
-  { id: 2, name: "Dr. Altamash", assigned_devices: 0 },
-  { id: 3, name: "Dr. Altamash", assigned_devices: 3 },
-  { id: 4, name: "Dr. Altamash", assigned_devices: 3 },
-  { id: 5, name: "Dr. Altamash", assigned_devices: 3 },
-  { id: 6, name: "Dr. Altamash", assigned_devices: 3 },
-  { id: 7, name: "Dr. Altamash", assigned_devices: 3 },
+const useStyles1 = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  },
+}));
+
+const Devices_rows = [
+  { device_id: 123, name: "Dr. Altamash", seed: "xyz" },
+  { device_id: 124, name: "Dr. Altamash", seed: "xyz" },
+  { device_id: 125, name: "Dr. Sidq", seed: "xyz" },
+  { device_id: 127, name: "Dr. Altamash", seed: "xyz" },
+  { device_id: 128, name: "None", seed: "xyz" },
+  { device_id: 129, name: "Dr. Altamash", seed: "xyz" },
+  { device_id: 130, name: "Dr. Altamash", seed: "xyz" },
 ];
+
 const useStylesTable = makeStyles({
   table: {
-    maxWidth: 650,
+    maxWidth: "100%",
   },
+  cell: { color: "white" },
   paper: {
-    maxwidth: 650,
+    maxwidth: "100%",
   },
   hover: {
     backgroundColor: "#2FC243",
@@ -66,18 +96,12 @@ const useStylesTable = makeStyles({
   },
 });
 
-const useStyles1 = makeStyles((theme) => ({
-  root: {
-    flexShrink: 0,
-    marginLeft: theme.spacing(2.5),
-  },
-}));
-
+//DIALOGUE BOX------------------------------------
 /* TABLE PAGINATION */
 
 function TablePaginationActions(props) {
   const classes = useStyles1();
-  const theme = useTheme();
+  //const theme = useTheme();
   const { count, page, rowsPerPage, onChangePage } = props;
 
   const handleFirstPageButtonClick = (event) => {
@@ -135,37 +159,126 @@ TablePaginationActions.propTypes = {
 
 
 
-function Doctors() {
+
+function Homepage(props) {
+  const classes = useStyles();
   const classesTable = useStylesTable();
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [seeds, setSeeds] = useState(null);
+  const [arr, setArr] = useState(null);
+  let history = useHistory();
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
+  useEffect( ()=>{ 
+   
+    async function getData() {
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
+      try{
+      const data = localStorage.getItem("credentials");
+      const abc = JSON.parse(data);
+      const username = abc.username;
+      //console.log("Parsed_name"+abc)
+      //console.log('data'+ credentials)
+      const password = abc.password;
+      const response = await fetch(
+        `https://thetamiddleware.herokuapp.com/getAllSeeds/${username}&${password}`
+      );
+      //  console.log("response =",   seeds);
+      const fetched_data = await response.json();
+      //console.log("fetched-data =", fetched_data);
+      setSeeds(fetched_data);}
+      catch (e){};
+      // setArr(seeds.SEED);
+      // console.log("SEED=", seeds.SEED);
+      //console.log("Seeds =", seeds);
+    } 
+    
+     getData();
+  },[]) 
+
+  useEffect(() => {
+    console.log("username=", seeds);
+    if (seeds != null) {
+      console.log("SEED=", seeds.SEED);
+    }
+  }, [seeds]);
+  // async function getSeeds(){
+  //   const credentials= localStorage.getItem('credentails');
+  //   const data= JSON.parse(credentials);
+  //      const username= data.username;
+  //      const password= data.password;
+  //      const seeds = await fetch(`https://thetamiddleware.herokuapp.com/getAllSeeds/${username}&${password}`);
+  //      console.log("response =",   seeds);
+  //      const fetched_data= await seeds.json();
+  //      console.log("data =", fetched_data);
+
+  //      return fetched_data;
+  //  }
+  //  const dataReturned= getSeeds();
+  function Patients(props, SEED) {
+    console.log("anday waala burger");
+    props.history.push(`/ViewPatient/${SEED}`);
+    
+  }
+
+  if (seeds === null) {
+    return (
+      <ThemeProvider>
+        <Navbar />
+        <Typography
+          variant="h3"
+          style={{ marginTop: "2%", color: "#B4B4B4", fontWeight: "bold" }}
+        >
+          Doctors{" "}
+        </Typography>
+
+        <Grid container spacing={1}>
+          {/**  <Grid item xs={0.5}></Grid> */}
+          <Grid item xs={12}>
+            <Paper
+              elevation={5}
+              style={{
+                maxWidth: "100%",
+                width: "100%",
+                margin: "auto",
+                marginTop: "2%",
+                border: "solid grey 0.9px",
+              }}
+            ></Paper>
+          </Grid>
+          {/**  <Grid item xs={0.5}></Grid> */}
+        </Grid>
+
+        <Typography variant="h1"> Loading...</Typography>
+      </ThemeProvider>
+    );
+  }
 
   return (
     <ThemeProvider>
       <Navbar />
+      <Typography
+        variant="h3"
+        style={{ marginTop: "2%", color: "#B4B4B4", fontWeight: "bold" }}
+      >
+        Doctors{" "}
+      </Typography>
 
-      <Grid container spacing={1}>
-        <Grid item xs={3}></Grid>
-        <Grid item xs={6} style={{ flaot: "right" }}>
-          <TableContainer className={classesTable.paper}>
-            <Paper
-              elevation={5}
-              style={{
-                width: 650,
-                margin: "auto",
-                marginTop: "5%",
-                border: "solid grey 0.9px",
-              }}
-            >
+      {/* TABLE START*/}
+
+      <Grid container spacing={1} style={{ alignSelf: "center" }}>
+        {/** <Grid item xs={0.5}></Grid> */}
+
+        <Paper
+          elevation={5}
+          style={{
+            maxWidth: "100%",
+            width: "100%",
+            margin: "auto",
+            marginTop: "2%",
+            border: "solid grey 0.9px",
+          }}
+        >
+          <Grid item xs={12}>
+            {/**   <Typography variant="h3" style={{backgroundColor:"#B4B4B4"}}> </Typography>
               <Typography
                 variant="h3"
                 component="h2"
@@ -177,86 +290,72 @@ function Doctors() {
                 }}
               >
                 <b>Doctors</b>
-              </Typography>
-
+              </Typography> */}
+            <TableContainer className={classesTable.paper}>
               <Table className={classesTable.table} aria-label="simple table">
-                <TableHead>
+                <TableHead style={{ backgroundColor: "#0ea80e" }}>
                   <TableRow>
-                    <TableCell align="center">
-                      <strong>Doctors ID</strong>
+                    <TableCell className={classesTable.cell} align="left">
+                      <strong>Doctor's Name</strong>
                     </TableCell>
-                    <TableCell align="center">
-                      <strong>Name</strong>
+                    <TableCell className={classesTable.cell} align="left">
+                      <strong>Specialization</strong>
                     </TableCell>
-                    <TableCell align="center">
-                      <strong>Assigned Devices</strong>
+                    <TableCell className={classesTable.cell} align="center">
+                      <strong>Contact</strong>
                     </TableCell>
-
-                    <TableCell align="center">
-                      <strong>Actions</strong>
+                    <TableCell className={classesTable.cell} align="center">
+                      <strong>Seed</strong>
+                    </TableCell>
+                    <TableCell className={classesTable.cell} align="center">
+                      <strong>Patients</strong>
                     </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {(rowsPerPage > 0
-            ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : rows
-          ).map((obj) => (
+                  {seeds.map((obj) => (
                     <TableRow hover key={obj.name}>
                       <TableCell component="th" scope="row">
-                        {obj.id}
+                        {obj.ID}
                       </TableCell>
-                      <TableCell align="center">{obj.name}</TableCell>
                       <TableCell align="center">
-                        {obj.assigned_devices}
+                        {obj.Profile.specialization}
                       </TableCell>
-
+                      <TableCell align="center">
+                        {obj.Profile.contact}
+                      </TableCell>
+                      <TableCell align="center">{obj.SEED}</TableCell>
                       <TableCell align="center">
                         {
                           <Button
                             className={classesTable.hover}
                             color="inherit"
-                            startIcon={<SettingsIcon fontSize="small" />}
+                            onClick={() => Patients(props, obj.SEED)}
+                            startIcon={
+                              <ListIcon
+                                fontSize="small"
+                                component={link}
+                                //to={`/ViewPatient/${obj.SEED}`}
+                              />
+                            }
                           >
                             {" "}
-                            Configure
+                            View Patients
                           </Button>
                         }
                       </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
-                <TableFooter>
-                  <TableRow>
-                    <TablePagination
-                      rowsPerPageOptions={[
-                        5,
-                        10,
-                        25,
-                        { label: "All", value: -1 },
-                      ]}
-                      colSpan={3}
-              count={rows.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              SelectProps={{
-                inputProps: { 'aria-label': 'rows per page' },
-                native: true,
-              }}
-                      onChangePage={handleChangePage}
-              onChangeRowsPerPage={handleChangeRowsPerPage}
-              ActionsComponent={TablePaginationActions}
-                    />
-                  </TableRow>
-                </TableFooter>
               </Table>
-            </Paper>
-          </TableContainer>
-        </Grid>
+            </TableContainer>
+          </Grid>
 
-        <Grid item xs={3}></Grid>
+          {/**  <Grid item xs={0.5}></Grid>
+        {/********************* */}
+        </Paper>
       </Grid>
     </ThemeProvider>
   );
 }
-export default Doctors;
+export default Homepage;
