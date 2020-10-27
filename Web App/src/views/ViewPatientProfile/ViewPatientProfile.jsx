@@ -134,7 +134,6 @@ const ViewPatientProfile = (props) => {
         `https://thetamiddleware.herokuapp.com/getAddressInfo/${seed}&${address}`
       );
       obj = await obj.json();
-      console.log(obj);
       SetName(obj.Profile.name);
       SetAge(obj.Profile.age);
       //Returns Hash
@@ -143,22 +142,25 @@ const ViewPatientProfile = (props) => {
       );
 
       var resObj = await response.json();
-      console.log(resObj);
       if (resObj !== false) {
         //Passing Hash of transaction
         var responseTx = await fetch(
           `https://thetamiddleware.herokuapp.com/getTx/${resObj}`
         );
         var resObjTx = await responseTx.json();
-        console.log("response");
-        console.log(responseTx);
         resObjTx = JSON.parse(resObjTx);
-        if (resObjTx !== null) {
+
+        if (resObjTx !== false) {
           SetEmpty(false);
           SetCircularVisible(false);
           SetLastReading(resObjTx);
         }
-      } else {
+        else {
+          SetEmpty(true);
+          SetCircularVisible(false);
+        }
+      }
+      else {
         SetEmpty(true);
         SetCircularVisible(false);
       }
