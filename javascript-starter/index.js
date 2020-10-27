@@ -1,10 +1,11 @@
 const { adminLogin, getAllSeeds, getSeed, getAllHash,getLastTransaction, sendPublicTransaction } = require('./thetamiddleware/middleware');
+require('dotenv').config();
 
-async function testing() {
-    testSeed =
-      "MBNDML9YVMXWKOMQZKYNJZQQRIQUQYLSNNDLSHCEAKKDJYHBPEWXBNXNXWOGQTHYUCBPPECYHVQFTZFOQ";
-    testAddress =
-      "NTWSWV9CBWVKZXKLWSOHFLCJTDWIAMVSYRD9DFDXWJWFBVPWYUYDJQDOOLEWLPOAPHR9CHQKTMEOYRKDC";
+async function sendData() {
+    testSeed =process.env.testSeed;
+    testAddress =process.env.testAddress;
+    console.log(testSeed)
+    console.log(testAddress)
       var count=0;
       var readings=null;
       // var msg = await getLastTransaction(testAddress)
@@ -23,6 +24,7 @@ async function testing() {
         readings=JSON.stringify(readings);
         console.log(readings)
         var result = await sendPublicTransaction(testSeed, testAddress, readings);
+        console.log(result)
     console.log(count);
       }
 
@@ -54,4 +56,5 @@ async function testing() {
     // console.log("Current time is " + dateTime);
     return dateTime;
   }
-  testing()
+
+  sendData()

@@ -23,6 +23,7 @@ export default function qrScanner({navigation}) {
     var response = await fetch(`https://thetamiddleware.herokuapp.com/getAddressInfo/${data}`);
     var resObj = await response.json();
     var result= JSON.stringify(resObj)
+    // Alert.alert(result.toString())
     if(resObj == false)
     {
       setFinished(true)
@@ -39,7 +40,7 @@ export default function qrScanner({navigation}) {
     } catch(e)
     {
       setFinished(true)
-      Alert.alert("An Error Has Occured", JSON.stringify(e))
+      Alert.alert("Unable to Login", "Please Try Again....")
     }
 
 

@@ -24,10 +24,10 @@ export default function Profile({route, navigation}) {
   const [patientAge, setPatientAge] = useState("Loading....")
   const [patientGender, setPatientGender] = useState("Loading....")
   const [patientDate, setPatientDate] = useState("Loading....")
-  const [patientHR, setPatientHR] = useState("Not Found")
-  const [patientTemp, setPatientTemp] = useState("Not Found")
-  const [patientBPsys, setPatientBPsys] = useState("Not Found")
-  const [patientBPdiast, setPatientBPdiast] = useState("Not Found")
+  const [patientHR, setPatientHR] = useState("Loading....")
+  const [patientTemp, setPatientTemp] = useState("Loading....")
+  const [patientBPsys, setPatientBPsys] = useState("Loading....")
+  const [patientBPdiast, setPatientBPdiast] = useState("Loading....")
   const [patientAddress, setPatientAddress] = useState("Loading....")
   const [patientDeviceID, setPatientDeviceID] = useState("Loading....")
   var [finished, setFinished]=useState(false)
@@ -61,10 +61,17 @@ export default function Profile({route, navigation}) {
       setPatientTemp(resObjTx.Temp.toString())
       setPatientBPsys(resObjTx.BP.systolic.toString())
       setPatientBPdiast(resObjTx.BP.diastolic.toString())
+      setFinished(true)
       }
         // alert("Finished")
-        setFinished(true)
 
+      else{
+        setPatientHR("N/A")
+        setPatientTemp("N/A")
+        setPatientBPsys("N/A")
+        setPatientBPdiast("N/A")
+        setFinished(true)
+      }
       }
        catch(e)
        {
@@ -104,7 +111,7 @@ export default function Profile({route, navigation}) {
 
         <View style={{alignSelf: "center"}}>
           <View style={styles.profileImage}>
-            <Image source={require('../assets/monitor.png')} style={styles.image} resizeMode="center"></Image>
+            <Image source={require('../assets/iota.png')} style={styles.image} resizeMode="center"></Image>
           </View>
         </View>
 
@@ -114,7 +121,10 @@ export default function Profile({route, navigation}) {
           </View>
 
           <View style={{marginTop:20, alignSelf:'center', }}>
-            <Button style={[styles.button, {marginBottom: 20,}]} title='Get Live Readings' onPress={() => navigation.navigate('Readings')}></Button>
+            <Button style={[styles.button, {marginBottom: 20,}]} title='Get Live Readings' onPress={() =>
+              Alert.alert("This Feature is being under development")
+              // navigation.navigate('Readings')
+              }></Button>
             {/* <Button style={styles.button} title='View History' onPress={() => navigation.navigate('History')}></Button> */}
           </View>
           <View style={{marginTop:20, alignSelf:'center', }}>

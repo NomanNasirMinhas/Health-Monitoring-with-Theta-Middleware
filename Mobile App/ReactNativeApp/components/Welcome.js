@@ -14,7 +14,7 @@ const FadeInView = (props) => {
       fadeAnim,
       {
         toValue: 1,
-        duration: 3000,
+        duration: 5000,
       }
     ).start();
   }, [fadeAnim])
@@ -44,7 +44,7 @@ export default ({navigation}) => {
       </FadeInView>
 
       <FadeInView style={styles.login}>
-      <Button title='Login' onPress={() => navigation.navigate('qrScanner')}></Button>
+      <Button style={{backgroundColor: 'black'}} title='Scan QR' onPress={() => navigation.navigate('qrScanner')}></Button>
       </FadeInView>
     </View>
   )
@@ -58,6 +58,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 
+  button:{
+    backgroundColor:"#154360",
+    color: 'white',
+    fontWeight:'bold',
+  },
   text: {
    // fontFamily: "Righteous",
     color: "#154360",

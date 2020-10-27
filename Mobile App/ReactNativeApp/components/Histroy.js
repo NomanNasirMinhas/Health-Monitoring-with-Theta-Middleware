@@ -13,6 +13,7 @@ export default function Readings({route, navigation}) {
   var [finished, setFinished]=useState(false)
   var [tableState, setTableState]= useState([]);
   var [hashArray, setHashArray] = useState([])
+  var [histState, setHistState] = useState('Please Wait...')
   var [txInfo, setTxInfo] = useState([])
   var tableData=[]
 
@@ -21,12 +22,12 @@ export default function Readings({route, navigation}) {
 
       try{
         const { address } = route.params;
-
+        setHistState('Fetching Transaction Hashes\nPlease Wait......')
     var response = await fetch(`https://thetamiddleware.herokuapp.com/getAllHash/${address.toString()}&07-10-2020`);
     var resObj = await response.json();
     // Alert.alert("All Hashes", JSON.stringify(resObj.length));
     setHashArray(resObj)
-
+    setHistState('Fetching Transactions from IOTA\nPlease Wait..........')
     for(var i=0; i<resObj.length; i++)
     {
       var responseTx = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${resObj[i].toString()}`);
@@ -36,14 +37,15 @@ export default function Readings({route, navigation}) {
     setTxInfo(txInfo.push(parsed))
 
     }
-    Alert.alert("Fetched",JSON.stringify(txInfo))
+    // Alert.alert("Fetched",JSON.stringify(txInfo))
 
     for(var i=0; i<txInfo.length; i++)
     {
     var val = txInfo[i]
     var row=[]
+      row.push(val.TimeStamp.toString());
       row.push(val.HR.toString());
-      row.push(val.BPM.toString());
+      row.push(val.Temp.toString());
       row.push(val.BP.systolic.toString());
       row.push(val.BP.diastolic.toString());
       tableData.push(row)
@@ -64,14 +66,14 @@ export default function Readings({route, navigation}) {
   }, []);
 
 
-  var tableHead= ['Heart Rate', 'Temp.', 'Syst. BP', 'Dia. BP'];
+  var tableHead= ['Time','Heart Rate', 'Temp.', 'Syst. BP', 'Dia. BP'];
 
 
   return (
     <View style={styles.container}>
       <Spinner
           visible={!finished}
-          textContent={'Fetching from IoTA...\nPlease Wait...'}
+          textContent={histState}
           textStyle={styles.text}
         />
       <ScrollView horizontal={false} showsVerticalScrollIndicator={true} >
