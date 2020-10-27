@@ -10,8 +10,6 @@ import {
     ThemeProvider,
     Slide,
     CircularProgress,
-} from '@material-ui/core'
-import {
     Dialog,
     DialogContent,
     DialogContentText,

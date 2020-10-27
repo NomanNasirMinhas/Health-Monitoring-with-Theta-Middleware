@@ -7,9 +7,7 @@ import {
     TableCell,
     TableHead,
     CircularProgress,
-    Button
-} from '@material-ui/core';
-import {
+    Button,
     TableRow,
     Paper,
     Typography,
@@ -17,6 +15,7 @@ import {
     Slide,
     TableContainer
 } from '@material-ui/core';
+
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import Header from "../../components/Header/Header"
 import theme from "../../assets/theme/theme"

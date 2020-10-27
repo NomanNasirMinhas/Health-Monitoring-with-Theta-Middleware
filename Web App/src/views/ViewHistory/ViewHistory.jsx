@@ -7,24 +7,21 @@ import {
     TableBody,
     TableCell,
     TableContainer,
-    TableHead
-} from '@material-ui/core';
-import {
+    TableHead,
     TableRow,
     Paper,
     Typography,
     Grid,
     ThemeProvider,
     Slide,
-    CircularProgress
-} from '@material-ui/core';
-import {
+    CircularProgress,
     Dialog,
     DialogTitle,
     DialogContent,
     DialogActions,
     Button
-} from "@material-ui/core"
+} from '@material-ui/core';
+
 import Header from "../../components/Header/Header"
 import theme from "../../assets/theme/theme"
 import DateFnsUtils from '@date-io/date-fns';
