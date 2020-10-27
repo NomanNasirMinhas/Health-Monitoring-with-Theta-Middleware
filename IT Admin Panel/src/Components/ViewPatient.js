@@ -42,6 +42,7 @@ const useStylesTable = makeStyles({
   paper: {
     maxwidth: 700,
   },
+  cell:{color:"white"},
   hover: {
     backgroundColor: "#2FC243",
     color: "white",
@@ -199,7 +200,7 @@ function ViewPatient() {
                 <TableBody>
                   {addresses.map((obj) => (
                     <TableRow hover key={obj.name}>
-                      <TableCell component="th" scope="row">
+                      <TableCell component="th" scope="row" style={{color:"green"}}>
                         {obj.Profile.name}
                       </TableCell>
                       <TableCell align="center">{obj.ID}</TableCell>
@@ -221,7 +222,7 @@ function ViewPatient() {
 
         <Paper className={classes.paper}>
         <Typography variant="h3" gutterBottom>
-             <strong> Patients  </strong>
+             <strong> History  </strong>
             </Typography>
             <Table>
             <TableBody>

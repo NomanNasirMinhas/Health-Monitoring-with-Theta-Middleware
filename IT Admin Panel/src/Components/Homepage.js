@@ -60,7 +60,10 @@ const useStylesTable = makeStyles({
   table: {
     maxWidth: "100%",
   },
-  cell: { color: "white" },
+  TableHead:{
+  cell: { color: "white"},
+  strong:{color:"white"}
+},
   paper: {
     maxwidth: "100%",
   },
@@ -274,23 +277,23 @@ if (seeds === null) {
           <TableContainer className={classesTable.paper}>
              
               <Table className={classesTable.table} aria-label="simple table">
-                <TableHead style={{ backgroundColor: "#0ea80e"}}>
-                  <TableRow style={{color:"white"}}>
+                <TableHead  style={{ backgroundColor: "#0ea80e"}}>
+                  <TableRow >
                     <TableCell align="center">
-                      <strong>Name</strong>
+                      <strong style={{color:"white"}}>Name</strong>
                     </TableCell>
                     <TableCell align="center">
-                      <strong>Specialization</strong>
+                      <strong style={{color:"white"}}>Specialization</strong>
                     </TableCell>
                     <TableCell align="center">
-                      <strong>Contact</strong>
+                      <strong style={{color:"white"}}>Contact</strong>
                     </TableCell>
 
                     <TableCell align="center">
-                      <strong>Seed</strong>
+                      <strong style={{color:"white"}}>Seed</strong>
                     </TableCell>
                     <TableCell align="center">
-                      <strong>Patients</strong>
+                      <strong style={{color:"white"}}>Patients</strong>
                     </TableCell>
 
                   </TableRow>

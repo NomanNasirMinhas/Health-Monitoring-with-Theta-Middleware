@@ -27,7 +27,8 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2),
   },
   title: {
-    flexGrow: 1,
+    flexGrow: 0,
+    
   },
 }));
 
@@ -65,9 +66,9 @@ function Navbar() {
         <Toolbar>
           <Typography variant="h4" className={classes.title} style={{marginLeft:"0%"}}>
             <ArrowForwardIcon />
-            <strong>Welcome Admin </strong>
+            <strong style={{marginLeft:"0%"}}>Welcome Admin </strong>
           </Typography>
-
+    <div style={{position: "absolute", right:"0px"}}>
           <Button
             color="inherit"
             startIcon={<HomeIcon fontSize="small" />}
@@ -92,7 +93,7 @@ function Navbar() {
             onClick={goAdd}
           >
             {" "}
-            Patients History
+            Manage Devices
           </Button>
           <Button
             color="inherit"
@@ -101,7 +102,8 @@ function Navbar() {
           >
             {" "}
             logout
-          </Button>
+         
+          </Button></div>
         </Toolbar>
       </AppBar>
     </ThemeProvider>
