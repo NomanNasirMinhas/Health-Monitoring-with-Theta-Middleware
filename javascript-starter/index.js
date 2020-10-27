@@ -1,4 +1,4 @@
-const { adminLogin, getAllSeeds, getSeed, getAllHash,getLastTransaction, sendPublicTransaction } = require('./thetamiddleware/middleware');
+const { adminLogin, getAllSeeds, publishMAMmsg, getSeed, getAllHash,getLastTransaction, sendPublicTransaction } = require('./thetamiddleware/middleware');
 require('dotenv').config();
 
 async function sendData() {
@@ -30,6 +30,16 @@ async function sendData() {
 
   }
 
+  async function publishMam(){
+    testSeed =process.env.testSeed;
+    testAddress =process.env.testAddress;
+    await publishMAMmsg(dummyMamMsg, testSeed, testAddress)
+  }
+
+  function dummyMamMsg(){
+    return "Hello from IoTA"
+  }
+
   function getHeartRate(min, max) {
     return Math.floor(Math.random() * (max - min + 1) ) + min;
   }
@@ -57,4 +67,5 @@ async function sendData() {
     return dateTime;
   }
 
-  sendData()
+  // sendData()
+  publishMam()

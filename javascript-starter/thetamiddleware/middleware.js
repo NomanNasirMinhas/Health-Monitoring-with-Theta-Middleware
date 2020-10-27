@@ -505,7 +505,7 @@ async function getAllSeeds(username, password) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function updateStreamRoot(address, root) {
+async function updateStreamRoot(seed, address, root) {
   try {
 
     var db = await MongoClient.connect(uri);
@@ -641,7 +641,9 @@ async function getPrivateTransactionInfo(seed, address, hash)
 //--------------------------------------New Function------------------------------------------//
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-async function publishMAMmsg(dbo, func, seed, address) {
+async function publishMAMmsg(func, seed, address) {
+  var db = await MongoClient.connect(uri);
+    var dbo = await db.db("thetamw1");
   const Mam = require('@iota/mam');
 const { asciiToTrytes, trytesToAscii } = require('@iota/converter');
 const mode = 'public';
@@ -677,7 +679,7 @@ const publishAll = async (func) => {
                 message: msg,
                 timestamp: (new Date()).toLocaleString()
               })
-              updateStreamRoot(dbo, seed, address, root)
+              updateStreamRoot(seed, address, root)
               console.log("Root is ", root)
 
         }
