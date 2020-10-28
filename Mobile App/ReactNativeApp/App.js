@@ -92,14 +92,18 @@ function App() {
           headerLeft:null,
           headerTitleAlign:'center',
           backgroundColor: '#019490',
+
           headerStyle: {
             backgroundColor: '#154360',
+            height:70
           },
 
           headerTintColor: '#fff',
+          headerShown:false,
           headerTitleStyle: {
             color: 'white',
-            fontWeight: 'bold',
+            fontSize:28,
+            fontWeight: '700',
             alignContent: 'center',
             alignItems: 'center',
             justifyContent: 'center'
