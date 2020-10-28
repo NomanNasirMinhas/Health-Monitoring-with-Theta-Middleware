@@ -507,7 +507,7 @@ async function getPublicTransactionInfo(hash) {
     );
     return txMsg;
   } catch (err) {
-    return [false, err];
+    return false;
   }
 }
 

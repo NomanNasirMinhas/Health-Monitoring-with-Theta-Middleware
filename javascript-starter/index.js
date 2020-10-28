@@ -67,5 +67,14 @@ async function sendData() {
     return dateTime;
   }
 
+  async function fetchMam(){
+    var io = require('socket.io-client');
+    var socket =  io.connect("https://thetamiddleware.herokuapp.com/getMAM/MBNDML9YVMXWKOMQZKYNJZQQRIQUQYLSNNDLSHCEAKKDJYHBPEWXBNXNXWOGQTHYUCBPPECYHVQFTZFOQ&NTWSWV9CBWVKZXKLWSOHFLCJTDWIAMVSYRD9DFDXWJWFBVPWYUYDJQDOOLEWLPOAPHR9CHQKTMEOYRKDC");
+    console.log(socket)
+    socket.on('mamMsg', (data) => {console.log(data)})
+    // await fetch("https://thetamiddleware.herokuapp.com/getMAM/MBNDML9YVMXWKOMQZKYNJZQQRIQUQYLSNNDLSHCEAKKDJYHBPEWXBNXNXWOGQTHYUCBPPECYHVQFTZFOQ&NTWSWV9CBWVKZXKLWSOHFLCJTDWIAMVSYRD9DFDXWJWFBVPWYUYDJQDOOLEWLPOAPHR9CHQKTMEOYRKDC")
+  }
+
   // sendData()
-  publishMam()
+  // publishMam()
+fetchMam()
