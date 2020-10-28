@@ -1,10 +1,10 @@
 import React, { useRef, useEffect } from 'react';
-import { Animated, Text, View, Image, StyleSheet, Button } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import qrScanner from './qrScanner';
-import Readings from './Readings';
-import Profile from './Profile';
+import { Animated, Text, View, Image, StyleSheet} from 'react-native';
+import { Card, ListItem, Button, Icon } from "react-native-elements";
+import { AppLoading } from 'expo';
+import { useFonts } from 'expo-font';
+
+
 
 const FadeInView = (props) => {
   const fadeAnim = useRef(new Animated.Value(0)).current  // Initial value for opacity: 0
@@ -33,58 +33,65 @@ const FadeInView = (props) => {
 
 // You can then use your `FadeInView` in place of a `View` in your components:
 export default ({navigation}) => {
+  let [fontsLoaded] = useFonts({
+        // Load a font `Montserrat` from a static resource
+        'Righteous': require('./../assets/fonts/Righteous-Regular.ttf'),
+        'Secular': require('./../assets/fonts/SecularOne-Regular.ttf'),
+        'Nunito': require('./../assets/fonts/Nunito-Regular.ttf'),
+        'Poppins': require('./../assets/fonts/Poppins-Regular.ttf'),
+        'NunitoBold': require('./../assets/fonts/Nunito-Bold.ttf'),
+        'PoppinsBold': require('./../assets/fonts/Poppins-Bold.ttf'),
+        'NunitoBlack': require('./../assets/fonts/Nunito-Black.ttf'),
+        'PoppinsBlack': require('./../assets/fonts/Poppins-Black.ttf')
+      });
+
+      if (!fontsLoaded) {
+        return <AppLoading />;
+      } else {
+
   return (
     <View style={styles.container}>
        <FadeInView style={styles.text}>
   <Text style={[styles.text, {fontWeight:"900", fontSize: 36 }]}>Patient Monitoring App</Text>
       </FadeInView>
 
-      <FadeInView style={{width: '100%', height: '60%'}}>
+      <View style={{width: '100%', height: '50%'}}>
       <Image source={require("../assets/splashIcon.png")} style={styles.image} resizeMode="center"></Image>
-      </FadeInView>
+      </View>
 
-      <FadeInView style={styles.login}>
-      <Button style={{backgroundColor: 'black'}} title='Scan QR' onPress={() => navigation.navigate('qrScanner')}></Button>
+      <FadeInView>
+      <Button buttonStyle={styles.button} title='Scan QR' titleStyle={{fontFamily:'NunitoBlack'}} onPress={() => navigation.navigate('qrScanner')}></Button>
       </FadeInView>
     </View>
   )
+}
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E8F8F5',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#002943",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingTop: 30,
+    paddingHorizontal:30,
+    borderWidth:10,
+    borderColor:'#154360'
   },
 
   button:{
-    backgroundColor:"#154360",
+    backgroundColor:"#076BAA",
     color: 'white',
-    fontWeight:'bold',
+    height:80,
+    width:200,
+    borderRadius:10,
+    borderWidth:5,
+    borderColor:'#004068'
   },
   text: {
-   // fontFamily: "Righteous",
-    color: "#154360",
+   fontFamily: "PoppinsBold",
+    color: "white",
     textAlign: "center"
-  },
-
-  login: {
-    fontFamily: "Righteous",
-    color: "#154360",
-    textAlign: "center",
-    width: '40%',
-    borderStyle: "solid",
-    borderWidth: 2,
-    borderColor: 'white',
-
-  },
-
-  subText:{
-    fontSize:12,
-    color: "#154360",
-    textTransform: "capitalize",
-    fontWeight:"500"
   },
 
   image:{

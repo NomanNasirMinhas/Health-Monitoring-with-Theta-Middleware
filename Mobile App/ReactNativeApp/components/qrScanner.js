@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import {Text, View, StyleSheet, Button, Alert } from 'react-native';
+import {Text, View, StyleSheet, Alert } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import Spinner from 'react-native-loading-spinner-overlay';
+import { Card, ListItem, Button, Icon } from "react-native-elements";
+import { AppLoading } from 'expo';
+import { useFonts } from 'expo-font';
 import Profile from './Profile'
 
 export default function qrScanner({navigation}) {
@@ -46,6 +49,22 @@ export default function qrScanner({navigation}) {
 
   };
 
+  let [fontsLoaded] = useFonts({
+    // Load a font `Montserrat` from a static resource
+    'Righteous': require('./../assets/fonts/Righteous-Regular.ttf'),
+    'Secular': require('./../assets/fonts/SecularOne-Regular.ttf'),
+    'Nunito': require('./../assets/fonts/Nunito-Regular.ttf'),
+    'Poppins': require('./../assets/fonts/Poppins-Regular.ttf'),
+    'NunitoBold': require('./../assets/fonts/Nunito-Bold.ttf'),
+    'PoppinsBold': require('./../assets/fonts/Poppins-Bold.ttf'),
+    'NunitoBlack': require('./../assets/fonts/Nunito-Black.ttf'),
+    'PoppinsBlack': require('./../assets/fonts/Poppins-Black.ttf')
+  });
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  } else {
+
   if (hasPermission === null) {
     return <Text>Requesting for camera permission</Text>;
   }
@@ -58,8 +77,8 @@ export default function qrScanner({navigation}) {
       style={{
         flex: 1,
         flexDirection: 'column',
-        justifyContent: 'flex-end',
-        backgroundColor: '#E8F8F5'
+        justifyContent: 'center',
+        backgroundColor: '#09344F',
       }}>
         <Spinner
           visible={scanned && !finished}
@@ -69,24 +88,26 @@ export default function qrScanner({navigation}) {
         <Text style={styles.text}>
           Please Scan QR Code on Patient's Machine to Login
         </Text>
+
       <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
         style={styles.container}
       />
 
-      {scanned && <Button style={styles.button} title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
+      {scanned && <Button buttonStyle={styles.button} titleStyle={{fontFamily:"PoppinsBold"}} title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
     </View>
   );
+    }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#141D2B',
+    backgroundColor: '#034772',
     alignItems: 'center',
     justifyContent: 'center',
     marginTop:50,
-    marginBottom:50,
+    marginBottom:20,
     borderRadius:100,
     borderColor: "#DFD8C8",
     borderLeftWidth: 2,
@@ -97,8 +118,8 @@ const styles = StyleSheet.create({
     // paddingHorizontal:20,
     marginTop:20,
     fontSize:20,
-    fontWeight:"bold",
-    color: "#154360",
+    fontFamily:"PoppinsBold",
+    color: "white",
     textAlign: "center"
   },
 
@@ -141,12 +162,16 @@ const styles = StyleSheet.create({
     flex: 1
   },
 
-  button: {
-    //fontFamily: "Righteous",
-    color: "#52575D",
-    textAlign: "center",
-    marginRight: 30,
-    marginBottom: 30
-  }
+  button:{
+    backgroundColor:"#D83100",
+    color: 'white',
+    height:50,
+    width:200,
+    borderRadius:10,
+    borderWidth:5,
+    borderColor:'#004068',
+    marginLeft:'auto',
+    marginRight:'auto'
+  },
 
 });

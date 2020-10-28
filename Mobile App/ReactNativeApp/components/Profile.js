@@ -9,8 +9,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 // import { useFonts, Righteous_400Regular } from '@expo-google-fonts/righteous';
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { AppLoading } from "expo";
-import * as Font from "expo-font";
+import { AppLoading } from 'expo';
+import { useFonts } from 'expo-font';
 import Readings from "./Readings";
 import History from "./Histroy";
 import { Dimensions } from "react-native";
@@ -29,7 +29,7 @@ const getFonts = () =>
   });
 
 export default function Profile({ route, navigation }) {
-  const [fontsLoaded, setFontsLoaded] = useState(false);
+  // const [fontsLoaded, setFontsLoaded] = useState(false);
   const [patientName, setPatientName] = useState("Loading....");
   const [patientAge, setPatientAge] = useState("Loading....");
   const [patientGender, setPatientGender] = useState("Loading....");
@@ -41,7 +41,7 @@ export default function Profile({ route, navigation }) {
   const [patientAddress, setPatientAddress] = useState("Loading....");
   const [patientDeviceID, setPatientDeviceID] = useState("Loading....");
   const [hasLastTx, setHasLastTx] = useState(false);
-  const [lastTx, setLastTx] = useState([0, 0, 0, 0]);
+  const [lastTx, setLastTx] = useState([0, 0, 0, 0,0]);
   var [finished, setFinished] = useState(false);
   var maxWidth = Dimensions.get("window").width;
 
@@ -76,7 +76,7 @@ export default function Profile({ route, navigation }) {
           setPatientTemp(resObjTx.Temp.toString());
           setPatientBPsys(resObjTx.BP.systolic.toString());
           setPatientBPdiast(resObjTx.BP.diastolic.toString());
-          setLastTx([patientTemp, patientHR, patientBPsys, patientBPdiast]);
+          setLastTx([resObjTx.HR, resObjTx.Temp, resObjTx.BP.systolic,resObjTx.BP.diastolic, 0]);
           setHasLastTx(true);
           setFinished(true);
         }
@@ -96,11 +96,21 @@ export default function Profile({ route, navigation }) {
     })();
   }, []);
 
+  let [fontsLoaded] = useFonts({
+    // Load a font `Montserrat` from a static resource
+    'Righteous': require('./../assets/fonts/Righteous-Regular.ttf'),
+    'Secular': require('./../assets/fonts/SecularOne-Regular.ttf'),
+    'Nunito': require('./../assets/fonts/Nunito-Regular.ttf'),
+    'Poppins': require('./../assets/fonts/Poppins-Regular.ttf'),
+    'NunitoBold': require('./../assets/fonts/Nunito-Bold.ttf'),
+    'PoppinsBold': require('./../assets/fonts/Poppins-Bold.ttf'),
+    'NunitoBlack': require('./../assets/fonts/Nunito-Black.ttf'),
+    'PoppinsBlack': require('./../assets/fonts/Poppins-Black.ttf')
+  });
+
   if (!fontsLoaded) {
-    return (
-      <AppLoading startAsync={getFonts} onFinish={() => setFontsLoaded(true)} />
-    );
-  }
+    return <AppLoading />;
+  } else {
 
   return (
     <View style={styles.container}>
@@ -158,6 +168,8 @@ export default function Profile({ route, navigation }) {
         <View style={styles.buttonContainer}>
           <Button
             title="Live Readings"
+            buttonStyle={styles.buttonStyle}
+            titleStyle={styles.buttonText}
             style={{ width: 150, marginRight: 10 }}
             onPress={
               () => Alert.alert("This Feature is being under development")
@@ -166,6 +178,8 @@ export default function Profile({ route, navigation }) {
           ></Button>
           <Button
             style={{ width: 150, marginLeft: 10 }}
+            buttonStyle={styles.buttonStyle}
+            titleStyle={styles.buttonText}
             title="View History"
             onPress={() =>
               navigation.navigate("History", { address: patientAddress })
@@ -185,10 +199,10 @@ export default function Profile({ route, navigation }) {
 
             <BarChart
               data={{
-                labels: ["Temp (F)", "HR (BPM)", "BP-Syst", "BP-Diast"],
+                labels: ["Temp (F)", "HR (BPM)", "BP-Syst", "BP-Diast",""],
                 datasets: [
                   {
-                    data: [98, 68, 80, 120],
+                    data: lastTx,
                   },
                 ],
               }}
@@ -259,6 +273,7 @@ export default function Profile({ route, navigation }) {
       </ScrollView>
     </View>
   );
+      }
 }
 
 const styles = StyleSheet.create({
@@ -285,15 +300,27 @@ const styles = StyleSheet.create({
   },
 
   text: {
-    // fontFamily: "Righteous",
+    fontFamily: "Righteous",
     color: "white",
     textAlign: "center",
     fontWeight: "900",
   },
 
+  buttonStyle:{
+    backgroundColor:'#00619E',
+    borderWidth:1,
+    borderColor:'white'
+  },
+  buttonText: {
+    fontFamily: "Righteous",
+    color: "white",
+    textAlign: "center",
+  },
+
   subText: {
     fontSize: 14,
-    color: "white",
+    color: "gray",
+    fontFamily:'Secular',
     textTransform: "capitalize",
     fontWeight: "500",
   },
@@ -310,12 +337,14 @@ const styles = StyleSheet.create({
     marginTop: 0,
     marginBottom: 20,
   },
+
   lastTxContainer: {
     flexDirection: "row",
     alignSelf: "center",
     marginTop: 20,
     marginBottom: 20,
   },
+
   buttonContainer: {
     flexDirection: "row",
     alignSelf: "center",
