@@ -156,9 +156,12 @@ function ViewPatient() {
     console.log(to_json);
     if (to_json != false) {
       setTransactions(to_json);
-      setShow(true);
+      setShow(true);}
+      else{
+
+      }
       console.log("Transactions=", Transactions);
-    }
+    
   }
 
   function handleClose() {

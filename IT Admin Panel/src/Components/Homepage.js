@@ -449,7 +449,7 @@ function Doctors(props) {
               Registered Patients{" "}
             </Typography>
             <Typography variant="h5">
-              <strong style={{ color: "white" }}> {totalPatients} </strong>
+              <strong style={{ color: "white" }}> {totalPatients==0 ? "Fetching data...": totalPatients} </strong>
             </Typography>
           </Paper>
         </Grid>
