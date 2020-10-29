@@ -88,6 +88,7 @@ const Options = {
         },
         ticks: {
           fontColor: "#FFFFFF",
+          beginAtZero: true
         },
       },
     ],
@@ -99,6 +100,35 @@ const Options = {
         ticks: {
           fontColor: "#FFFFFF",
         },
+      },
+    ],
+  },
+};
+const StackedOptions = {
+  legend: {
+    display: false,
+  },
+  scales: {
+    yAxes: [
+      {
+        gridLines: {
+          color: "rgba(255, 255, 255, 0.2)",
+        },
+        ticks: {
+          fontColor: "#FFFFFF",
+        },
+        stacked: true,
+      },
+    ],
+    xAxes: [
+      {
+        gridLines: {
+          display: false,
+        },
+        ticks: {
+          fontColor: "#FFFFFF",
+        },
+        stacked: true,
       },
     ],
   },
@@ -239,7 +269,9 @@ export default function HomePage() {
                         }),
                         datasets: [
                           {
-                            data: [12, 10, 3, 5, 4, 3],
+                            data: transactions.map((rows) => {
+                              return rows.Temp;
+                            }),
                             backgroundColor: " rgba(255, 255, 255, 0.8)",
                             borderColor: " rgba(255, 255, 255, 1)",
                             borderWidth: 1,
@@ -274,7 +306,9 @@ export default function HomePage() {
                         }),
                         datasets: [
                           {
-                            data: [12, 10, 3, 5, 4, 3],
+                            data: transactions.map((rows) => {
+                              return rows.HR;
+                            }),
                             backgroundColor: " rgba(255, 255, 255, 0.8)",
                             borderColor: " rgba(255, 255, 255, 1)",
                             borderWidth: 1,
@@ -309,16 +343,33 @@ export default function HomePage() {
                         }),
                         datasets: [
                           {
-                            data: [12, 10, 3, 5, 4, 3],
+                            label: "Systolic",
+                            //systolic
+                            //diastolic
+                            data: transactions.map((rows) => {
+                              return rows.BP.systolic;
+                            }),
+                            backgroundColor: "rgba(88, 214, 141, 0.8)",
+                            borderColor: "rgba(88, 214, 141, 1)",
+                            borderWidth: 1,
+                            hoverBackgroundColor: "rgba(88, 214, 141, 1)",
+                            hoverBorderColor: "rgba(88, 214, 141, 1)",
+                          },
+                          {
+                            //systolic
+                            label: "Diastolic",
+                            data:transactions.map((rows) => {
+                              return rows.BP.diastolic;
+                            }),
                             backgroundColor: " rgba(255, 255, 255, 0.8)",
                             borderColor: " rgba(255, 255, 255, 1)",
                             borderWidth: 1,
                             hoverBackgroundColor: "rgba(255, 255, 255, 1)",
-                            hoverBorderColor: "rgba(255, 255, 255, 1",
+                            hoverBorderColor: "rgba(255, 255, 255, 1)",
                           },
                         ],
                       }}
-                      options={Options}
+                      options={StackedOptions}
                     />
                   </CardHeader>
                   <CardBody>
