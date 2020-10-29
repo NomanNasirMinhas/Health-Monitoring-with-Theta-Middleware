@@ -52,13 +52,17 @@ export default function qrScanner({navigation}) {
   let [fontsLoaded] = useFonts({
     // Load a font `Montserrat` from a static resource
     'Righteous': require('./../assets/fonts/Righteous-Regular.ttf'),
-    'Secular': require('./../assets/fonts/SecularOne-Regular.ttf'),
-    'Nunito': require('./../assets/fonts/Nunito-Regular.ttf'),
-    'Poppins': require('./../assets/fonts/Poppins-Regular.ttf'),
-    'NunitoBold': require('./../assets/fonts/Nunito-Bold.ttf'),
-    'PoppinsBold': require('./../assets/fonts/Poppins-Bold.ttf'),
-    'NunitoBlack': require('./../assets/fonts/Nunito-Black.ttf'),
-    'PoppinsBlack': require('./../assets/fonts/Poppins-Black.ttf')
+        'Secular': require('./../assets/fonts/SecularOne-Regular.ttf'),
+        'Nunito': require('./../assets/fonts/Nunito-Regular.ttf'),
+        'Poppins': require('./../assets/fonts/Poppins-Regular.ttf'),
+        'NunitoBold': require('./../assets/fonts/Nunito-Bold.ttf'),
+        'PoppinsBold': require('./../assets/fonts/Poppins-Bold.ttf'),
+        'NunitoBlack': require('./../assets/fonts/Nunito-Black.ttf'),
+        'PoppinsBlack': require('./../assets/fonts/Poppins-Black.ttf'),
+        'MetropolisBlack': require('./../assets/fonts/Metropolis-Black.otf'),
+        'MetropolisBold': require('./../assets/fonts/Metropolis-Bold.otf'),
+        'MetropolisSemiBold': require('./../assets/fonts/Metropolis-SemiBold.otf'),
+        'Metropolis': require('./../assets/fonts/Metropolis-Regular.otf'),
   });
 
   if (!fontsLoaded) {

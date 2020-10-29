@@ -99,13 +99,17 @@ export default function Profile({ route, navigation }) {
   let [fontsLoaded] = useFonts({
     // Load a font `Montserrat` from a static resource
     'Righteous': require('./../assets/fonts/Righteous-Regular.ttf'),
-    'Secular': require('./../assets/fonts/SecularOne-Regular.ttf'),
-    'Nunito': require('./../assets/fonts/Nunito-Regular.ttf'),
-    'Poppins': require('./../assets/fonts/Poppins-Regular.ttf'),
-    'NunitoBold': require('./../assets/fonts/Nunito-Bold.ttf'),
-    'PoppinsBold': require('./../assets/fonts/Poppins-Bold.ttf'),
-    'NunitoBlack': require('./../assets/fonts/Nunito-Black.ttf'),
-    'PoppinsBlack': require('./../assets/fonts/Poppins-Black.ttf')
+        'Secular': require('./../assets/fonts/SecularOne-Regular.ttf'),
+        'Nunito': require('./../assets/fonts/Nunito-Regular.ttf'),
+        'Poppins': require('./../assets/fonts/Poppins-Regular.ttf'),
+        'NunitoBold': require('./../assets/fonts/Nunito-Bold.ttf'),
+        'PoppinsBold': require('./../assets/fonts/Poppins-Bold.ttf'),
+        'NunitoBlack': require('./../assets/fonts/Nunito-Black.ttf'),
+        'PoppinsBlack': require('./../assets/fonts/Poppins-Black.ttf'),
+        'MetropolisBlack': require('./../assets/fonts/Metropolis-Black.otf'),
+        'MetropolisBold': require('./../assets/fonts/Metropolis-Bold.otf'),
+        'MetropolisSemiBold': require('./../assets/fonts/Metropolis-SemiBold.otf'),
+        'Metropolis': require('./../assets/fonts/Metropolis-Regular.otf'),
   });
 
   if (!fontsLoaded) {
@@ -300,7 +304,7 @@ const styles = StyleSheet.create({
   },
 
   text: {
-    fontFamily: "Righteous",
+    fontFamily: "Metropolis",
     color: "white",
     textAlign: "center",
     fontWeight: "900",
@@ -308,18 +312,18 @@ const styles = StyleSheet.create({
 
   buttonStyle:{
     backgroundColor:'#00619E',
-    borderWidth:1,
+    borderWidth:2,
     borderColor:'white'
   },
   buttonText: {
-    fontFamily: "Righteous",
+    fontFamily: "MetropolisBold",
     color: "white",
     textAlign: "center",
   },
 
   subText: {
     fontSize: 14,
-    color: "gray",
+    color: "#e3e1dc",
     fontFamily:'Secular',
     textTransform: "capitalize",
     fontWeight: "500",

@@ -42,7 +42,12 @@ export default ({navigation}) => {
         'NunitoBold': require('./../assets/fonts/Nunito-Bold.ttf'),
         'PoppinsBold': require('./../assets/fonts/Poppins-Bold.ttf'),
         'NunitoBlack': require('./../assets/fonts/Nunito-Black.ttf'),
-        'PoppinsBlack': require('./../assets/fonts/Poppins-Black.ttf')
+        'PoppinsBlack': require('./../assets/fonts/Poppins-Black.ttf'),
+        'MetropolisBlack': require('./../assets/fonts/Metropolis-Black.otf'),
+        'MetropolisBold': require('./../assets/fonts/Metropolis-Bold.otf'),
+        'MetropolisSemiBold': require('./../assets/fonts/Metropolis-SemiBold.otf'),
+        'Metropolis': require('./../assets/fonts/Metropolis-Regular.otf'),
+
       });
 
       if (!fontsLoaded) {
@@ -52,15 +57,15 @@ export default ({navigation}) => {
   return (
     <View style={styles.container}>
        <FadeInView style={styles.text}>
-  <Text style={[styles.text, {fontWeight:"900", fontSize: 36 }]}>Patient Monitoring App</Text>
+  <Text style={[styles.text, {fontWeight:"900", fontSize: 30 }]}>Patient Monitoring App</Text>
       </FadeInView>
 
       <View style={{width: '100%', height: '50%'}}>
-      <Image source={require("../assets/splashIcon.png")} style={styles.image} resizeMode="center"></Image>
+      <Image source={require("../assets/IOTALogoWhite.png")} style={styles.image} resizeMode="center"></Image>
       </View>
 
       <FadeInView>
-      <Button buttonStyle={styles.button} title='Scan QR' titleStyle={{fontFamily:'NunitoBlack'}} onPress={() => navigation.navigate('qrScanner')}></Button>
+      <Button buttonStyle={styles.button} title='Scan QR' titleStyle={{fontFamily:'MetropolisBold'}} onPress={() => navigation.navigate('qrScanner')}></Button>
       </FadeInView>
     </View>
   )
@@ -89,7 +94,7 @@ const styles = StyleSheet.create({
     borderColor:'#004068'
   },
   text: {
-   fontFamily: "PoppinsBold",
+   fontFamily: "Metropolis",
     color: "white",
     textAlign: "center"
   },
