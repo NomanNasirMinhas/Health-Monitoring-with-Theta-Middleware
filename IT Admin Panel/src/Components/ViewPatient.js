@@ -5,10 +5,10 @@ import { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import ListIcon from '@material-ui/icons/List';
+import ListIcon from "@material-ui/icons/List";
 import swal from "sweetalert";
-import DatePicker from "react-datepicker"
-;import {
+import DatePicker from "react-datepicker";
+import {
   createMuiTheme,
   withStyles,
   ThemeProvider,
@@ -43,7 +43,7 @@ const useStylesTable = makeStyles({
   paper: {
     maxwidth: 700,
   },
-  cell:{color:"white"},
+  cell: { color: "white" },
   hover: {
     backgroundColor: "#2FC243",
     color: "white",
@@ -67,7 +67,7 @@ const useStyles1 = makeStyles((theme) => ({
 
 const theme = createMuiTheme({
   primary: {
-    main: "#0ea80e",
+    main: " #2980B9",  //   #2980B9 blue   dark#2471A3  button #1B4F72
   },
 });
 
@@ -85,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
-  side:{
+  side: {
     marginTop: "2%",
   },
   paper: {
@@ -137,17 +137,18 @@ function ViewPatient() {
   }, []);
   console.log("ADDRESS", addresses);
 
-  
-  
-    async function getInfo(address) {
-       console.log("Address to find",address);
-      const info= await fetch(`https://thetamiddleware.herokuapp.com/getAddressInfo/${SEED}&${address}`);
-      const to_json = await info.json();
-      console.log(to_json);
-    }
-  
-    function getDate(address){}
-      {/**
+  async function getInfo(address) {
+    console.log("Address to find", address);
+    const info = await fetch(
+      `https://thetamiddleware.herokuapp.com/getAddressInfo/${SEED}&${address}`
+    );
+    const to_json = await info.json();
+    console.log(to_json);
+  }
+
+  function getDate(address) {}
+  {
+    /**
       const { value: date } =  swal({
         title: 'Select Date',
       
@@ -163,7 +164,8 @@ function ViewPatient() {
   
     }
     
-  */}
+  */
+  }
 
   if (addresses == null) {
     return (
@@ -176,29 +178,32 @@ function ViewPatient() {
     );
   }
 
-    if(addresses== false){
-      return(
+  if (addresses == false) {
+    return (
       <div>
-      <Navbar />
-      <Typography variant="h2" style={{color:"#B4B4B4" , margin: "auto"}}><strong >No Patient added </strong></Typography>
-      </div>)
-    }
+        <Navbar />
+        <Typography variant="h2" style={{ color: "#B4B4B4", margin: "auto" }}>
+          <strong>No Patient added </strong>
+        </Typography>
+      </div>
+    );
+  }
   return (
     <ThemeProvider>
       <Navbar />
 
-      <Grid container spacing={0}>
+      <Grid container spacing={0} style={{marginTop:"1%"}}>
         <Grid item xs={2} className={classes.side}>
           <Paper className={classes.paper}>
             <Typography variant="h3" gutterBottom>
-             <strong> Patients  </strong>
+              <strong> Patients </strong>
             </Typography>
-            <Typography variant="h4" style={{ color: "green" }}>
+            <Typography variant="h4" style={{ color: "#2980B9" }}>
               <strong>{total}</strong>
             </Typography>
           </Paper>
         </Grid>
-        <Grid item xs={1}></Grid> 
+        <Grid item xs={1}></Grid>
         {/**ADD TABLE */}
         <Grid xs={6}>
           <Typography
@@ -212,7 +217,7 @@ function ViewPatient() {
           <Paper classNam e={classes.paper}>
             <TableContainer className={classesTable.paper}>
               <Table className={classesTable.table} aria-label="simple table">
-                <TableHead style={{ backgroundColor: "#0ea80e" }}>
+                <TableHead style={{ backgroundColor: "#2980B9" }}>
                   <TableRow>
                     <TableCell className={classesTable.cell} align="left">
                       <strong>Patient's Name</strong>
@@ -231,7 +236,11 @@ function ViewPatient() {
                 <TableBody>
                   {addresses.map((obj) => (
                     <TableRow hover key={obj.name}>
-                      <TableCell component="th" scope="row" style={{color:"green"}}>
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        style={{ color: "green" }}
+                      >
                         {obj.Profile.name}
                       </TableCell>
                       <TableCell align="center">{obj.ID}</TableCell>
@@ -250,42 +259,38 @@ function ViewPatient() {
         </Grid>
         <Grid item xs={1}></Grid>
         <Grid item xs={2} className={classes.side}>
-
-        <Paper className={classes.paper}>
-        <Typography variant="h3" gutterBottom>
-             <strong> History  </strong>
+          <Paper className={classes.paper}>
+            <Typography variant="h3" gutterBottom>
+              <strong> History </strong>
             </Typography>
             <Table>
-            <TableBody>
-                  {addresses.map((obj) => (
-                    <TableRow>
-                      <TableCell>{obj.Profile.name}</TableCell>
-                      <TableCell>
-
+              <TableBody>
+                {addresses.map((obj) => (
+                  <TableRow>
+                    <TableCell>{obj.Profile.name}</TableCell>
+                    <TableCell>
                       <Button
-                            className={classesTable.hover}
-                            color="inherit"
-                            onClick={() => getInfo(obj.ADDRESS)}
-                            startIcon={
-                              <ListIcon
-                                fontSize="small"
-                               // component={link}
-                                //to={`/ViewPatient/${obj.SEED}`}
-                              />
-                            }
-                          >
-                            {" "}
-                            View
-                          </Button>
-
-                      </TableCell>
-                    </TableRow> 
-      ))}
-        </TableBody>
+                        className={classesTable.hover}
+                        color="inherit"
+                        onClick={() => getInfo(obj.ADDRESS)}
+                        startIcon={
+                          <ListIcon
+                            fontSize="small"
+                            // component={link}
+                            //to={`/ViewPatient/${obj.SEED}`}
+                          />
+                        }
+                      >
+                        {" "}
+                        View
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
             </Table>
           </Paper>
-          </Grid>            
-
+        </Grid>
       </Grid>
     </ThemeProvider>
   );

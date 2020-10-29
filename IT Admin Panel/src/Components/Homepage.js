@@ -416,8 +416,9 @@ function Doctors(props) {
         </Grid>
       </Grid>
 
-      <Grid container spacing={1}>
-        <Grid item xs={3}>
+      <Grid container spacing={1} style={{marginTop:"1%"}}>
+        {/**  <Grid item xs={1}></Grid> */}     
+        <Grid item xs={4}>
           <Paper
             elevation={5}
             style={{ backgroundColor: "#2980B9", marginTop: "2%" }}
@@ -433,9 +434,9 @@ function Doctors(props) {
             </Typography>
           </Paper>
         </Grid>
-        <Grid item xs={1}></Grid>
+         {/**  <Grid item xs={1}></Grid> */}
 
-        <Grid item xs={3}>
+        <Grid item xs={4}>
           <Paper
             elevation={5}
             style={{ backgroundColor: "#2980B9", marginTop: "2%" }}
@@ -451,6 +452,24 @@ function Doctors(props) {
             </Typography>
           </Paper>
         </Grid>
+       {/**  <Grid item xs={1}></Grid> */}             
+        <Grid item xs={4}>
+          <Paper
+            elevation={5}
+            style={{ backgroundColor: "#2980B9", marginTop: "2%" }}
+          >
+            <Typography
+              variant="h4"
+              style={{ marginTop: "1%", color: "white", fontWeight: "bold" }}
+            >
+              Total Devices{" "}
+            </Typography>
+            <Typography variant="h5">
+              <strong style={{ color: "white" }}> -- </strong>
+            </Typography>
+          </Paper>
+        </Grid>  
+      
       </Grid>
     </ThemeProvider>
   );
