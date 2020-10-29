@@ -53,11 +53,11 @@ const useStyles1 = makeStyles((theme) => ({
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: "#0ea80e",
+      main: "#2471A3", //   #2980B9 blue   dark#2471A3  button #1B4F72
     },
 
     secondary: {
-      main: "#ddd",
+      main: "#2980B9",
     },
   },
 });
@@ -167,6 +167,7 @@ export const Form = () => {
             float: "center",
             margin: "auto",
             marginTop: "30px",
+            backgroundColor:"#FBFCFC"
           }}
         >
           <form style={{ color: "black", marginTop: "20px" }}>

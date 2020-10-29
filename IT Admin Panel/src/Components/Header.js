@@ -7,7 +7,7 @@ const useStyles = makeStyles({
       minWidth: 275,
       
       textAlign: 'center',
-      backgroundColor: 'rgb(14, 168, 14)',
+      backgroundColor: '#2471A3',
       color: 'white',
       height: '110px'
     },

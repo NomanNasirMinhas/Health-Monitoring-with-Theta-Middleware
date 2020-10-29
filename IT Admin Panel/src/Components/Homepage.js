@@ -158,7 +158,7 @@ function Doctors(props) {
   const classesTable = useStylesTable();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [totalDoctors, settotalDoctors] = React.useState("");
+  const [totalDoctors, settotalDoctors] = React.useState('');
   const [totalPatients, settotalPatients] = React.useState(0);
   
 
@@ -228,7 +228,7 @@ function Doctors(props) {
             }
             
           }
-          settotalPatients((l.length+1))
+          if(l.length!=0){settotalPatients((l.length+1))}
           console.log("total=", l, "length=", l.length);
           {}
     }
@@ -280,7 +280,7 @@ function Doctors(props) {
           {/**  <Grid item xs={0.5}></Grid> */}
         </Grid>
 
-        <Typography variant="h1"> Loading...</Typography>
+        <Typography variant="h1">  Loading...</Typography>
       </ThemeProvider>
     );
   }
@@ -328,6 +328,7 @@ function Doctors(props) {
                 <TableHead style={{ backgroundColor: "#2980B9" }}>
                   <TableRow>
                     <TableCell align="center">
+                      
                       <strong style={{ color: "white" }}>Name</strong>
                     </TableCell>
                     <TableCell align="center">
@@ -355,15 +356,15 @@ function Doctors(props) {
                   ).map((obj) => (
                     <TableRow hover key={obj.name}>
                       <TableCell component="th" scope="row">
-                        {obj.ID}
+                       <strong> {obj.ID} </strong>
                       </TableCell>
                       <TableCell align="center">
-                        {obj.Profile.specialization}
+                       <strong>{obj.Profile.specialization}</strong>
                       </TableCell>
                       <TableCell align="center">
-                        {obj.Profile.contact}
+                       <strong> {obj.Profile.contact}</strong>
                       </TableCell>
-                      <TableCell align="center">{obj.SEED}</TableCell>
+                      <TableCell align="center"> <strong>{obj.SEED}</strong></TableCell>
 
                       <TableCell align="center">
                         {
@@ -380,7 +381,7 @@ function Doctors(props) {
                             }
                           >
                             {" "}
-                            View Patients
+                            Patients
                           </Button>
                         }
                       </TableCell>

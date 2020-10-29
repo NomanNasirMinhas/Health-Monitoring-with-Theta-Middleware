@@ -35,7 +35,8 @@ import FirstPageIcon from "@material-ui/icons/FirstPage";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
-
+import TextField from "@material-ui/core/TextField";
+import { Dialog, DialogContent, DialogTitle, Slide } from "@material-ui/core";
 const useStylesTable = makeStyles({
   table: {
     maxWidth: 700,
@@ -45,10 +46,10 @@ const useStylesTable = makeStyles({
   },
   cell: { color: "white" },
   hover: {
-    backgroundColor: "#2FC243",
+    backgroundColor: "#1B4F72", //   #2980B9 blue   dark#2471A3  button #1B4F72
     color: "white",
     "&:hover": {
-      backgroundColor: "#67D977 ",
+      backgroundColor: "#2980B9",
     },
   },
 });
@@ -67,7 +68,7 @@ const useStyles1 = makeStyles((theme) => ({
 
 const theme = createMuiTheme({
   primary: {
-    main: " #2980B9",  //   #2980B9 blue   dark#2471A3  button #1B4F72
+    main: " #2980B9", //   #2980B9 blue   dark#2471A3  button #1B4F72
   },
 });
 
@@ -101,9 +102,15 @@ function ViewPatient() {
   console.log(SEED);
   const [addresses, setAddresses] = useState(null);
   const [total, setTotal] = useState(0);
+  let [date, setdate] = React.useState("");
   const [page, setPage] = React.useState(0);
+  const [openDialogue, setopenDialogue] = React.useState(false);
+  let [historyAddress, sethistoryAddress] = React.useState("");
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [seeds, setSeeds] = useState([]);
+  let [Transactions, setTransactions] = React.useState("");
+  let [Show, setShow] = React.useState(false);
+  let [Name, setName] = React.useState("");
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -137,15 +144,27 @@ function ViewPatient() {
   }, []);
   console.log("ADDRESS", addresses);
 
-  async function getInfo(address) {
+  async function getInfo(address, name) {
     console.log("Address to find", address);
+    setName(name);
+
     const info = await fetch(
-      `https://thetamiddleware.herokuapp.com/getAddressInfo/${SEED}&${address}`
+      `https://thetamiddleware.herokuapp.com/getAllHash/${address}&${"29-10-2020"}`
     );
     const to_json = await info.json();
+
     console.log(to_json);
+    if (to_json != false) {
+      setTransactions(to_json);
+      setShow(true);
+      console.log("Transactions=", Transactions);
+    }
   }
 
+  function handleClose() {
+    console.log("date=", date);
+    setopenDialogue(false);
+  }
   function getDate(address) {}
   {
     /**
@@ -188,12 +207,95 @@ function ViewPatient() {
       </div>
     );
   }
+
+  /*  function showTransactions(){
+      return(
+        <Slide direction="up" in={true} timeout={800}>
+        <Paper elevation={2}
+          style={{
+            width: "40%",
+            height: "50%",
+            float: "center",
+            margin: "auto"}}>
+              
+              <TableBody>
+                
+         {Transactions.map((obj)=>(
+           <TableRow>
+             <TableCell>{obj}</TableCell>
+           </TableRow>
+
+         ))};
+              
+
+              </TableBody>
+            
+               </Paper>
+               <Button onClick={()=>{setShow(false)}}>Close</Button>
+        </Slide>         
+
+      );
+    }*/
+
+  if (Show) {
+    return (
+      //  <Slide direction="up" in={true} timeout={800}>
+      <ThemeProvider>
+        <Navbar />
+        <Grid container spacing={0}>
+          <Grid item xs={2}>
+          <Paper className={classes.paper}>
+            <Typography variant="h6" gutterBottom>
+              <strong> Total Transactions </strong>
+            </Typography>
+            <Typography variant="h4" style={{ color: "#2980B9" }}>
+              <strong>{(Transactions.length+1)}</strong>
+            </Typography>
+          </Paper>
+          </Grid>
+      <Grid item xs={1}></Grid>
+          <Grid item xs={6}>
+            <Paper elevation={2} className={classes.paper} style={{marginTop:"4%"}}>
+              <Typography
+                variant="h5"
+                style={{ backgroundColor: "#2980B9", color: "white" }}
+              >
+                Transactions for {Name}
+              </Typography>
+              <TableContainer className={classesTable.paper}>
+                <Table className={classesTable.table} aria-label="simple table">
+                  
+                  {Transactions.map((obj) => (
+                    <TableRow>
+                      <TableCell><strong>{obj}</strong></TableCell>
+                    </TableRow>
+                  ))}
+                  ;
+                </Table>
+              </TableContainer>
+            </Paper>
+          </Grid>
+          <Grid item xs={3}></Grid>
+        </Grid>
+        <Button
+          className={classesTable.hover}
+          color="inherit"
+          onClick={() => {
+            setShow(false);
+          }}
+        >
+          Close
+        </Button>
+      </ThemeProvider>
+    );
+  }
+
   return (
     <ThemeProvider>
       <Navbar />
 
-      <Grid container spacing={0} style={{marginTop:"1%"}}>
-        <Grid item xs={2} className={classes.side}>
+      <Grid container spacing={0}>
+        {/**  <Grid item xs={2} className={classes.side}>
           <Paper className={classes.paper}>
             <Typography variant="h3" gutterBottom>
               <strong> Patients </strong>
@@ -203,18 +305,18 @@ function ViewPatient() {
             </Typography>
           </Paper>
         </Grid>
-        <Grid item xs={1}></Grid>
+        <Grid item xs={1}></Grid> */}
         {/**ADD TABLE */}
-        <Grid xs={6}>
-          <Typography
-            variant="h2"
-            style={{ marginTop: "2%", color: "#B4B4B4", fontWeight: "bold" }}
-            gutterBottom
-          >
-            <strong> Patients </strong>
-          </Typography>
-
+        <Grid xs={9}>
           <Paper classNam e={classes.paper}>
+            <Typography
+              variant="h2"
+              style={{ marginTop: "2%", color: "#B4B4B4", fontWeight: "bold" }}
+              gutterBottom
+            >
+              <strong> Patients </strong>
+            </Typography>
+
             <TableContainer className={classesTable.paper}>
               <Table className={classesTable.table} aria-label="simple table">
                 <TableHead style={{ backgroundColor: "#2980B9" }}>
@@ -231,6 +333,9 @@ function ViewPatient() {
                     <TableCell className={classesTable.cell} align="center">
                       <strong>Contact</strong>
                     </TableCell>
+                    <TableCell className={classesTable.cell} align="center">
+                      <strong>Address</strong>
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -239,15 +344,16 @@ function ViewPatient() {
                       <TableCell
                         component="th"
                         scope="row"
-                        style={{ color: "green" }}
+                        //style={{ color: "green" }}
                       >
-                        {obj.Profile.name}
+                        <strong>{obj.Profile.name} </strong>
                       </TableCell>
                       <TableCell align="center">{obj.ID}</TableCell>
                       <TableCell align="center">{obj.Profile.age}</TableCell>
                       <TableCell align="center">
                         {obj.Profile.contact}
                       </TableCell>
+                      <TableCell align="center">{obj.ADDRESS}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -272,7 +378,8 @@ function ViewPatient() {
                       <Button
                         className={classesTable.hover}
                         color="inherit"
-                        onClick={() => getInfo(obj.ADDRESS)}
+                        /** onClick={()=>{setopenDialogue(true); sethistoryAddress(obj.ADDRESS)}} */
+                        onClick={() => getInfo(obj.ADDRESS, obj.Profile.name)}
                         startIcon={
                           <ListIcon
                             fontSize="small"
@@ -291,7 +398,43 @@ function ViewPatient() {
             </Table>
           </Paper>
         </Grid>
+
+        <Grid item xs={10}></Grid>
+
+        <Grid item xs={2} className={classes.side}>
+          <Paper className={classes.paper}>
+            <Typography variant="h3" gutterBottom>
+              <strong> Patients </strong>
+            </Typography>
+            <Typography variant="h4" style={{ color: "#2980B9" }}>
+              <strong>{total}</strong>
+            </Typography>
+          </Paper>
+        </Grid>
       </Grid>
+
+      <Dialog
+        fullWidth
+        maxWidth="sm"
+        open={openDialogue}
+        //onChange={()=>{}}
+        onClose={handleClose}
+      >
+        <DialogTitle>Select date</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Date"
+            type="date"
+            onChange={(date) => setdate(date)}
+            format="yyyy-MM-dd"
+            max="2020-10-30"
+            min="2017-05-11"
+            value={date}
+            defaultValue="2019-05-24"
+          ></TextField>
+          {/** <DatePicker  onChange={date => setdate(date)} />*/}
+        </DialogContent>
+      </Dialog>
     </ThemeProvider>
   );
 }
