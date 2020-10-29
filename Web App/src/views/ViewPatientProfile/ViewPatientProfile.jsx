@@ -250,7 +250,7 @@ const ViewPatientProfile = (props) => {
                           variant="h6"
                           className={classes.tileBottomText}
                         >
-                          {LastReading?.HR} BPM
+                          {LastReading?.HR} <small>BPM</small>
                         </Typography>
                       </Card>
 
@@ -265,7 +265,7 @@ const ViewPatientProfile = (props) => {
                           variant="h6"
                           className={classes.tileBottomText}
                         >
-                          {LastReading?.Temp} F
+                          {LastReading?.Temp} <small>F</small>
                         </Typography>
                       </Card>
 

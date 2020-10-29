@@ -226,9 +226,9 @@ export default function AddPatient() {
                       },
                       body: JSON.stringify({
                         seed: seed,
-                        deviceNum: 6,
+                        deviceNum: 2,
                         secLevel: 3,
-                        id: "IDalph6",
+                        id: "IDalph1",
                         password: "PASSWORD",
                         info: profile,
                       }),
