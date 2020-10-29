@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import Header from "./Header";
 import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom"
 import {
   Button,
   Typography,
@@ -9,12 +10,15 @@ import {
   FormControl,
   InputLabel,
   Input,
+  Slide,
   FormHelperText,
+  CircularProgress,
 } from "@material-ui/core";
 import EmailIcon from "@material-ui/icons/EmailSharp";
 import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import LockOpenRoundedIcon from "@material-ui/icons/LockOpenSharp";
+
 import {
   createMuiTheme,
   withStyles,
@@ -66,24 +70,26 @@ export const Form = () => {
   const [password, setPassword] = useState(null);
 
   const changePassword = (event) => {
- 
-      setPassword(event.target.value);
-    
+    setPassword(event.target.value);
   };
 
   const changeUsername = (event) => {
-  
-   setUsername(event.target.value); 
+    setUsername(event.target.value);
   };
   //routing history
   let history = useHistory();
-  
-  
-  
+
+  function showProgress(){
+    return(<CircularProgress color="secondary"/>)
+  }
+   
+  function forgotPassword(){
+    history.push("/resetpassword");
+  }
   // Login handler
   async function login() {
     //refs.btn.setAttribute("disabled","disbaled");
-    
+    showProgress();
     console.log("username =", username);
     console.log("password =", password);
     if (
@@ -98,62 +104,61 @@ export const Form = () => {
         buttons: false,
       });
     } else {
-      try{
-      const response = await fetch(
-        `https://thetamiddleware.herokuapp.com/adminLogin/${username}&${password}`
-      );
-      // console.log("response =",   response);
-      const fetched_data = await response.json();
-      console.log("data =", fetched_data);
-    
+      try {
+        const response = await fetch(
+          `https://thetamiddleware.herokuapp.com/adminLogin/${username}&${password}`
+        );
+        // console.log("response =",   response);
+        const fetched_data = await response.json();
+        console.log("data =", fetched_data);
 
-      if (fetched_data == true) {
-        const credentials = { username: username, password: password };
-        localStorage.setItem("credentials", JSON.stringify(credentials));
-        console.log(credentials);
-        //swal("Login!", "You clicked the button!", "success");
-        swal({
-          text: "Success!",
-          timer: 2000,
-          icon: "success",
-          buttons: false,
-        });
+        if (fetched_data == true) {
+          const credentials = { username: username, password: password };
+          localStorage.setItem("credentials", JSON.stringify(credentials));
+          console.log(credentials);
+          //swal("Login!", "You clicked the button!", "success");
+          swal({
+            text: "Success!",
+            timer: 2000,
+            icon: "success",
+            buttons: false,
+          });
 
-        history.push("/home");
-      } else {
-        //alert("Login Failed");
-        // setUsername(null);
-        // setPassword(null);
+          history.push("/home");
+        } else {
+          //alert("Login Failed");
+          // setUsername(null);
+          // setPassword(null);
+          swal({
+            text: " Invalid email and password",
+            timer: 2000,
+            icon: "error",
+            buttons: false,
+          });
+        }
+        //console.log(username);
+        //console.log(password);
+      } catch (e) {
         swal({
-          text: " Invalid email and password",
+          text: "No response from the server",
           timer: 2000,
           icon: "error",
           buttons: false,
         });
       }
-      //console.log(username);
-      //console.log(password);
-    }
-    catch(e){
-      swal({
-        text: "No response from the server",
-        timer: 2000,
-        icon: "error",
-        buttons: false,
-      });
-    
     }
   }
-  
+
+  function getPassword() {
+    return <div></div>;
   }
   return (
     //#757575
 
-    
     // <input   style={{padding:"10px"}} type="text" placeholder="Enter email"/>
     <ThemeProvider theme={theme}>
-    
       <div className={classes.root}>
+      <Slide direction="up" in={true} timeout={800}>
         <Paper
           elevation={2}
           style={{
@@ -183,10 +188,11 @@ export const Form = () => {
                   label="Email"
                   type="email"
                   variant="outlined"
+                  required
                   color="primary"
                   value={username}
                   onChange={changeUsername}
-                  required
+                 
                 />
               </div>
               <br />
@@ -210,7 +216,8 @@ export const Form = () => {
                 />
 
                 <br />
-                <a href="www.google.com">Forgot Password?</a>
+               {/** <Link onClick={forgotPassword}>Forgot Password?</Link> */}
+                
               </div>
               <br />
               <br />
@@ -219,7 +226,6 @@ export const Form = () => {
                 color="primary"
                 startIcon={<VpnKeyIcon fontSize="small" />}
                 onClick={login}
-                
               >
                 Login
               </Button>
@@ -227,6 +233,7 @@ export const Form = () => {
             </div>
           </form>
         </Paper>
+        </Slide>
       </div>
     </ThemeProvider>
   );

@@ -6,8 +6,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import ListIcon from '@material-ui/icons/List';
-
-import {
+import swal from "sweetalert";
+import DatePicker from "react-datepicker"
+;import {
   createMuiTheme,
   withStyles,
   ThemeProvider,
@@ -136,10 +137,33 @@ function ViewPatient() {
   }, []);
   console.log("ADDRESS", addresses);
 
-  useEffect(() => {
-    async function doctorData() {}
-    doctorData();
-  }, []);
+  
+  
+    async function getInfo(address) {
+       console.log("Address to find",address);
+      const info= await fetch(`https://thetamiddleware.herokuapp.com/getAddressInfo/${SEED}&${address}`);
+      const to_json = await info.json();
+      console.log(to_json);
+    }
+  
+    function getDate(address){}
+      {/**
+      const { value: date } =  swal({
+        title: 'Select Date',
+      
+        input : <DatePicker/>,
+        inputLabel: 'Your email address',
+        inputPlaceholder: 'Enter your email address'
+        
+      })
+       <div>
+       <DatePicker 
+       value={v}/></div>
+      getInfo(address,v);
+  
+    }
+    
+  */}
 
   if (addresses == null) {
     return (
@@ -152,6 +176,13 @@ function ViewPatient() {
     );
   }
 
+    if(addresses== false){
+      return(
+      <div>
+      <Navbar />
+      <Typography variant="h2" style={{color:"#B4B4B4" , margin: "auto"}}><strong >No Patient added </strong></Typography>
+      </div>)
+    }
   return (
     <ThemeProvider>
       <Navbar />
@@ -234,7 +265,7 @@ function ViewPatient() {
                       <Button
                             className={classesTable.hover}
                             color="inherit"
-                           // onClick={() => Patients(props, obj.SEED)}
+                            onClick={() => getInfo(obj.ADDRESS)}
                             startIcon={
                               <ListIcon
                                 fontSize="small"

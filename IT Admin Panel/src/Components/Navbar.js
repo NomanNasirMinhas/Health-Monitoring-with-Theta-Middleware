@@ -61,7 +61,8 @@ function Navbar() {
     <ThemeProvider theme={theme}>
       <AppBar
         position="static"
-        style={{ marginLeft: "0%", backgroundColor: "#0ea80e" }}
+        style={{ marginLeft: "0%", backgroundColor: "#2471A3" }} 
+        //   #2980B9 blue   dark#2471A3
       >
         <Toolbar>
           <Typography variant="h4" className={classes.title} style={{marginLeft:"0%"}}>

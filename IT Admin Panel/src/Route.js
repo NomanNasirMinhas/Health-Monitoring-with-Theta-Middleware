@@ -12,6 +12,7 @@ import {
   import Doctors from './Components/Doctors';
   import Add from './Components/Add';
   import ViewPatient from './Components/ViewPatient';
+  import ResetPassword from './Components/ResetPassword';
  
   //import Dashboard from './Components/Dashboard';
 
@@ -25,6 +26,7 @@ function RouteConfig() {
         {/* <NavBar/> */}
         <Switch>
           <Route exact path="/" component={Login}></Route>
+          <Route exact path="/resetpassword" component={ResetPassword}></Route>
           <Route exact path="/home" component={Homepage}></Route>
           <Route exact path="/configure" component={Configure}></Route>
           
