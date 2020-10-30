@@ -13,7 +13,7 @@ import LastPageIcon from '@material-ui/icons/LastPage';
 import { useHistory } from "react-router-dom";
 
 import Grid from "@material-ui/core/Grid";
-import {
+import {useTheme,
   Card,
   CardActions,
   CardContent,
@@ -29,10 +29,13 @@ import {
 
 //**** TABLE ******/
 import Table from "@material-ui/core/Table";
+import TableFooter from "@material-ui/core/TableFooter";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
+import TablePagination from "@material-ui/core/TablePagination";
+
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 //import SettingsIcon from "@material-ui/icons/Settings";
@@ -83,15 +86,18 @@ const useStylesTable = makeStyles({
   table: {
     maxWidth: "100%",
   },
-  cell: { color: "white" },
+  TableHead: {
+    cell: { color: "white" },
+    strong: { color: "white" },
+  },
   paper: {
     maxwidth: "100%",
   },
   hover: {
-    backgroundColor: "#2FC243",
+    backgroundColor: "#1B4F72", //   #2980B9 blue   dark#2471A3  button #1B4F72
     color: "white",
     "&:hover": {
-      backgroundColor: "#67D977 ",
+      backgroundColor: "#2980B9", //#3498DB
     },
   },
 });
@@ -101,7 +107,7 @@ const useStylesTable = makeStyles({
 
 function TablePaginationActions(props) {
   const classes = useStyles1();
-  //const theme = useTheme();
+  const theme = useTheme();
   const { count, page, rowsPerPage, onChangePage } = props;
 
   const handleFirstPageButtonClick = (event) => {
@@ -127,24 +133,36 @@ function TablePaginationActions(props) {
         disabled={page === 0}
         aria-label="first page"
       >
-        {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
+        {theme.direction === "rtl" ? <LastPageIcon /> : <FirstPageIcon />}
       </IconButton>
-      <IconButton onClick={handleBackButtonClick} disabled={page === 0} aria-label="previous page">
-        {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+      <IconButton
+        onClick={handleBackButtonClick}
+        disabled={page === 0}
+        aria-label="previous page"
+      >
+        {theme.direction === "rtl" ? (
+          <KeyboardArrowRight />
+        ) : (
+          <KeyboardArrowLeft />
+        )}
       </IconButton>
       <IconButton
         onClick={handleNextButtonClick}
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
         aria-label="next page"
       >
-        {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+        {theme.direction === "rtl" ? (
+          <KeyboardArrowLeft />
+        ) : (
+          <KeyboardArrowRight />
+        )}
       </IconButton>
       <IconButton
         onClick={handleLastPageButtonClick}
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
         aria-label="last page"
       >
-        {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
+        {theme.direction === "rtl" ? <FirstPageIcon /> : <LastPageIcon />}
       </IconButton>
     </div>
   );
@@ -164,8 +182,22 @@ function Homepage(props) {
   const classes = useStyles();
   const classesTable = useStylesTable();
   const [seeds, setSeeds] = useState(null);
+  const [patients, setAll]= React.useState('');
   const [arr, setArr] = useState(null);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [load, setLoad]=React.useState(false);
+  let all_add=[];
   let history = useHistory();
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   useEffect( ()=>{ 
    
@@ -194,6 +226,78 @@ function Homepage(props) {
      getData();
   },[]) 
 
+
+  //Get patitens
+
+  useEffect(() => {
+    async function getPatients() {
+      setLoad(false);
+      let s = []; //store seeds
+      let l = []; //store patient respectively
+      let n=[];   //store doctor name 
+      
+      if(seeds!=null){
+      {
+        seeds.map((obj) => {
+          s.push(obj.SEED);
+          n.push(obj.Profile.name);
+         
+        });
+      } }console.log("extract", s);
+      //let count = 0;
+      
+      let current = "";
+      let c_name= ""
+      for (var i = 0; i <= s.length; i++) {
+        current = s[i];
+        c_name=n[i]; //doctor name stored
+        const add = await fetch(
+          `https://thetamiddleware.herokuapp.com/getAllAddresses/${current}`
+        );
+        const js = await add.json();
+        if (js == false) {
+          continue;
+        } else {
+          
+          js.map((obj) => {
+            l.push(obj.ADDRESS); });
+            let one={ "seed": current,"addresses": l, "name": c_name }; //seed and its addresses
+          ///  l=[];
+         
+
+          //fetch patients singly
+          for(var j=0; j<=l.length; j++){
+            let doc=one.seed;
+            let p=l[j];
+            const fetch_add= await fetch(`https://thetamiddleware.herokuapp.com/getAddressInfo/${doc}&${p}`);
+
+            const JS_fetch= await fetch_add.json();
+            if(JS_fetch!= false){
+              const temp={"name": c_name, "data": JS_fetch};
+            all_add.push(temp);}
+          }
+
+        }
+        l=[];
+        console.log("ALL=", all_add);
+        
+     }
+     
+
+   /**     if (l.length != 0) {
+        settotalPatients(l.length + 1);
+      } */
+     //console.log("total=", l, "length=", l.length);
+
+      setAll(all_add);
+      console.log("new all=", patients)
+      setLoad(true);
+    }
+    getPatients();  
+  }, [seeds]);
+
+
+
   useEffect(() => {
     console.log("username=", seeds);
     if (seeds != null) {
@@ -219,7 +323,7 @@ function Homepage(props) {
     
   }
 
-  if (seeds === null) {
+  if (seeds === null || all_add==null || load==false  ) {
     return (
       <ThemeProvider>
         <Navbar />
@@ -252,6 +356,7 @@ function Homepage(props) {
     );
   }
 
+  if(load){
   return (
     <ThemeProvider>
       <Navbar />
@@ -259,15 +364,17 @@ function Homepage(props) {
         variant="h3"
         style={{ marginTop: "2%", color: "#B4B4B4", fontWeight: "bold" }}
       >
-        Doctors{" "}
+        All Patients{" "}
       </Typography>
 
       {/* TABLE START*/}
 
-      <Grid container spacing={1} style={{ alignSelf: "center" }}>
+      <Grid container spacing={1} style={{ flaot: "right" }}  >
         {/** <Grid item xs={0.5}></Grid> */}
 
-        <Paper
+        
+          <Grid item xs={12}>
+          <Paper
           elevation={5}
           style={{
             maxWidth: "100%",
@@ -277,7 +384,6 @@ function Homepage(props) {
             border: "solid grey 0.9px",
           }}
         >
-          <Grid item xs={12}>
             {/**   <Typography variant="h3" style={{backgroundColor:"#B4B4B4"}}> </Typography>
               <Typography
                 variant="h3"
@@ -291,7 +397,9 @@ function Homepage(props) {
               >
                 <b>Doctors</b>
               </Typography> */}
-            <TableContainer className={classesTable.paper}>
+
+
+         {/**     <TableContainer className={classesTable.paper}>
               <Table className={classesTable.table} aria-label="simple table">
                 <TableHead style={{ backgroundColor: "#0ea80e" }}>
                   <TableRow>
@@ -348,14 +456,109 @@ function Homepage(props) {
                   ))}
                 </TableBody>
               </Table>
+            </TableContainer>*/}
+
+<TableContainer className={classesTable.paper}>
+              <Table className={classesTable.table} aria-label="simple table">
+                <TableHead style={{ backgroundColor: "#2980B9" }}>
+                  <TableRow>
+                    <TableCell align="center">
+                      <strong style={{ color: "white" }}>Name</strong>
+                    </TableCell>
+                    <TableCell align="center">
+                      <strong style={{ color: "white" }}>Age</strong>
+                    </TableCell>
+                    <TableCell align="center">
+                      <strong style={{ color: "white" }}>Contact</strong>
+                    </TableCell>
+                    <TableCell align="center">
+                      <strong style={{ color: "white" }}>Gender</strong>
+                    </TableCell>
+
+                    <TableCell align="center">
+                      <strong style={{ color: "white" }}>Admitted on</strong>
+                    </TableCell>
+                    <TableCell align="center">
+                      <strong style={{ color: "white" }}>Doctor</strong>
+                    </TableCell>
+                    <TableCell align="center">
+                      <strong style={{ color: "white" }}>Address</strong>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {/*{(rowsPerPage > 0
+                    ? all_add.slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                    : all_add
+                  )*/}
+                  
+                 { patients.map((obj) => (
+                    <TableRow hover key={obj.data.Profile.name}>
+                      <TableCell component="th" scope="row">
+                        <strong> {obj.data.Profile.name} </strong>
+                      </TableCell>
+                      <TableCell align="center">
+                        <strong>{obj.data.Profile.age}</strong>
+                      </TableCell>
+                      <TableCell align="center">
+                        <strong> {obj.data.Profile.contact}</strong>
+                      </TableCell>
+                      <TableCell align="center">
+                        <strong> {obj.data.Profile.gender}</strong>
+                      </TableCell>
+                      <TableCell align="center">
+                        <strong> {obj.data.Profile.date}</strong>
+                      </TableCell>
+                      <TableCell align="center">
+                        <strong> {obj.name}</strong>
+                      </TableCell>
+                      <TableCell align="center">
+                        {" "}
+                        <strong>{obj.data.ADDRESS}</strong>
+                      </TableCell>
+
+                      
+                    </TableRow>
+                  ))}
+                </TableBody>
+                <TableFooter style={{ maxwidth: "100%" }}>
+                  <TableRow>
+                    <TablePagination
+                      rowsPerPageOptions={[
+                        5,
+                        10,
+                        25,
+                        { label: "All", value: -1 },
+                      ]}
+                      colSpan={12}
+                      count={patients.length}  
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      SelectProps={{
+                        inputProps: { "aria-label": "rows per page" },
+                        native: true,
+                      }}
+                      onChangePage={handleChangePage}
+                      onChangeRowsPerPage={handleChangeRowsPerPage}
+                      ActionsComponent={TablePaginationActions}
+                    />
+                  </TableRow>
+                </TableFooter>
+              </Table>
             </TableContainer>
+
+
+            </Paper>
           </Grid>
 
           {/**  <Grid item xs={0.5}></Grid>
         {/********************* */}
-        </Paper>
+       
       </Grid>
     </ThemeProvider>
-  );
+  )};
 }
 export default Homepage;

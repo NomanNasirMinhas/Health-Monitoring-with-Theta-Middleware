@@ -85,7 +85,7 @@ function Navbar() {
             onClick={Doctors}
           >
             {" "}
-            Attendance
+            Patients
           </Button>
 
           <Button

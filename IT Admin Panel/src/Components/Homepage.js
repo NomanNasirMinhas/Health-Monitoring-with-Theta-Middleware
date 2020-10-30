@@ -53,7 +53,7 @@ const rows = [
   { id: 4, name: "Kltamash", assigned_devices: 3 },
   { id: 5, name: "Dr. Lltamash", assigned_devices: 3 },
   { id: 6, name: "Dr. Vltamash", assigned_devices: 3 },
-  { id: 7, name: "Dr. Oltamash", assigned_devices: 3 },
+ 
 ];
 const useStylesTable = makeStyles({
   table: {
@@ -158,9 +158,8 @@ function Doctors(props) {
   const classesTable = useStylesTable();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [totalDoctors, settotalDoctors] = React.useState('');
+  const [totalDoctors, settotalDoctors] = React.useState("");
   const [totalPatients, settotalPatients] = React.useState(0);
-  
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -200,41 +199,44 @@ function Doctors(props) {
   useEffect(() => {
     async function getPatients() {
       let s = [];
-      let l=[]
+      let l = [];
       {
         /** let s=[]
       for(var i=0; i<= seeds.length ;i++){
         
       }  */
       }
-          {
-            seeds.map((obj) => {
-              s.push(obj.SEED);
-              console.log("extract",s);
-            });
-          }
-          let count=0;
-          let current='';
-          for(var i =0; i<=s.length; i++){
-            current= s[i];
-            const add= await fetch (
-              `https://thetamiddleware.herokuapp.com/getAllAddresses/${current}`
-            );
-            const js= await add.json();
-            if(js==false) {continue}
-            else
-            {
-              js.map((obj) => {l.push(obj.ADDRESS) });
-            }
-            
-          }
-          if(l.length!=0){settotalPatients((l.length+1))}
-          console.log("total=", l, "length=", l.length);
-          {}
+      {
+        seeds.map((obj) => {
+          s.push(obj.SEED);
+          console.log("extract", s);
+        });
+      }
+      let count = 0;
+      let current = "";
+      for (var i = 0; i <= s.length; i++) {
+        current = s[i];
+        const add = await fetch(
+          `https://thetamiddleware.herokuapp.com/getAllAddresses/${current}`
+        );
+        const js = await add.json();
+        if (js == false) {
+          continue;
+        } else {
+          js.map((obj) => {
+            l.push(obj.ADDRESS);
+          });
+        }
+      }
+      if (l.length != 0) {
+        settotalPatients(l.length);
+      }
+      console.log("total=", l, "length=", l.length);
+      {
+      }
     }
     getPatients();
-    
-  },[seeds]);
+  }, [seeds]);
 
   useEffect(() => {
     console.log("username=", seeds);
@@ -280,7 +282,7 @@ function Doctors(props) {
           {/**  <Grid item xs={0.5}></Grid> */}
         </Grid>
 
-        <Typography variant="h1">  Loading...</Typography>
+        <Typography variant="h1"> Loading...</Typography>
       </ThemeProvider>
     );
   }
@@ -323,12 +325,12 @@ function Doctors(props) {
                 <b>Doctors</b>
               </Typography>
 */}
+  
             <TableContainer className={classesTable.paper}>
               <Table className={classesTable.table} aria-label="simple table">
                 <TableHead style={{ backgroundColor: "#2980B9" }}>
                   <TableRow>
                     <TableCell align="center">
-                      
                       <strong style={{ color: "white" }}>Name</strong>
                     </TableCell>
                     <TableCell align="center">
@@ -356,15 +358,18 @@ function Doctors(props) {
                   ).map((obj) => (
                     <TableRow hover key={obj.name}>
                       <TableCell component="th" scope="row">
-                       <strong> {obj.ID} </strong>
+                        <strong> {obj.ID} </strong>
                       </TableCell>
                       <TableCell align="center">
-                       <strong>{obj.Profile.specialization}</strong>
+                        <strong>{obj.Profile.specialization}</strong>
                       </TableCell>
                       <TableCell align="center">
-                       <strong> {obj.Profile.contact}</strong>
+                        <strong> {obj.Profile.contact}</strong>
                       </TableCell>
-                      <TableCell align="center"> <strong>{obj.SEED}</strong></TableCell>
+                      <TableCell align="center">
+                        {" "}
+                        <strong>{obj.SEED}</strong>
+                      </TableCell>
 
                       <TableCell align="center">
                         {
@@ -398,7 +403,7 @@ function Doctors(props) {
                         { label: "All", value: -1 },
                       ]}
                       colSpan={12}
-                      count={rows.length}
+                      count={seeds.length}
                       rowsPerPage={rowsPerPage}
                       page={page}
                       SelectProps={{
@@ -417,8 +422,8 @@ function Doctors(props) {
         </Grid>
       </Grid>
 
-      <Grid container spacing={1} style={{marginTop:"1%"}}>
-        {/**  <Grid item xs={1}></Grid> */}     
+      <Grid container spacing={1} style={{ marginTop: "1%" }}>
+        {/**  <Grid item xs={1}></Grid> */}
         <Grid item xs={4}>
           <Paper
             elevation={5}
@@ -435,7 +440,7 @@ function Doctors(props) {
             </Typography>
           </Paper>
         </Grid>
-         {/**  <Grid item xs={1}></Grid> */}
+        {/**  <Grid item xs={1}></Grid> */}
 
         <Grid item xs={4}>
           <Paper
@@ -449,11 +454,14 @@ function Doctors(props) {
               Registered Patients{" "}
             </Typography>
             <Typography variant="h5">
-              <strong style={{ color: "white" }}> {totalPatients==0 ? "Fetching data...": totalPatients} </strong>
+              <strong style={{ color: "white" }}>
+                {" "}
+                {totalPatients == 0 ? "Fetching data..." : totalPatients}{" "}
+              </strong>
             </Typography>
           </Paper>
         </Grid>
-       {/**  <Grid item xs={1}></Grid> */}             
+        {/**  <Grid item xs={1}></Grid> */}
         <Grid item xs={4}>
           <Paper
             elevation={5}
@@ -469,8 +477,7 @@ function Doctors(props) {
               <strong style={{ color: "white" }}> -- </strong>
             </Typography>
           </Paper>
-        </Grid>  
-      
+        </Grid>
       </Grid>
     </ThemeProvider>
   );
