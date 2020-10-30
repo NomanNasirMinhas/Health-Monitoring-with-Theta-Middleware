@@ -332,7 +332,7 @@ function Homepage(props) {
           variant="h3"
           style={{ marginTop: "2%", color: "#B4B4B4", fontWeight: "bold" }}
         >
-          Doctors{" "}
+          All Patients{" "}
         </Typography>
 
         <Grid container spacing={1}>
