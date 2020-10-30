@@ -252,7 +252,7 @@ function Doctors(props) {
 
   //IF FETCHING DATA------>
 
-  if (seeds == null) {
+  if (seeds == false) {
     return (
       <ThemeProvider>
         <Navbar />

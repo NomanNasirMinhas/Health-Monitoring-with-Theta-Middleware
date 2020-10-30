@@ -154,14 +154,22 @@ function ViewPatient() {
     const to_json = await info.json();
 
     console.log(to_json);
-    if (to_json != false) {
-      setTransactions(to_json);
-      setShow(true);}
-      else{
-
+    // if transactions fetched
+    try {
+      if (to_json != false) {
+        setTransactions(to_json);
+        setShow(true);
+      } else {
+        // display SWEET ALERT
+        swal({
+          text: "No Transactions made",
+          timer: 4000,
+          icon: "error",
+          buttons: false,
+        });
       }
-      console.log("Transactions=", Transactions);
-    
+    } catch (e) {}
+    console.log("Transactions=", Transactions);
   }
 
   function handleClose() {
@@ -247,18 +255,22 @@ function ViewPatient() {
         <Navbar />
         <Grid container spacing={0}>
           <Grid item xs={2}>
-          <Paper className={classes.paper}>
-            <Typography variant="h6" gutterBottom>
-              <strong> Total Transactions </strong>
-            </Typography>
-            <Typography variant="h4" style={{ color: "#2980B9" }}>
-              <strong>{(Transactions.length+1)}</strong>
-            </Typography>
-          </Paper>
+            <Paper className={classes.paper}>
+              <Typography variant="h6" gutterBottom>
+                <strong> Total Transactions </strong>
+              </Typography>
+              <Typography variant="h4" style={{ color: "#2980B9" }}>
+                <strong>{Transactions.length + 1}</strong>
+              </Typography>
+            </Paper>
           </Grid>
-      <Grid item xs={1}></Grid>
+          <Grid item xs={1}></Grid>
           <Grid item xs={6}>
-            <Paper elevation={2} className={classes.paper} style={{marginTop:"4%"}}>
+            <Paper
+              elevation={2}
+              className={classes.paper}
+              style={{ marginTop: "4%" }}
+            >
               <Typography
                 variant="h5"
                 style={{ backgroundColor: "#2980B9", color: "white" }}
@@ -267,10 +279,11 @@ function ViewPatient() {
               </Typography>
               <TableContainer className={classesTable.paper}>
                 <Table className={classesTable.table} aria-label="simple table">
-                  
                   {Transactions.map((obj) => (
                     <TableRow>
-                      <TableCell><strong>{obj}</strong></TableCell>
+                      <TableCell>
+                        <strong>{obj}</strong>
+                      </TableCell>
                     </TableRow>
                   ))}
                   ;
