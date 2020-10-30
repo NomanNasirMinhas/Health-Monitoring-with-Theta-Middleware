@@ -30,8 +30,6 @@ import BP from "../../assets/icons/BP";
 import Frequency from "../../assets/icons/frequency";
 import { Link as link } from "react-router-dom";
 import { Bar } from "react-chartjs-2";
-import { max } from "moment";
-
 const useStyle = makeStyles(styles);
 
 const StyledTableCell = withStyles((theme) => ({
@@ -248,269 +246,280 @@ export default function HomePage() {
       ) : (
         <Slide direction="down" in={true} timeout={300}>
           <Grid container className={classes.content}>
-            <Grid container justify="space-between" spacing={4}>
-              <Grid item md={4} xs={12}>
-                <Card>
-                  <CardHeader color="warning" stats icon>
-                    <CardIcon color="danger">
-                      <Thermometer color="primary" />
-                    </CardIcon>
-                    <p className={Class.cardCategory}>Record Temperature</p>
-                    <h3 className={Class.cardTitle}>
-                      {maximumValues && maximumValues[0].value} <small>F</small>
-                    </h3>
-                  </CardHeader>
-                  <CardFooter stats>
-                    <div className={Class.stats}>
-                      {maximumValues && maximumValues[0].name}
-                    </div>
-                  </CardFooter>
-                </Card>
-              </Grid>
-              <Grid item md={4} xs={12}>
-                <Card>
-                  <CardHeader color="warning" stats icon>
-                    <CardIcon color="warning">
-                      <Frequency />
-                    </CardIcon>
-                    <p className={Class.cardCategory}>Record BPM</p>
-                    <h3 className={Class.cardTitle}>
-                      {maximumValues && maximumValues[2].value}{" "}
-                      <small>BPM</small>
-                    </h3>
-                  </CardHeader>
-                  <CardFooter stats>
-                    <div className={Class.stats}>
-                      {maximumValues && maximumValues[2].name}
-                    </div>
-                  </CardFooter>
-                </Card>
-              </Grid>
-              <Grid item md={4} xs={12}>
-                <Card>
-                  <CardHeader color="success" stats icon>
-                    <CardIcon color="success">
-                      <BP />
-                    </CardIcon>
-                    <p className={Class.cardCategory}>Record Blood Pressure</p>
-                    <h3 className={Class.cardTitle}>
-                      {maximumValues &&
-                        `${maximumValues[1].value.diastolic}/${maximumValues[1].value.sys}`}{" "}
-                      <small>mm/Hg</small>
-                    </h3>
-                  </CardHeader>
-                  <CardFooter stats>
-                    <div className={Class.stats}>{maximumValues[1].name}</div>
-                  </CardFooter>
-                </Card>
-              </Grid>
-            </Grid>
-            <Grid item>
-              <Typography variant="h5" color="secondary">
-                Recent Statistics
-              </Typography>
-            </Grid>
-            {/* ------------------------------------------------------------------------------------- */}
-            <Grid container justify="space-around" spacing={3}>
-              <Grid item md={4} xs={12}>
-                <Card chart>
-                  <CardHeader color="danger">
-                    <Thermometer />
-                    <Bar
-                      data={{
-                        labels: Response.map((rows) => {
-                          return rows.Profile.name;
-                        }),
-                        datasets: [
-                          {
-                            data: transactions.map((rows) => {
-                              return rows.Temp;
-                            }),
-                            backgroundColor: " rgba(255, 255, 255, 0.8)",
-                            borderColor: " rgba(255, 255, 255, 1)",
-                            borderWidth: 1,
-                            hoverBackgroundColor: "rgba(255, 255, 255, 1)",
-                            hoverBorderColor: "rgba(255, 255, 255, 1",
-                          },
-                        ],
-                      }}
-                      options={Options}
-                    />
-                  </CardHeader>
-                  <CardBody>
-                    <h4 className={Class.cardTitle}>Temperature</h4>
-                    {/* <p className={Class.cardCategory}>
-                      <span className={Class.successText}>55%</span> increase in
-                      today sales.
-                    </p> */}
-                  </CardBody>
-                  {/* <CardFooter chart>
-                    <div className={Class.stats}>updated 4 minutes ago</div>
-                  </CardFooter> */}
-                </Card>
-              </Grid>
-              <Grid item md={4} xs={12}>
-                <Card chart>
-                  <CardHeader color="warning">
-                    <Frequency />
-                    <Bar
-                      data={{
-                        labels: Response.map((rows) => {
-                          return rows.Profile.name;
-                        }),
-                        datasets: [
-                          {
-                            data: transactions.map((rows) => {
-                              return rows.HR;
-                            }),
-                            backgroundColor: " rgba(255, 255, 255, 0.8)",
-                            borderColor: " rgba(255, 255, 255, 1)",
-                            borderWidth: 1,
-                            hoverBackgroundColor: "rgba(255, 255, 255, 1)",
-                            hoverBorderColor: "rgba(255, 255, 255, 1",
-                          },
-                        ],
-                      }}
-                      options={Options}
-                    />
-                  </CardHeader>
-                  <CardBody>
-                    <h4 className={Class.cardTitle}>Beats Per Minute</h4>
-                    {/* <p className={Class.cardCategory}>
-                      <span className={Class.successText}>55%</span> increase in
-                      today sales.
-                    </p> */}
-                  </CardBody>
-                  {/* <CardFooter chart>
-                    <div className={Class.stats}>updated 4 minutes ago</div>
-                  </CardFooter> */}
-                </Card>
-              </Grid>
-              <Grid item md={4} xs={12}>
-                <Card chart>
-                  <CardHeader color="success">
-                    <BP />
-                    <Bar
-                      data={{
-                        labels: Response.map((rows) => {
-                          return rows.Profile.name;
-                        }),
-                        datasets: [
-                          {
-                            label: "Systolic",
-                            //systolic
-                            //diastolic
-                            data: transactions.map((rows) => {
-                              return rows.BP.systolic;
-                            }),
-                            backgroundColor: "rgba(88, 214, 141, 0.8)",
-                            borderColor: "rgba(88, 214, 141, 1)",
-                            borderWidth: 1,
-                            hoverBackgroundColor: "rgba(88, 214, 141, 1)",
-                            hoverBorderColor: "rgba(88, 214, 141, 1)",
-                          },
-                          {
-                            //systolic
-                            label: "Diastolic",
-                            data: transactions.map((rows) => {
-                              return rows.BP.diastolic;
-                            }),
-                            backgroundColor: " rgba(255, 255, 255, 0.8)",
-                            borderColor: " rgba(255, 255, 255, 1)",
-                            borderWidth: 1,
-                            hoverBackgroundColor: "rgba(255, 255, 255, 1)",
-                            hoverBorderColor: "rgba(255, 255, 255, 1)",
-                          },
-                        ],
-                      }}
-                      options={StackedOptions}
-                    />
-                  </CardHeader>
-                  <CardBody>
-                    <h4 className={Class.cardTitle}>Blood Pressure</h4>
-                    {/* <p className={Class.cardCategory}>
-                      <span className={Class.successText}>55%</span> increase in
-                      today sales.
-                    </p> */}
-                  </CardBody>
-                  {/* <CardFooter chart>
-                    <div className={Class.stats}>updated 4 minutes ago</div>
-                  </CardFooter> */}
-                </Card>
-              </Grid>
-            </Grid>
             {empty ? (
               <ErrorMessage />
             ) : (
-              <Slide direction="up" in={true} timeout={300}>
-                <Grid item xs={12}>
-                  <TableContainer className={classes.fonts} component={Paper}>
-                    <Table className={classes.table}>
-                      <TableHead>
-                        <TableRow>
-                          <StyledTableCell align="center">
-                            Patient's ID
-                          </StyledTableCell>
-                          <StyledTableCell align="center">Name</StyledTableCell>
-                          <StyledTableCell align="center">Age</StyledTableCell>
-                          <StyledTableCell align="center">
-                            Gender
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            Date of Admission
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            Contact
-                          </StyledTableCell>
-                          <StyledTableCell align="center">
-                            Action
-                          </StyledTableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {Response.map((row) => (
-                          <TableRow key={row.ID}>
-                            <StyledTableCell
-                              align="center"
-                              component="th"
-                              scope="row"
-                            >
-                              {row.ID}
+              <>
+                <Grid container justify="space-between" spacing={4}>
+                  <Grid item md={4} xs={12}>
+                    <Card>
+                      <CardHeader color="warning" stats icon>
+                        <CardIcon color="danger">
+                          <Thermometer color="primary" />
+                        </CardIcon>
+                        <p className={Class.cardCategory}>Record Temperature</p>
+                        <h3 className={Class.cardTitle}>
+                          {maximumValues && maximumValues[0].value}{" "}
+                          <small>F</small>
+                        </h3>
+                      </CardHeader>
+                      <CardFooter stats>
+                        <div className={Class.stats}>
+                          {maximumValues && maximumValues[0].name}
+                        </div>
+                      </CardFooter>
+                    </Card>
+                  </Grid>
+                  <Grid item md={4} xs={12}>
+                    <Card>
+                      <CardHeader color="warning" stats icon>
+                        <CardIcon color="warning">
+                          <Frequency />
+                        </CardIcon>
+                        <p className={Class.cardCategory}>Record BPM</p>
+                        <h3 className={Class.cardTitle}>
+                          {maximumValues && maximumValues[2].value}{" "}
+                          <small>BPM</small>
+                        </h3>
+                      </CardHeader>
+                      <CardFooter stats>
+                        <div className={Class.stats}>
+                          {maximumValues && maximumValues[2].name}
+                        </div>
+                      </CardFooter>
+                    </Card>
+                  </Grid>
+                  <Grid item md={4} xs={12}>
+                    <Card>
+                      <CardHeader color="success" stats icon>
+                        <CardIcon color="success">
+                          <BP />
+                        </CardIcon>
+                        <p className={Class.cardCategory}>
+                          Record Blood Pressure
+                        </p>
+                        <h3 className={Class.cardTitle}>
+                          {maximumValues &&
+                            `${maximumValues[1].value.diastolic}/${maximumValues[1].value.sys}`}{" "}
+                          <small>mm/Hg</small>
+                        </h3>
+                      </CardHeader>
+                      <CardFooter stats>
+                        <div className={Class.stats}>
+                          {maximumValues[1].name}
+                        </div>
+                      </CardFooter>
+                    </Card>
+                  </Grid>
+                </Grid>
+                <Grid item>
+                  <Typography variant="h5" color="secondary">
+                    Recent Statistics
+                  </Typography>
+                </Grid>
+                {/* ------------------------------------------------------------------------------------- */}
+                <Grid container justify="space-around" spacing={3}>
+                  <Grid item md={4} xs={12}>
+                    <Card chart>
+                      <CardHeader color="danger">
+                        <Thermometer />
+                        <Bar
+                          data={{
+                            labels: Response.map((rows) => {
+                              return rows.Profile.name;
+                            }),
+                            datasets: [
+                              {
+                                data: transactions.map((rows) => {
+                                  return rows.Temp;
+                                }),
+                                backgroundColor: " rgba(255, 255, 255, 0.8)",
+                                borderColor: " rgba(255, 255, 255, 1)",
+                                borderWidth: 1,
+                                hoverBackgroundColor: "rgba(255, 255, 255, 1)",
+                                hoverBorderColor: "rgba(255, 255, 255, 1",
+                              },
+                            ],
+                          }}
+                          options={Options}
+                        />
+                      </CardHeader>
+                      <CardBody>
+                        <h4 className={Class.cardTitle}>Temperature</h4>
+                        {/* <p className={Class.cardCategory}>
+                      <span className={Class.successText}>55%</span> increase in
+                      today sales.
+                    </p> */}
+                      </CardBody>
+                      {/* <CardFooter chart>
+                    <div className={Class.stats}>updated 4 minutes ago</div>
+                  </CardFooter> */}
+                    </Card>
+                  </Grid>
+                  <Grid item md={4} xs={12}>
+                    <Card chart>
+                      <CardHeader color="warning">
+                        <Frequency />
+                        <Bar
+                          data={{
+                            labels: Response.map((rows) => {
+                              return rows.Profile.name;
+                            }),
+                            datasets: [
+                              {
+                                data: transactions.map((rows) => {
+                                  return rows.HR;
+                                }),
+                                backgroundColor: " rgba(255, 255, 255, 0.8)",
+                                borderColor: " rgba(255, 255, 255, 1)",
+                                borderWidth: 1,
+                                hoverBackgroundColor: "rgba(255, 255, 255, 1)",
+                                hoverBorderColor: "rgba(255, 255, 255, 1",
+                              },
+                            ],
+                          }}
+                          options={Options}
+                        />
+                      </CardHeader>
+                      <CardBody>
+                        <h4 className={Class.cardTitle}>Beats Per Minute</h4>
+                        {/* <p className={Class.cardCategory}>
+                      <span className={Class.successText}>55%</span> increase in
+                      today sales.
+                    </p> */}
+                      </CardBody>
+                      {/* <CardFooter chart>
+                    <div className={Class.stats}>updated 4 minutes ago</div>
+                  </CardFooter> */}
+                    </Card>
+                  </Grid>
+                  <Grid item md={4} xs={12}>
+                    <Card chart>
+                      <CardHeader color="success">
+                        <BP />
+                        <Bar
+                          data={{
+                            labels: Response.map((rows) => {
+                              return rows.Profile.name;
+                            }),
+                            datasets: [
+                              {
+                                label: "Systolic",
+                                //systolic
+                                //diastolic
+                                data: transactions.map((rows) => {
+                                  return rows.BP.systolic;
+                                }),
+                                backgroundColor: "rgba(88, 214, 141, 0.8)",
+                                borderColor: "rgba(88, 214, 141, 1)",
+                                borderWidth: 1,
+                                hoverBackgroundColor: "rgba(88, 214, 141, 1)",
+                                hoverBorderColor: "rgba(88, 214, 141, 1)",
+                              },
+                              {
+                                //systolic
+                                label: "Diastolic",
+                                data: transactions.map((rows) => {
+                                  return rows.BP.diastolic;
+                                }),
+                                backgroundColor: " rgba(255, 255, 255, 0.8)",
+                                borderColor: " rgba(255, 255, 255, 1)",
+                                borderWidth: 1,
+                                hoverBackgroundColor: "rgba(255, 255, 255, 1)",
+                                hoverBorderColor: "rgba(255, 255, 255, 1)",
+                              },
+                            ],
+                          }}
+                          options={StackedOptions}
+                        />
+                      </CardHeader>
+                      <CardBody>
+                        <h4 className={Class.cardTitle}>Blood Pressure</h4>
+                        {/* <p className={Class.cardCategory}>
+                      <span className={Class.successText}>55%</span> increase in
+                      today sales.
+                    </p> */}
+                      </CardBody>
+                      {/* <CardFooter chart>
+                    <div className={Class.stats}>updated 4 minutes ago</div>
+                  </CardFooter> */}
+                    </Card>
+                  </Grid>
+                </Grid>
+                <Slide direction="up" in={true} timeout={300}>
+                  <Grid item xs={12}>
+                    <TableContainer className={classes.fonts} component={Paper}>
+                      <Table className={classes.table}>
+                        <TableHead>
+                          <TableRow>
+                            <StyledTableCell align="center">
+                              Patient's ID
                             </StyledTableCell>
                             <StyledTableCell align="center">
-                              {row.Profile.name}
+                              Name
                             </StyledTableCell>
                             <StyledTableCell align="center">
-                              {row.Profile.age}
+                              Age
                             </StyledTableCell>
                             <StyledTableCell align="center">
-                              {row.Profile.gender}
+                              Gender
                             </StyledTableCell>
                             <StyledTableCell align="center">
-                              {row.Profile.date}
+                              Date of Admission
                             </StyledTableCell>
                             <StyledTableCell align="center">
-                              {row.Profile.contact}
+                              Contact
                             </StyledTableCell>
                             <StyledTableCell align="center">
-                              <Button
-                                component={link}
-                                color="secondary"
-                                disableElevation
-                                variant="outlined"
-                                to={`/viewpatientprofile/${row.ADDRESS}`}
-                                startIcon={<VisibilityIcon />}
-                              >
-                                View Profile
-                              </Button>
+                              Action
                             </StyledTableCell>
                           </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </Grid>
-              </Slide>
+                        </TableHead>
+                        <TableBody>
+                          {Response.map((row) => (
+                            <TableRow key={row.ID}>
+                              <StyledTableCell
+                                align="center"
+                                component="th"
+                                scope="row"
+                              >
+                                {row.ID}
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                {row.Profile.name}
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                {row.Profile.age}
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                {row.Profile.gender}
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                {row.Profile.date}
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                {row.Profile.contact}
+                              </StyledTableCell>
+                              <StyledTableCell align="center">
+                                <Button
+                                  component={link}
+                                  color="secondary"
+                                  disableElevation
+                                  variant="outlined"
+                                  to={`/viewpatientprofile/${row.ADDRESS}`}
+                                  startIcon={<VisibilityIcon />}
+                                >
+                                  View Profile
+                                </Button>
+                              </StyledTableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </Grid>
+                </Slide>
+              </>
             )}
           </Grid>
         </Slide>
