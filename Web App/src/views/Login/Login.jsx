@@ -124,7 +124,7 @@ const Login = (props) => {
                                             />
                                             <TextField
                                                 variant="outlined"
-                                                // type="password"
+                                                type="password"
                                                 margin="normal"
                                                 disabled={isSubmitting}
                                                 fullWidth

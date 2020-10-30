@@ -100,9 +100,17 @@ const AddPatientSchema = Yup.object().shape({
     .min(2, "Too Short!")
     .max(20, "Too Long!")
     .required("Required"),
+  Username: Yup.string()
+    .min(2, "Too Short!")
+    .max(20, "Too Long!")
+    .required("Required"),
   Age: Yup.number()
     .positive("Age is invalid")
     .max(150, "Too Long!")
+    .required("Required"),
+  PatientNumber: Yup.number()
+    .positive("Patient number is invalid")
+    .max(20, "Too Long!")
     .required("Required"),
   Gender: Yup.string().required("Please specify your gender"),
   Address: Yup.string().required("Please state your address"),
@@ -200,6 +208,8 @@ export default function AddPatient() {
             <div className={classes.paper}>
               <Formik
                 initialValues={{
+                  Username: "",
+                  PatientNumber: "",
                   Name: "",
                   Age: "",
                   Gender: "",
@@ -226,9 +236,9 @@ export default function AddPatient() {
                       },
                       body: JSON.stringify({
                         seed: seed,
-                        deviceNum: 2,
+                        deviceNum: values.PatientNumber,
                         secLevel: 3,
-                        id: "IDalph1",
+                        id: values.Username,
                         password: "PASSWORD",
                         info: profile,
                       }),
@@ -264,19 +274,56 @@ export default function AddPatient() {
                 }) => (
                   <Form onSubmit={handleSubmit}>
                     <Grid container spacing={3}>
-                      <Grid item xs={12}>
+                      <Grid item xs={12} sm={6}>
                         <CssTextField
                           disabled={isSubmitting}
                           autoComplete="off"
                           variant="outlined"
                           fullWidth
                           id="Name"
-                          label="Name"
+                          label="Full Name"
                           value={values.Name}
                           onChange={handleChange}
                           onBlur={handleBlur}
                           helperText={touched.Name ? errors.Name : ""}
                           error={touched.Name && Boolean(errors.Name)}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <CssTextField
+                          disabled={isSubmitting}
+                          variant="outlined"
+                          fullWidth
+                          type="number"
+                          id="PatientNumber"
+                          label="Patient Number"
+                          color="secondary"
+                          value={values.PatientNumber}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          helperText={
+                            touched.PatientNumber ? errors.PatientNumber : ""
+                          }
+                          error={
+                            touched.PatientNumber &&
+                            Boolean(errors.PatientNumber)
+                          }
+                          autoComplete="off"
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <CssTextField
+                          disabled={isSubmitting}
+                          autoComplete="off"
+                          variant="outlined"
+                          fullWidth
+                          id="Username"
+                          label="User Name"
+                          value={values.Username}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          helperText={touched.Username ? errors.Username : ""}
+                          error={touched.Username && Boolean(errors.Username)}
                         />
                       </Grid>
                       <Grid item xs={12} sm={6}>

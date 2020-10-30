@@ -30,6 +30,7 @@ import BP from "../../assets/icons/BP";
 import Frequency from "../../assets/icons/frequency";
 import { Link as link } from "react-router-dom";
 import { Bar } from "react-chartjs-2";
+import { max } from "moment";
 
 const useStyle = makeStyles(styles);
 
@@ -88,7 +89,7 @@ const Options = {
         },
         ticks: {
           fontColor: "#FFFFFF",
-          beginAtZero: true
+          beginAtZero: true,
         },
       },
     ],
@@ -139,6 +140,7 @@ export default function HomePage() {
   const [visible, setVisible] = React.useState(true);
   const [empty, SetEmpty] = React.useState(false);
   const [transactions, SetTransactions] = React.useState("");
+  const [maximumValues, SetMaximumValues] = React.useState([]);
   const classes = useStyles();
   const Class = useStyle();
 
@@ -167,9 +169,53 @@ export default function HomePage() {
       //transaction.push({name: tx.name, value: tx.value})
     }
     //[{name: "Fatima Umar", temp: '100'},{name: "Noman", bp: "120/80"},{name: 'Usman', bpm: "80"}]
-
     return transaction;
   };
+
+  const maxValues = (props) => {
+    //[ {name: "Fatima Umar", Temp: '100', BP: {sys: '100', dia:'80'}, Temp: '100'},
+    //  {name: "Fatima Umar", Temp: '100', BP: {sys: '100', dia:'80'}, Temp: '100'},
+    //  {name: "Fatima Umar", Temp: '100', BP: {sys: '100', dia:'80'}, Temp: '100'},
+    //]
+    let maxTemp = 0,
+      maxBPM = 0;
+    let maxBP = {
+      systolic: 0,
+      diastolic: 0,
+    };
+    let maxTemp_Name, maxBP_Name, maxBPM_Name;
+    for (var i = 0; i < props.length; i++) {
+      var prop = props[i];
+      if (prop.Temp > maxTemp) {
+        maxTemp = prop.Temp;
+        maxTemp_Name = prop.name;
+      }
+      if (prop.HR > maxBPM) {
+        maxBPM = prop.HR;
+        maxBPM_Name = prop.name;
+      }
+      if (
+        prop.BP.systolic > maxBP.systolic &&
+        prop.BP.diastolic > maxBP.diastolic
+      ) {
+        maxBP.systolic = prop.BP.systolic;
+        maxBP.diastolic = prop.BP.diastolic;
+        maxBP_Name = prop.name;
+      }
+    }
+
+    const x = [
+      { name: maxTemp_Name, value: maxTemp },
+      {
+        name: maxBP_Name,
+        value: { sys: maxBP.systolic, diastolic: maxBP.diastolic },
+      },
+      { name: maxBPM_Name, value: maxBPM },
+    ];
+    console.log(x);
+    return x;
+  };
+
   useEffect(() => {
     async function getPatient() {
       var seed = localStorage.getItem("seed") || "";
@@ -181,8 +227,9 @@ export default function HomePage() {
         SetEmpty(true);
       } else {
         SetResponse(obj);
-        console.log(await LastTransaction(obj));
-        SetTransactions(await LastTransaction(obj));
+        const x = await LastTransaction(obj);
+        SetTransactions(x);
+        SetMaximumValues(maxValues(x));
       }
       setVisible(false);
     }
@@ -210,11 +257,13 @@ export default function HomePage() {
                     </CardIcon>
                     <p className={Class.cardCategory}>Record Temperature</p>
                     <h3 className={Class.cardTitle}>
-                      100 <small>F</small>
+                      {maximumValues && maximumValues[0].value} <small>F</small>
                     </h3>
                   </CardHeader>
                   <CardFooter stats>
-                    <div className={Class.stats}>Fatima Umar</div>
+                    <div className={Class.stats}>
+                      {maximumValues && maximumValues[0].name}
+                    </div>
                   </CardFooter>
                 </Card>
               </Grid>
@@ -226,11 +275,14 @@ export default function HomePage() {
                     </CardIcon>
                     <p className={Class.cardCategory}>Record BPM</p>
                     <h3 className={Class.cardTitle}>
-                      49/50 <small>GB</small>
+                      {maximumValues && maximumValues[2].value}{" "}
+                      <small>BPM</small>
                     </h3>
                   </CardHeader>
                   <CardFooter stats>
-                    <div className={Class.stats}>Fatima Umar</div>
+                    <div className={Class.stats}>
+                      {maximumValues && maximumValues[2].name}
+                    </div>
                   </CardFooter>
                 </Card>
               </Grid>
@@ -242,11 +294,13 @@ export default function HomePage() {
                     </CardIcon>
                     <p className={Class.cardCategory}>Record Blood Pressure</p>
                     <h3 className={Class.cardTitle}>
-                      49/50 <small>GB</small>
+                      {maximumValues &&
+                        `${maximumValues[1].value.diastolic}/${maximumValues[1].value.sys}`}{" "}
+                      <small>mm/Hg</small>
                     </h3>
                   </CardHeader>
                   <CardFooter stats>
-                    <div className={Class.stats}>Fatima Umar</div>
+                    <div className={Class.stats}>{maximumValues[1].name}</div>
                   </CardFooter>
                 </Card>
               </Grid>
@@ -290,9 +344,9 @@ export default function HomePage() {
                       today sales.
                     </p> */}
                   </CardBody>
-                  <CardFooter chart>
+                  {/* <CardFooter chart>
                     <div className={Class.stats}>updated 4 minutes ago</div>
-                  </CardFooter>
+                  </CardFooter> */}
                 </Card>
               </Grid>
               <Grid item md={4} xs={12}>
@@ -327,9 +381,9 @@ export default function HomePage() {
                       today sales.
                     </p> */}
                   </CardBody>
-                  <CardFooter chart>
+                  {/* <CardFooter chart>
                     <div className={Class.stats}>updated 4 minutes ago</div>
-                  </CardFooter>
+                  </CardFooter> */}
                 </Card>
               </Grid>
               <Grid item md={4} xs={12}>
@@ -358,7 +412,7 @@ export default function HomePage() {
                           {
                             //systolic
                             label: "Diastolic",
-                            data:transactions.map((rows) => {
+                            data: transactions.map((rows) => {
                               return rows.BP.diastolic;
                             }),
                             backgroundColor: " rgba(255, 255, 255, 0.8)",
@@ -379,20 +433,12 @@ export default function HomePage() {
                       today sales.
                     </p> */}
                   </CardBody>
-                  <CardFooter chart>
+                  {/* <CardFooter chart>
                     <div className={Class.stats}>updated 4 minutes ago</div>
-                  </CardFooter>
+                  </CardFooter> */}
                 </Card>
               </Grid>
             </Grid>
-            {/* <Typography
-              variant="h2"
-              align="center"
-              color="secondary"
-              className={classes.titletext}
-            >
-              Current Patients
-            </Typography> */}
             {empty ? (
               <ErrorMessage />
             ) : (
