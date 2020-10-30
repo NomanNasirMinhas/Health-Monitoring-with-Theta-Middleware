@@ -195,7 +195,7 @@ function Add() {
    },[addresses])
  
 
-
+/**
   if (seeds===null){
     return (
       <ThemeProvider>
@@ -240,14 +240,22 @@ function Add() {
     )};
   
 
-
+ */
 
 
 
   return (
     <ThemeProvider>
-      <Navbar />
+    
 
+      <div>
+        <Navbar />
+        <Typography variant="h1" style={{ color: "#B4B4B4", margin: "auto" , marginTop:"10%"}}>
+          <strong>Not Available Yet..</strong>
+        </Typography>
+      </div>
+
+{/**
       <Grid container spacing={1}>
         <Grid item xs={3}></Grid>
         <Grid item xs={6} style={{ flaot: "right" }}>
@@ -352,7 +360,7 @@ function Add() {
         </Grid>
 
         <Grid item xs={3}></Grid>
-      </Grid>
+      </Grid> */}
     </ThemeProvider>
   );
 }

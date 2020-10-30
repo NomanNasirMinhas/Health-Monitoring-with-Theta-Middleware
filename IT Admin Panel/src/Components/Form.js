@@ -135,6 +135,8 @@ export const Form = () => {
             icon: "error",
             buttons: false,
           });
+          setUsername('');
+          setPassword('');
         }
         //console.log(username);
         //console.log(password);

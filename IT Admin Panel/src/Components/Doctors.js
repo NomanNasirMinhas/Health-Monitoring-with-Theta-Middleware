@@ -246,8 +246,8 @@ function Homepage(props) {
       } }console.log("extract", s);
       //let count = 0;
       
-      let current = "";
-      let c_name= ""
+      let current = ""; // current doctor
+      let c_name= ""  ;  // doctor's name
       for (var i = 0; i <= s.length; i++) {
         current = s[i];
         c_name=n[i]; //doctor name stored
@@ -257,7 +257,8 @@ function Homepage(props) {
         const js = await add.json();
         if (js == false) {
           continue;
-        } else {
+        } 
+        else {
           
           js.map((obj) => {
             l.push(obj.ADDRESS); });
@@ -466,6 +467,9 @@ function Homepage(props) {
                       <strong style={{ color: "white" }}>Name</strong>
                     </TableCell>
                     <TableCell align="center">
+                      <strong style={{ color: "white" }}>Patient ID</strong>
+                    </TableCell>
+                    <TableCell align="center">
                       <strong style={{ color: "white" }}>Age</strong>
                     </TableCell>
                     <TableCell align="center">
@@ -499,6 +503,9 @@ function Homepage(props) {
                     <TableRow hover key={obj.data.Profile.name}>
                       <TableCell component="th" scope="row">
                         <strong> {obj.data.Profile.name} </strong>
+                      </TableCell>
+                      <TableCell align="center">
+                        <strong>{obj.data.ID}</strong>
                       </TableCell>
                       <TableCell align="center">
                         <strong>{obj.data.Profile.age}</strong>
