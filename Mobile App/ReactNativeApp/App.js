@@ -135,13 +135,6 @@ function App() {
             alignItems: 'center',
             justifyContent: 'center'
           },
-          headerRight: () => (
-            <Button
-              onPress={() => alert('This is a button!')}
-              title="Logout"
-              color="#fff"
-            />
-          ),
         }} />
 
 <Stack.Screen
@@ -162,13 +155,6 @@ function App() {
             alignItems: 'center',
             justifyContent: 'center'
           },
-          headerRight: () => (
-            <Button
-              onPress={() => alert('This is a button!')}
-              title="Logout"
-              color="#fff"
-            />
-          ),
         }} />
 
       </Stack.Navigator>

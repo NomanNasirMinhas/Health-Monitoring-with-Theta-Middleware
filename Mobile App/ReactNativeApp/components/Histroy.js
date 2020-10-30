@@ -4,17 +4,11 @@ import { Table, Row, Rows } from 'react-native-table-component';
 import { ScrollView } from 'react-native-gesture-handler';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { Card, ListItem, Button, Icon } from "react-native-elements";
+import { DataTable } from 'react-native-paper';
 import { AppLoading } from 'expo';
 import { Dimensions } from "react-native";
 import { useFonts } from 'expo-font';
-import {
-  LineChart,
-  BarChart,
-  PieChart,
-  ProgressChart,
-  ContributionGraph,
-  StackedBarChart,
-} from "react-native-chart-kit";
+import { LineChart } from "react-native-chart-kit";
 
 //this.state = {
 
@@ -69,10 +63,10 @@ export default function Readings({route, navigation}) {
     var val = txInfo[i]
     var row=[]
       row.push(val.TimeStamp.toString());
-      row.push(val.HR.toString());
-      row.push(val.Temp.toString());
-      row.push(val.BP.systolic.toString());
-      row.push(val.BP.diastolic.toString());
+      row.push(val.HR);
+      row.push(val.Temp);
+      row.push(val.BP.systolic);
+      row.push(val.BP.diastolic);
       tempData.push(val.Temp)
       hrData.push(val.HR)
       systData.push(val.BP.systolic)
@@ -86,7 +80,7 @@ export default function Readings({route, navigation}) {
     setDiastArray(diastData)
     setTableState(tableData)
     setFinished(true)
-    // Alert.alert(JSON.stringify(tableData))
+    console.log(tableData)
       }
       catch(e){
         setFinished(true)
@@ -276,6 +270,7 @@ export default function Readings({route, navigation}) {
               Your Readings are shown below
             </Text>
             </Card.Title>
+
       <Table  style={styles.tableStyle} borderStyle={{borderWidth: 2, borderColor: 'white'}}>
         <Row data={tableHead} style={styles.head} textStyle={styles.headerText}/>
         <Rows data={tableState} textStyle={styles.text}/>

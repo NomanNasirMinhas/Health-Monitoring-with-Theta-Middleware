@@ -41,7 +41,7 @@ export default function Profile({ route, navigation }) {
   const [patientAddress, setPatientAddress] = useState("Loading....");
   const [patientDeviceID, setPatientDeviceID] = useState("Loading....");
   const [hasLastTx, setHasLastTx] = useState(false);
-  const [lastTx, setLastTx] = useState([0, 0, 0, 0,0]);
+  const [lastTx, setLastTx] = useState([0, 0, 0, 0]);
   var [finished, setFinished] = useState(false);
   var maxWidth = Dimensions.get("window").width;
 
@@ -76,7 +76,7 @@ export default function Profile({ route, navigation }) {
           setPatientTemp(resObjTx.Temp.toString());
           setPatientBPsys(resObjTx.BP.systolic.toString());
           setPatientBPdiast(resObjTx.BP.diastolic.toString());
-          setLastTx([resObjTx.HR, resObjTx.Temp, resObjTx.BP.systolic,resObjTx.BP.diastolic, 0]);
+          setLastTx([resObjTx.HR, resObjTx.Temp, resObjTx.BP.systolic,resObjTx.BP.diastolic]);
           setHasLastTx(true);
           setFinished(true);
         }
@@ -203,7 +203,7 @@ export default function Profile({ route, navigation }) {
 
             <BarChart
               data={{
-                labels: ["Temp (F)", "HR (BPM)", "BP-Syst", "BP-Diast",""],
+                labels: ["Temp (F)", "HR (BPM)", "BP-Syst", "BP-Diast"],
                 datasets: [
                   {
                     data: lastTx,
@@ -212,6 +212,7 @@ export default function Profile({ route, navigation }) {
               }}
               width={maxWidth} // from react-native
               height={250}
+              fromZero={true}
               yAxisInterval={1} // optional, defaults to 1
               chartConfig={{
                 backgroundColor: "#103952",
