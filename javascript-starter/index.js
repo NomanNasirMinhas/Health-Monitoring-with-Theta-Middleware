@@ -76,8 +76,8 @@ async function sendData() {
   }
 
   async function sendDataWithAPI() {
-    testSeed =process.env.testSeed;
-    testAddress =process.env.testAddress;
+    var testSeed =process.env.testSeed;
+    var testAddress =process.env.testAddress;
     console.log(testSeed)
     console.log(testAddress)
       var count=0;
@@ -95,11 +95,11 @@ async function sendData() {
           }
         }
 
-        fetch("https://thetamiddleware.herokuapp.com/sendTx", {
+        await fetch("https://thetamiddleware.herokuapp.com/sendTx", {
           method: "POST",
           body: JSON.stringify({
-              seed: "foo",
-              address: "bar",
+              seed: testSeed,
+              address: testAddress,
               txType:"reading",
               Data: readings
           }),
@@ -107,8 +107,6 @@ async function sendData() {
         "Content-type": "application/json; charset=UTF-8"
     }
 })
-.then(response => response.json())
-.then(json => console.log(json));
 
       }
 
