@@ -63,7 +63,7 @@ async function getSeed(id, pass) {
     else
     return [true, result];
   } catch (err) {
-    return err;
+    return false;
   }
 }
 
@@ -143,7 +143,7 @@ async function generateAddressLocally(
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function sendPublicTransaction(seed, address, message) {
+async function sendPublicTransaction(seed, address, message, type) {
   const Iota = require("@iota/core");
   const Converter = require("@iota/converter");
 
@@ -169,7 +169,7 @@ async function sendPublicTransaction(seed, address, message) {
       return iota.sendTrytes(trytes, depth, minimumWeightMagnitude);
     })
     .then((bundle) => {
-      addTransaction( address, bundle[0].hash);
+      addTransaction( address, bundle[0].hash, type);
     })
     .catch((err) => {
       console.error(err);
@@ -191,7 +191,7 @@ async function getSingleHash(address, time) {
     var result = await dbo.collection(address).findOne({ timestamp: time });
     return result.txHash;
   } catch (err) {
-    return err;
+    return false;
   }
 }
 
@@ -201,14 +201,14 @@ async function getSingleHash(address, time) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function getAllHash(address, txDate) {
+async function getAllHash(address, txDate, type) {
   var transactionArray = [];
   try {
     var db = await MongoClient.connect(uri);
     var dbo = await db.db("thetamw1");
     var info = await dbo
       .collection(address)
-      .find({ date: txDate }, { projection: { _id: 1 } })
+      .find({ $and: [{date: txDate}, {txType:type}] }, { projection: { _id: 1 } })
       .toArray();
     var i;
     for (i = 0; i < info.length; i++) {
@@ -216,7 +216,7 @@ async function getAllHash(address, txDate) {
     }
     return transactionArray;
   } catch (err) {
-    return err;
+    return false;
   }
 }
 
@@ -242,7 +242,7 @@ async function getSeedInfo(seed)
     }
     return (response);
   } catch (err) {
-    return err;
+    return false;
   }
 
 }
@@ -265,7 +265,7 @@ async function addSeed( id, password, info, seed) {
     await dbo.collection("SEEDS").insertOne(myobj);
     return true;
   } catch (err) {
-    return err;
+    return false;
   }
 }
 
@@ -292,7 +292,7 @@ async function addAddress( id, pass, seed, info, finalAddress) {
     await dbo.collection(seed).insertOne(myobj);
     return true;
   } catch (err) {
-    return err;
+    return false;
   }
 }
 
@@ -302,7 +302,7 @@ async function addAddress( id, pass, seed, info, finalAddress) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function addTransaction( address, hash) {
+async function addTransaction( address, hash, type) {
   try {
     // console.log("Uri is ", uri)
     var db = await MongoClient.connect(uri);
@@ -312,18 +312,19 @@ async function addTransaction( address, hash) {
       date: getDate(),
       timestamp: timestamp(),
       ADDRESS: address,
+      txType:type,
       txHash: hash,
-      isLatest: true
+      isLatest: true,
     };
 
-    var myquery = { isLatest: true };
+    var myquery = {$and: [{ isLatest: true}, {txType:type }]};
     var newvalues = { $set: { isLatest: false } };
     await dbo.collection(address).updateOne(myquery, newvalues);
 
     await dbo.collection(address).insertOne(myobj);
     return true;
   } catch (err) {
-    return err;
+    return false;
   }
 }
 
@@ -344,7 +345,7 @@ async function updateAddressProfile( seed, address, info) {
 
     return true;
   } catch (err) {
-    return err;
+    return false;
   }
 }
 
@@ -366,7 +367,7 @@ async function getAddress( seed, id, pass) {
    console.log(result.ADDRESS);
     return result;
   } catch (err) {
-    return err;
+    return false;
   }
 }
 
@@ -393,7 +394,7 @@ async function checkAddress( seedID, address) {
 
     return result;
   } catch (err) {
-    return err;
+    return false;
   }
 }
 
@@ -420,7 +421,7 @@ async function getAllAddresses(seed) {
     }
     return addressAray;
   } catch (err) {
-    return err;
+    return false;
   }
 }
 
@@ -442,7 +443,7 @@ async function dropAddress(seed, address) {
     return true
 
   } catch (err) {
-    return err;
+    return false;
   }
 }
 
@@ -466,7 +467,7 @@ async function adminLogin(id, pass) {
       else
       return true
   } catch (err) {
-    return err;
+    return false;
   }
 }
 
@@ -490,7 +491,7 @@ async function getAllSeeds(username, password) {
     }
     return addressAray;
   } catch (err) {
-    return err;
+    return false;
   }
   }
 
@@ -505,7 +506,7 @@ async function getAllSeeds(username, password) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function updateStreamRoot(address, root) {
+async function updateStreamRoot(seed, address, root) {
   try {
 
     var db = await MongoClient.connect(uri);
@@ -516,7 +517,7 @@ async function updateStreamRoot(address, root) {
 
     return true;
   } catch (err) {
-    return err;
+    return false;
   }
 }
 
@@ -540,7 +541,7 @@ async function getStreamRoot(seed, address) {
     else
     return result.streamRoot;
   } catch (err) {
-    return err;
+    return false;
   }
 }
 
@@ -560,7 +561,7 @@ async function getAddressInfo( seed, address) {
 
     return info;
   } catch (err) {
-    return err;
+    return false;
   }
 }
 
@@ -570,7 +571,7 @@ async function getAddressInfo( seed, address) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function getLastTransactionHash( address)
+async function getLastTransactionHash(address, type)
 {
   try {
     var db = await MongoClient.connect(uri);
@@ -578,14 +579,14 @@ async function getLastTransactionHash( address)
 
     var result = await dbo
       .collection(address)
-      .findOne({ isLatest:true });
+      .findOne({$and: [{ isLatest: true}, {txType:type }]});
     db.close();
     if(result == null)
       return false;
     else
     return result.txHash;
   } catch (err) {
-    return err;
+    return false;
   }
 
 }
@@ -613,7 +614,7 @@ async function getPublicTransactionInfo(hash)
       var txMsg = Converter.trytesToAscii(txData[0].signatureMessageFragment.substring(0,2186));
       return txMsg;
   } catch (err) {
-    return err;
+    return false;
   }
 
 }
@@ -641,7 +642,9 @@ async function getPrivateTransactionInfo(seed, address, hash)
 //--------------------------------------New Function------------------------------------------//
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-async function publishMAMmsg(dbo, func, seed, address) {
+async function publishMAMmsg(func, seed, address) {
+  var db = await MongoClient.connect(uri);
+    var dbo = await db.db("thetamw1");
   const Mam = require('@iota/mam');
 const { asciiToTrytes, trytesToAscii } = require('@iota/converter');
 const mode = 'public';
@@ -677,7 +680,7 @@ const publishAll = async (func) => {
                 message: msg,
                 timestamp: (new Date()).toLocaleString()
               })
-              updateStreamRoot(dbo, seed, address, root)
+              updateStreamRoot(seed, address, root)
               console.log("Root is ", root)
 
         }

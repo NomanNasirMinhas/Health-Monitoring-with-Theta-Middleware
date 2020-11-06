@@ -23,7 +23,7 @@ async function sendData() {
         }
         readings=JSON.stringify(readings);
         console.log(readings)
-        var result = await sendPublicTransaction(testSeed, testAddress, readings);
+        var result = await sendPublicTransaction(testSeed, testAddress, readings, "readings");
         console.log(result)
     console.log(count);
       }
@@ -75,6 +75,46 @@ async function sendData() {
     // await fetch("https://thetamiddleware.herokuapp.com/getMAM/MBNDML9YVMXWKOMQZKYNJZQQRIQUQYLSNNDLSHCEAKKDJYHBPEWXBNXNXWOGQTHYUCBPPECYHVQFTZFOQ&NTWSWV9CBWVKZXKLWSOHFLCJTDWIAMVSYRD9DFDXWJWFBVPWYUYDJQDOOLEWLPOAPHR9CHQKTMEOYRKDC")
   }
 
-  sendData()
+  async function sendDataWithAPI() {
+    testSeed =process.env.testSeed;
+    testAddress =process.env.testAddress;
+    console.log(testSeed)
+    console.log(testAddress)
+      var count=0;
+      var readings=null;
+      // var msg = await getLastTransaction(testAddress)
+      // console.log(msg)
+      while(true){
+        readings={
+          TimeStamp: timestamp(),
+          HR: getHeartRate(50,70),
+          Temp: getBPM(70,90),
+          BP:{
+            systolic: getBPsys(60,90),
+            diastolic: getBPdias(100,130)
+          }
+        }
+
+        fetch("https://thetamiddleware.herokuapp.com/sendTx", {
+          method: "POST",
+          body: JSON.stringify({
+              seed: "foo",
+              address: "bar",
+              txType:"reading",
+              Data: readings
+          }),
+    headers: {
+        "Content-type": "application/json; charset=UTF-8"
+    }
+})
+.then(response => response.json())
+.then(json => console.log(json));
+
+      }
+
+  }
+
+  sendDataWithAPI()
+  // sendData()
   // publishMam()
 // fetchMam()

@@ -1,12 +1,16 @@
 {
-  "name": "thetamiddleware",
-  "version": "2.3.2",
-  "description": "Theta Middleware V-2.3.2",
-  "main": "index.js",
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon server.js"
   },
-  "author": "Noman Nasir Minhas",
+  "keywords": [],
+  "engines": {
+    "node": "12.14.1"
+  },
+  "author": "",
   "license": "ISC",
   "dependencies": {
     "@iota/converter": "^1.0.0-beta.23",
@@ -22,6 +26,7 @@
     "express": "^4.16.4",
     "mongodb": "^3.6.1",
     "mongoose": "^5.5.7",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "socket.io-client": "^2.3.1"
   }
 }
