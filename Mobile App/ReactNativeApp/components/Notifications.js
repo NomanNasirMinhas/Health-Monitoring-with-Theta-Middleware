@@ -236,7 +236,7 @@ export default function Profile({ route, navigation }) {
             titleStyle={styles.buttonText}
             style={{ width: 150, marginRight: 10 }}
             onPress={
-              () => navigation.navigate("Prescriptions", { address: patientAddress })
+              () => Alert.alert("This Feature is being under development")
               // navigation.navigate('Readings')
             }
           ></Button>
@@ -246,7 +246,7 @@ export default function Profile({ route, navigation }) {
             titleStyle={styles.buttonText}
             title="Notifications"
             onPress={() =>
-              navigation.navigate("Notifications", { address: patientAddress })
+              navigation.navigate("History", { address: patientAddress })
             }
           ></Button>
         </View>

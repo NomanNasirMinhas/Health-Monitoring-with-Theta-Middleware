@@ -1,0 +1,240 @@
+import React, { Component, useState, useEffect } from 'react';
+import { StyleSheet, View, Alert, Text } from 'react-native';
+import { Table, Row, Rows } from 'react-native-table-component';
+import { ScrollView } from 'react-native-gesture-handler';
+import Spinner from 'react-native-loading-spinner-overlay';
+import { Card, ListItem, Button, Icon } from "react-native-elements";
+import { DataTable } from 'react-native-paper';
+import { AppLoading } from 'expo';
+import { Dimensions } from "react-native";
+import { useFonts } from 'expo-font';
+import { LineChart } from "react-native-chart-kit";
+
+//this.state = {
+
+//}
+
+
+export default function Readings({route, navigation}) {
+  var [finished, setFinished]=useState(false)
+  var [tableState, setTableState]= useState([]);
+  var [hashArray, setHashArray] = useState([])
+  var [histState, setHistState] = useState('Please Wait...')
+  var [txInfo, setTxInfo] = useState([])
+  var [tempArray, setTempArray] = useState([])
+  var [hrArray, setHrArray] = useState([])
+  var [systArray, setSystArray] = useState([])
+  var [diastArray, setDiastArray] = useState([])
+  var [BPArray, setBPArray] = useState([])
+  var [tempArray, setTempArray] = useState([])
+
+  var tempData=[]
+  var hrData=[]
+  var systData=[]
+  var diastData=[]
+
+  var tableData=[]
+  var maxWidth = Dimensions.get("window").width;
+
+  useEffect(() => {
+    (async () => {
+
+      try{
+        const { address } = route.params;
+        setHistState('Fetching Transaction Hashes\nPlease Wait......')
+    var response = await fetch(`https://thetamiddleware.herokuapp.com/getAllHash/${address.toString()}&08-11-2020&prescription`);
+    var resObj = await response.json();
+    // Alert.alert("All Hashes", JSON.stringify(resObj.length));
+    setHashArray(resObj)
+    setHistState('Fetching Transactions from IOTA\nPlease Wait..........')
+    for(var i=0; i<resObj.length; i++)
+    {
+      var responseTx = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${resObj[i].toString()}`);
+    var resObjTx = await responseTx.json();
+    var parsed = JSON.parse(resObjTx)
+    // Alert.alert(JSON.stringify(parsed))
+    setTxInfo(txInfo.push(parsed))
+
+    }
+    Alert.alert("Fetched",JSON.stringify(txInfo))
+
+    // for(var i=0; i<txInfo.length; i++)
+    // {
+    // var val = txInfo[i]
+    // var row=[]
+    //   row.push(val.TimeStamp.toString());
+    //   row.push(val.HR);
+    //   row.push(val.Temp);
+    //   row.push(val.BP.systolic);
+    //   row.push(val.BP.diastolic);
+    //   tempData.push(val.Temp)
+    //   hrData.push(val.HR)
+    //   systData.push(val.BP.systolic)
+    //   diastData.push(val.BP.diastolic)
+    //   tableData.push(row)
+
+    // }
+    // setTempArray(tempData)
+    // setHrArray(hrData)
+    // setSystArray(systData)
+    // setDiastArray(diastData)
+    // setTableState(tableData)
+    setFinished(true)
+    // console.log(tableData)
+      }
+      catch(e){
+        setFinished(true)
+        // Alert.alert("Error Has Occurred")
+      }
+
+
+
+    })();
+  }, []);
+
+  let [fontsLoaded] = useFonts({
+    // Load a font `Montserrat` from a static resource
+    'Righteous': require('./../assets/fonts/Righteous-Regular.ttf'),
+        'Secular': require('./../assets/fonts/SecularOne-Regular.ttf'),
+        'Nunito': require('./../assets/fonts/Nunito-Regular.ttf'),
+        'Poppins': require('./../assets/fonts/Poppins-Regular.ttf'),
+        'NunitoBold': require('./../assets/fonts/Nunito-Bold.ttf'),
+        'PoppinsBold': require('./../assets/fonts/Poppins-Bold.ttf'),
+        'NunitoBlack': require('./../assets/fonts/Nunito-Black.ttf'),
+        'PoppinsBlack': require('./../assets/fonts/Poppins-Black.ttf'),
+        'MetropolisBlack': require('./../assets/fonts/Metropolis-Black.otf'),
+        'MetropolisBold': require('./../assets/fonts/Metropolis-Bold.otf'),
+        'MetropolisSemiBold': require('./../assets/fonts/Metropolis-SemiBold.otf'),
+        'Metropolis': require('./../assets/fonts/Metropolis-Regular.otf'),
+  });
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  } else {
+
+  return (
+    <View style={styles.container}>
+      <Spinner
+          visible={!finished}
+          textContent={histState}
+          textStyle={styles.text}
+        />
+      <ScrollView horizontal={false} showsVerticalScrollIndicator={true} >
+
+      <Card containerStyle={styles.card}>
+      <Card.Title style={[styles.text, { color: "white", fontFamily: 'MetropolisBold', fontSize:30 }]}>
+              Your Prescriptions
+            </Card.Title>
+        <View style={styles.buttonContainer}>
+          <Button
+            title="Go Back"
+            buttonStyle={styles.buttonStyle}
+            titleStyle={styles.buttonText}
+            style={{ width: 150}}
+            onPress={
+              () => navigation.goBack()
+              // navigation.navigate('Readings')
+            }
+          ></Button>
+        </View>
+        </Card>
+
+      <View style={{marginBottom:30, paddingHorizontal:20, paddingTop:40}}>
+
+            </View>
+
+
+
+      </ScrollView>
+    </View>
+  )
+}
+}
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#034772",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  card: {
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+    width:Dimensions.get("window").width,
+    padding: "auto",
+    paddingTop: 50,
+    margin: "auto",
+    borderStyle: "solid",
+    borderWidth: 0,
+    borderColor: "#154360",
+    backgroundColor: "#0B3047",
+  },
+
+  text: {
+    fontFamily: "Metropolis",
+    color: "white",
+    textAlign: "center",
+    fontWeight: "900",
+  },
+
+  buttonStyle:{
+    backgroundColor:'#00619E',
+    borderWidth:2,
+    borderColor:'white'
+  },
+  buttonText: {
+    fontFamily: "MetropolisBold",
+    color: "white",
+    textAlign: "center",
+  },
+
+  subText: {
+    fontSize: 14,
+    color: "#e3e1dc",
+    fontFamily:'Secular',
+    textTransform: "capitalize",
+    fontWeight: "500",
+  },
+
+  infoContainer: {
+    alignSelf: "center",
+    alignItems: "center",
+    marginTop: 0,
+  },
+
+  statsContainer: {
+    flexDirection: "row",
+    alignSelf: "center",
+    marginTop: 0,
+    marginBottom: 20,
+  },
+
+  lastTxContainer: {
+    flexDirection: "row",
+    alignSelf: "center",
+    marginTop: 20,
+    marginBottom: 20,
+  },
+
+  buttonContainer: {
+    flexDirection: "row",
+    alignSelf: "center",
+    marginBottom: 20,
+  },
+  statsBox: {
+    alignItems: "center",
+    flex: 1,
+  },
+  statusOnline:{
+    color:'#1E8449'
+  },
+  statusOffline:{
+    color:'#C0392B'
+  }
+});
+

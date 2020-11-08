@@ -10,6 +10,8 @@ import qrScanner from './components/qrScanner';
 import Profile from './components/Profile';
 import Readings from './components/Readings';
 import History from './components/Histroy';
+import Notifications from './components/Notifications'
+import Prescriptions from './components/Prescription'
 
 
 function DetailsScreen({navigation}) {
@@ -142,6 +144,49 @@ function App() {
         component={History}
         options={{
           title: 'Patient Readings History',
+          headerShown:false,
+          headerTitleAlign:'center',
+          backgroundColor: '#019490',
+          headerStyle: {
+            backgroundColor: '#154360',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            color: 'white',
+            fontWeight: 'bold',
+            alignContent: 'center',
+            alignItems: 'center',
+            justifyContent: 'center'
+          },
+        }} />
+
+<Stack.Screen
+        name="Prescriptions"
+        component={Prescriptions}
+        options={{
+          title: 'Patient Prescriptions',
+          headerShown:false,
+          headerTitleAlign:'center',
+          backgroundColor: '#019490',
+          headerStyle: {
+            backgroundColor: '#154360',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            color: 'white',
+            fontWeight: 'bold',
+            alignContent: 'center',
+            alignItems: 'center',
+            justifyContent: 'center'
+          },
+        }} />
+
+<Stack.Screen
+        name="Notifications"
+        component={Notifications}
+        options={{
+          title: 'Notifications from Doctor',
+          headerShown:false,
           headerTitleAlign:'center',
           backgroundColor: '#019490',
           headerStyle: {

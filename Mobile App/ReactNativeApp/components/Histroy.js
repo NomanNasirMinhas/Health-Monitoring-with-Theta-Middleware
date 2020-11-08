@@ -42,7 +42,7 @@ export default function Readings({route, navigation}) {
       try{
         const { address } = route.params;
         setHistState('Fetching Transaction Hashes\nPlease Wait......')
-    var response = await fetch(`https://thetamiddleware.herokuapp.com/getAllHash/${address.toString()}&07-10-2020`);
+    var response = await fetch(`https://thetamiddleware.herokuapp.com/getAllHash/${address.toString()}&08-11-2020&vitals`);
     var resObj = await response.json();
     // Alert.alert("All Hashes", JSON.stringify(resObj.length));
     setHashArray(resObj)
@@ -125,7 +125,22 @@ export default function Readings({route, navigation}) {
       <ScrollView horizontal={false} showsVerticalScrollIndicator={true} >
 
       {finished &&
-      <View style={{marginBottom:30, paddingHorizontal:20}}>
+      <View style={{marginBottom:30, paddingHorizontal:20, paddingTop:40}}>
+        <Text style={[styles.text, { color: "white", fontFamily: 'MetropolisBold', fontSize:30 }]}>
+              Your Vital Sign's History
+            </Text>
+        <View style={styles.buttonContainer}>
+          <Button
+            title="Go Back"
+            buttonStyle={styles.buttonStyle}
+            titleStyle={styles.buttonText}
+            style={{ width: 150}}
+            onPress={
+              () => navigation.goBack()
+              // navigation.navigate('Readings')
+            }
+          ></Button>
+        </View>
         <Text style={[styles.text, { color: "white", fontFamily: 'MetropolisBold', fontSize:30 }]}>
               Infographics
             </Text>
@@ -302,6 +317,11 @@ const styles = StyleSheet.create({
     borderWidth: 5,
     borderColor: "#F6F8FC",
     backgroundColor: "#0B3047",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    alignSelf: "center",
+    marginBottom: 20,
   },
 
 });

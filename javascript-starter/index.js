@@ -94,13 +94,13 @@ async function sendData() {
             diastolic: getBPdias(100,130)
           }
         }
-
+        readings=JSON.stringify(readings);
         await fetch("https://thetamiddleware.herokuapp.com/sendTx", {
           method: "POST",
           body: JSON.stringify({
               seed: testSeed,
               address: testAddress,
-              txType:"reading",
+              txType:"vitals",
               Data: readings
           }),
     headers: {
