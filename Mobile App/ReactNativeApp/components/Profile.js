@@ -41,26 +41,14 @@ export default function Profile({ route, navigation }) {
   const [patientBPdiast, setPatientBPdiast] = useState("Loading....");
   const [patientAddress, setPatientAddress] = useState("Loading....");
   const [patientDeviceID, setPatientDeviceID] = useState("Loading....");
+  const [spinnierText, setSpinnerText] = useState("Fetching From IOTA.........\nPlease Wait.............")
   const [hasLastTx, setHasLastTx] = useState(false);
   const [lastTx, setLastTx] = useState([0, 0, 0, 0]);
   var [finished, setFinished] = useState(false);
   const [online, setOnline] = useState("Checking Device Status....")
   const [boolOnline, setBoolOnline] = useState(0)
   var maxWidth = Dimensions.get("window").width;
-  const actions = [
-    {
-      text: "Prescriptions",
-      icon: require("../assets/medicine.png"),
-      name: "btn_medicine",
-      position: 2
-    },
-    {
-      text: "Doctor's Notifications",
-      icon: require("../assets/bell.png"),
-      name: "btn_bell",
-      position: 1
-    }
-  ];
+  var PrescArray = [];
 
   useEffect(() => {
     (async () => {
@@ -130,6 +118,36 @@ export default function Profile({ route, navigation }) {
       // Alert.alert(JSON.stringify(info))
     })();
   }, []);
+
+  const handlePrescription = async () => {
+    try{
+      setFinished(false)
+      const address = patientAddress;
+      // setHistState(spinnierText)
+  setSpinnerText('Fetching Transactions from IOTA\nPlease Wait..........')
+
+  var response = await fetch(`https://thetamiddleware.herokuapp.com/getAllHash/${address.toString()}&08-11-2020&prescription`);
+  var resObj = await response.json();
+  // Alert.alert("All Hashes", JSON.stringify(resObj.length));
+  // setHashArray(resObj)
+  setSpinnerText('Fetching Transactions from IOTA\nPlease Wait..........')
+  for(var i=0; i<resObj.length; i++)
+  {
+    var responseTx = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${resObj[i].toString()}`);
+  var resObjTx = await responseTx.json();
+  var parsed = JSON.parse(resObjTx)
+    PrescArray.push(parsed)
+
+  }
+  setFinished(true)
+  navigation.navigate('Prescriptions', {data: PrescArray})
+
+    }
+    catch(e){
+      setFinished(true)
+      console.log("Error Occurred ", e)
+    }
+  };
 
 
   let [fontsLoaded] = useFonts({
@@ -235,10 +253,7 @@ export default function Profile({ route, navigation }) {
             buttonStyle={styles.buttonStyle}
             titleStyle={styles.buttonText}
             style={{ width: 150, marginRight: 10 }}
-            onPress={
-              () => navigation.navigate("Prescriptions", { address: patientAddress })
-              // navigation.navigate('Readings')
-            }
+            onPress={handlePrescription}
           ></Button>
           <Button
             style={{ width: 150, marginLeft: 10}}

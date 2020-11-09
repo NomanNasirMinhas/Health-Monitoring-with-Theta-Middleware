@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect } from 'react';
-import { StyleSheet, View, Alert, Text } from 'react-native';
+import { StyleSheet, View, Alert, Text, FlatList } from 'react-native';
 import { Table, Row, Rows } from 'react-native-table-component';
 import { ScrollView } from 'react-native-gesture-handler';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -21,76 +21,8 @@ export default function Readings({route, navigation}) {
   var [hashArray, setHashArray] = useState([])
   var [histState, setHistState] = useState('Please Wait...')
   var [txInfo, setTxInfo] = useState([])
-  var [tempArray, setTempArray] = useState([])
-  var [hrArray, setHrArray] = useState([])
-  var [systArray, setSystArray] = useState([])
-  var [diastArray, setDiastArray] = useState([])
-  var [BPArray, setBPArray] = useState([])
-  var [tempArray, setTempArray] = useState([])
+  const { data } = route.params;
 
-  var tempData=[]
-  var hrData=[]
-  var systData=[]
-  var diastData=[]
-
-  var tableData=[]
-  var maxWidth = Dimensions.get("window").width;
-
-  useEffect(() => {
-    (async () => {
-
-      try{
-        const { address } = route.params;
-        setHistState('Fetching Transaction Hashes\nPlease Wait......')
-    var response = await fetch(`https://thetamiddleware.herokuapp.com/getAllHash/${address.toString()}&08-11-2020&prescription`);
-    var resObj = await response.json();
-    // Alert.alert("All Hashes", JSON.stringify(resObj.length));
-    setHashArray(resObj)
-    setHistState('Fetching Transactions from IOTA\nPlease Wait..........')
-    for(var i=0; i<resObj.length; i++)
-    {
-      var responseTx = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${resObj[i].toString()}`);
-    var resObjTx = await responseTx.json();
-    var parsed = JSON.parse(resObjTx)
-    // Alert.alert(JSON.stringify(parsed))
-    setTxInfo(txInfo.push(parsed))
-
-    }
-    Alert.alert("Fetched",JSON.stringify(txInfo))
-
-    // for(var i=0; i<txInfo.length; i++)
-    // {
-    // var val = txInfo[i]
-    // var row=[]
-    //   row.push(val.TimeStamp.toString());
-    //   row.push(val.HR);
-    //   row.push(val.Temp);
-    //   row.push(val.BP.systolic);
-    //   row.push(val.BP.diastolic);
-    //   tempData.push(val.Temp)
-    //   hrData.push(val.HR)
-    //   systData.push(val.BP.systolic)
-    //   diastData.push(val.BP.diastolic)
-    //   tableData.push(row)
-
-    // }
-    // setTempArray(tempData)
-    // setHrArray(hrData)
-    // setSystArray(systData)
-    // setDiastArray(diastData)
-    // setTableState(tableData)
-    setFinished(true)
-    // console.log(tableData)
-      }
-      catch(e){
-        setFinished(true)
-        // Alert.alert("Error Has Occurred")
-      }
-
-
-
-    })();
-  }, []);
 
   let [fontsLoaded] = useFonts({
     // Load a font `Montserrat` from a static resource
@@ -112,13 +44,25 @@ export default function Readings({route, navigation}) {
     return <AppLoading />;
   } else {
 
+    const Item = ({ item }) => (
+      <View style={styles.item}>
+        <Text style={styles.text}>{item.PrescriptionName}</Text>
+        <Text style={styles.subText}>Details: {item.PrescriptionDetails}</Text>
+        <Text style={styles.subText}>Prescribed At: {item.TimeStamp}</Text>
+      </View>
+    );
+
+    const renderItem = ({ item }) => (
+      <Item item={item} />
+    );
+
   return (
     <View style={styles.container}>
-      <Spinner
+      {/* <Spinner
           visible={!finished}
           textContent={histState}
           textStyle={styles.text}
-        />
+        /> */}
       <ScrollView horizontal={false} showsVerticalScrollIndicator={true} >
 
       <Card containerStyle={styles.card}>
@@ -140,7 +84,11 @@ export default function Readings({route, navigation}) {
         </Card>
 
       <View style={{marginBottom:30, paddingHorizontal:20, paddingTop:40}}>
-
+      <FlatList
+        data={data}
+        renderItem={renderItem}
+        keyExtractor={item => item.TimeStamp}
+      />
             </View>
 
 
@@ -176,8 +124,9 @@ const styles = StyleSheet.create({
   },
 
   text: {
-    fontFamily: "Metropolis",
-    color: "white",
+    fontFamily: "PoppinsBold",
+    color: "#1F618D",
+    fontSize:20,
     textAlign: "center",
     fontWeight: "900",
   },
@@ -194,8 +143,8 @@ const styles = StyleSheet.create({
   },
 
   subText: {
-    fontSize: 14,
-    color: "#e3e1dc",
+    fontSize: 16,
+    color: "#1F618D",
     fontFamily:'Secular',
     textTransform: "capitalize",
     fontWeight: "500",
@@ -235,6 +184,14 @@ const styles = StyleSheet.create({
   },
   statusOffline:{
     color:'#C0392B'
-  }
+  },
+  item: {
+    backgroundColor: '#AED6F1',
+    padding: 20,
+    borderRadius:20
+  },
+  title: {
+    fontSize: 32,
+  },
 });
 
