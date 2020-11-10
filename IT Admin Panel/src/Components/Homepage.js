@@ -421,12 +421,12 @@ function Doctors(props) {
         </Grid>
       </Grid>
 
-      <Grid container spacing={1}  justify="space-between" >
+      <Grid container spacing={1} style={{alignSelf:"bottom"}} justify="space-between" >
         {/**  <Grid item xs={1}></Grid> */}
         <Grid item xs={4}>
           <Paper
             elevation={5}
-            style={{ backgroundColor: "#2980B9", marginTop: "2%" }}
+            style={{ backgroundColor: "#08A24A", marginTop: "2%" }}
           >
             <Typography
               variant="h4"
@@ -443,10 +443,10 @@ function Doctors(props) {
         </Grid>
         {/**  <Grid item xs={1}></Grid> */}
 
-        <Grid item xs={4}>
+        <Grid item xs={4} >
           <Paper
             elevation={5}
-            style={{ backgroundColor: "#2980B9", marginTop: "2%" }}
+            style={{ backgroundColor: "#2B8FA3", marginTop: "2%" }}
           >
             <Typography
               variant="h4"
