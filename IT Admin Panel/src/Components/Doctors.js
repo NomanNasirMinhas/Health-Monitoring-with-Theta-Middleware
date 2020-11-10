@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import { Link as link } from "react-router-dom";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
-import ListIcon from '@material-ui/icons/List';
+import ListIcon from "@material-ui/icons/List";
 import SettingsIcon from "@material-ui/icons/Settings";
-import IconButton from '@material-ui/core/IconButton';
-import FirstPageIcon from '@material-ui/icons/FirstPage';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import LastPageIcon from '@material-ui/icons/LastPage';
+import IconButton from "@material-ui/core/IconButton";
+import FirstPageIcon from "@material-ui/icons/FirstPage";
+import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
+import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
+import LastPageIcon from "@material-ui/icons/LastPage";
 import { useHistory } from "react-router-dom";
 
 import Grid from "@material-ui/core/Grid";
-import {useTheme,
+import {
+  useTheme,
   Card,
   CardActions,
   CardContent,
@@ -39,8 +40,6 @@ import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 //import SettingsIcon from "@material-ui/icons/Settings";
-
-
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -175,19 +174,16 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-
-
-
 function Homepage(props) {
   const classes = useStyles();
   const classesTable = useStylesTable();
   const [seeds, setSeeds] = useState(null);
-  const [patients, setAll]= React.useState('');
+  const [patients, setAll] = React.useState("");
   const [arr, setArr] = useState(null);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [load, setLoad]=React.useState(false);
-  let all_add=[];
+  const [load, setLoad] = React.useState(false);
+  let all_add = [];
   let history = useHistory();
 
   const handleChangePage = (event, newPage) => {
@@ -199,33 +195,30 @@ function Homepage(props) {
     setPage(0);
   };
 
-  useEffect( ()=>{ 
-   
+  useEffect(() => {
     async function getData() {
-
-      try{
-      const data = localStorage.getItem("credentials");
-      const abc = JSON.parse(data);
-      const username = abc.username;
-      //console.log("Parsed_name"+abc)
-      //console.log('data'+ credentials)
-      const password = abc.password;
-      const response = await fetch(
-        `https://thetamiddleware.herokuapp.com/getAllSeeds/${username}&${password}`
-      );
-      //  console.log("response =",   seeds);
-      const fetched_data = await response.json();
-      //console.log("fetched-data =", fetched_data);
-      setSeeds(fetched_data);}
-      catch (e){};
+      try {
+        const data = localStorage.getItem("credentials");
+        const abc = JSON.parse(data);
+        const username = abc.username;
+        //console.log("Parsed_name"+abc)
+        //console.log('data'+ credentials)
+        const password = abc.password;
+        const response = await fetch(
+          `https://thetamiddleware.herokuapp.com/getAllSeeds/${username}&${password}`
+        );
+        //  console.log("response =",   seeds);
+        const fetched_data = await response.json();
+        //console.log("fetched-data =", fetched_data);
+        setSeeds(fetched_data);
+      } catch (e) {}
       // setArr(seeds.SEED);
       // console.log("SEED=", seeds.SEED);
       //console.log("Seeds =", seeds);
-    } 
-    
-     getData();
-  },[]) 
+    }
 
+    getData();
+  }, []);
 
   //Get patitens
 
@@ -234,70 +227,67 @@ function Homepage(props) {
       setLoad(false);
       let s = []; //store seeds
       let l = []; //store patient respectively
-      let n=[];   //store doctor name 
-      
-      if(seeds!=null){
-      {
-        seeds.map((obj) => {
-          s.push(obj.SEED);
-          n.push(obj.Profile.name);
-         
-        });
-      } }console.log("extract", s);
+      let n = []; //store doctor name
+
+      if (seeds != null) {
+        {
+          seeds.map((obj) => {
+            s.push(obj.SEED);
+            n.push(obj.Profile.name);
+          });
+        }
+      }
+      console.log("extract", s);
       //let count = 0;
-      
+
       let current = ""; // current doctor
-      let c_name= ""  ;  // doctor's name
+      let c_name = ""; // doctor's name
       for (var i = 0; i <= s.length; i++) {
         current = s[i];
-        c_name=n[i]; //doctor name stored
+        c_name = n[i]; //doctor name stored
         const add = await fetch(
           `https://thetamiddleware.herokuapp.com/getAllAddresses/${current}`
         );
         const js = await add.json();
         if (js == false) {
           continue;
-        } 
-        else {
-          
+        } else {
           js.map((obj) => {
-            l.push(obj.ADDRESS); });
-            let one={ "seed": current,"addresses": l, "name": c_name }; //seed and its addresses
+            l.push(obj.ADDRESS);
+          });
+          let one = { seed: current, addresses: l, name: c_name }; //seed and its addresses
           ///  l=[];
-         
 
           //fetch patients singly
-          for(var j=0; j<=l.length; j++){
-            let doc=one.seed;
-            let p=l[j];
-            const fetch_add= await fetch(`https://thetamiddleware.herokuapp.com/getAddressInfo/${doc}&${p}`);
+          for (var j = 0; j <= l.length; j++) {
+            let doc = one.seed;
+            let p = l[j];
+            const fetch_add = await fetch(
+              `https://thetamiddleware.herokuapp.com/getAddressInfo/${doc}&${p}`
+            );
 
-            const JS_fetch= await fetch_add.json();
-            if(JS_fetch!= false){
-              const temp={"name": c_name, "data": JS_fetch};
-            all_add.push(temp);}
+            const JS_fetch = await fetch_add.json();
+            if (JS_fetch != false) {
+              const temp = { name: c_name, data: JS_fetch };
+              all_add.push(temp);
+            }
           }
-
         }
-        l=[];
+        l = [];
         console.log("ALL=", all_add);
-        
-     }
-     
+      }
 
-   /**     if (l.length != 0) {
+      /**     if (l.length != 0) {
         settotalPatients(l.length + 1);
       } */
-     //console.log("total=", l, "length=", l.length);
+      //console.log("total=", l, "length=", l.length);
 
       setAll(all_add);
-      console.log("new all=", patients)
+      console.log("new all=", patients);
       setLoad(true);
     }
-    getPatients();  
+    getPatients();
   }, [seeds]);
-
-
 
   useEffect(() => {
     console.log("username=", seeds);
@@ -321,10 +311,9 @@ function Homepage(props) {
   function Patients(props, SEED) {
     console.log("anday waala burger");
     props.history.push(`/ViewPatient/${SEED}`);
-    
   }
 
-  if (seeds === null || all_add==null || load==false  ) {
+  if (seeds === null || all_add == null || load == false) {
     return (
       <ThemeProvider>
         <Navbar />
@@ -357,35 +346,34 @@ function Homepage(props) {
     );
   }
 
-  if(load){
-  return (
-    <ThemeProvider>
-      <Navbar />
-      <Typography
-        variant="h3"
-        style={{ marginTop: "2%", color: "#B4B4B4", fontWeight: "bold" }}
-      >
-        All Patients{" "}
-      </Typography>
-
-      {/* TABLE START*/}
-
-      <Grid container spacing={1} style={{ flaot: "right" }}  >
-        {/** <Grid item xs={0.5}></Grid> */}
-
-        
-          <Grid item xs={12}>
-          <Paper
-          elevation={5}
-          style={{
-            maxWidth: "100%",
-            width: "100%",
-            margin: "auto",
-            marginTop: "2%",
-            border: "solid grey 0.9px",
-          }}
+  if (load) {
+    return (
+      <ThemeProvider>
+        <Navbar />
+        <Typography
+          variant="h3"
+          style={{ marginTop: "2%", color: "#B4B4B4", fontWeight: "bold" }}
         >
-            {/**   <Typography variant="h3" style={{backgroundColor:"#B4B4B4"}}> </Typography>
+          All Patients{" "}
+        </Typography>
+
+        {/* TABLE START*/}
+
+        <Grid container spacing={1} style={{ flaot: "right" }}>
+          {/** <Grid item xs={0.5}></Grid> */}
+
+          <Grid item xs={12}>
+            <Paper
+              elevation={5}
+              style={{
+                maxWidth: "100%",
+                width: "100%",
+                margin: "auto",
+                marginTop: "2%",
+                border: "solid grey 0.9px",
+              }}
+            >
+              {/**   <Typography variant="h3" style={{backgroundColor:"#B4B4B4"}}> </Typography>
               <Typography
                 variant="h3"
                 component="h2"
@@ -399,8 +387,7 @@ function Homepage(props) {
                 <b>Doctors</b>
               </Typography> */}
 
-
-         {/**     <TableContainer className={classesTable.paper}>
+              {/**     <TableContainer className={classesTable.paper}>
               <Table className={classesTable.table} aria-label="simple table">
                 <TableHead style={{ backgroundColor: "#0ea80e" }}>
                   <TableRow>
@@ -459,113 +446,109 @@ function Homepage(props) {
               </Table>
             </TableContainer>*/}
 
-<TableContainer className={classesTable.paper}>
-              <Table className={classesTable.table} aria-label="simple table">
-                <TableHead style={{ backgroundColor: "#2980B9" }}>
-                  <TableRow>
-                    <TableCell align="center">
-                      <strong style={{ color: "white" }}>Name</strong>
-                    </TableCell>
-                    <TableCell align="center">
-                      <strong style={{ color: "white" }}>Patient ID</strong>
-                    </TableCell>
-                    <TableCell align="center">
-                      <strong style={{ color: "white" }}>Age</strong>
-                    </TableCell>
-                    <TableCell align="center">
-                      <strong style={{ color: "white" }}>Contact</strong>
-                    </TableCell>
-                    <TableCell align="center">
-                      <strong style={{ color: "white" }}>Gender</strong>
-                    </TableCell>
+              <TableContainer className={classesTable.paper}>
+                <Table className={classesTable.table} aria-label="simple table">
+                  <TableHead style={{ backgroundColor: "#2980B9" }}>
+                    <TableRow>
+                      <TableCell align="center">
+                        <strong style={{ color: "white" }}>Name</strong>
+                      </TableCell>
+                      <TableCell align="center">
+                        <strong style={{ color: "white" }}>Patient ID</strong>
+                      </TableCell>
+                      <TableCell align="center">
+                        <strong style={{ color: "white" }}>Age</strong>
+                      </TableCell>
+                      <TableCell align="center">
+                        <strong style={{ color: "white" }}>Contact</strong>
+                      </TableCell>
+                      <TableCell align="center">
+                        <strong style={{ color: "white" }}>Gender</strong>
+                      </TableCell>
 
-                    <TableCell align="center">
-                      <strong style={{ color: "white" }}>Admitted on</strong>
-                    </TableCell>
-                    <TableCell align="center">
-                      <strong style={{ color: "white" }}>Doctor</strong>
-                    </TableCell>
-                    <TableCell align="center">
-                      <strong style={{ color: "white" }}>Address</strong>
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {/*{(rowsPerPage > 0
+                      <TableCell align="center">
+                        <strong style={{ color: "white" }}>Admitted on</strong>
+                      </TableCell>
+                      <TableCell align="center">
+                        <strong style={{ color: "white" }}>Doctor</strong>
+                      </TableCell>
+                      <TableCell align="center">
+                        <strong style={{ color: "white" }}>Address</strong>
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {/*{(rowsPerPage > 0
                     ? all_add.slice(
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage
                       )
                     : all_add
                   )*/}
-                  
-                 { patients.map((obj) => (
-                    <TableRow hover key={obj.data.Profile.name}>
-                      <TableCell component="th" scope="row">
-                        <strong> {obj.data.Profile.name} </strong>
-                      </TableCell>
-                      <TableCell align="center">
-                        <strong>{obj.data.ID}</strong>
-                      </TableCell>
-                      <TableCell align="center">
-                        <strong>{obj.data.Profile.age}</strong>
-                      </TableCell>
-                      <TableCell align="center">
-                        <strong> {obj.data.Profile.contact}</strong>
-                      </TableCell>
-                      <TableCell align="center">
-                        <strong> {obj.data.Profile.gender}</strong>
-                      </TableCell>
-                      <TableCell align="center">
-                        <strong> {obj.data.Profile.date}</strong>
-                      </TableCell>
-                      <TableCell align="center">
-                        <strong> {obj.name}</strong>
-                      </TableCell>
-                      <TableCell align="center">
-                        {" "}
-                        <strong>{obj.data.ADDRESS}</strong>
-                      </TableCell>
 
-                      
+                    {patients.map((obj) => (
+                      <TableRow hover key={obj.data.Profile.name}>
+                        <TableCell component="th" scope="row">
+                          <strong> {obj.data.Profile.name} </strong>
+                        </TableCell>
+                        <TableCell align="center">
+                          <strong>{obj.data.ID}</strong>
+                        </TableCell>
+                        <TableCell align="center">
+                          <strong>{obj.data.Profile.age}</strong>
+                        </TableCell>
+                        <TableCell align="center">
+                          <strong> {obj.data.Profile.contact}</strong>
+                        </TableCell>
+                        <TableCell align="center">
+                          <strong> {obj.data.Profile.gender}</strong>
+                        </TableCell>
+                        <TableCell align="center">
+                          <strong> {obj.data.Profile.date}</strong>
+                        </TableCell>
+                        <TableCell align="center">
+                          <strong> {obj.name}</strong>
+                        </TableCell>
+                        <TableCell align="center">
+                          {" "}
+                          <strong>{obj.data.ADDRESS}</strong>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                  <TableFooter style={{ maxwidth: "100%" }}>
+                    <TableRow>
+                      <TablePagination
+                        rowsPerPageOptions={[
+                          5,
+                          10,
+                          25,
+                          { label: "All", value: -1 },
+                        ]}
+                        colSpan={12}
+                        count={patients.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        SelectProps={{
+                          inputProps: { "aria-label": "rows per page" },
+                          native: true,
+                        }}
+                        onChangePage={handleChangePage}
+                        onChangeRowsPerPage={handleChangeRowsPerPage}
+                        ActionsComponent={TablePaginationActions}
+                      />
                     </TableRow>
-                  ))}
-                </TableBody>
-                <TableFooter style={{ maxwidth: "100%" }}>
-                  <TableRow>
-                    <TablePagination
-                      rowsPerPageOptions={[
-                        5,
-                        10,
-                        25,
-                        { label: "All", value: -1 },
-                      ]}
-                      colSpan={12}
-                      count={patients.length}  
-                      rowsPerPage={rowsPerPage}
-                      page={page}
-                      SelectProps={{
-                        inputProps: { "aria-label": "rows per page" },
-                        native: true,
-                      }}
-                      onChangePage={handleChangePage}
-                      onChangeRowsPerPage={handleChangeRowsPerPage}
-                      ActionsComponent={TablePaginationActions}
-                    />
-                  </TableRow>
-                </TableFooter>
-              </Table>
-            </TableContainer>
-
-
+                  </TableFooter>
+                </Table>
+              </TableContainer>
             </Paper>
           </Grid>
 
           {/**  <Grid item xs={0.5}></Grid>
         {/********************* */}
-       
-      </Grid>
-    </ThemeProvider>
-  )};
+        </Grid>
+      </ThemeProvider>
+    );
+  }
 }
 export default Homepage;

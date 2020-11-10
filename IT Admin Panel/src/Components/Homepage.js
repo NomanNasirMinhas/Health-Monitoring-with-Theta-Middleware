@@ -53,7 +53,6 @@ const rows = [
   { id: 4, name: "Kltamash", assigned_devices: 3 },
   { id: 5, name: "Dr. Lltamash", assigned_devices: 3 },
   { id: 6, name: "Dr. Vltamash", assigned_devices: 3 },
- 
 ];
 const useStylesTable = makeStyles({
   table: {
@@ -325,7 +324,7 @@ function Doctors(props) {
                 <b>Doctors</b>
               </Typography>
 */}
-  
+
             <TableContainer className={classesTable.paper}>
               <Table className={classesTable.table} aria-label="simple table">
                 <TableHead style={{ backgroundColor: "#2980B9" }}>

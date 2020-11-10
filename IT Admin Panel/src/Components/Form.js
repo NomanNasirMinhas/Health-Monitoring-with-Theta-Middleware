@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import Header from "./Header";
 import { useHistory } from "react-router-dom";
+import Grid from "@material-ui/core/Grid";
 import { Link } from "react-router-dom"
 import {
   Button,
@@ -68,6 +69,7 @@ export const Form = () => {
   const classes = useStyles();
   const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
+  const [isSubmitting, setisSubmitting]= useState(false);
 
   const changePassword = (event) => {
     setPassword(event.target.value);
@@ -89,7 +91,8 @@ export const Form = () => {
   // Login handler
   async function login() {
     //refs.btn.setAttribute("disabled","disbaled");
-    showProgress();
+    //showProgress();
+    setisSubmitting(true);
     console.log("username =", username);
     console.log("password =", password);
     if (
@@ -103,6 +106,7 @@ export const Form = () => {
         icon: "error",
         buttons: false,
       });
+      setisSubmitting(false);
     } else {
       try {
         const response = await fetch(
@@ -125,6 +129,7 @@ export const Form = () => {
           });
 
           history.push("/home");
+          setisSubmitting(false);
         } else {
           //alert("Login Failed");
           // setUsername(null);
@@ -137,6 +142,7 @@ export const Form = () => {
           });
           setUsername('');
           setPassword('');
+          setisSubmitting(false);
         }
         //console.log(username);
         //console.log(password);
@@ -159,12 +165,12 @@ export const Form = () => {
 
     // <input   style={{padding:"10px"}} type="text" placeholder="Enter email"/>
     <ThemeProvider theme={theme}>
-      <div className={classes.root}>
       <Slide direction="up" in={true} timeout={800}>
         <Paper
           elevation={2}
           style={{
-            width: "30%",
+            width: "40%",
+            maxWidth: "100%",
             height: "50%",
             float: "center",
             margin: "auto",
@@ -176,9 +182,12 @@ export const Form = () => {
             <div style={{ margin: "auto", textAlign: "center" }}>
               <h2>Login</h2>
             </div>
-            <div style={{ marginLeft: "25%", width: "50%" }}>
+         {/**   <div style={{ marginLeft: "25%", width: "50%" }}></div> */}
+         <Grid container spacing={0}>
+           <Grid item xs={2}></Grid>
+           <Grid item xs={8}>
               <div>
-                <label style={{ padding: "10px" }}>
+                <label startIcon={<EmailIcon fontSize="small" />} style={{ padding: "10px" }}>
                   {" "}
                   <EmailIcon fontSize="small" /> <strong>Email</strong>{" "}
                 </label>
@@ -227,17 +236,21 @@ export const Form = () => {
               <Button
                 variant="contained"
                 color="primary"
+                disabled={isSubmitting}
                 startIcon={<VpnKeyIcon fontSize="small" />}
                 onClick={login}
               >
-                Login
+                 {isSubmitting ? <CircularProgress color="secondary" /> : 'Login'}
               </Button>
               <br /> <br />
-            </div>
+
+              </Grid>
+              <Grid item xs={2}></Grid>
+              </Grid>
           </form>
         </Paper>
         </Slide>
-      </div>
+     
     </ThemeProvider>
   );
 };

@@ -7,7 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import ListIcon from "@material-ui/icons/List";
 import swal from "sweetalert";
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import DatePicker from "react-datepicker";
 import {
   createMuiTheme,
@@ -264,16 +264,15 @@ function ViewPatient() {
                 <strong>{Transactions.length + 1}</strong>
               </Typography>
               <Button
-          className={classesTable.hover}
-          color="inherit"
-          startIcon={<ArrowBackIosIcon  
-          fontSize="small"/>}
-          onClick={() => {
-            setShow(false);
-          }}
-        >
-          Go Back
-        </Button>
+                className={classesTable.hover}
+                color="inherit"
+                startIcon={<ArrowBackIosIcon fontSize="small" />}
+                onClick={() => {
+                  setShow(false);
+                }}
+              >
+                Go Back
+              </Button>
             </Paper>
           </Grid>
           <Grid item xs={1}></Grid>
@@ -284,13 +283,12 @@ function ViewPatient() {
               style={{ marginTop: "4%" }}
             >
               <div style={{ backgroundColor: "#2980B9", color: "white" }}>
-              <Typography
-                variant="h5"
-                style={{ backgroundColor: "#2980B9", color: "white" }}
-              >
-                Transactions for {Name} 
-              </Typography>
-             
+                <Typography
+                  variant="h5"
+                  style={{ backgroundColor: "#2980B9", color: "white" }}
+                >
+                  Transactions for {Name}
+                </Typography>
               </div>
               <TableContainer className={classesTable.paper}>
                 <Table className={classesTable.table} aria-label="simple table">
@@ -308,7 +306,6 @@ function ViewPatient() {
           </Grid>
           <Grid item xs={3}></Grid>
         </Grid>
-        
       </ThemeProvider>
     );
   }
@@ -331,7 +328,6 @@ function ViewPatient() {
         <Grid item xs={1}></Grid> */}
         {/**ADD TABLE */}
 
-
         <Grid item xs={2} className={classes.side}>
           <Paper className={classes.paper}>
             <Typography variant="h3" gutterBottom>
@@ -340,51 +336,44 @@ function ViewPatient() {
             <Typography variant="h4" style={{ color: "#2980B9" }}>
               <strong>{total}</strong>
             </Typography>
-          
-            </Paper>
-            
-            <Paper className={classes.paper}>
-          <Grid item xs={2} className={classes.side}>
-         
-            <Typography variant="h3" gutterBottom>
-              <strong> History </strong>
-            </Typography>
-            <Table>
-              <TableBody>
-                {addresses.map((obj) => (
-                  <TableRow>
-                    <TableCell>{obj.Profile.name}</TableCell>
-                    <TableCell>
-                      <Button
-                        className={classesTable.hover}
-                        color="inherit"
-                        /** onClick={()=>{setopenDialogue(true); sethistoryAddress(obj.ADDRESS)}} */
-                        onClick={() => getInfo(obj.ADDRESS, obj.Profile.name)}
-                        startIcon={
-                          <ListIcon
-                            fontSize="small"
-                            // component={link}
-                            //to={`/ViewPatient/${obj.SEED}`}
-                          />
-                        }
-                      >
-                        {" "}
-                        View
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-         
+          </Paper>
+
+          <Paper className={classes.paper}>
+            <Grid item xs={2} className={classes.side}>
+              <Typography variant="h3" gutterBottom>
+                <strong> History </strong>
+              </Typography>
+              <Table>
+                <TableBody>
+                  {addresses.map((obj) => (
+                    <TableRow>
+                      <TableCell>{obj.Profile.name}</TableCell>
+                      <TableCell>
+                        <Button
+                          className={classesTable.hover}
+                          color="inherit"
+                          /** onClick={()=>{setopenDialogue(true); sethistoryAddress(obj.ADDRESS)}} */
+                          onClick={() => getInfo(obj.ADDRESS, obj.Profile.name)}
+                          startIcon={
+                            <ListIcon
+                              fontSize="small"
+                              // component={link}
+                              //to={`/ViewPatient/${obj.SEED}`}
+                            />
+                          }
+                        >
+                          {" "}
+                          View
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Grid>
+          </Paper>
         </Grid>
 
-        </Paper>
-
-
-        </Grid>
-
-      
         <Grid xs={10}>
           <Paper classNam e={classes.paper}>
             <Typography
@@ -441,13 +430,6 @@ function ViewPatient() {
 
           {/** END */}
         </Grid>
-
-
-        
-       
-        
-        
-        
       </Grid>
 
       <Dialog
