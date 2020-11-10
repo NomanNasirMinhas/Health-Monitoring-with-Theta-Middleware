@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Header from "./Header";
 import { useHistory } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
+import PersonSharpIcon from '@material-ui/icons/PersonSharp';
 import { Link } from "react-router-dom"
 import {
   Button,
@@ -33,10 +34,14 @@ import { green } from "@material-ui/core/colors";
 //import {classes} from "*.module.sass";
 //import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn } from 'mdbreact';
 //import { Row } from "react-bootstrap";
+
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     flexWrap: "wrap",
+    
+
 
     "& > *": {
       margin: theme.spacing(1),
@@ -44,6 +49,7 @@ const useStyles = makeStyles((theme) => ({
       height: theme.spacing(16),
     },
   },
+  form:{ marginTop: theme.spacing(1)},
 }));
 
 const useStyles1 = makeStyles((theme) => ({
@@ -52,6 +58,19 @@ const useStyles1 = makeStyles((theme) => ({
   },
 }));
 const theme = createMuiTheme({
+
+  label:{fontFamily: [
+    'Metrophobic',
+    'sans-serif',
+  ].join(','),},
+
+  typography: {
+    fontFamily: [
+      'Metrophobic',
+      'sans-serif',
+    ].join(','),
+  }, 
+
   palette: {
     primary: {
       main: "#2471A3", //   #2980B9 blue   dark#2471A3  button #1B4F72
@@ -69,7 +88,7 @@ export const Form = () => {
   const classes = useStyles();
   const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
-  const [isSubmitting, setisSubmitting]= useState(false);
+  const [submitted, setisSubmitting]= useState(false);
 
   const changePassword = (event) => {
     setPassword(event.target.value);
@@ -153,6 +172,7 @@ export const Form = () => {
           icon: "error",
           buttons: false,
         });
+        setisSubmitting(false);
       }
     }
   }
@@ -165,11 +185,15 @@ export const Form = () => {
 
     // <input   style={{padding:"10px"}} type="text" placeholder="Enter email"/>
     <ThemeProvider theme={theme}>
+      
+      
       <Slide direction="up" in={true} timeout={800}>
+        
         <Paper
           elevation={2}
           style={{
             width: "40%",
+            alignItems: 'center',
             maxWidth: "100%",
             height: "50%",
             float: "center",
@@ -178,29 +202,34 @@ export const Form = () => {
             backgroundColor:"#FBFCFC"
           }}
         >
-          <form style={{ color: "black", marginTop: "20px" }}>
-            <div style={{ margin: "auto", textAlign: "center" }}>
-              <h2>Login</h2>
-            </div>
+        
+         
+           <Typography  component="h3" variant="h3"   style={{ color: "black" }}>
+           <PersonSharpIcon fontSize="large" color="inherit" />  Login
+                            </Typography>
+        
+                       
+          <form className={classes.form} style={{ color: "black", marginTop: "20px" }}>
+            
+              
+             
          {/**   <div style={{ marginLeft: "25%", width: "50%" }}></div> */}
-         <Grid container spacing={0}>
-           <Grid item xs={2}></Grid>
-           <Grid item xs={8}>
+         <Grid container spacing={2}>
+           <Grid item md={2}></Grid>
+           <Grid item  md={8}>
               <div>
-                <label startIcon={<EmailIcon fontSize="small" />} style={{ padding: "10px" }}>
-                  {" "}
-                  <EmailIcon fontSize="small" /> <strong>Email</strong>{" "}
-                </label>
-
-                <br />
+                
                 <br />
 
                 <TextField
                   id="outlined-basic"
                   label="Email"
+                  placeholder="Email"
                   type="email"
                   variant="outlined"
-                  required
+                  required  
+                  disabled={submitted}
+                  size='medium'
                   color="primary"
                   value={username}
                   onChange={changeUsername}
@@ -209,19 +238,16 @@ export const Form = () => {
               </div>
               <br />
               <div>
-                <label style={{ padding: "10px" }}>
-                  {" "}
-                  <LockOpenRoundedIcon fontSize="small" />{" "}
-                  <strong>Password</strong>{" "}
-                </label>
-
-                <br />
+                
                 <br />
                 <TextField
                   id="outlined-basic"
                   label="Password"
+                  placeholder="Password"
                   type="password"
+                  size='medium'
                   variant="outlined"
+                  disabled={submitted}
                   value={password}
                   onChange={changePassword}
                   required
@@ -236,20 +262,23 @@ export const Form = () => {
               <Button
                 variant="contained"
                 color="primary"
-                disabled={isSubmitting}
+                disabled={submitted}
                 startIcon={<VpnKeyIcon fontSize="small" />}
                 onClick={login}
               >
-                 {isSubmitting ? <CircularProgress color="secondary" /> : 'Login'}
+                 {submitted ? <CircularProgress color="secondary" /> : <Typography variant="h6"> Login</Typography>}
               </Button>
               <br /> <br />
 
               </Grid>
-              <Grid item xs={2}></Grid>
+              <Grid item  md={2}></Grid>
               </Grid>
           </form>
         </Paper>
+        
         </Slide>
+       
+        
      
     </ThemeProvider>
   );
