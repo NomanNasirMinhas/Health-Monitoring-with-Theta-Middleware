@@ -25,7 +25,7 @@ import {
   createMuiTheme,
   withStyles,
   makeStyles,
-  ThemeProvider,
+  ThemeProvider,responsiveFontSizes,  
 } from "@material-ui/core/styles";
 import swal from "sweetalert";
 import TextField from "@material-ui/core/TextField";
@@ -37,6 +37,7 @@ import { green } from "@material-ui/core/colors";
 
 
 const useStyles = makeStyles((theme) => ({
+ 
   root: {
     display: "flex",
     flexWrap: "wrap",
@@ -57,8 +58,9 @@ const useStyles1 = makeStyles((theme) => ({
     margin: theme.spacing(1),
   },
 }));
-const theme = createMuiTheme({
+let theme = createMuiTheme({
 
+  
   label:{fontFamily: [
     'Metrophobic',
     'sans-serif',
@@ -81,9 +83,9 @@ const theme = createMuiTheme({
     },
   },
 });
+theme = responsiveFontSizes(theme);
 
 //const [logged_in, setLoggedIn] = useState(false);
-
 export const Form = () => {
   const classes = useStyles();
   const [username, setUsername] = useState(null);
@@ -204,7 +206,7 @@ export const Form = () => {
         >
         
          
-           <Typography  component="h3" variant="h3"   style={{ color: "black" }}>
+           <Typography  component="h6" variant="h3"   style={{ color: "black" }}>
            <PersonSharpIcon fontSize="large" color="inherit" />  Login
                             </Typography>
         
@@ -215,8 +217,8 @@ export const Form = () => {
              
          {/**   <div style={{ marginLeft: "25%", width: "50%" }}></div> */}
          <Grid container spacing={2}>
-           <Grid item md={2}></Grid>
-           <Grid item  md={8}>
+           <Grid item md={2} xs={false} sm={false}></Grid>
+           <Grid item  md={8} xs={false} sm={false}>
               <div>
                 
                 <br />
@@ -271,7 +273,7 @@ export const Form = () => {
               <br /> <br />
 
               </Grid>
-              <Grid item  md={2}></Grid>
+              <Grid item  md={2} xs={false} sm={false}></Grid>
               </Grid>
           </form>
         </Paper>
