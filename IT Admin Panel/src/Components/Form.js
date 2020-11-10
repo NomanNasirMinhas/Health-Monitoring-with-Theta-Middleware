@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import Header from "./Header";
 import { useHistory } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
-import PersonSharpIcon from '@material-ui/icons/PersonSharp';
-import { Link } from "react-router-dom"
+import PersonSharpIcon from "@material-ui/icons/PersonSharp";
+import { Link } from "react-router-dom";
 import {
   Button,
   Typography,
@@ -25,7 +25,8 @@ import {
   createMuiTheme,
   withStyles,
   makeStyles,
-  ThemeProvider,responsiveFontSizes,  
+  ThemeProvider,
+  responsiveFontSizes,
 } from "@material-ui/core/styles";
 import swal from "sweetalert";
 import TextField from "@material-ui/core/TextField";
@@ -35,14 +36,10 @@ import { green } from "@material-ui/core/colors";
 //import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn } from 'mdbreact';
 //import { Row } from "react-bootstrap";
 
-
 const useStyles = makeStyles((theme) => ({
- 
   root: {
     display: "flex",
     flexWrap: "wrap",
-    
-
 
     "& > *": {
       margin: theme.spacing(1),
@@ -50,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
       height: theme.spacing(16),
     },
   },
-  form:{ marginTop: theme.spacing(1)},
+  form: { marginTop: theme.spacing(1) },
 }));
 
 const useStyles1 = makeStyles((theme) => ({
@@ -58,20 +55,13 @@ const useStyles1 = makeStyles((theme) => ({
     margin: theme.spacing(1),
   },
 }));
-let theme = createMuiTheme({
 
-  
-  label:{fontFamily: [
-    'Metrophobic',
-    'sans-serif',
-  ].join(','),},
+let theme = createMuiTheme({
+  label: { fontFamily: ["Metrophobic", "sans-serif"].join(",") },
 
   typography: {
-    fontFamily: [
-      'Metrophobic',
-      'sans-serif',
-    ].join(','),
-  }, 
+    fontFamily: ["Metrophobic", "sans-serif"].join(","),
+  },
 
   palette: {
     primary: {
@@ -83,6 +73,8 @@ let theme = createMuiTheme({
     },
   },
 });
+
+//Adjuts font size
 theme = responsiveFontSizes(theme);
 
 //const [logged_in, setLoggedIn] = useState(false);
@@ -90,7 +82,7 @@ export const Form = () => {
   const classes = useStyles();
   const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
-  const [submitted, setisSubmitting]= useState(false);
+  const [submitted, setisSubmitting] = useState(false);
 
   const changePassword = (event) => {
     setPassword(event.target.value);
@@ -102,11 +94,11 @@ export const Form = () => {
   //routing history
   let history = useHistory();
 
-  function showProgress(){
-    return(<CircularProgress color="secondary"/>)
+  function showProgress() {
+    return <CircularProgress color="secondary" />;
   }
-   
-  function forgotPassword(){
+
+  function forgotPassword() {
     history.push("/resetpassword");
   }
   // Login handler
@@ -161,8 +153,8 @@ export const Form = () => {
             icon: "error",
             buttons: false,
           });
-          setUsername('');
-          setPassword('');
+          setUsername("");
+          setPassword("");
           setisSubmitting(false);
         }
         //console.log(username);
@@ -187,101 +179,90 @@ export const Form = () => {
 
     // <input   style={{padding:"10px"}} type="text" placeholder="Enter email"/>
     <ThemeProvider theme={theme}>
-      
-      
       <Slide direction="up" in={true} timeout={800}>
-        
         <Paper
           elevation={2}
           style={{
             width: "40%",
-            alignItems: 'center',
+            alignItems: "center",
             maxWidth: "100%",
             height: "50%",
             float: "center",
             margin: "auto",
             marginTop: "30px",
-            backgroundColor:"#FBFCFC"
+            backgroundColor: "#FBFCFC",
           }}
         >
-        
-         
-           <Typography  component="h6" variant="h3"   style={{ color: "black" }}>
-           <PersonSharpIcon fontSize="large" color="inherit" />  Login
-                            </Typography>
-        
-                       
-          <form className={classes.form} style={{ color: "black", marginTop: "20px" }}>
-            
-              
-             
-         {/**   <div style={{ marginLeft: "25%", width: "50%" }}></div> */}
-         <Grid container spacing={2}>
-           <Grid item md={2} xs={false} sm={false}></Grid>
-           <Grid item  md={8} xs={false} sm={false}>
-              <div>
-                
-                <br />
+          <Typography component="h6" variant="h3" style={{ color: "black" }}>
+            <PersonSharpIcon fontSize="large" color="inherit" /> Login
+          </Typography>
 
-                <TextField
-                  id="outlined-basic"
-                  label="Email"
-                  placeholder="Email"
-                  type="email"
-                  variant="outlined"
-                  required  
-                  disabled={submitted}
-                  size='medium'
+          <form
+            className={classes.form}
+            style={{ color: "black", marginTop: "20px" }}
+          >
+            {/**   <div style={{ marginLeft: "25%", width: "50%" }}></div> */}
+            <Grid container spacing={2}>
+              <Grid item md={2} xs={false} sm={false}></Grid>
+              <Grid item md={8} xs={false} sm={false}>
+                <div>
+                  <br />
+
+                  <TextField
+                    id="outlined-basic"
+                    label="Email"
+                    placeholder="Email"
+                    type="email"
+                    variant="outlined"
+                    required
+                    disabled={submitted}
+                    size="medium"
+                    color="primary"
+                    value={username}
+                    onChange={changeUsername}
+                  />
+                </div>
+                <br />
+                <div>
+                  <br />
+                  <TextField
+                    id="outlined-basic"
+                    label="Password"
+                    placeholder="Password"
+                    type="password"
+                    size="medium"
+                    variant="outlined"
+                    disabled={submitted}
+                    value={password}
+                    onChange={changePassword}
+                    required
+                  />
+
+                  <br />
+                  {/** <Link onClick={forgotPassword}>Forgot Password?</Link> */}
+                </div>
+                <br />
+                <br />
+                <Button
+                  variant="contained"
                   color="primary"
-                  value={username}
-                  onChange={changeUsername}
-                 
-                />
-              </div>
-              <br />
-              <div>
-                
-                <br />
-                <TextField
-                  id="outlined-basic"
-                  label="Password"
-                  placeholder="Password"
-                  type="password"
-                  size='medium'
-                  variant="outlined"
                   disabled={submitted}
-                  value={password}
-                  onChange={changePassword}
-                  required
-                />
-
-                <br />
-               {/** <Link onClick={forgotPassword}>Forgot Password?</Link> */}
-                
-              </div>
-              <br />
-              <br />
-              <Button
-                variant="contained"
-                color="primary"
-                disabled={submitted}
-                startIcon={<VpnKeyIcon fontSize="small" />}
-                onClick={login}
-              >
-                 {submitted ? <CircularProgress color="secondary" /> : <Typography variant="h6"> Login</Typography>}
-              </Button>
-              <br /> <br />
-
+                  startIcon={<VpnKeyIcon fontSize="small" />}
+                  onClick={login}
+                >
+                  {submitted ? (
+                    <CircularProgress color="secondary" />
+                  ) : (
+                    <Typography variant="h6">Login</Typography>
+                  )}
+                </Button>
+                <br /> <br />
               </Grid>
-              <Grid item  md={2} xs={false} sm={false}></Grid>
-              </Grid>
+              <Grid item md={2} xs={false} sm={false}></Grid>
+            </Grid>
           </form>
         </Paper>
-        
-        </Slide>
-       
-        
-     
+      </Slide>
     </ThemeProvider>
   );
 };

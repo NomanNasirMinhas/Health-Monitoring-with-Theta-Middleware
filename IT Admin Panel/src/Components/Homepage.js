@@ -11,13 +11,13 @@ import {
   CardActions,
   CardContent,
   Button,
-  Typography,
+  Typography,CircularProgress
 } from "@material-ui/core";
 import {
   createMuiTheme,
   withStyles,
   makeStyles,
-  ThemeProvider,
+  ThemeProvider,responsiveFontSizes,
   useTheme,
 } from "@material-ui/core/styles";
 
@@ -40,11 +40,17 @@ import ListIcon from "@material-ui/icons/List";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
 
-const theme = createMuiTheme({
+let theme = createMuiTheme({
+
+  typography: {
+    fontFamily: ["Metrophobic", "sans-serif"].join(","),
+  },
   primary: {
     main: "#2980B9",
   },
 });
+//Adjuts font size
+theme = responsiveFontSizes(theme);
 
 const rows = [
   { id: 1, name: "home", assigned_devices: 3 },
@@ -60,7 +66,7 @@ const useStylesTable = makeStyles({
   },
   TableHead: {
     cell: { color: "white" },
-    strong: { color: "white" },
+    
   },
   paper: {
     maxwidth: "100%",
@@ -105,6 +111,7 @@ function TablePaginationActions(props) {
   };
 
   return (
+    <ThemeProvider theme={theme}>
     <div className={classes.root}>
       <IconButton
         onClick={handleFirstPageButtonClick}
@@ -142,7 +149,7 @@ function TablePaginationActions(props) {
       >
         {theme.direction === "rtl" ? <FirstPageIcon /> : <LastPageIcon />}
       </IconButton>
-    </div>
+    </div> </ThemeProvider>
   );
 }
 
@@ -255,33 +262,25 @@ function Doctors(props) {
 
   if (seeds == false) {
     return (
-      <ThemeProvider>
+      <ThemeProvider theme={theme}>
         <Navbar />
-        <Typography
+       {/** <Typography
           variant="h3"
-          style={{ marginTop: "2%", color: "#B4B4B4", fontWeight: "bold" }}
+          style={{ marginTop: "2%", color: "#B4B4B4" }}
         >
           Doctors{" "}
-        </Typography>
-
-        <Grid container spacing={1}>
+        </Typography> */}
+        <br/>   <br/>   <br/>   <br/>   <br/>   <br/>   <br/>   <br/>  
+        <Grid container spacing={0}>
           {/**  <Grid item xs={0.5}></Grid> */}
           <Grid item xs={12}>
-            <Paper
-              elevation={5}
-              style={{
-                maxWidth: "100%",
-                width: "100%",
-                margin: "auto",
-                marginTop: "2%",
-                border: "solid grey 0.9px",
-              }}
-            ></Paper>
+            
           </Grid>
           {/**  <Grid item xs={0.5}></Grid> */}
         </Grid>
-
-        <Typography variant="h1"> Loading...</Typography>
+              
+       {/**  <Typography variant="h1"> Loading...</Typography>*/}
+       <CircularProgress size="200px"/>
       </ThemeProvider>
     );
   }
@@ -293,11 +292,11 @@ function Doctors(props) {
       <Navbar />
 
       <Typography
-        variant="h3"
-        style={{ marginTop: "1%", color: "#B4B4B4", fontWeight: "bold" }}
-      >
-        Doctors{" "}
-      </Typography>
+          variant="h2"
+          style={{ marginTop: "2%", color: "#B4B4B4" }}
+        >
+          Doctors{" "}
+        </Typography>
       <Grid container spacing={1}>
         <Grid item xs={12} style={{ flaot: "right" }}>
           <Paper
@@ -330,20 +329,20 @@ function Doctors(props) {
                 <TableHead style={{ backgroundColor: "#2980B9" }}>
                   <TableRow>
                     <TableCell align="center">
-                      <strong style={{ color: "white" }}>Name</strong>
+                    <Typography variant="h6" style={{ color: "white" }}>Name</Typography>
                     </TableCell>
                     <TableCell align="center">
-                      <strong style={{ color: "white" }}>Specialization</strong>
+                    <Typography variant="h6" style={{ color: "white" }}>Specialization</Typography>
                     </TableCell>
                     <TableCell align="center">
-                      <strong style={{ color: "white" }}>Contact</strong>
+                    <Typography variant="h6" style={{ color: "white" }}>Contact</Typography>
                     </TableCell>
 
                     <TableCell align="center">
-                      <strong style={{ color: "white" }}>Seed</strong>
+                    <Typography variant="h6" style={{ color: "white" }}>Seed</Typography>
                     </TableCell>
                     <TableCell align="center">
-                      <strong style={{ color: "white" }}>Patients</strong>
+                    <Typography variant="h6" style={{ color: "white" }}>Patients</Typography>
                     </TableCell>
                   </TableRow>
                 </TableHead>
@@ -357,17 +356,17 @@ function Doctors(props) {
                   ).map((obj) => (
                     <TableRow hover key={obj.name}>
                       <TableCell component="th" scope="row">
-                        <strong> {obj.ID} </strong>
+                      <Typography variant="body2"> {obj.ID} </Typography>                      
                       </TableCell>
                       <TableCell align="center">
-                        <strong>{obj.Profile.specialization}</strong>
+                      <Typography variant="body2">{obj.Profile.specialization}</Typography> 
                       </TableCell>
                       <TableCell align="center">
-                        <strong> {obj.Profile.contact}</strong>
+                      <Typography variant="body2"> {obj.Profile.contact}</Typography> 
                       </TableCell>
                       <TableCell align="center">
                         {" "}
-                        <strong>{obj.SEED}</strong>
+                        <Typography variant="body2">{obj.SEED}</Typography> 
                       </TableCell>
 
                       <TableCell align="center">
@@ -385,7 +384,8 @@ function Doctors(props) {
                             }
                           >
                             {" "}
-                            Patients
+                            <Typography variant="button"  >
+                            Patients</Typography>
                           </Button>
                         }
                       </TableCell>
@@ -421,7 +421,7 @@ function Doctors(props) {
         </Grid>
       </Grid>
 
-      <Grid container spacing={1} style={{ marginTop: "1%" }}>
+      <Grid container spacing={1}  justify="space-between" >
         {/**  <Grid item xs={1}></Grid> */}
         <Grid item xs={4}>
           <Paper
@@ -435,7 +435,9 @@ function Doctors(props) {
               Registered Doctors{" "}
             </Typography>
             <Typography variant="h5">
-              <strong style={{ color: "white" }}> {totalDoctors} </strong>
+              <strong style={{ color: "white" }}> 
+              {totalPatients == 0 ? <CircularProgress  style={{color:"white"}}/> : totalDoctors}{" "}
+               </strong>
             </Typography>
           </Paper>
         </Grid>
@@ -455,7 +457,7 @@ function Doctors(props) {
             <Typography variant="h5">
               <strong style={{ color: "white" }}>
                 {" "}
-                {totalPatients == 0 ? "Fetching data..." : totalPatients}{" "}
+                {totalPatients == 0 ? <CircularProgress  style={{color:"white"}}/> : totalPatients}{" "}
               </strong>
             </Typography>
           </Paper>
@@ -473,7 +475,8 @@ function Doctors(props) {
               Total Devices{" "}
             </Typography>
             <Typography variant="h5">
-              <strong style={{ color: "white" }}> -- </strong>
+              <strong style={{ color: "white" }}> 
+               {totalPatients == 0 ? <CircularProgress style={{color:"white"}}/> : "--"}{" "} </strong>
             </Typography>
           </Paper>
         </Grid>
