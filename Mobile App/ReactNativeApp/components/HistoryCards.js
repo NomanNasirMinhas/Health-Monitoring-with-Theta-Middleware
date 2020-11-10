@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect } from 'react';
-import { StyleSheet, View, Alert, Text } from 'react-native';
+import { StyleSheet, View, Alert, Text, FlatList } from 'react-native';
 import { Table, Row, Rows } from 'react-native-table-component';
 import { ScrollView } from 'react-native-gesture-handler';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -15,7 +15,7 @@ import { LineChart } from "react-native-chart-kit";
 //}
 
 
-export default function Readings({route, navigation}) {
+export default function History({route, navigation}) {
   var [finished, setFinished]=useState(false)
   var [tableState, setTableState]= useState([]);
   var [hashArray, setHashArray] = useState([])
@@ -25,81 +25,28 @@ export default function Readings({route, navigation}) {
   var [hrArray, setHrArray] = useState([])
   var [systArray, setSystArray] = useState([])
   var [diastArray, setDiastArray] = useState([])
-  var [BPArray, setBPArray] = useState([])
-  var [tempArray, setTempArray] = useState([])
 
   var tempData=[]
   var hrData=[]
   var systData=[]
   var diastData=[]
 
-  var tableData=[]
-  var maxWidth = Dimensions.get("window").width;
+  const { data } = route.params;
 
-  useEffect(() => {
-    (async () => {
-
-      try{
-        const { address } = route.params;
-        setHistState('Fetching Transaction Hashes\nPlease Wait......')
-    var response = await fetch(`https://thetamiddleware.herokuapp.com/getAllHash/${address.toString()}&08-11-2020&vitals`);
-    var resObj = await response.json();
-    // Alert.alert("All Hashes", JSON.stringify(resObj.length));
-    if(resObj === false){
-      Alert.alert("No Transactions Found");
-      navigation.goBack();
-    }
-    else{
-    setHashArray(resObj.reverse())
-    setHistState('Fetching Transactions from IOTA\nPlease Wait..........')
-    for(var i=0; i<resObj.length; i++)
-    {
-      var responseTx = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${resObj[i].toString()}`);
-    var resObjTx = await responseTx.json();
-    var parsed = JSON.parse(resObjTx)
-    // Alert.alert(JSON.stringify(parsed))
-    setTxInfo(txInfo.push(parsed))
-
-    }
-    // Alert.alert("Fetched",JSON.stringify(txInfo))
-
-    for(var i=0; i<txInfo.length; i++)
+  for(var i=0; i<data.length; i++)
     {
     var val = txInfo[i]
-    var row=[]
-      row.push(val.TimeStamp.toString());
-      row.push(val.HR);
-      row.push(val.Temp);
-      row.push(val.BP.systolic);
-      row.push(val.BP.diastolic);
       tempData.push(val.Temp)
       hrData.push(val.HR)
       systData.push(val.BP.systolic)
       diastData.push(val.BP.diastolic)
-      tableData.push(row)
-
     }
-    setTempArray(tempData)
-    setHrArray(hrData)
-    setSystArray(systData)
-    setDiastArray(diastData)
-    setTableState(tableData)
-    setFinished(true)
-    console.log(tableData)
-  }
-      }
-      catch(e){
-        setFinished(true)
-        // Alert.alert("Error Has Occurred")
-      }
 
+  setTempArray(tempData)
+  setHrArray(hrData)
+  setSystArray(systData)
+  setDiastArray(diastArray)
 
-
-    })();
-  }, []);
-
-
-  var tableHead= ['Time','Heart Rate', 'Temp.', 'Syst. BP', 'Dia. BP'];
 
   let [fontsLoaded] = useFonts({
     // Load a font `Montserrat` from a static resource
@@ -121,32 +68,31 @@ export default function Readings({route, navigation}) {
     return <AppLoading />;
   } else {
 
+    const Item = ({ item }) => (
+      <View style={styles.item}>
+        <Text style={styles.text}>At: {item.TimeStamp}</Text>
+        <Text style={styles.subText}>Heart Rate: {item.HR}</Text>
+        <Text style={styles.subText}>Body Temp: {item.Temp} C</Text>
+    <Text style={styles.subText}>Blood Pressure: {item.BP.systolic}/{item.BP.diastolic}</Text>
+      </View>
+    );
+
+    const renderItem = ({ item }) => (
+      <Item item={item} />
+    );
+
   return (
     <View style={styles.container}>
-      <Spinner
+      {/* <Spinner
           visible={!finished}
           textContent={histState}
           textStyle={styles.text}
-        />
+        /> */}
       <ScrollView horizontal={false} showsVerticalScrollIndicator={true} >
 
       {finished &&
       <View style={{marginBottom:30, paddingHorizontal:20, paddingTop:40}}>
-        <Text style={[styles.text, { color: "white", fontFamily: 'MetropolisBold', fontSize:30 }]}>
-              Your Vital Sign's History
-            </Text>
-        <View style={styles.buttonContainer}>
-          <Button
-            title="Go Back"
-            buttonStyle={styles.buttonStyle}
-            titleStyle={styles.buttonText}
-            style={{ width: 150}}
-            onPress={
-              () => navigation.goBack()
-              // navigation.navigate('Readings')
-            }
-          ></Button>
-        </View>
+
         <Text style={[styles.text, { color: "white", fontFamily: 'MetropolisBold', fontSize:30 }]}>
               Infographics
             </Text>
@@ -283,22 +229,33 @@ export default function Readings({route, navigation}) {
       </View>
       }
 
-      {finished &&
-
-      <Card containerStyle={[styles.card, {borderTopLeftRadius: 20, borderTopRightRadius: 20,}]}>
-        <Card.Title>
-            <Text style={[styles.text, { color: "white", fontSize: 20 }]}>
-              Your Readings are shown below
-            </Text>
+      <Card containerStyle={styles.card}>
+      <Card.Title style={[styles.text, { color: "white", fontFamily: 'MetropolisBold', fontSize:30 }]}>
+              Vitals History
             </Card.Title>
+        <View style={styles.buttonContainer}>
+          <Button
+            title="Go Back"
+            buttonStyle={styles.buttonStyle}
+            titleStyle={styles.buttonText}
+            style={{ width: 150}}
+            onPress={
+              () => navigation.goBack()
+              // navigation.navigate('Readings')
+            }
+          ></Button>
+        </View>
+        </Card>
 
-      <Table  style={styles.tableStyle} borderStyle={{borderWidth: 2, borderColor: 'white'}}>
-        <Row data={tableHead} style={styles.head} textStyle={styles.headerText}/>
-        <Rows data={tableState} textStyle={styles.text}/>
-      </Table>
-      </Card>
+      <View style={{marginBottom:30, paddingHorizontal:20, paddingTop:40}}>
+      <FlatList
+        data={data.reverse()}
+        renderItem={renderItem}
+        keyExtractor={item => item.TimeStamp}
+      />
+            </View>
 
-      }
+
 
       </ScrollView>
     </View>
@@ -308,26 +265,98 @@ export default function Readings({route, navigation}) {
 
 
 const styles = StyleSheet.create({
-  container: { flex: 1, paddingTop: 30, backgroundColor: '#034772' },
-  head: { height: 40, backgroundColor: '#154360' },
-  text: { margin: 6, color: "white", alignSelf: 'center', fontFamily:'Righteous'},
-  headerText: { margin: 6, color: "white", alignSelf: 'center', fontFamily:'MetropolisBold'},
-  tableStyle: { backgroundColor: "#485776"},
+  container: {
+    flex: 1,
+    backgroundColor: "#034772",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
   card: {
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+    width:Dimensions.get("window").width,
     padding: "auto",
-    paddingTop: 20,
+    paddingTop: 50,
     margin: "auto",
     borderStyle: "solid",
-    borderWidth: 5,
-    borderColor: "#F6F8FC",
+    borderWidth: 0,
+    borderColor: "#154360",
     backgroundColor: "#0B3047",
   },
+
+  text: {
+    fontFamily: "PoppinsBold",
+    color: "#1F618D",
+    fontSize:20,
+    textAlign: "center",
+    fontWeight: "900",
+  },
+
+  buttonStyle:{
+    backgroundColor:'#00619E',
+    borderWidth:2,
+    borderColor:'white'
+  },
+  buttonText: {
+    fontFamily: "MetropolisBold",
+    color: "white",
+    textAlign: "center",
+  },
+
+  subText: {
+    fontSize: 16,
+    color: "#1F618D",
+    fontFamily:'Secular',
+    textTransform: "capitalize",
+    fontWeight: "500",
+  },
+
+  infoContainer: {
+    alignSelf: "center",
+    alignItems: "center",
+    marginTop: 0,
+  },
+
+  statsContainer: {
+    flexDirection: "row",
+    alignSelf: "center",
+    marginTop: 0,
+    marginBottom: 20,
+  },
+
+  lastTxContainer: {
+    flexDirection: "row",
+    alignSelf: "center",
+    marginTop: 20,
+    marginBottom: 20,
+  },
+
   buttonContainer: {
     flexDirection: "row",
     alignSelf: "center",
     marginBottom: 20,
   },
-
+  statsBox: {
+    alignItems: "center",
+    flex: 1,
+  },
+  statusOnline:{
+    color:'#1E8449'
+  },
+  statusOffline:{
+    color:'#C0392B'
+  },
+  item: {
+    backgroundColor: '#AED6F1',
+    padding: 10,
+    borderRadius:10,
+    marginBottom:20
+  },
+  title: {
+    fontSize: 32,
+  },
 });
+

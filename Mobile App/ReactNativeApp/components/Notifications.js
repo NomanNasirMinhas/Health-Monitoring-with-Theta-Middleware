@@ -1,135 +1,27 @@
-import { StatusBar } from "expo-status-bar";
-import React, { useState, useEffect } from "react";
-import Spinner from "react-native-loading-spinner-overlay";
-import { StyleSheet, Text, View, Image, Alert } from "react-native";
+import React, { Component, useState, useEffect } from 'react';
+import { StyleSheet, View, Alert, Text, FlatList } from 'react-native';
+import { Table, Row, Rows } from 'react-native-table-component';
+import { ScrollView } from 'react-native-gesture-handler';
+import Spinner from 'react-native-loading-spinner-overlay';
 import { Card, ListItem, Button, Icon } from "react-native-elements";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { ScrollView } from "react-native-gesture-handler";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-// import { useFonts, Righteous_400Regular } from '@expo-google-fonts/righteous';
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { DataTable } from 'react-native-paper';
 import { AppLoading } from 'expo';
-import { useFonts } from 'expo-font';
-import Readings from "./Readings";
-import History from "./Histroy";
 import { Dimensions } from "react-native";
-import { FloatingAction } from "react-native-floating-action";
-import {
-  LineChart,
-  BarChart,
-  PieChart,
-  ProgressChart,
-  ContributionGraph,
-  StackedBarChart,
-} from "react-native-chart-kit";
+import { useFonts } from 'expo-font';
+import { LineChart } from "react-native-chart-kit";
 
-const getFonts = () =>
-  Font.loadAsync({
-    Righteous: require("../assets/fonts/Righteous-Regular.ttf"),
-  });
+//this.state = {
 
-export default function Profile({ route, navigation }) {
-  // const [fontsLoaded, setFontsLoaded] = useState(false);
-  const [patientName, setPatientName] = useState("Loading....");
-  const [patientAge, setPatientAge] = useState("Loading....");
-  const [patientGender, setPatientGender] = useState("Loading....");
-  const [patientDate, setPatientDate] = useState("Loading....");
-  const [patientHR, setPatientHR] = useState("Loading....");
-  const [patientTemp, setPatientTemp] = useState("Loading....");
-  const [patientBPsys, setPatientBPsys] = useState("Loading....");
-  const [patientBPdiast, setPatientBPdiast] = useState("Loading....");
-  const [patientAddress, setPatientAddress] = useState("Loading....");
-  const [patientDeviceID, setPatientDeviceID] = useState("Loading....");
-  const [hasLastTx, setHasLastTx] = useState(false);
-  const [lastTx, setLastTx] = useState([0, 0, 0, 0]);
-  var [finished, setFinished] = useState(false);
-  const [online, setOnline] = useState("Checking Device Status....")
-  const [boolOnline, setBoolOnline] = useState(0)
-  var maxWidth = Dimensions.get("window").width;
-  const actions = [
-    {
-      text: "Prescriptions",
-      icon: require("../assets/medicine.png"),
-      name: "btn_medicine",
-      position: 2
-    },
-    {
-      text: "Doctor's Notifications",
-      icon: require("../assets/bell.png"),
-      name: "btn_bell",
-      position: 1
-    }
-  ];
+//}
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const { info } = route.params;
-        // Alert.alert(JSON.stringify(info))
-        setPatientName(info.Profile.name.toString());
-        setPatientAge(info.Profile.age.toString());
-        setPatientGender(info.Profile.gender.toString());
-        setPatientDate(info.Profile.date.toString());
 
-        setPatientAddress(info.ADDRESS.toString());
-        setPatientDeviceID(info.ID.toString());
-
-        var response = await fetch(
-          `https://thetamiddleware.herokuapp.com/getLastTx/${info.ADDRESS}&vitals`
-        );
-
-        var resObj = await response.json();
-        if (resObj !== false) {
-          var responseTx = await fetch(
-            `https://thetamiddleware.herokuapp.com/getTx/${resObj}`
-          );
-          var resObjTx = await responseTx.json();
-          resObjTx = JSON.parse(resObjTx);
-          // Alert.alert(JSON.stringify(resObjTx))
-          setPatientHR(resObjTx.HR.toString());
-          setPatientTemp(resObjTx.Temp.toString());
-          setPatientBPsys(resObjTx.BP.systolic.toString());
-          setPatientBPdiast(resObjTx.BP.diastolic.toString());
-          setLastTx([resObjTx.HR, resObjTx.Temp, resObjTx.BP.systolic,resObjTx.BP.diastolic]);
-          setHasLastTx(true);
-          setFinished(true);
-        }
-        // alert("Finished")
-        else {
-          setPatientHR("N/A");
-          setPatientTemp("N/A");
-          setPatientBPsys("N/A");
-          setPatientBPdiast("N/A");
-          setFinished(true);
-        }
-
-        var checkOnline = await fetch(
-          `https://thetamiddleware.herokuapp.com/getLastTx/${info.ADDRESS}&deviceLog`
-        );
-        checkOnline = await checkOnline.json();
-        if(checkOnline !== false){
-          var logTx = await fetch(
-            `https://thetamiddleware.herokuapp.com/getTx/${checkOnline}`
-          );
-          var onlineStatus = await logTx.json();
-          onlineStatus = JSON.parse(onlineStatus);
-          // Alert.alert(JSON.stringify(onlineStatus))
-          onlineStatus.LogType == 1 ? setBoolOnline(1) : setBoolOnline(0)
-          onlineStatus.LogType == 1 ? setOnline("Your Device is ONLINE") : setOnline("Your Device is OFFLINE")
-        }
-        else{
-          setBoolOnline(2)
-          setOnline("Patient's Device Status is Unknown")
-        }
-
-      } catch (e) {
-        setFinished(true);
-        Alert.alert("Error has Ocurred", JSON.stringify(e));
-      }
-      // Alert.alert(JSON.stringify(info))
-    })();
-  }, []);
+export default function Notifications({route, navigation}) {
+  var [finished, setFinished]=useState(false)
+  var [tableState, setTableState]= useState([]);
+  var [hashArray, setHashArray] = useState([])
+  var [histState, setHistState] = useState('Please Wait...')
+  var [txInfo, setTxInfo] = useState([])
+  const { data } = route.params;
 
 
   let [fontsLoaded] = useFonts({
@@ -152,198 +44,61 @@ export default function Profile({ route, navigation }) {
     return <AppLoading />;
   } else {
 
+    const Item = ({ item }) => (
+      <View style={styles.item}>
+        <Text style={styles.text}>{item.NotificationTitle}</Text>
+        <Text style={styles.subText}>{item.NotificationDetails}</Text>
+        <Text style={styles.subText}>At: {item.TimeStamp}</Text>
+      </View>
+    );
+
+    const renderItem = ({ item }) => (
+      <Item item={item} />
+    );
+
   return (
     <View style={styles.container}>
-      <Spinner
-        visible={!finished}
-        color='white'
-        textContent={"Fetching from IoTA...\nPlease Wait..."}
-      />
+      {/* <Spinner
+          visible={!finished}
+          textContent={histState}
+          textStyle={styles.text}
+        /> */}
+      <ScrollView horizontal={false} showsVerticalScrollIndicator={true} >
 
-      <ScrollView horizontal={false} showsVerticalScrollIndicator={false}>
-
-        <Card.Title>
-          <Text style={[styles.text, { color:'white', fontWeight: "900", fontSize: 36, fontFamily:'Righteous' }]}>
-            {patientName}
-          </Text>
-        </Card.Title>
-        <View style={styles.infoContainer}>
-          <Text
-            style={[
-              styles.text,
-              {color: '#F1C40F', fontFamily:'MetropolisBlack',fontSize: 20, marginBottom: 10 },
-              boolOnline == 1 ? styles.statusOnline : styles.statusOffline
-            ]}
-          >
-            {online}
-          </Text>
-        </View>
-        <Card.Divider />
-
-
-        <View style={styles.statsContainer}>
-          <View style={styles.statsBox}>
-            <Text style={[styles.text, { fontSize: 20 }]}>Age</Text>
-            <Text style={[styles.text, styles.subText]}>{patientAge}</Text>
-          </View>
-          <View
-            style={[
-              styles.statsBox,
-              {
-                borderColor: "#DFD8C8",
-                borderLeftWidth: 2,
-                borderRightWidth: 2,
-              },
-            ]}
-          >
-            <Text style={[styles.text, { fontSize: 20 }]}>Gender</Text>
-            <Text style={[styles.text, styles.subText]}>
-              {patientGender.toUpperCase()}
-            </Text>
-          </View>
-          <View style={styles.statsBox}>
-            <Text style={[styles.text, { fontSize: 20 }]}>Admitted</Text>
-            <Text style={[styles.text, styles.subText]}>{patientDate}</Text>
-          </View>
-        </View>
-
-        <Card.Divider />
+      <Card containerStyle={styles.card}>
+      <Card.Title style={[styles.text, { color: "white", fontFamily: 'MetropolisBold', fontSize:30 }]}>
+              Doctor's Notifications
+            </Card.Title>
         <View style={styles.buttonContainer}>
           <Button
-            title="Live Readings"
+            title="Go Back"
             buttonStyle={styles.buttonStyle}
             titleStyle={styles.buttonText}
-            style={{ width: 150, marginRight: 10 }}
+            style={{ width: 150}}
             onPress={
-              () => Alert.alert("This Feature is being under development")
+              () => navigation.goBack()
               // navigation.navigate('Readings')
             }
           ></Button>
-          <Button
-            style={{ width: 150, marginLeft: 10 }}
-            buttonStyle={styles.buttonStyle}
-            titleStyle={styles.buttonText}
-            title="View History"
-            onPress={() =>
-              navigation.navigate("History", { address: patientAddress })
-            }
-          ></Button>
         </View>
-        <View style={styles.buttonContainer}>
-          <Button
-            title="Prescriptions"
-            buttonStyle={styles.buttonStyle}
-            titleStyle={styles.buttonText}
-            style={{ width: 150, marginRight: 10 }}
-            onPress={
-              () => Alert.alert("This Feature is being under development")
-              // navigation.navigate('Readings')
-            }
-          ></Button>
-          <Button
-            style={{ width: 150, marginLeft: 10}}
-            buttonStyle={styles.buttonStyle}
-            titleStyle={styles.buttonText}
-            title="Notifications"
-            onPress={() =>
-              navigation.navigate("History", { address: patientAddress })
-            }
-          ></Button>
-        </View>
-        <Card.Divider />
-        <Card containerStyle={styles.card}>
-          <Card.Title>
-            <Text style={[styles.text, { color: "white", fontSize: 20 }]}>
-              Last Readings
-            </Text>
-          </Card.Title>
-
-          <View>
-            {/* Bar Chart Starts From Here */}
-
-            <BarChart
-              data={{
-                labels: ["Temp (F)", "HR (BPM)", "BP-Syst", "BP-Diast"],
-                datasets: [
-                  {
-                    data: lastTx,
-                  },
-                ],
-              }}
-              width={maxWidth} // from react-native
-              height={250}
-              fromZero={true}
-              yAxisInterval={1} // optional, defaults to 1
-              chartConfig={{
-                backgroundColor: "#103952",
-                backgroundGradientFrom: "#02395A",
-                backgroundGradientTo: "#074164",
-                decimalPlaces: 0, // optional, defaults to 2dp
-                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                style: {
-                  borderRadius: 6,
-                },
-              }}
-              style={{
-                marginVertical: 0,
-                paddingHorizontal: "auto",
-                borderRadius: 0,
-              }}
-            />
-
-            <View style={styles.lastTxContainer}>
-              <View style={styles.statsBox}>
-                <Text style={[styles.text, { fontSize: 20 }]}>
-                  Heart{"\n"}Beat
-                </Text>
-                <Text style={[styles.text, styles.subText]}>
-                  {patientHR} BPM
-                </Text>
-              </View>
-              <View
-                style={[
-                  styles.statsBox,
-                  {
-                    borderColor: "#DFD8C8",
-                    borderLeftWidth: 2,
-                    borderRightWidth: 2,
-                  },
-                ]}
-              >
-                <Text style={[styles.text, { fontSize: 20 }]}>
-                  Body{"\n"}Temp.
-                </Text>
-                <Text style={[styles.text, styles.subText]}>
-                  {patientTemp} F
-                </Text>
-              </View>
-              <View style={styles.statsBox}>
-                <Text style={[styles.text, { fontSize: 20 }]}>
-                  Blood{"\n"}Pressure
-                </Text>
-                <Text style={[styles.text, styles.subText]}>
-                  {patientBPsys}/{patientBPdiast} Hg
-                </Text>
-              </View>
-            </View>
-          </View>
         </Card>
 
-        {/* <FloatingAction
-        floatingIcon={require("../assets/menu.png")}
-        color={"#7EB8F1"}
-        overlayColor={"rgba(208, 230, 252, 0.6)"}
-        actions={actions}
-        onPressItem={name => {
-      console.log(`selected button: ${name}`);
-    }}
-  /> */}
+      <View style={{marginBottom:30, paddingHorizontal:20, paddingTop:40}}>
+      <FlatList
+        data={data.reverse()}
+        renderItem={renderItem}
+        keyExtractor={item => item.TimeStamp}
+      />
+            </View>
+
+
+
       </ScrollView>
     </View>
-  );
-      }
+  )
 }
+}
+
 
 const styles = StyleSheet.create({
   container: {
@@ -351,16 +106,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#034772",
     alignItems: "center",
     justifyContent: "center",
-    paddingTop: 50,
   },
 
   card: {
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+    width:Dimensions.get("window").width,
     padding: "auto",
-    paddingTop: 20,
+    paddingTop: 50,
     margin: "auto",
     borderStyle: "solid",
     borderWidth: 0,
@@ -369,8 +124,9 @@ const styles = StyleSheet.create({
   },
 
   text: {
-    fontFamily: "Metropolis",
-    color: "white",
+    fontFamily: "PoppinsBold",
+    color: "#1F618D",
+    fontSize:20,
     textAlign: "center",
     fontWeight: "900",
   },
@@ -387,8 +143,8 @@ const styles = StyleSheet.create({
   },
 
   subText: {
-    fontSize: 14,
-    color: "#e3e1dc",
+    fontSize: 16,
+    color: "#1F618D",
     fontFamily:'Secular',
     textTransform: "capitalize",
     fontWeight: "500",
@@ -428,5 +184,14 @@ const styles = StyleSheet.create({
   },
   statusOffline:{
     color:'#C0392B'
-  }
+  },
+  item: {
+    backgroundColor: '#AED6F1',
+    padding: 20,
+    borderRadius:20
+  },
+  title: {
+    fontSize: 32,
+  },
 });
+

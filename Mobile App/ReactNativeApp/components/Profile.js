@@ -41,14 +41,33 @@ export default function Profile({ route, navigation }) {
   const [patientBPdiast, setPatientBPdiast] = useState("Loading....");
   const [patientAddress, setPatientAddress] = useState("Loading....");
   const [patientDeviceID, setPatientDeviceID] = useState("Loading....");
-  const [spinnierText, setSpinnerText] = useState("Fetching From IOTA.........\nPlease Wait.............")
+  const [spinnerText, setSpinnerText] = useState("Fetching From IOTA...\nPlease Wait...")
   const [hasLastTx, setHasLastTx] = useState(false);
   const [lastTx, setLastTx] = useState([0, 0, 0, 0]);
-  var [finished, setFinished] = useState(false);
+  const [lastNotif, setLastNotif] = useState({now: 0});
+  const [lastPresc, setLastPresc] = useState({now: 0});
+  const [notifFinished, setNotifFinished] = useState(false);
+  const [prescFinished, setPrescFinished] = useState(false);
+  const [finished, setFinished] = useState(false);
   const [online, setOnline] = useState("Checking Device Status....")
-  const [boolOnline, setBoolOnline] = useState(0)
+  const [boolOnline, setBoolOnline] = useState(0);
+
+  // Last Prescription States
+  const[prescTitle, setPrescTitle] = useState("Loading... Please Wait...")
+  const[prescDetails, setPrescDetails] = useState("Loading... Please Wait...")
+  const[prescTime, setPrescTime] = useState("Loading... Please Wait...")
+
+  // Last Notification States
+  const[notifTitle, setNotifTitle] = useState("Loading... Please Wait...")
+  const[notifDetails, setNotifDetails] = useState("Loading... Please Wait...")
+  const[notifTime, setNotifTime] = useState("Loading... Please Wait...")
+
+
   var maxWidth = Dimensions.get("window").width;
   var PrescArray = [];
+  var NotificationArray = [];
+  var HistoryArray = []
+  var lastPrescVar = false;
 
   useEffect(() => {
     (async () => {
@@ -111,6 +130,58 @@ export default function Profile({ route, navigation }) {
           setOnline("Patient's Device Status is Unknown")
         }
 
+        var prescHash = await fetch(
+          `https://thetamiddleware.herokuapp.com/getLastTx/${info.ADDRESS}&prescription`
+        );
+        prescHash = await prescHash.json();
+
+        if(prescHash !== false){
+          var logTx = await fetch(
+            `https://thetamiddleware.herokuapp.com/getTx/${prescHash}`
+          );
+          var prescData = await logTx.json();
+          prescData = JSON.parse(prescData);
+          setPrescTitle(prescData.PrescriptionName)
+          setPrescDetails(prescData.PrescriptionDetails)
+          setPrescTime(prescData.TimeStamp)
+          // setLastPresc({...lastPresc, now:{prescData}})
+          // setPrescFinished(true)
+          // console.log("Prescription Data", lastPresc)
+        }
+        else{
+          setPrescTitle("Not Found...")
+          setPrescDetails("Not Found...")
+          setPrescTime("Not Found...")
+          console.log("No Last Prescription")
+        }
+
+        var notifHash = await fetch(
+          `https://thetamiddleware.herokuapp.com/getLastTx/${info.ADDRESS}&docNotification`
+        );
+        notifHash = await notifHash.json();
+
+        if(notifHash !== false){
+          var logTx = await fetch(
+            `https://thetamiddleware.herokuapp.com/getTx/${notifHash}`
+          );
+          var notifData = await logTx.json();
+          notifData = JSON.parse(notifData);
+
+          setNotifTitle(notifData.NotificationTitle)
+          setNotifDetails(notifData.NotificationDetails)
+          setNotifTime(notifData.TimeStamp)
+          // setLastNotif({...lastNotif, now: {notifData}})
+          // setNotifFinished(true)
+          // console.log("Notification Data", lastNotif)
+        }
+        else{
+          setNotifTitle("Not Found...")
+          setNotifDetails("Not Found...")
+          setNotifTime("Not Found...")
+          console.log("No Last Notification")
+        }
+
+
       } catch (e) {
         setFinished(true);
         Alert.alert("Error has Ocurred", JSON.stringify(e));
@@ -124,13 +195,13 @@ export default function Profile({ route, navigation }) {
       setFinished(false)
       const address = patientAddress;
       // setHistState(spinnierText)
-  setSpinnerText('Fetching Transactions from IOTA\nPlease Wait..........')
+  setSpinnerText('Fetching Hashes of Prescriptions\nPlease Wait...')
 
   var response = await fetch(`https://thetamiddleware.herokuapp.com/getAllHash/${address.toString()}&08-11-2020&prescription`);
   var resObj = await response.json();
   // Alert.alert("All Hashes", JSON.stringify(resObj.length));
   // setHashArray(resObj)
-  setSpinnerText('Fetching Transactions from IOTA\nPlease Wait..........')
+  setSpinnerText('Fetching Prescriptions from IOTA\nPlease Wait...')
   for(var i=0; i<resObj.length; i++)
   {
     var responseTx = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${resObj[i].toString()}`);
@@ -141,6 +212,66 @@ export default function Profile({ route, navigation }) {
   }
   setFinished(true)
   navigation.navigate('Prescriptions', {data: PrescArray})
+
+    }
+    catch(e){
+      setFinished(true)
+      console.log("Error Occurred ", e)
+    }
+  };
+
+  const handleNotifications = async () => {
+    try{
+      setFinished(false)
+      const address = patientAddress;
+      // setHistState(spinnierText)
+  setSpinnerText('Fetching Hashes of Notifications\nPlease Wait...')
+
+  var response = await fetch(`https://thetamiddleware.herokuapp.com/getAllHash/${address.toString()}&08-11-2020&docNotification`);
+  var resObj = await response.json();
+  // Alert.alert("All Hashes", JSON.stringify(resObj.length));
+  // setHashArray(resObj)
+  setSpinnerText('Fetching Notifications from IOTA\nPlease Wait...')
+  for(var i=0; i<resObj.length; i++)
+  {
+    var responseTx = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${resObj[i].toString()}`);
+  var resObjTx = await responseTx.json();
+  var parsed = JSON.parse(resObjTx)
+    NotificationArray.push(parsed)
+
+  }
+  setFinished(true)
+  navigation.navigate('Notifications', {data: NotificationArray})
+
+    }
+    catch(e){
+      setFinished(true)
+      console.log("Error Occurred ", e)
+    }
+  };
+
+  const handleHistory = async () => {
+    try{
+      setFinished(false)
+      const address = patientAddress;
+      // setHistState(spinnierText)
+  setSpinnerText('Fetching History Hashes\nPlease Wait...')
+
+  var response = await fetch(`https://thetamiddleware.herokuapp.com/getAllHash/${address.toString()}&08-11-2020&vitals`);
+  var resObj = await response.json();
+  // Alert.alert("All Hashes", JSON.stringify(resObj.length));
+  // setHashArray(resObj)
+  setSpinnerText('Fetching History from IOTA\nPlease Wait...')
+  for(var i=0; i<resObj.length; i++)
+  {
+    var responseTx = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${resObj[i].toString()}`);
+  var resObjTx = await responseTx.json();
+  var parsed = JSON.parse(resObjTx)
+  HistoryArray.push(parsed)
+
+  }
+  setFinished(true)
+  navigation.navigate('HistoryCards', {data: HistoryArray})
 
     }
     catch(e){
@@ -174,8 +305,8 @@ export default function Profile({ route, navigation }) {
     <View style={styles.container}>
       <Spinner
         visible={!finished}
-        color='white'
-        textContent={"Fetching from IoTA...\nPlease Wait..."}
+        textStyle={styles.spinnerText}
+        textContent={spinnerText}
       />
 
       <ScrollView horizontal={false} showsVerticalScrollIndicator={false}>
@@ -242,7 +373,8 @@ export default function Profile({ route, navigation }) {
             buttonStyle={styles.buttonStyle}
             titleStyle={styles.buttonText}
             title="View History"
-            onPress={() =>
+            onPress={
+              () =>
               navigation.navigate("History", { address: patientAddress })
             }
           ></Button>
@@ -260,11 +392,47 @@ export default function Profile({ route, navigation }) {
             buttonStyle={styles.buttonStyle}
             titleStyle={styles.buttonText}
             title="Notifications"
-            onPress={() =>
-              navigation.navigate("Notifications", { address: patientAddress })
-            }
+            onPress={handleNotifications}
           ></Button>
         </View>
+
+        <Card.Divider />
+        <Card containerStyle={[styles.card, {borderTopLeftRadius: 10, borderTopRightRadius:10, borderBottomLeftRadius:10, borderBottomRightRadius:10, marginBottom:20, paddingBottom:20, borderWidth:3, borderColor:'white'}]}>
+          <Card.Title>
+            <Text style={[styles.text, { color: "yellow", fontSize: 24, fontFamily:'MetropolisBold' }]}>
+              Last Prescription
+            </Text>
+          </Card.Title>
+          <Text style={{color: "white", fontSize: 20, fontFamily:'Righteous', marginLeft: 10}}>
+              Name: {prescTitle}
+            </Text>
+            <Text style={{color: "white", fontSize: 20, fontFamily:'Righteous', marginLeft: 10}}>
+              Details: {prescDetails}
+            </Text>
+            <Text style={{color: "white", fontSize: 20, fontFamily:'Righteous', marginLeft: 10}}>
+              Prescribed At: {prescTime}
+            </Text>
+        </Card>
+
+        <Card.Divider />
+        <Card containerStyle={[styles.card, {borderTopLeftRadius: 10, borderTopRightRadius:10, borderBottomLeftRadius:10, borderBottomRightRadius:10, marginBottom:20, paddingBottom:20, borderWidth:3, borderColor:'white'}]}>
+          <Card.Title>
+            <Text style={[styles.text, { color: "red", fontSize: 24, fontFamily:'MetropolisBold' }]}>
+              Last Notification
+            </Text>
+          </Card.Title>
+          <Text style={{color: "white", fontSize: 20, fontFamily:'Righteous', marginLeft: 10}}>
+              Name: {notifTitle}
+            </Text>
+            <Text style={{color: "white", fontSize: 20, fontFamily:'Righteous', marginLeft: 10}}>
+              Details: {notifDetails}
+            </Text>
+            <Text style={{color: "white", fontSize: 20, fontFamily:'Righteous', marginLeft: 10}}>
+              Notified At: {notifTime}
+            </Text>
+        </Card>
+
+
         <Card.Divider />
         <Card containerStyle={styles.card}>
           <Card.Title>
@@ -382,6 +550,8 @@ const styles = StyleSheet.create({
     borderColor: "#154360",
     backgroundColor: "#0B3047",
   },
+
+  spinnerText: { margin: 6, color: "white", alignSelf: 'center', fontFamily:'Righteous'},
 
   text: {
     fontFamily: "Metropolis",

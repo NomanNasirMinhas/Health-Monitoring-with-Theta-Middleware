@@ -12,6 +12,7 @@ import Readings from './components/Readings';
 import History from './components/Histroy';
 import Notifications from './components/Notifications'
 import Prescriptions from './components/Prescription'
+import HistoryCards from './components/HistoryCards'
 
 
 function DetailsScreen({navigation}) {
@@ -202,7 +203,30 @@ function App() {
           },
         }} />
 
+<Stack.Screen
+        name="HistoryCards"
+        component={HistoryCards}
+        options={{
+          title: 'History Cards',
+          headerShown:false,
+          headerTitleAlign:'center',
+          backgroundColor: '#019490',
+          headerStyle: {
+            backgroundColor: '#154360',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            color: 'white',
+            fontWeight: 'bold',
+            alignContent: 'center',
+            alignItems: 'center',
+            justifyContent: 'center'
+          },
+        }} />
+
       </Stack.Navigator>
+
+
     </NavigationContainer>
   );
 }

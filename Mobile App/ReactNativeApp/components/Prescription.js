@@ -85,7 +85,7 @@ export default function Readings({route, navigation}) {
 
       <View style={{marginBottom:30, paddingHorizontal:20, paddingTop:40}}>
       <FlatList
-        data={data}
+        data={data.reverse()}
         renderItem={renderItem}
         keyExtractor={item => item.TimeStamp}
       />
