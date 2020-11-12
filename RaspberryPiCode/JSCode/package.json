@@ -11,6 +11,7 @@
   "dependencies": {
     "ds18b20": "^0.1.0",
     "ds18b20-raspi": "^0.3.5",
+    "node-fetch": "^2.6.1",
     "python-shell": "^2.0.2",
     "raspi": "^6.0.1",
     "raspi-i2c": "^6.2.4"
