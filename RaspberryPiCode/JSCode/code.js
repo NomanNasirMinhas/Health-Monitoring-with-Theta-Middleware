@@ -23,11 +23,6 @@ async function publishMam(){
     testAddress =process.env.testAddress;
     await publishMAMmsg(readData, testSeed, testAddress)
   }
-
-  MONGO_URI=mongodb+srv://spidy_admin:CsIcBnIcP786@thetamiddleware-pi0h1.gcp.mongodb.net/thetamw1?retryWrites=true&w=majority
-  IOTA_NODE=https://nodes.iota.cafe:443
-  PORT=5000
-  testSeed =MBNDML9YVMXWKOMQZKYNJZQQRIQUQYLSNNDLSHCEAKKDJYHBPEWXBNXNXWOGQTHYUCBPPECYHVQFTZFOQ
-  testAddress =NTWSWV9CBWVKZXKLWSOHFLCJTDWIAMVSYRD9DFDXWJWFBVPWYUYDJQDOOLEWLPOAPHR9CHQKTMEOYRKDC
+  
 
 publishMam()
