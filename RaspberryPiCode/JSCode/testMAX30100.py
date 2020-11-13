@@ -11,14 +11,10 @@ while 1:
 
     hb = int(mx30.ir / 100)
     spo2 = int(mx30.red / 100)
-    data = {
-        "HR":hb,
-        "SPo2": spo2
-        }
-    print(data, flush=True, end='')
-    #if mx30.ir != mx30.buffer_ir :
-        #print("Pulse:",hb);
-    #if mx30.red != mx30.buffer_red:
-        #print("SPO2:",spo2);
+    
+    if mx30.ir != mx30.buffer_ir :
+        print("Pulse:",hb);
+    if mx30.red != mx30.buffer_red:
+        print("SPO2:",spo2);
 
-    time.sleep(2)
+    time.sleep(1)
