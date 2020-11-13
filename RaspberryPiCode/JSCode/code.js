@@ -21,6 +21,7 @@ return JSON.stringify(dataObj)
 async function publishMam(){
     testSeed =process.env.testSeed;
     testAddress =process.env.testAddress;
+	
     await publishMAMmsg(readData, testSeed, testAddress)
   }
   

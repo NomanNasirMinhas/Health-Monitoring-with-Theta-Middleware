@@ -8,9 +8,6 @@ const Mam = require('@iota/mam');
   const { asciiToTrytes, trytesToAscii } = require('@iota/converter');
   const uri = process.env.MONGO_URI;
 
-// const uri =
-  // "mongodb+srv://spidy_admin:CsIcBnIcP786@thetamiddleware-pi0h1.gcp.mongodb.net/test?retryWrites=true&w=majority";
-
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 //                                                                                            //
 //--------------------------------------New Function------------------------------------------//
@@ -508,15 +505,18 @@ async function getAllSeeds(username, password) {
 
 async function updateStreamRoot(seed, address, root) {
   try {
-
+	console.log("Update Stream Root Called on URI ", uri)
+	console.log("Recieved Root is ", root)
     var db = await MongoClient.connect(uri);
     var dbo = await db.db("thetamw1");
+	//console.log("DBO ", dbo)
     var myquery = { ADDRESS: address };
     var newvalues = { $set: { streamRoot: root } };
     await dbo.collection(seed).updateOne(myquery, newvalues);
-
+	console.log("True")
     return true;
   } catch (err) {
+	console.log("Error Recieved ", err)
     return false;
   }
 }
@@ -643,44 +643,71 @@ async function getPrivateTransactionInfo(seed, address, hash)
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 async function publishMAMmsg(func, seed, address) {
-  var db = await MongoClient.connect(uri);
-    var dbo = await db.db("thetamw1");
-  const Mam = require('@iota/mam');
-const { asciiToTrytes, trytesToAscii } = require('@iota/converter');
-const mode = 'public';
-const provider = 'https://nodes.devnet.iota.org';
+	console.log("Check 0")
+  
+  	const Mam = require('@iota/mam');
+	const { asciiToTrytes, trytesToAscii } = require('@iota/converter');
+	const mode = 'public';
+	const provider = 'https://nodes.devnet.iota.org';
 
-let mamState = Mam.init(provider);
+	let mamState = Mam.init(provider);
 
-const publish = async packet => {
-    // Create MAM message as a string of trytes
-    const trytes = asciiToTrytes(JSON.stringify(packet));
-    const message = Mam.create(mamState, trytes);
+	const publish = async packet => {
+    	// Create MAM message as a string of trytes
+    	const trytes = asciiToTrytes(JSON.stringify(packet));
+    	const message = Mam.create(mamState, trytes);
 
-    // Save your new mamState
-    mamState = message.state;
-    // Attach the message to the Tangle
-    await Mam.attach(message.payload, message.address, 3, 9)
+    	// Save your new mamState
+    	mamState = message.state;
+    	// Attach the message to the Tangle
+    	await Mam.attach(message.payload, message.address, 3, 9)
 
-    console.log('Published', packet);
-    // console.log('Root = ', message.root, '\n');
-    return message.root
+    	console.log('Published', packet);
+    	// console.log('Root = ', message.root, '\n');
+    	return message.root
 }
 
-const publishAll = async (func) => {
-    var root=null;
-    var initial=true
-    while(true)
-    {
+const publishAll = async () => {
+    	var root=null;
+    	var initial=true
+	
+	const fetch = require("node-fetch");
+	const sensor = require('ds18b20-raspi');
 
-        var msg = func()
+	console.log("Check 2");
+    	while(true)
+    	{
+		console.log("Check 3")
+		var tempF = sensor.readSimpleF();
+		var max30100 = await fetch('http://localhost:5000/');
+		max30100 = await max30100.json();
+		console.log(`Temp = ${tempF}-F, Heart Rate = ${max30100.HR}, SPo2 = ${max30100.SPo2}`);
+		var dataObj = {
+    			Temp: tempF,
+    			HR: max30100.HR,
+    			SpO2: max30100.SPo2
+			}
+
+        	var msg = JSON.stringify(dataObj);
+		console.log("Check 4")
+		console.log("Data Returned by Function ", msg)
         if(initial)
         {
             root = await publish({
                 message: msg,
                 timestamp: (new Date()).toLocaleString()
               })
-              updateStreamRoot(seed, address, root)
+
+              await fetch("https://thetamiddleware.herokuapp.com/updateStreamRoot", {
+		  method: "POST",
+		  body: JSON.stringify({
+		      seed: seed,
+		      address: address,
+		      root:root}),
+			headers: {
+				"Content-type": "application/json; charset=UTF-8"
+			    }
+			})
               console.log("Root is ", root)
 
         }
@@ -698,7 +725,7 @@ const publishAll = async (func) => {
 
     return root
   }
-
+console.log("Check 1")
   publishAll(func)
 
 }
@@ -823,15 +850,11 @@ async function sendPrivateTransaction(seed, addresss, msg)
 
 async function testing() {
   testSeed =
-    "VLLPIQLDNUXPF9ECVNDQTDQITIQBSTNWJPXSHWEMHSDYHOEZT9CMMRKOIFRZPSJVDBZGJOYMXM9KPJAPY";
+    "MBNDML9YVMXWKOMQZKYNJZQQRIQUQYLSNNDLSHCEAKKDJYHBPEWXBNXNXWOGQTHYUCBPPECYHVQFTZFOQ";
   testAddress =
-    "LZK9VJPEJNKHKNADMKYIQVBLWRW9YEXBDPGSYMONHFGVXDHQ9FRLPDPCCHNYAJRCQSJWKWHBFHKYNPCHA";
-//await sendPrivateTransaction(testSeed, testAddress, "Enrypted Text")
-  //var lastresult = await getLastTransactionHash(testAddress);
-  //var result = await getPrivateTransactionInfo(testSeed, testAddress, lastresult);
-  //console.log(result);
- var root = await generateSeed("2", "2", "1")
- console.log(root);
+    "NTWSWV9CBWVKZXKLWSOHFLCJTDWIAMVSYRD9DFDXWJWFBVPWYUYDJQDOOLEWLPOAPHR9CHQKTMEOYRKDC";
+	var result = await getAllAddresses(testSeed)
+console.log(result.toString())
 }
 
 module.exports = {
