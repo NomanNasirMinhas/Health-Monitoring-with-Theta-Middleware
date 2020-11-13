@@ -37,7 +37,7 @@ import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import TextField from "@material-ui/core/TextField";
-import { Dialog, DialogContent, DialogTitle, Slide } from "@material-ui/core";
+import { Dialog, DialogContent, DialogTitle, Slide, CircularProgress } from "@material-ui/core";
 const useStylesTable = makeStyles({
   table: {
     maxWidth: 700,

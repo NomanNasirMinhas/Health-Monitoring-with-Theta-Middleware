@@ -212,7 +212,7 @@ export const Form = () => {
                     id="outlined-basic"
                     label="Email"
                     placeholder="Email"
-                    type="email"
+                    type="Email"
                     variant="outlined"
                     required
                     disabled={submitted}

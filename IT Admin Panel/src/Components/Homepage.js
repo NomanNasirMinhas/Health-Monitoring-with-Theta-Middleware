@@ -11,13 +11,15 @@ import {
   CardActions,
   CardContent,
   Button,
-  Typography,CircularProgress
+  Typography,
+  CircularProgress,Slide
 } from "@material-ui/core";
 import {
   createMuiTheme,
   withStyles,
   makeStyles,
-  ThemeProvider,responsiveFontSizes,
+  ThemeProvider,
+  responsiveFontSizes,
   useTheme,
 } from "@material-ui/core/styles";
 
@@ -41,7 +43,6 @@ import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
 
 let theme = createMuiTheme({
-
   typography: {
     fontFamily: ["Metrophobic", "sans-serif"].join(","),
   },
@@ -63,10 +64,11 @@ const rows = [
 const useStylesTable = makeStyles({
   table: {
     maxWidth: "100%",
+     fontFamily:"Metrophobic"
   },
   TableHead: {
     cell: { color: "white" },
-    
+    fontFamily:"Metrophobic"
   },
   paper: {
     maxwidth: "100%",
@@ -112,44 +114,45 @@ function TablePaginationActions(props) {
 
   return (
     <ThemeProvider theme={theme}>
-    <div className={classes.root}>
-      <IconButton
-        onClick={handleFirstPageButtonClick}
-        disabled={page === 0}
-        aria-label="first page"
-      >
-        {theme.direction === "rtl" ? <LastPageIcon /> : <FirstPageIcon />}
-      </IconButton>
-      <IconButton
-        onClick={handleBackButtonClick}
-        disabled={page === 0}
-        aria-label="previous page"
-      >
-        {theme.direction === "rtl" ? (
-          <KeyboardArrowRight />
-        ) : (
-          <KeyboardArrowLeft />
-        )}
-      </IconButton>
-      <IconButton
-        onClick={handleNextButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="next page"
-      >
-        {theme.direction === "rtl" ? (
-          <KeyboardArrowLeft />
-        ) : (
-          <KeyboardArrowRight />
-        )}
-      </IconButton>
-      <IconButton
-        onClick={handleLastPageButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="last page"
-      >
-        {theme.direction === "rtl" ? <FirstPageIcon /> : <LastPageIcon />}
-      </IconButton>
-    </div> </ThemeProvider>
+      <div className={classes.root}>
+        <IconButton
+          onClick={handleFirstPageButtonClick}
+          disabled={page === 0}
+          aria-label="first page"
+        >
+          {theme.direction === "rtl" ? <LastPageIcon /> : <FirstPageIcon />}
+        </IconButton>
+        <IconButton
+          onClick={handleBackButtonClick}
+          disabled={page === 0}
+          aria-label="previous page"
+        >
+          {theme.direction === "rtl" ? (
+            <KeyboardArrowRight />
+          ) : (
+            <KeyboardArrowLeft />
+          )}
+        </IconButton>
+        <IconButton
+          onClick={handleNextButtonClick}
+          disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+          aria-label="next page"
+        >
+          {theme.direction === "rtl" ? (
+            <KeyboardArrowLeft />
+          ) : (
+            <KeyboardArrowRight />
+          )}
+        </IconButton>
+        <IconButton
+          onClick={handleLastPageButtonClick}
+          disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+          aria-label="last page"
+        >
+          {theme.direction === "rtl" ? <FirstPageIcon /> : <LastPageIcon />}
+        </IconButton>
+      </div>{" "}
+    </ThemeProvider>
   );
 }
 
@@ -264,23 +267,20 @@ function Doctors(props) {
     return (
       <ThemeProvider theme={theme}>
         <Navbar />
-       {/** <Typography
+        {/** <Typography
           variant="h3"
           style={{ marginTop: "2%", color: "#B4B4B4" }}
         >
           Doctors{" "}
         </Typography> */}
-        <br/>   <br/>   <br/>   <br/>   <br/>   <br/>   <br/>   <br/>  
+        <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
         <Grid container spacing={0}>
           {/**  <Grid item xs={0.5}></Grid> */}
-          <Grid item xs={12}>
-            
-          </Grid>
+          <Grid item xs={12}></Grid>
           {/**  <Grid item xs={0.5}></Grid> */}
         </Grid>
-              
-       {/**  <Typography variant="h1"> Loading...</Typography>*/}
-       <CircularProgress size="200px"/>
+        {/**  <Typography variant="h1"> Loading...</Typography>*/}
+        <CircularProgress size="200px" />
       </ThemeProvider>
     );
   }
@@ -291,15 +291,14 @@ function Doctors(props) {
     <ThemeProvider>
       <Navbar />
 
-      <Typography
-          variant="h2"
-          style={{ marginTop: "2%", color: "#B4B4B4" }}
-        >
-          Doctors{" "}
-        </Typography>
-      <Grid container spacing={1}>
-        <Grid item xs={12} style={{ flaot: "right" }}>
-          <Paper
+      <Typography variant="h2" style={{ marginTop: "2%", color: "#B4B4B4" }}>
+        Doctors{" "}
+      </Typography>
+      <Slide direction="down" in={true} timeout={300}>
+      <Grid container spacing={0} style={{ marginTop:"2%"}}>
+       
+        <Grid item xs={12} >
+          {/**  <Paper
             elevation={5}
             style={{
               width: "100%",
@@ -308,8 +307,8 @@ function Doctors(props) {
 
               border: "solid grey 0.9px",
             }}
-          >
-            {/** 
+          >/*}
+            
             <Typography
                 variant="h3"
                 component="h2"
@@ -324,104 +323,125 @@ function Doctors(props) {
               </Typography>
 */}
 
-            <TableContainer className={classesTable.paper}>
-              <Table className={classesTable.table} aria-label="simple table">
-                <TableHead style={{ backgroundColor: "#2980B9" }}>
-                  <TableRow>
-                    <TableCell align="center">
-                    <Typography variant="h6" style={{ color: "white" }}>Name</Typography>
-                    </TableCell>
-                    <TableCell align="center">
-                    <Typography variant="h6" style={{ color: "white" }}>Specialization</Typography>
-                    </TableCell>
-                    <TableCell align="center">
-                    <Typography variant="h6" style={{ color: "white" }}>Contact</Typography>
-                    </TableCell>
+          <TableContainer className={classesTable.paper}>
+            <Table className={classesTable.table} aria-label="simple table">
+              <TableHead style={{ backgroundColor: "#2980B9" }}>
+                <TableRow>
+                  <TableCell align="center">
+                    <Typography variant="h6" style={{ color: "white" }}>
+                      Name
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Typography variant="h6" style={{ color: "white" }}>
+                      Specialization
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Typography variant="h6" style={{ color: "white" }}>
+                      Contact
+                    </Typography>
+                  </TableCell>
 
-                    <TableCell align="center">
-                    <Typography variant="h6" style={{ color: "white" }}>Seed</Typography>
+                  <TableCell align="center">
+                    <Typography variant="h6" style={{ color: "white" }}>
+                      Seed
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Typography variant="h6" style={{ color: "white" }}>
+                      Patients
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {(rowsPerPage > 0
+                  ? seeds.slice(
+                      page * rowsPerPage,
+                      page * rowsPerPage + rowsPerPage
+                    )
+                  : seeds
+                ).map((obj) => (
+                  <TableRow hover key={obj.name}>
+                    <TableCell component="th" scope="row">
+                      <Typography variant="body2"> {obj.ID} </Typography>
                     </TableCell>
                     <TableCell align="center">
-                    <Typography variant="h6" style={{ color: "white" }}>Patients</Typography>
+                      <Typography variant="body2">
+                        {obj.Profile.specialization}
+                      </Typography>
                     </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {(rowsPerPage > 0
-                    ? seeds.slice(
-                        page * rowsPerPage,
-                        page * rowsPerPage + rowsPerPage
-                      )
-                    : seeds
-                  ).map((obj) => (
-                    <TableRow hover key={obj.name}>
-                      <TableCell component="th" scope="row">
-                      <Typography variant="body2"> {obj.ID} </Typography>                      
-                      </TableCell>
-                      <TableCell align="center">
-                      <Typography variant="body2">{obj.Profile.specialization}</Typography> 
-                      </TableCell>
-                      <TableCell align="center">
-                      <Typography variant="body2"> {obj.Profile.contact}</Typography> 
-                      </TableCell>
-                      <TableCell align="center">
+                    <TableCell align="center">
+                      <Typography variant="body2">
                         {" "}
-                        <Typography variant="body2">{obj.SEED}</Typography> 
-                      </TableCell>
+                        {obj.Profile.contact}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="center">
+                      {" "}
+                      <Typography variant="body2">{obj.SEED}</Typography>
+                    </TableCell>
 
-                      <TableCell align="center">
-                        {
-                          <Button
-                            className={classesTable.hover}
-                            color="inherit"
-                            onClick={() => Patients(props, obj.SEED)}
-                            startIcon={
-                              <ListIcon
-                                fontSize="small"
-                                // component={link}
-                                //to={`/ViewPatient/${obj.SEED}`}
-                              />
-                            }
-                          >
-                            {" "}
-                            <Typography variant="button"  >
-                            Patients</Typography>
-                          </Button>
-                        }
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-                <TableFooter style={{ maxwidth: "100%" }}>
-                  <TableRow>
-                    <TablePagination
-                      rowsPerPageOptions={[
-                        5,
-                        10,
-                        25,
-                        { label: "All", value: -1 },
-                      ]}
-                      colSpan={12}
-                      count={seeds.length}
-                      rowsPerPage={rowsPerPage}
-                      page={page}
-                      SelectProps={{
-                        inputProps: { "aria-label": "rows per page" },
-                        native: true,
-                      }}
-                      onChangePage={handleChangePage}
-                      onChangeRowsPerPage={handleChangeRowsPerPage}
-                      ActionsComponent={TablePaginationActions}
-                    />
+                    <TableCell align="center">
+                      {
+                        <Button
+                          className={classesTable.hover}
+                          color="inherit"
+                          onClick={() => Patients(props, obj.SEED)}
+                          startIcon={
+                            <ListIcon
+                              fontSize="small"
+                              // component={link}
+                              //to={`/ViewPatient/${obj.SEED}`}
+                            />
+                          }
+                        >
+                          {" "}
+                          <Typography variant="button">Patients</Typography>
+                        </Button>
+                      }
+                    </TableCell>
                   </TableRow>
-                </TableFooter>
-              </Table>
-            </TableContainer>
-          </Paper>
+                ))}
+              </TableBody>
+              <TableFooter style={{ maxwidth: "100%" }}>
+                <TableRow>
+                  <TablePagination
+                    rowsPerPageOptions={[
+                      5,
+                      10,
+                      25,
+                      { label: "All", value: -1 },
+                    ]}
+                    colSpan={12}
+                    count={seeds.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    SelectProps={{
+                      inputProps: { "aria-label": "rows per page" },
+                      native: true,
+                    }}
+                    onChangePage={handleChangePage}
+                    onChangeRowsPerPage={handleChangeRowsPerPage}
+                    ActionsComponent={TablePaginationActions}
+                  />
+                </TableRow>
+              </TableFooter>
+            </Table>
+          </TableContainer>
         </Grid>
+        
       </Grid>
+      </Slide>
 
-      <Grid container spacing={1} style={{alignSelf:"bottom"}} justify="space-between" >
+
+      <Grid
+        container
+        spacing={1}
+        style={{ alignSelf: "bottom" }}
+        justify="space-between"
+      >
         {/**  <Grid item xs={1}></Grid> */}
         <Grid item xs={4}>
           <Paper
@@ -435,15 +455,19 @@ function Doctors(props) {
               Registered Doctors{" "}
             </Typography>
             <Typography variant="h5">
-              <strong style={{ color: "white" }}> 
-              {totalPatients == 0 ? <CircularProgress  style={{color:"white"}}/> : totalDoctors}{" "}
-               </strong>
+              <strong style={{ color: "white" }}>
+                {totalPatients == 0 ? (
+                  <CircularProgress style={{ color: "white" }} />
+                ) : (
+                  totalDoctors
+                )}{" "}
+              </strong>
             </Typography>
           </Paper>
         </Grid>
         {/**  <Grid item xs={1}></Grid> */}
 
-        <Grid item xs={4} >
+        <Grid item xs={4}>
           <Paper
             elevation={5}
             style={{ backgroundColor: "#2B8FA3", marginTop: "2%" }}
@@ -457,7 +481,11 @@ function Doctors(props) {
             <Typography variant="h5">
               <strong style={{ color: "white" }}>
                 {" "}
-                {totalPatients == 0 ? <CircularProgress  style={{color:"white"}}/> : totalPatients}{" "}
+                {totalPatients == 0 ? (
+                  <CircularProgress style={{ color: "white" }} />
+                ) : (
+                  totalPatients
+                )}{" "}
               </strong>
             </Typography>
           </Paper>
@@ -475,13 +503,21 @@ function Doctors(props) {
               Total Devices{" "}
             </Typography>
             <Typography variant="h5">
-              <strong style={{ color: "white" }}> 
-               {totalPatients == 0 ? <CircularProgress style={{color:"white"}}/> : "--"}{" "} </strong>
+              <strong style={{ color: "white" }}>
+                {totalPatients == 0 ? (
+                  <CircularProgress style={{ color: "white" }} />
+                ) : (
+                  "--"
+                )}{" "}
+              </strong>
             </Typography>
           </Paper>
         </Grid>
       </Grid>
-    </ThemeProvider>
+             
+
+
+          </ThemeProvider>
   );
 }
 export default Doctors;

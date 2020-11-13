@@ -20,6 +20,7 @@ import {
   CardContent,
   Button,
   Typography,
+  CircularProgress,
 } from "@material-ui/core";
 import {
   createMuiTheme,
@@ -323,9 +324,8 @@ function Homepage(props) {
         >
           All Patients{" "}
         </Typography>
-
-        <Grid container spacing={1}>
-          {/**  <Grid item xs={0.5}></Grid> */}
+        {/** <Grid container spacing={1}>
+        
           <Grid item xs={12}>
             <Paper
               elevation={5}
@@ -338,10 +338,14 @@ function Homepage(props) {
               }}
             ></Paper>
           </Grid>
-          {/**  <Grid item xs={0.5}></Grid> */}
-        </Grid>
+         
+        </Grid> */}
+        <br />
+        <br />
+        <br />
+        <br />
 
-        <Typography variant="h1"> Loading...</Typography>
+        <CircularProgress size="200px" />
       </ThemeProvider>
     );
   }
@@ -359,195 +363,7 @@ function Homepage(props) {
 
         {/* TABLE START*/}
 
-        <Grid container spacing={1} style={{ flaot: "right" }}>
-          {/** <Grid item xs={0.5}></Grid> */}
-
-          <Grid item xs={12}>
-            <Paper
-              elevation={5}
-              style={{
-                maxWidth: "100%",
-                width: "100%",
-                margin: "auto",
-                marginTop: "2%",
-                border: "solid grey 0.9px",
-              }}
-            >
-              {/**   <Typography variant="h3" style={{backgroundColor:"#B4B4B4"}}> </Typography>
-              <Typography
-                variant="h3"
-                component="h2"
-                style={{
-                  textAlign: "center",
-                  backgroundColor: "#0ea80e",
-                  color: "white",
-                  alignSelf: "center",
-                }}
-              >
-                <b>Doctors</b>
-              </Typography> */}
-
-              {/**     <TableContainer className={classesTable.paper}>
-              <Table className={classesTable.table} aria-label="simple table">
-                <TableHead style={{ backgroundColor: "#0ea80e" }}>
-                  <TableRow>
-                    <TableCell className={classesTable.cell} align="left">
-                      <strong>Doctor's Name</strong>
-                    </TableCell>
-                    <TableCell className={classesTable.cell} align="left">
-                      <strong>Specialization</strong>
-                    </TableCell>
-                    <TableCell className={classesTable.cell} align="center">
-                      <strong>Contact</strong>
-                    </TableCell>
-                    <TableCell className={classesTable.cell} align="center">
-                      <strong>Seed</strong>
-                    </TableCell>
-                    <TableCell className={classesTable.cell} align="center">
-                      <strong>Patients</strong>
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {seeds.map((obj) => (
-                    <TableRow hover key={obj.name}>
-                      <TableCell component="th" scope="row">
-                        {obj.ID}
-                      </TableCell>
-                      <TableCell align="center">
-                        {obj.Profile.specialization}
-                      </TableCell>
-                      <TableCell align="center">
-                        {obj.Profile.contact}
-                      </TableCell>
-                      <TableCell align="center">{obj.SEED}</TableCell>
-                      <TableCell align="center">
-                        {
-                          <Button
-                            className={classesTable.hover}
-                            color="inherit"
-                            onClick={() => Patients(props, obj.SEED)}
-                            startIcon={
-                              <ListIcon
-                                fontSize="small"
-                                component={link}
-                                //to={`/ViewPatient/${obj.SEED}`}
-                              />
-                            }
-                          >
-                            {" "}
-                            View Patients
-                          </Button>
-                        }
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>*/}
-
-              <TableContainer className={classesTable.paper}>
-                <Table className={classesTable.table} aria-label="simple table">
-                  <TableHead style={{ backgroundColor: "#2980B9" }}>
-                    <TableRow>
-                      <TableCell align="center">
-                        <strong style={{ color: "white" }}>Name</strong>
-                      </TableCell>
-                      <TableCell align="center">
-                        <strong style={{ color: "white" }}>Patient ID</strong>
-                      </TableCell>
-                      <TableCell align="center">
-                        <strong style={{ color: "white" }}>Age</strong>
-                      </TableCell>
-                      <TableCell align="center">
-                        <strong style={{ color: "white" }}>Contact</strong>
-                      </TableCell>
-                      <TableCell align="center">
-                        <strong style={{ color: "white" }}>Gender</strong>
-                      </TableCell>
-
-                      <TableCell align="center">
-                        <strong style={{ color: "white" }}>Admitted on</strong>
-                      </TableCell>
-                      <TableCell align="center">
-                        <strong style={{ color: "white" }}>Doctor</strong>
-                      </TableCell>
-                      <TableCell align="center">
-                        <strong style={{ color: "white" }}>Address</strong>
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {/*{(rowsPerPage > 0
-                    ? all_add.slice(
-                        page * rowsPerPage,
-                        page * rowsPerPage + rowsPerPage
-                      )
-                    : all_add
-                  )*/}
-
-                    {patients.map((obj) => (
-                      <TableRow hover key={obj.data.Profile.name}>
-                        <TableCell component="th" scope="row">
-                          <strong> {obj.data.Profile.name} </strong>
-                        </TableCell>
-                        <TableCell align="center">
-                          <strong>{obj.data.ID}</strong>
-                        </TableCell>
-                        <TableCell align="center">
-                          <strong>{obj.data.Profile.age}</strong>
-                        </TableCell>
-                        <TableCell align="center">
-                          <strong> {obj.data.Profile.contact}</strong>
-                        </TableCell>
-                        <TableCell align="center">
-                          <strong> {obj.data.Profile.gender}</strong>
-                        </TableCell>
-                        <TableCell align="center">
-                          <strong> {obj.data.Profile.date}</strong>
-                        </TableCell>
-                        <TableCell align="center">
-                          <strong> {obj.name}</strong>
-                        </TableCell>
-                        <TableCell align="center">
-                          {" "}
-                          <strong>{obj.data.ADDRESS}</strong>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                  <TableFooter style={{ maxwidth: "100%" }}>
-                    <TableRow>
-                      <TablePagination
-                        rowsPerPageOptions={[
-                          5,
-                          10,
-                          25,
-                          { label: "All", value: -1 },
-                        ]}
-                        colSpan={12}
-                        count={patients.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        SelectProps={{
-                          inputProps: { "aria-label": "rows per page" },
-                          native: true,
-                        }}
-                        onChangePage={handleChangePage}
-                        onChangeRowsPerPage={handleChangeRowsPerPage}
-                        ActionsComponent={TablePaginationActions}
-                      />
-                    </TableRow>
-                  </TableFooter>
-                </Table>
-              </TableContainer>
-            </Paper>
-          </Grid>
-
-          {/**  <Grid item xs={0.5}></Grid>
-        {/********************* */}
-        </Grid>
-      </ThemeProvider>
+              </ThemeProvider>
     );
   }
 }
