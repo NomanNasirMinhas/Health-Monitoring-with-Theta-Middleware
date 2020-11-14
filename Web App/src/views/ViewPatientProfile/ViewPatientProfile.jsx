@@ -138,7 +138,7 @@ const ViewPatientProfile = (props) => {
       SetAge(obj.Profile.age);
       //Returns Hash
       var response = await fetch(
-        `https://thetamiddleware.herokuapp.com/getLastTx/${address}`
+        `https://thetamiddleware.herokuapp.com/getLastTx/${address}&vitals`
       );
 
       var resObj = await response.json();

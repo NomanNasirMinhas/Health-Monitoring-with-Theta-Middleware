@@ -147,7 +147,7 @@ export default function HomePage() {
     let info = {};
     for (var i = 0; i < prop.length; i++) {
       var hash = await fetch(
-        `https://thetamiddleware.herokuapp.com/getLastTx/${prop[i].ADDRESS}`
+        `https://thetamiddleware.herokuapp.com/getLastTx/${prop[i].ADDRESS}&vitals`
       );
       hash = await hash.json();
       var tx = await fetch(
@@ -221,6 +221,7 @@ export default function HomePage() {
         `https://thetamiddleware.herokuapp.com/getAllAddresses/${seed}`
       );
       obj = await obj.json();
+      console.log(obj)
       if (obj === false) {
         SetEmpty(true);
       } else {
