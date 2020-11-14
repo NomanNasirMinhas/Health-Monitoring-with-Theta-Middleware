@@ -56,15 +56,15 @@ const dashboard = () => {
   const classes = UseStyles();
   return (
     <>
+      <AppBar position="static">
+        <Toolbar >
+          <Typography variant="h6" color="inherit">
+            Raspberry Pi
+             </Typography>
+        </Toolbar>
+      </AppBar>
       <Grid container>
         <Grid item xs={12}>
-          <AppBar position="static">
-            <Toolbar variant="dense" >
-              <Typography variant="h6" color="inherit">
-                Raspberry Pi
-             </Typography>
-            </Toolbar>
-          </AppBar>
         </Grid>
         <div className={classes.appBarSpacer} />
         <Grid container justify="space-evenly" spacing={3}>
