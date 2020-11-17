@@ -26,7 +26,7 @@ function timestamp() {
     var time =
       today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
     var dateTime = time + "\n" + date;
-    console.log("Current time is " + dateTime);
+    //console.log("Current time is " + dateTime);
     return dateTime;
   }
 
@@ -38,7 +38,7 @@ while(true)
 { 
 	var readings = await readData();
 	//readings=JSON.stringify(readings);
-    if(readings.SpO2 <60){
+    if(JSON.parse(readings).SpO2 <60){
         console.log("Please Wait While Sensors are getting Stable......")
     }
     else{
