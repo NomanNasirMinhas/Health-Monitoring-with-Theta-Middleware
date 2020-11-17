@@ -47,8 +47,10 @@ export default function Readings({route, navigation}) {
     const Item = ({ item }) => (
       <View style={styles.item}>
         <Text style={styles.text}>{item.PrescriptionName}</Text>
+        <Card.Divider />
         <Text style={styles.subText}>Details: {item.PrescriptionDetails}</Text>
         <Text style={styles.subText}>Prescribed At: {item.TimeStamp}</Text>
+
       </View>
     );
 

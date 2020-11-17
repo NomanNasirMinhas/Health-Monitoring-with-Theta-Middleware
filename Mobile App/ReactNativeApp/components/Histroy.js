@@ -107,7 +107,7 @@ export default function Readings({route, navigation}) {
   }, []);
 
 
-  var tableHead= ['Time','Heart Rate', 'Temp.', 'SpO2'];
+  var tableHead= ['Time','Heart Rate (BpM)', 'Temp (F)', 'SpO2 - %'];
 
   let [fontsLoaded] = useFonts({
     // Load a font `Montserrat` from a static resource
@@ -139,8 +139,9 @@ export default function Readings({route, navigation}) {
       <ScrollView horizontal={false} showsVerticalScrollIndicator={true} >
 
       {finished &&
-      <View style={{marginBottom:30, paddingHorizontal:20, paddingTop:40}}>
-        <Text style={[styles.text, { color: "white", fontFamily: 'MetropolisBold', fontSize:30 }]}>
+      <View style={{marginBottom:30, paddingHorizontal:5, paddingTop:20}}>
+        <Card.Divider />
+        <Text style={[styles.text, { color: "white", fontFamily: 'Secular', fontSize:30 }]}>
               Your Vital Sign's History
             </Text>
         <View style={styles.buttonContainer}>
@@ -155,13 +156,15 @@ export default function Readings({route, navigation}) {
             }
           ></Button>
         </View>
+        <Card.Divider />
         <Text style={[styles.text, { color: "white", fontFamily: 'MetropolisBold', fontSize:30 }]}>
               Infographics
             </Text>
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={true}>
+            <Card.Divider />
+      <ScrollView horizontal={false} showsVerticalScrollIndicator={true}>
         <View>
             {/* Bar Chart Starts From Here */}
-            <Card containerStyle={[styles.card, {borderRadius:0, borderWidth:0, marginRight:20,}]}>
+            <Card containerStyle={[styles.card, {backgroundColor:'#940101', borderRadius:10, borderWidth:0, marginBottom:20,}]}>
             <Card.Title>
             <Text style={[styles.text, { color: "white", fontSize: 20 }]}>
               Body Temperature
@@ -181,21 +184,21 @@ export default function Readings({route, navigation}) {
               bezier
               width={maxWidth} // from react-native
               height={250}
-              withHorizontalLines={false}
-              withVerticalLines={false}
+              withHorizontalLines={true}
+              withVerticalLines={true}
               yAxisInterval={1} // optional, defaults to 1
               chartConfig={{
                 backgroundColor: "#048bbd",
-                backgroundGradientFrom: "#37c1d4",
-                backgroundGradientTo: "#1e95a6",
-                decimalPlaces: 0, // optional, defaults to 2dp
+                backgroundGradientFrom: "#CD210E",
+                backgroundGradientTo: "#FF1900",
+                decimalPlaces: 1, // optional, defaults to 2dp
                 color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                 labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
               }}
               style={{
                 marginVertical: 0,
                 paddingHorizontal: "auto",
-                borderRadius: 10,
+                borderRadius: 0,
               }}
             />
             </Card>
@@ -204,7 +207,7 @@ export default function Readings({route, navigation}) {
 
             <View>
             {/* Bar Chart Starts From Here */}
-            <Card containerStyle={[styles.card, {borderRadius:0, borderWidth:0, marginRight:20}]}>
+            <Card containerStyle={[styles.card, {backgroundColor:'#126435', borderRadius:10, borderWidth:0, marginBottom:20}]}>
             <Card.Title>
             <Text style={[styles.text, { color: "white", fontSize: 20 }]}>
               Oxygen Saturation
@@ -224,21 +227,21 @@ export default function Readings({route, navigation}) {
               bezier
               width={maxWidth} // from react-native
               height={250}
-              withHorizontalLines={false}
-              withVerticalLines={false}
+              withHorizontalLines={true}
+              withVerticalLines={true}
               yAxisInterval={1} // optional, defaults to 1
               chartConfig={{
                 backgroundColor: "#048bbd",
-                backgroundGradientFrom: "#37c1d4",
-                backgroundGradientTo: "#1e95a6",
-                decimalPlaces: 0, // optional, defaults to 2dp
+                backgroundGradientFrom: "#1E8449",
+                backgroundGradientTo: "#02A647",
+                decimalPlaces: 1, // optional, defaults to 2dp
                 color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                 labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
               }}
               style={{
                 marginVertical: 0,
                 paddingHorizontal: "auto",
-                borderRadius: 10,
+                borderRadius: 0,
               }}
             />
             </Card>
@@ -247,7 +250,7 @@ export default function Readings({route, navigation}) {
 
             <View>
             {/* Bar Chart Starts From Here */}
-            <Card containerStyle={[styles.card, {borderRadius:0, borderWidth:0, marginRight:20}]}>
+            <Card containerStyle={[styles.card, {backgroundColor:'#C69E00', borderRadius:10, borderWidth:0, marginBottom:20}]}>
             <Card.Title>
             <Text style={[styles.text, { color: "white", fontSize: 20 }]}>
               Heart Rate
@@ -267,21 +270,21 @@ export default function Readings({route, navigation}) {
               bezier
               width={maxWidth} // from react-native
               height={250}
-              withHorizontalLines={false}
-              withVerticalLines={false}
+              withHorizontalLines={true}
+              withVerticalLines={true}
               yAxisInterval={1} // optional, defaults to 1
               chartConfig={{
                 backgroundColor: "#048bbd",
-                backgroundGradientFrom: "#37c1d4",
-                backgroundGradientTo: "#1e95a6",
-                decimalPlaces: 0, // optional, defaults to 2dp
+                backgroundGradientFrom: "#E1B711",
+                backgroundGradientTo: "#F1C40F",
+                decimalPlaces: 1, // optional, defaults to 2dp
                 color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                 labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
               }}
               style={{
                 marginVertical: 0,
                 paddingHorizontal: "auto",
-                borderRadius: 10,
+                borderRadius: 0,
               }}
             />
             </Card>
@@ -290,7 +293,7 @@ export default function Readings({route, navigation}) {
       </ScrollView>
       </View>
       }
-
+<Card.Divider />
       {finished &&
 
       <Card containerStyle={[styles.card, {borderTopLeftRadius: 20, borderTopRightRadius: 20,}]}>
@@ -317,10 +320,10 @@ export default function Readings({route, navigation}) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, paddingTop: 30, backgroundColor: '#034772' },
-  head: { height: 40, backgroundColor: '#154360' },
+  head: { height: 40, backgroundColor: '#0E6655' },
   text: { margin: 6, color: "white", alignSelf: 'center', fontFamily:'Righteous'},
   headerText: { margin: 6, color: "white", alignSelf: 'center', fontFamily:'MetropolisBold'},
-  tableStyle: { backgroundColor: "#485776"},
+  tableStyle: { backgroundColor: "#A2D9CE"},
   card: {
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
@@ -329,7 +332,7 @@ const styles = StyleSheet.create({
     margin: "auto",
     borderStyle: "solid",
     borderWidth: 5,
-    borderColor: "#F6F8FC",
+    borderColor: "#1F618D",
     backgroundColor: "#0B3047",
   },
   buttonContainer: {
@@ -337,5 +340,16 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginBottom: 20,
   },
+  buttonStyle:{
+    backgroundColor:'#F1C40F',
+    borderRadius:20,
+    borderWidth:3,
+    borderColor:'#B7950B'
+  },
+  buttonText:{
+    fontFamily:'PoppinsBold',
+    fontSize:20,
+    color:'#D35400'
+  }
 
 });

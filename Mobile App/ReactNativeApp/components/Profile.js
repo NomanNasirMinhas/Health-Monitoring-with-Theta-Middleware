@@ -492,6 +492,7 @@ export default function Profile({ route, navigation }) {
               Last Prescription
             </Text>
           </Card.Title>
+          <Card.Divider />
           <Text style={{color: "white", fontSize: 20, fontFamily:'Righteous', marginLeft: 10}}>
               Name: {prescTitle}
             </Text>
@@ -510,6 +511,7 @@ export default function Profile({ route, navigation }) {
               Last Notification
             </Text>
           </Card.Title>
+          <Card.Divider />
           <Text style={{color: "white", fontSize: 20, fontFamily:'Righteous', marginLeft: 10}}>
               Name: {notifTitle}
             </Text>
