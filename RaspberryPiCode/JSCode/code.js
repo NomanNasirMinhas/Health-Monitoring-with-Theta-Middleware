@@ -18,6 +18,30 @@ var dataObj = {
 return JSON.stringify(dataObj)
 }
 
+async function sendData(){
+testSeed =process.env.testSeed;
+testAddress =process.env.testAddress;
+
+while(true)
+{ 
+	var readings = await readData();
+	//readings=JSON.stringify(readings);
+        await fetch("https://thetamiddleware.herokuapp.com/sendTx", {
+          method: "POST",
+          body: JSON.stringify({
+              seed: testSeed,
+              address: testAddress,
+              txType:"vitals",
+              Data: readings
+          }),
+    headers: {
+        "Content-type": "application/json; charset=UTF-8"
+    }
+})
+ }
+}
+
+
 async function publishMam(){
     testSeed =process.env.testSeed;
     testAddress =process.env.testAddress;
@@ -26,4 +50,4 @@ async function publishMam(){
   }
   
 
-publishMam()
+sendData()
