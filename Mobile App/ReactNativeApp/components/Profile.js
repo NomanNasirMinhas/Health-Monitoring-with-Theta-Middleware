@@ -39,6 +39,7 @@ export default function Profile({ route, navigation }) {
   const [patientTemp, setPatientTemp] = useState("Loading....");
   const [patientBPsys, setPatientBPsys] = useState("Loading....");
   const [patientBPdiast, setPatientBPdiast] = useState("Loading....");
+  const [patientSpO2, setPatientSpO2] = useState("Loading....");
   const [patientAddress, setPatientAddress] = useState("Loading....");
   const [patientSeed, setPatientSeed] = useState('');
   const [patientDeviceID, setPatientDeviceID] = useState("Loading....");
@@ -95,15 +96,16 @@ export default function Profile({ route, navigation }) {
             `https://thetamiddleware.herokuapp.com/getTx/${resObj}`
           );
           var resObjTx = await responseTx.json();
-          resObjTx = JSON.parse(resObjTx);
-          console.log(resObjTx)
+          // resObjTx = JSON.parse(resObjTx["response"]);
+          console.log(resObjTx.response.HR)
 
           // Alert.alert(JSON.stringify(resObjTx))
-          setPatientHR(resObjTx.HR.toString());
-          setPatientTemp(resObjTx.Temp.toString());
-          setPatientBPsys(resObjTx.BP.systolic.toString());
-          setPatientBPdiast(resObjTx.BP.diastolic.toString());
-          setLastTx([resObjTx.HR, resObjTx.Temp, resObjTx.BP.systolic,resObjTx.BP.diastolic]);
+          setPatientHR(resObjTx.response.HR.toString());
+          setPatientTemp(resObjTx.response.Temp.toString());
+          setPatientSpO2(resObjTx.response.SpO2.toString())
+          // setPatientBPsys(resObjTx.BP.systolic.toString());
+          // setPatientBPdiast(resObjTx.BP.diastolic.toString());
+          setLastTx([resObjTx.response.HR, resObjTx.response.Temp, resObjTx.response.SpO2]);
           setHasLastTx(true);
           setFinished(true);
         }
@@ -111,8 +113,9 @@ export default function Profile({ route, navigation }) {
         else {
           setPatientHR("N/A");
           setPatientTemp("N/A");
-          setPatientBPsys("N/A");
-          setPatientBPdiast("N/A");
+          setPatientSpO2("N/A");
+          // setPatientBPsys("N/A");
+          // setPatientBPdiast("N/A");
           setFinished(true);
         }
 
@@ -125,10 +128,10 @@ export default function Profile({ route, navigation }) {
             `https://thetamiddleware.herokuapp.com/getTx/${checkOnline}`
           );
           var onlineStatus = await logTx.json();
-          onlineStatus = JSON.parse(onlineStatus);
+          // onlineStatus = JSON.parse(onlineStatus);
           // Alert.alert(JSON.stringify(onlineStatus))
-          onlineStatus.LogType == 1 ? setBoolOnline(1) : setBoolOnline(0)
-          onlineStatus.LogType == 1 ? setOnline("Your Device is ONLINE") : setOnline("Your Device is OFFLINE")
+          onlineStatus.response.LogType == 1 ? setBoolOnline(1) : setBoolOnline(0)
+          onlineStatus.response.LogType == 1 ? setOnline("Your Device is ONLINE") : setOnline("Your Device is OFFLINE")
         }
         else{
           setBoolOnline(2)
@@ -145,10 +148,10 @@ export default function Profile({ route, navigation }) {
             `https://thetamiddleware.herokuapp.com/getTx/${prescHash}`
           );
           var prescData = await logTx.json();
-          prescData = JSON.parse(prescData);
-          setPrescTitle(prescData.PrescriptionName)
-          setPrescDetails(prescData.PrescriptionDetails)
-          setPrescTime(prescData.TimeStamp)
+          // prescData = JSON.parse(prescData);
+          setPrescTitle(prescData.response.PrescriptionName)
+          setPrescDetails(prescData.response.PrescriptionDetails)
+          setPrescTime(prescData.response.TimeStamp)
           // setLastPresc({...lastPresc, now:{prescData}})
           // setPrescFinished(true)
           // console.log("Prescription Data", lastPresc)
@@ -170,11 +173,11 @@ export default function Profile({ route, navigation }) {
             `https://thetamiddleware.herokuapp.com/getTx/${notifHash}`
           );
           var notifData = await logTx.json();
-          notifData = JSON.parse(notifData);
+          // notifData = JSON.parse(notifData);
 
-          setNotifTitle(notifData.NotificationTitle)
-          setNotifDetails(notifData.NotificationDetails)
-          setNotifTime(notifData.TimeStamp)
+          setNotifTitle(notifData.response.NotificationTitle)
+          setNotifDetails(notifData.response.NotificationDetails)
+          setNotifTime(notifData.response.TimeStamp)
           // setLastNotif({...lastNotif, now: {notifData}})
           // setNotifFinished(true)
           // console.log("Notification Data", lastNotif)
@@ -212,8 +215,8 @@ export default function Profile({ route, navigation }) {
   {
     var responseTx = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${resObj[i].toString()}`);
   var resObjTx = await responseTx.json();
-  var parsed = JSON.parse(resObjTx)
-    PrescArray.push(parsed)
+  // var parsed = JSON.parse(resObjTx)
+    PrescArray.push(resObjTx.response)
 
   }
   setFinished(true)
@@ -242,8 +245,8 @@ export default function Profile({ route, navigation }) {
   {
     var responseTx = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${resObj[i].toString()}`);
   var resObjTx = await responseTx.json();
-  var parsed = JSON.parse(resObjTx)
-    NotificationArray.push(parsed)
+  // var parsed = JSON.parse(resObjTx)
+    NotificationArray.push(resObjTx.response)
 
   }
   setFinished(true)
@@ -272,8 +275,8 @@ export default function Profile({ route, navigation }) {
   {
     var responseTx = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${resObj[i].toString()}`);
   var resObjTx = await responseTx.json();
-  var parsed = JSON.parse(resObjTx)
-  HistoryArray.push(parsed)
+  // var parsed = JSON.parse(resObjTx)
+  HistoryArray.push(resObjTx.response)
 
   }
   setFinished(true)
@@ -403,43 +406,6 @@ export default function Profile({ route, navigation }) {
         </View>
 
         <Card.Divider />
-        <Card containerStyle={[styles.card, {borderTopLeftRadius: 10, borderTopRightRadius:10, borderBottomLeftRadius:10, borderBottomRightRadius:10, marginBottom:20, paddingBottom:20, borderWidth:3, borderColor:'white'}]}>
-          <Card.Title>
-            <Text style={[styles.text, { color: "yellow", fontSize: 24, fontFamily:'MetropolisBold' }]}>
-              Last Prescription
-            </Text>
-          </Card.Title>
-          <Text style={{color: "white", fontSize: 20, fontFamily:'Righteous', marginLeft: 10}}>
-              Name: {prescTitle}
-            </Text>
-            <Text style={{color: "white", fontSize: 20, fontFamily:'Righteous', marginLeft: 10}}>
-              Details: {prescDetails}
-            </Text>
-            <Text style={{color: "white", fontSize: 20, fontFamily:'Righteous', marginLeft: 10}}>
-              Prescribed At: {prescTime}
-            </Text>
-        </Card>
-
-        <Card.Divider />
-        <Card containerStyle={[styles.card, {borderTopLeftRadius: 10, borderTopRightRadius:10, borderBottomLeftRadius:10, borderBottomRightRadius:10, marginBottom:20, paddingBottom:20, borderWidth:3, borderColor:'white'}]}>
-          <Card.Title>
-            <Text style={[styles.text, { color: "red", fontSize: 24, fontFamily:'MetropolisBold' }]}>
-              Last Notification
-            </Text>
-          </Card.Title>
-          <Text style={{color: "white", fontSize: 20, fontFamily:'Righteous', marginLeft: 10}}>
-              Name: {notifTitle}
-            </Text>
-            <Text style={{color: "white", fontSize: 20, fontFamily:'Righteous', marginLeft: 10}}>
-              Details: {notifDetails}
-            </Text>
-            <Text style={{color: "white", fontSize: 20, fontFamily:'Righteous', marginLeft: 10}}>
-              Notified At: {notifTime}
-            </Text>
-        </Card>
-
-
-        <Card.Divider />
         <Card containerStyle={styles.card}>
           <Card.Title>
             <Text style={[styles.text, { color: "white", fontSize: 20 }]}>
@@ -452,7 +418,7 @@ export default function Profile({ route, navigation }) {
 
             <BarChart
               data={{
-                labels: ["Temp (F)", "HR (BPM)", "BP-Syst", "BP-Diast"],
+                labels: ["Temp (F)", "HR (BPM)", "SpO2"],
                 datasets: [
                   {
                     data: lastTx,
@@ -509,14 +475,50 @@ export default function Profile({ route, navigation }) {
               </View>
               <View style={styles.statsBox}>
                 <Text style={[styles.text, { fontSize: 20 }]}>
-                  Blood{"\n"}Pressure
+                  Oxygen{"\n"}Saturation
                 </Text>
                 <Text style={[styles.text, styles.subText]}>
-                  {patientBPsys}/{patientBPdiast} Hg
+                  {patientSpO2} %
                 </Text>
               </View>
             </View>
           </View>
+        </Card>
+
+        <Card.Divider />
+        <Card containerStyle={[styles.card, {borderTopLeftRadius: 10, borderTopRightRadius:10, borderBottomLeftRadius:10, borderBottomRightRadius:10, marginBottom:20, paddingBottom:20, borderWidth:3, borderColor:'white'}]}>
+          <Card.Title>
+            <Text style={[styles.text, { color: "yellow", fontSize: 24, fontFamily:'MetropolisBold' }]}>
+              Last Prescription
+            </Text>
+          </Card.Title>
+          <Text style={{color: "white", fontSize: 20, fontFamily:'Righteous', marginLeft: 10}}>
+              Name: {prescTitle}
+            </Text>
+            <Text style={{color: "white", fontSize: 20, fontFamily:'Righteous', marginLeft: 10}}>
+              Details: {prescDetails}
+            </Text>
+            <Text style={{color: "white", fontSize: 20, fontFamily:'Righteous', marginLeft: 10}}>
+              Prescribed At: {prescTime}
+            </Text>
+        </Card>
+
+        <Card.Divider />
+        <Card containerStyle={[styles.card, {borderTopLeftRadius: 10, borderTopRightRadius:10, borderBottomLeftRadius:10, borderBottomRightRadius:10, marginBottom:20, paddingBottom:20, borderWidth:3, borderColor:'white'}]}>
+          <Card.Title>
+            <Text style={[styles.text, { color: "red", fontSize: 24, fontFamily:'MetropolisBold' }]}>
+              Last Notification
+            </Text>
+          </Card.Title>
+          <Text style={{color: "white", fontSize: 20, fontFamily:'Righteous', marginLeft: 10}}>
+              Name: {notifTitle}
+            </Text>
+            <Text style={{color: "white", fontSize: 20, fontFamily:'Righteous', marginLeft: 10}}>
+              Details: {notifDetails}
+            </Text>
+            <Text style={{color: "white", fontSize: 20, fontFamily:'Righteous', marginLeft: 10}}>
+              Notified At: {notifTime}
+            </Text>
         </Card>
 
         {/* <FloatingAction

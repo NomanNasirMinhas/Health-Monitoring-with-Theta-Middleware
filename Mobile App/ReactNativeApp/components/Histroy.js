@@ -24,14 +24,17 @@ export default function Readings({route, navigation}) {
   var [tempArray, setTempArray] = useState([])
   var [hrArray, setHrArray] = useState([])
   var [systArray, setSystArray] = useState([])
+  var [SpO2Array, setSpO2Array] = useState([])
   var [diastArray, setDiastArray] = useState([])
   var [BPArray, setBPArray] = useState([])
   var [tempArray, setTempArray] = useState([])
 
+  var rawTxs=[]
   var tempData=[]
   var hrData=[]
   var systData=[]
   var diastData=[]
+  var spo2Data=[]
 
   var tableData=[]
   var maxWidth = Dimensions.get("window").width;
@@ -42,7 +45,7 @@ export default function Readings({route, navigation}) {
       try{
         const { address } = route.params;
         setHistState('Fetching Transaction Hashes\nPlease Wait......')
-    var response = await fetch(`https://thetamiddleware.herokuapp.com/getAllHash/${address.toString()}&08-11-2020&vitals`);
+    var response = await fetch(`https://thetamiddleware.herokuapp.com/getAllHash/${address.toString()}&17-11-2020&vitals`);
     var resObj = await response.json();
     // Alert.alert("All Hashes", JSON.stringify(resObj.length));
     if(resObj === false){
@@ -56,33 +59,37 @@ export default function Readings({route, navigation}) {
     {
       var responseTx = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${resObj[i].toString()}`);
     var resObjTx = await responseTx.json();
-    var parsed = JSON.parse(resObjTx)
+    // console.log(resObjTx.response)
+    // var parsed = JSON.parse(resObjTx)
     // Alert.alert(JSON.stringify(parsed))
-    setTxInfo(txInfo.push(parsed))
-
+    rawTxs.push(resObjTx.response)
     }
+    setTxInfo(rawTxs)
     // Alert.alert("Fetched",JSON.stringify(txInfo))
 
-    for(var i=0; i<txInfo.length; i++)
+    for(var i=0; i<rawTxs.length; i++)
     {
-    var val = txInfo[i]
+    var val = rawTxs[i]
     var row=[]
       row.push(val.TimeStamp.toString());
       row.push(val.HR);
       row.push(val.Temp);
-      row.push(val.BP.systolic);
-      row.push(val.BP.diastolic);
+      row.push(val.SpO2)
+      // row.push(val.BP.systolic);
+      // row.push(val.BP.diastolic);
       tempData.push(val.Temp)
       hrData.push(val.HR)
-      systData.push(val.BP.systolic)
-      diastData.push(val.BP.diastolic)
+      spo2Data.push(val.SpO2)
+      // systData.push(val.BP.systolic)
+      // diastData.push(val.BP.diastolic)
       tableData.push(row)
 
     }
     setTempArray(tempData)
     setHrArray(hrData)
-    setSystArray(systData)
-    setDiastArray(diastData)
+    setSpO2Array(spo2Data)
+    // setSystArray(systData)
+    // setDiastArray(diastData)
     setTableState(tableData)
     setFinished(true)
     console.log(tableData)
@@ -90,6 +97,7 @@ export default function Readings({route, navigation}) {
       }
       catch(e){
         setFinished(true)
+        console.log(e)
         // Alert.alert("Error Has Occurred")
       }
 
@@ -99,7 +107,7 @@ export default function Readings({route, navigation}) {
   }, []);
 
 
-  var tableHead= ['Time','Heart Rate', 'Temp.', 'Syst. BP', 'Dia. BP'];
+  var tableHead= ['Time','Heart Rate', 'Temp.', 'SpO2'];
 
   let [fontsLoaded] = useFonts({
     // Load a font `Montserrat` from a static resource
@@ -199,7 +207,7 @@ export default function Readings({route, navigation}) {
             <Card containerStyle={[styles.card, {borderRadius:0, borderWidth:0, marginRight:20}]}>
             <Card.Title>
             <Text style={[styles.text, { color: "white", fontSize: 20 }]}>
-              Blood Pressure
+              Oxygen Saturation
             </Text>
 
             </Card.Title>
@@ -208,7 +216,7 @@ export default function Readings({route, navigation}) {
                 labels: [],
                 datasets: [
                   {
-                    data: systArray,
+                    data: SpO2Array,
                     strokeWidth:2,
                   },
                 ],
