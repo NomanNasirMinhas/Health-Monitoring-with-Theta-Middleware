@@ -1,8 +1,13 @@
 import { Grid, makeStyles, Paper, Avatar, IconButton } from "@material-ui/core";
+import React, { useState, useEffect } from "react";
 import { deepOrange } from "@material-ui/core/colors";
 import WcIcon from "@material-ui/icons/Wc";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import Hashtag from "./hashtag.js";
+
+
+
+
 const UseStyles = makeStyles((theme) => ({
   paper: {
     height: theme.spacing(30)
@@ -16,7 +21,39 @@ const UseStyles = makeStyles((theme) => ({
   },
 }));
 
-const profile = () => {
+export default function Profile() {
+  const [name, setName] = useState('Loading...')
+  const [age, setAge] = useState('Loading...')
+  const [gender, setGender] = useState('Loading...')
+  const [address, setAddress] = useState('Loading...')
+  const [date, setDate] = useState('Loading...')
+
+
+
+  useEffect(() => {
+    (async () => {
+      const testSeed ='MBNDML9YVMXWKOMQZKYNJZQQRIQUQYLSNNDLSHCEAKKDJYHBPEWXBNXNXWOGQTHYUCBPPECYHVQFTZFOQ';
+      const testAddress ='NTWSWV9CBWVKZXKLWSOHFLCJTDWIAMVSYRD9DFDXWJWFBVPWYUYDJQDOOLEWLPOAPHR9CHQKTMEOYRKDC';
+      var response = await fetch(`https://thetamiddleware.herokuapp.com/getAddressInfo/${testSeed}&${testAddress}`);
+      var resObj = await response.json();
+
+      if(resObj === false){
+        setName("Error")
+        setAge("Error")
+        setGender("Error")
+        setAddress("Error")
+        setDate("Error")
+      }
+      else{
+        setName(resObj.Profile.name)
+        setAge(resObj.Profile.age)
+        setGender(resObj.Profile.gender)
+        setAddress(resObj.Profile.address)
+        setDate(resObj.Profile.date)
+      }
+      // console.log(resObj)
+    })();
+  }, []);
   const classes = UseStyles();
   return (
     <Paper className={classes.paper} variant="elevation" elevation={1}>
@@ -26,31 +63,29 @@ const profile = () => {
         </Grid>
         <Grid item sm={6} md={8}>
           <h4>
-            Hasnain Khawaja,{" "}
+            {name},{" "}
             <small>
-              <i>22</i>
+              <i>{age}</i>
             </small>
           </h4>
           <p>
             <IconButton disabled>
               <Hashtag />
             </IconButton>
-            HASDJLAJsdnbaAJKSDJK
+            {address}
             <br />
             <IconButton disabled>
               <WcIcon />
             </IconButton>
-            male
+            {gender.toUpperCase()}
             <br/>
             <IconButton disabled>
               <CalendarTodayIcon/>
             </IconButton>
-            22-12-2020
+            {date}
           </p>
         </Grid>
       </Grid>
     </Paper>
   );
-};
-
-export default profile;
+}

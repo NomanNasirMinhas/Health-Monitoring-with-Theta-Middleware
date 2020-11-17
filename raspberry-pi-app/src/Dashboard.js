@@ -1,6 +1,8 @@
 import { AppBar, Toolbar, Typography, Grid, makeStyles, Card, Paper, Box } from "@material-ui/core"
 import Profile from "./Profile"
 import { Line } from 'react-chartjs-2';
+import Switch from '@material-ui/core/Switch';
+import React, {useState, useEffect} from 'react';
 
 const UseStyles = makeStyles((theme) => ({
   appBarSpacer: theme.mixins.toolbar,
@@ -52,17 +54,27 @@ const data = {
   ]
 };
 
-const dashboard = () => {
+export default function Dashboard() {
   const classes = UseStyles();
+  const [offline, setOffline] = useState(false);
+
+  const handleChange = (event) => {
+    setOffline(event.target.checked);
+    console.log(offline)
+    if(!offline)
+    {
+      while(!offline)
+      {
+        console.log("Online")
+      }
+    }
+  };
+
+
+
   return (
     <>
-      <AppBar position="static">
-        <Toolbar >
-          <Typography variant="h6" color="inherit">
-            Raspberry Pi
-             </Typography>
-        </Toolbar>
-      </AppBar>
+
       <Grid container>
         <Grid item xs={12}>
         </Grid>
@@ -74,6 +86,17 @@ const dashboard = () => {
             </Grid>
           </Grid>
           <br />
+          <Grid container justify="center">
+            <Grid item md={6} xs={12} >
+            <Switch
+            checked={offline}
+            onChange={handleChange}
+            color="primary"
+            name="checkedB"
+          />
+            </Grid>
+          </Grid>
+          <br/>
           <Grid item md={4} xs={12}>
             <Card className={classes.card} square variant="outlined">
               Temperature
@@ -118,5 +141,3 @@ const dashboard = () => {
     </>
   );
 }
-
-export default dashboard;

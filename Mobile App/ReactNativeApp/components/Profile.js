@@ -40,6 +40,7 @@ export default function Profile({ route, navigation }) {
   const [patientBPsys, setPatientBPsys] = useState("Loading....");
   const [patientBPdiast, setPatientBPdiast] = useState("Loading....");
   const [patientAddress, setPatientAddress] = useState("Loading....");
+  const [patientSeed, setPatientSeed] = useState('');
   const [patientDeviceID, setPatientDeviceID] = useState("Loading....");
   const [spinnerText, setSpinnerText] = useState("Fetching From IOTA...\nPlease Wait...")
   const [hasLastTx, setHasLastTx] = useState(false);
@@ -74,11 +75,12 @@ export default function Profile({ route, navigation }) {
       try {
         const { info } = route.params;
         // Alert.alert(JSON.stringify(info))
+        // console.log(info)
         setPatientName(info.Profile.name.toString());
         setPatientAge(info.Profile.age.toString());
         setPatientGender(info.Profile.gender.toString());
         setPatientDate(info.Profile.date.toString());
-
+        setPatientSeed(info.SEED.toString())
         setPatientAddress(info.ADDRESS.toString());
         setPatientDeviceID(info.ID.toString());
 
@@ -87,12 +89,15 @@ export default function Profile({ route, navigation }) {
         );
 
         var resObj = await response.json();
+        console.log("Last TX ", resObj)
         if (resObj !== false) {
           var responseTx = await fetch(
             `https://thetamiddleware.herokuapp.com/getTx/${resObj}`
           );
           var resObjTx = await responseTx.json();
           resObjTx = JSON.parse(resObjTx);
+          console.log(resObjTx)
+
           // Alert.alert(JSON.stringify(resObjTx))
           setPatientHR(resObjTx.HR.toString());
           setPatientTemp(resObjTx.Temp.toString());
@@ -184,6 +189,7 @@ export default function Profile({ route, navigation }) {
 
       } catch (e) {
         setFinished(true);
+        console.log(e)
         Alert.alert("Error has Ocurred", JSON.stringify(e));
       }
       // Alert.alert(JSON.stringify(info))
@@ -364,8 +370,8 @@ export default function Profile({ route, navigation }) {
             titleStyle={styles.buttonText}
             style={{ width: 150, marginRight: 10 }}
             onPress={
-              () => Alert.alert("This Feature is being under development")
-              // navigation.navigate('Readings')
+              () =>
+              navigation.navigate("LiveReadings", { seed: patientSeed , address: patientAddress })
             }
           ></Button>
           <Button

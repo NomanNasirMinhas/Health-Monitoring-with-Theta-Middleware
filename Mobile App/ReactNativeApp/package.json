@@ -22,6 +22,7 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.2.tar.gz",
     "react-native-action-bar": "^2.0.5",
     "react-native-chart-kit": "^6.6.1",
+    "react-native-crypto": "^2.2.0",
     "react-native-elements": "^3.0.0-alpha.1",
     "react-native-floating-action": "^1.21.0",
     "react-native-gesture-handler": "^1.6.1",
@@ -36,7 +37,8 @@
     "react-native-table-component": "^1.2.1",
     "react-native-web": "~0.11.7",
     "react-navigation": "^4.4.0",
-    "react-navigation-header-buttons": "^5.0.2"
+    "react-navigation-header-buttons": "^5.0.2",
+    "socket.io-client": "^3.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",
