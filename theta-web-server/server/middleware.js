@@ -1,12 +1,17 @@
 const { address } = require("@iota/signing");
 const { format, compareAsc } = require("date-fns");
+const io = require("socket.io-client");
 const { get } = require("http");
 const { connect } = require("http2");
 require("dotenv").config();
 const Mam = require("@iota/mam");
 const { asciiToTrytes, trytesToAscii } = require("@iota/converter");
 
-var publishing = false;
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = 8000;
+}
+
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 //                                                                                            //
@@ -65,7 +70,7 @@ async function getSeed(dbo, id, pass) {
     if (result == null) return [false, null];
     else return [true, result];
   } catch (err) {
-    return [false, err];
+    return false;
   }
 }
 
@@ -149,7 +154,7 @@ async function generateAddressLocally(
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function sendPublicTransaction(dbo, seed, address, message) {
+async function sendPublicTransaction(dbo, seed, address, message, type) {
   const Iota = require("@iota/core");
   const Converter = require("@iota/converter");
 
@@ -175,7 +180,7 @@ async function sendPublicTransaction(dbo, seed, address, message) {
       return iota.sendTrytes(trytes, depth, minimumWeightMagnitude);
     })
     .then((bundle) => {
-      addTransaction(dbo, address, bundle[0].hash);
+      addTransaction(dbo, address, bundle[0].hash, type);
     })
     .catch((err) => {
       console.error(err);
@@ -202,7 +207,7 @@ async function getSingleHash(dbo, address, time) {
     else
     return result.txHash;
   } catch (err) {
-    return [false, err];
+    return false;
   }
 }
 
@@ -212,12 +217,12 @@ async function getSingleHash(dbo, address, time) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function getAllHash(dbo, address, txDate) {
+async function getAllHash(dbo, address, txDate, type) {
   var transactionArray = [];
   try {
     var info = await dbo
       .collection(address)
-      .find({ date: txDate }, { projection: { _id: 1 } })
+      .find({ $and: [{date: txDate}, {txType:type}] }, { projection: { _id: 1 } })
       .toArray();
 
     if(info.length == 0)
@@ -230,7 +235,7 @@ async function getAllHash(dbo, address, txDate) {
     return transactionArray;
   }
   } catch (err) {
-    return [false, err];
+    return false;
   }
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
@@ -250,7 +255,7 @@ async function addSeed(dbo, id, password, info, seed) {
     await dbo.collection("SEEDS").insertOne(myobj);
     return true;
   } catch (err) {
-    return [false, err];
+    return false;
   }
 }
 
@@ -283,7 +288,7 @@ async function addAddress(dbo, id, pass, seed, info, finalAddress) {
     return [false, "Same ID exists"];
 
   } catch (err) {
-    return [false, err];
+    return false;
   }
 }
 
@@ -293,25 +298,26 @@ async function addAddress(dbo, id, pass, seed, info, finalAddress) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function addTransaction(dbo, address, hash) {
+async function addTransaction(dbo, address, hash, type) {
   try {
     var myobj = {
       _id: hash,
       date: getDate(),
       timestamp: timestamp(),
       ADDRESS: address,
+      txType:type,
       txHash: hash,
       isLatest: true,
     };
 
-    var myquery = { isLatest: true };
+    var myquery = {$and: [{ isLatest: true}, {txType:type }]};
     var newvalues = { $set: { isLatest: false } };
     await dbo.collection(address).updateOne(myquery, newvalues);
 
     await dbo.collection(address).insertOne(myobj);
     return true;
   } catch (err) {
-    return [false, err];
+    return false;
   }
 }
 
@@ -329,7 +335,7 @@ async function updateAddressProfile(dbo, seed, address, info) {
 
     return true;
   } catch (err) {
-    return [false, err];
+    return false;
   }
 }
 
@@ -351,7 +357,7 @@ async function getAddress(dbo, seed, id, pass) {
     return result;
   }
   } catch (err) {
-    return [false, err];
+    return false;
   }
 }
 
@@ -377,7 +383,7 @@ async function checkAddress(dbo, seedID, address) {
     return result;
     }
   } catch (err) {
-    return [false, err];
+    return false;
   }
 }
 
@@ -405,7 +411,7 @@ async function getAllAddresses(dbo, seed) {
     return addressAray;
   }
   } catch (err) {
-    return [false, err];
+    return false;
   }
 }
 
@@ -423,7 +429,7 @@ async function getAddressInfo(dbo, seed, address) {
 
     else return info;
   } catch (err) {
-    return [false, err];
+    return false;
   }
 }
 
@@ -440,7 +446,7 @@ async function dropAddress(dbo, seed, address) {
 
     return true;
   } catch (err) {
-    return [false, err];
+    return false;
   }
 }
 
@@ -450,14 +456,14 @@ async function dropAddress(dbo, seed, address) {
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
-async function getLastTransactionHash(dbo, address) {
+async function getLastTransactionHash(dbo, address, type) {
   try {
-    var result = await dbo.collection(address).findOne({ isLatest: true });
+    var result = await dbo.collection(address).findOne({$and: [{ isLatest: true}, {txType:type }]});
     console.log(result);
     if (result == null) return false;
     else return result.txHash;
   } catch (err) {
-    return [false, err];
+    return false;
   }
 }
 
@@ -479,7 +485,7 @@ async function getSeedInfo(dbo, seed) {
     if(response == null) return false;
     else return response;
   } catch (err) {
-    return [false, err];
+    return false;
   }
 }
 
@@ -488,6 +494,15 @@ async function getSeedInfo(dbo, seed) {
 //--------------------------------------New Function------------------------------------------//
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+var txData=null;
+
+function setTxData(data){
+  txData = data
+}
+
+function getTxData(){
+  return txData;
+}
 
 async function getPublicTransactionInfo(hash) {
   try {
@@ -500,13 +515,22 @@ async function getPublicTransactionInfo(hash) {
     const tailTransactionHash = hash;
     const Converter = require("@iota/converter");
 
-    var txData = await iota.getBundle(tailTransactionHash);
-    //var txMsg = JSON.parse(Extract.extractJson(txData));
-    var txMsg = Converter.trytesToAscii(
-      txData[0].signatureMessageFragment.substring(0, 2186)
-    );
-    return txMsg;
+    iota.getBundle(tailTransactionHash)
+.then(bundle => {
+    console.log(JSON.parse(Extract.extractJson(bundle)));
+})
+.catch(err => {
+    console.error(err);
+});
+    // var txData = await iota.getBundle(tailTransactionHash);
+    // //var txMsg = JSON.parse(Extract.extractJson(txData));
+    // var txMsg = Converter.trytesToAscii(
+    //   txData[0].signatureMessageFragment.substring(0, 2186)
+    // );
+
+    return true;
   } catch (err) {
+    console.log(err)
     return false;
   }
 }
@@ -528,7 +552,7 @@ async function adminLogin(dbo, id, pass) {
     if (result == null) return false;
     else return true;
   } catch (err) {
-    return [false, err];
+    return false;
   }
 }
 
@@ -579,7 +603,7 @@ async function updateStreamRoot(dbo, seed, address, root) {
     console.log("MAM Stream Root Updated");
     return true;
   } catch (err) {
-    return [false, err];
+    return false;
   }
 }
 
@@ -595,7 +619,7 @@ async function getStreamRoot(dbo, seed, address) {
     if (result == null) return false;
     else return result.streamRoot;
   } catch (err) {
-    return [false, err];
+    return false;
   }
 }
 
@@ -735,6 +759,7 @@ async function publishMAMmsg(dbo, func, seed, address) {
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
 async function fetchPublicMAM(dbo, seed, address) {
+
   const Mam = require("@iota/mam");
   const { asciiToTrytes, trytesToAscii } = require("@iota/converter");
   const mode = "public";
@@ -742,10 +767,15 @@ async function fetchPublicMAM(dbo, seed, address) {
 
   let mamState = Mam.init(provider);
 
-  const logData = (data) =>
-    console.log("Fetched and parsed", JSON.parse(trytesToAscii(data)), "\n");
+  const logData = (data) => {
+    var rec = JSON.stringify(trytesToAscii(data));
+    console.log("Data Recieved to Middleware ", rec)
+  }
+    // console.log("Fetched and parsed", JSON.parse(trytesToAscii(data)), "\n");
 
   root = await getStreamRoot(dbo, seed, address);
+  console.log(`root is ${root}`)
+
   await Mam.fetch(root, mode, null, logData);
 }
 
@@ -803,10 +833,10 @@ function decrypt(seed, address, text) {
   return decrypted.toString();
 }
 
-async function sendPrivateTransaction(seed, addresss, msg) {
-  const encText = encrypt(seed, addresss, msg);
-  await sendPublicTransaction(seed, addresss, encText);
-}
+// async function sendPrivateTransaction(seed, addresss, msg) {
+//   const encText = encrypt(seed, addresss, msg);
+//   await sendPublicTransaction(seed, addresss, encText);
+// }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -837,6 +867,7 @@ module.exports = {
   getSingleHash,
   updateAddressProfile,
   getSeedInfo,
+  getStreamRoot,
   getAllSeeds,
   adminLogin,
   updateStreamRoot,

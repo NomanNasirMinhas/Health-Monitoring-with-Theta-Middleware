@@ -43,56 +43,20 @@ export default function LiveReadings({route, navigation}) {
       try{
         const { address } = route.params;
         const { seed } = route.params;
+        
+
         setHistState('Fetching Transaction Hashes\nPlease Wait......')
-    var response = await fetch(`https://thetamiddleware.herokuapp.com/getMAMroot/${seed.toString()}&${address.toString()}`);
-    var resObj = await response.json();
-    console.log("Stream Root ",resObj)
-    // Alert.alert("All Hashes", JSON.stringify(resObj.length));
-    if(resObj === false){
-      Alert.alert("No Transactions Found");
-      navigation.goBack();
-    }
-    else{
-    setHashArray(resObj.reverse())
-    setHistState('Fetching Transactions from IOTA\nPlease Wait..........')
-    for(var i=0; i<resObj.length; i++)
-    {
-      var responseTx = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${resObj[i].toString()}`);
-    var resObjTx = await responseTx.json();
-    var parsed = JSON.parse(resObjTx)
-    // Alert.alert(JSON.stringify(parsed))
-    setTxInfo(txInfo.push(parsed))
+        var rawRoot = await fetch(`https://thetamiddleware.herokuapp.com/getMAMroot/${seed.toString()}&${address.toString()}`);
+        var root = await rawRoot.json();
+        console.log('Fetching from tangle, please wait...');
+        console.log("Stream Root ",root);
 
-    }
-    // Alert.alert("Fetched",JSON.stringify(txInfo))
 
-    for(var i=0; i<txInfo.length; i++)
-    {
-    var val = txInfo[i]
-    var row=[]
-      row.push(val.TimeStamp.toString());
-      row.push(val.HR);
-      row.push(val.Temp);
-      row.push(val.BP.systolic);
-      row.push(val.BP.diastolic);
-      tempData.push(val.Temp)
-      hrData.push(val.HR)
-      systData.push(val.BP.systolic)
-      diastData.push(val.BP.diastolic)
-      tableData.push(row)
-
-    }
-    setTempArray(tempData)
-    setHrArray(hrData)
-    setSystArray(systData)
-    setDiastArray(diastData)
-    setTableState(tableData)
     setFinished(true)
-    // console.log(tableData)
-  }
       }
       catch(e){
         setFinished(true)
+        console.log(e)
         // Alert.alert("Error Has Occurred")
       }
 
@@ -100,9 +64,6 @@ export default function LiveReadings({route, navigation}) {
 
     })();
   }, []);
-
-
-  var tableHead= ['Time','Heart Rate', 'Temp.', 'Syst. BP', 'Dia. BP'];
 
   let [fontsLoaded] = useFonts({
     // Load a font `Montserrat` from a static resource
@@ -135,9 +96,7 @@ export default function LiveReadings({route, navigation}) {
 
       {finished &&
       <View style={{marginBottom:30, paddingHorizontal:20, paddingTop:40}}>
-        <Text style={[styles.text, { color: "white", fontFamily: 'MetropolisBold', fontSize:30 }]}>
-              Your Vital Sign's History
-            </Text>
+        <Text>Hello</Text>
         <View style={styles.buttonContainer}>
           <Button
             title="Go Back"
@@ -150,139 +109,6 @@ export default function LiveReadings({route, navigation}) {
             }
           ></Button>
         </View>
-        <Text style={[styles.text, { color: "white", fontFamily: 'MetropolisBold', fontSize:30 }]}>
-              Infographics
-            </Text>
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={true}>
-        <View>
-            {/* Bar Chart Starts From Here */}
-            <Card containerStyle={[styles.card, {borderRadius:0, borderWidth:0, marginRight:20,}]}>
-            <Card.Title>
-            <Text style={[styles.text, { color: "white", fontSize: 20 }]}>
-              Body Temperature
-            </Text>
-
-            </Card.Title>
-            <LineChart
-              data={{
-                labels: [],
-                datasets: [
-                  {
-                    data: tempArray,
-                    strokeWidth:2,
-                  },
-                ],
-              }}
-              bezier
-              width={maxWidth} // from react-native
-              height={250}
-              withHorizontalLines={false}
-              withVerticalLines={false}
-              yAxisInterval={1} // optional, defaults to 1
-              chartConfig={{
-                backgroundColor: "#048bbd",
-                backgroundGradientFrom: "#37c1d4",
-                backgroundGradientTo: "#1e95a6",
-                decimalPlaces: 0, // optional, defaults to 2dp
-                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-              }}
-              style={{
-                marginVertical: 0,
-                paddingHorizontal: "auto",
-                borderRadius: 10,
-              }}
-            />
-            </Card>
-
-            </View>
-
-            <View>
-            {/* Bar Chart Starts From Here */}
-            <Card containerStyle={[styles.card, {borderRadius:0, borderWidth:0, marginRight:20}]}>
-            <Card.Title>
-            <Text style={[styles.text, { color: "white", fontSize: 20 }]}>
-              Blood Pressure
-            </Text>
-
-            </Card.Title>
-            <LineChart
-              data={{
-                labels: [],
-                datasets: [
-                  {
-                    data: systArray,
-                    strokeWidth:2,
-                  },
-                ],
-              }}
-              bezier
-              width={maxWidth} // from react-native
-              height={250}
-              withHorizontalLines={false}
-              withVerticalLines={false}
-              yAxisInterval={1} // optional, defaults to 1
-              chartConfig={{
-                backgroundColor: "#048bbd",
-                backgroundGradientFrom: "#37c1d4",
-                backgroundGradientTo: "#1e95a6",
-                decimalPlaces: 0, // optional, defaults to 2dp
-                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-              }}
-              style={{
-                marginVertical: 0,
-                paddingHorizontal: "auto",
-                borderRadius: 10,
-              }}
-            />
-            </Card>
-
-            </View>
-
-            <View>
-            {/* Bar Chart Starts From Here */}
-            <Card containerStyle={[styles.card, {borderRadius:0, borderWidth:0, marginRight:20}]}>
-            <Card.Title>
-            <Text style={[styles.text, { color: "white", fontSize: 20 }]}>
-              Heart Rate
-            </Text>
-
-            </Card.Title>
-            <LineChart
-              data={{
-                labels: [],
-                datasets: [
-                  {
-                    data: hrArray,
-                    strokeWidth:2,
-                  },
-                ],
-              }}
-              bezier
-              width={maxWidth} // from react-native
-              height={250}
-              withHorizontalLines={false}
-              withVerticalLines={false}
-              yAxisInterval={1} // optional, defaults to 1
-              chartConfig={{
-                backgroundColor: "#048bbd",
-                backgroundGradientFrom: "#37c1d4",
-                backgroundGradientTo: "#1e95a6",
-                decimalPlaces: 0, // optional, defaults to 2dp
-                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-              }}
-              style={{
-                marginVertical: 0,
-                paddingHorizontal: "auto",
-                borderRadius: 10,
-              }}
-            />
-            </Card>
-
-            </View>
-      </ScrollView>
       </View>
       }
 
@@ -331,6 +157,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignSelf: "center",
     marginBottom: 20,
+  },
+  buttonStyle:{
+    backgroundColor:'#00619E',
+    borderWidth:2,
+    borderColor:'white'
+  },
+  buttonText: {
+    fontFamily: "MetropolisBold",
+    color: "white",
+    textAlign: "center",
   },
 
 });

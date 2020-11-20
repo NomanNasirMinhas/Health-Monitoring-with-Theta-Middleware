@@ -197,23 +197,27 @@ MongoClient.connect(uri, { useUnifiedTopology: true }, (err, client) => {
     try {
       // const result = await fetchPublicMAM(dbo, seed, address);
       // res.status(201).json(result);
-      const Mam = require("@iota/mam");
-      const { asciiToTrytes, trytesToAscii } = require("@iota/converter");
-      const mode = "public";
-      const provider = 'https://nodes.iota.cafe:443';
+      const Mam = require('@iota/mam');
+const { asciiToTrytes, trytesToAscii } = require('@iota/converter');
+const mode = 'public';
+const provider = 'https://nodes.devnet.iota.org';
 
-      let mamState = Mam.init(provider);
+    let mamState = Mam.init(provider);
+
+// const logData = data => console.log('Fetched and parsed', JSON.parse(trytesToAscii(data)), '\n')
+
 
       const logData = (data) => {
-        res.write(JSON.stringify(trytesToAscii(data)));
-        // console.log("Data Recieved to Middleware ", rec)
+        var rec = JSON.stringify(trytesToAscii(data));
+        res.write(rec);
+        console.log("Data Recieved to Middleware ", rec)
       }
         // console.log("Fetched and parsed", JSON.parse(trytesToAscii(data)), "\n");
 
       root = await getStreamRoot(dbo, seed, address);
       console.log(`root is ${root}`)
       await Mam.fetch(root, mode, null, logData);
-      res.end(true)
+      res.end('ok')
     } catch (err) {
       res.status(400).json({ message: err.message });
     }
