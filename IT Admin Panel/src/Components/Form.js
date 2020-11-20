@@ -210,8 +210,8 @@ export const Form = () => {
 
                   <TextField
                     id="outlined-basic"
-                    label="Email"
-                    placeholder="Email"
+                    label="Username"
+                    placeholder="Username"
                     type="Email"
                     variant="outlined"
                     required

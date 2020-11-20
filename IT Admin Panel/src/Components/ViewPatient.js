@@ -150,11 +150,11 @@ function ViewPatient() {
     setName(name);
 
     const info = await fetch(
-      `https://thetamiddleware.herokuapp.com/getAllHash/${address}&${"29-10-2020"}`
+      `https://thetamiddleware.herokuapp.com/getAllHash/${address}&${"08-11-2020"}`
     );
     const to_json = await info.json();
 
-    console.log(to_json);
+    console.log("To json",to_json);
     // if transactions fetched
     try {
       if (to_json != false) {
@@ -169,7 +169,13 @@ function ViewPatient() {
           buttons: false,
         });
       }
-    } catch (e) {}
+    } catch (e) {
+      swal({
+      text: "404 Not Found",
+      timer: 4000,
+      icon: "error",
+      buttons: false,
+    });}
     console.log("Transactions=", Transactions);
   }
 

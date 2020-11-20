@@ -304,7 +304,6 @@ function Doctors(props) {
               width: "100%",
               margin: "auto",
               marginTop: "2%",
-
               border: "solid grey 0.9px",
             }}
           >/*}
@@ -343,7 +342,7 @@ function Doctors(props) {
                     </Typography>
                   </TableCell>
 
-                  <TableCell align="center">
+                  <TableCell align="left">
                     <Typography variant="h6" style={{ color: "white" }}>
                       Seed
                     </Typography>
