@@ -643,7 +643,7 @@ async function getPrivateTransactionInfo(seed, address, hash)
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 async function publishMAMmsg(func, seed, address) {
-	console.log("Check 0")
+	console.log("MAM Stream has started.......")
   
   	const Mam = require('@iota/mam');
 	const { asciiToTrytes, trytesToAscii } = require('@iota/converter');
@@ -662,7 +662,7 @@ async function publishMAMmsg(func, seed, address) {
     	// Attach the message to the Tangle
     	await Mam.attach(message.payload, message.address, 3, 9)
 
-    	console.log('Published', packet);
+    	console.log('MAM msg Published', packet);
     	// console.log('Root = ', message.root, '\n');
     	return message.root
 }
@@ -674,23 +674,27 @@ const publishAll = async () => {
 	const fetch = require("node-fetch");
 	const sensor = require('ds18b20-raspi');
 
-	console.log("Check 2");
+	//console.log("Check 2");
     	while(true)
     	{
-		console.log("Check 3")
+		//console.log("Check 3")
 		var tempF = sensor.readSimpleF();
 		var max30100 = await fetch('http://localhost:5000/');
 		max30100 = await max30100.json();
-		console.log(`Temp = ${tempF}-F, Heart Rate = ${max30100.HR}, SPo2 = ${max30100.SPo2}`);
+		//console.log(`Temp = ${tempF}-F, Heart Rate = ${max30100.HR}, SPo2 = ${max30100.SPo2}`);
 		var dataObj = {
     			Temp: tempF,
     			HR: max30100.HR,
     			SpO2: max30100.SPo2
 			}
+      if(dataObj.SpO2 <60){
+        console.log("MAM Readings... Please Wait While Sensors are getting Stable......")
+    }
+    else{
 
         	var msg = JSON.stringify(dataObj);
-		console.log("Check 4")
-		console.log("Data Returned by Function ", msg)
+		//console.log("Check 4")
+		//console.log("Data Returned by Function ", msg)
         if(initial)
         {
             root = await publish({
@@ -708,7 +712,7 @@ const publishAll = async () => {
 				"Content-type": "application/json; charset=UTF-8"
 			    }
 			})
-              console.log("Root is ", root)
+              //console.log("Root is ", root)
 
         }
         else{
@@ -718,14 +722,14 @@ const publishAll = async () => {
               })
         }
         initial=false
-
+      }
     }
 
-    console.log("Root is ", root)
+    //console.log("Root is ", root)
 
     return root
   }
-console.log("Check 1")
+  //console.log("Check 1")
   publishAll(func)
 
 }
