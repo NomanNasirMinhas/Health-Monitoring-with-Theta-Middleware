@@ -24,6 +24,9 @@ import {
 } from "@material-ui/core/styles";
 
 //**** TABLE ******/
+import EllipsisText from "react-ellipsis-text";
+
+
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TablePagination from "@material-ui/core/TablePagination";
@@ -288,7 +291,7 @@ function Doctors(props) {
   // IF DATA IS FETCHED---->
 
   return (
-    <ThemeProvider>
+    <ThemeProvider theme={theme}>
       <Navbar />
 
       <Typography variant="h2" style={{ marginTop: "2%", color: "#B4B4B4" }}>
@@ -328,6 +331,11 @@ function Doctors(props) {
                 <TableRow>
                   <TableCell align="center">
                     <Typography variant="h6" style={{ color: "white" }}>
+                     Username
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Typography variant="h6" style={{ color: "white" }}>
                       Name
                     </Typography>
                   </TableCell>
@@ -336,12 +344,12 @@ function Doctors(props) {
                       Specialization
                     </Typography>
                   </TableCell>
-                  <TableCell align="center">
+
+                  <TableCell align="left">
                     <Typography variant="h6" style={{ color: "white" }}>
                       Contact
                     </Typography>
                   </TableCell>
-
                   <TableCell align="left">
                     <Typography variant="h6" style={{ color: "white" }}>
                       Seed
@@ -368,19 +376,27 @@ function Doctors(props) {
                     </TableCell>
                     <TableCell align="center">
                       <Typography variant="body2">
-                        {obj.Profile.specialization}
+                        {obj.Profile.name}
                       </Typography>
                     </TableCell>
                     <TableCell align="center">
                       <Typography variant="body2">
                         {" "}
-                        {obj.Profile.contact}
+                        {obj.Profile.specialization}
                       </Typography>
                     </TableCell>
                     <TableCell align="center">
                       {" "}
-                      <Typography variant="body2">{obj.SEED}</Typography>
+                      <Typography variant="body2">{obj.Profile.contact}</Typography>
                     </TableCell>
+                    <TableCell align="center">
+                      {" "}
+
+                      <Typography variant="body2">
+                        {<EllipsisText text={obj.SEED} length={"9"}/>}
+
+                        </Typography>
+                        </TableCell>
 
                     <TableCell align="center">
                       {
@@ -442,6 +458,7 @@ function Doctors(props) {
         justify="space-between"
       >
         {/**  <Grid item xs={1}></Grid> */}
+        <Grid item xs={1}></Grid>
         <Grid item xs={4}>
           <Paper
             elevation={5}
@@ -465,7 +482,7 @@ function Doctors(props) {
           </Paper>
         </Grid>
         {/**  <Grid item xs={1}></Grid> */}
-
+        <Grid item xs={2}></Grid>
         <Grid item xs={4}>
           <Paper
             elevation={5}
@@ -489,7 +506,9 @@ function Doctors(props) {
             </Typography>
           </Paper>
         </Grid>
-        {/**  <Grid item xs={1}></Grid> */}
+         <Grid item xs={1}></Grid> 
+    
+    {/** 
         <Grid item xs={4}>
           <Paper
             elevation={5}
@@ -511,7 +530,7 @@ function Doctors(props) {
               </strong>
             </Typography>
           </Paper>
-        </Grid>
+        </Grid>*/}
       </Grid>
              
 

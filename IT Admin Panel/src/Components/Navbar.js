@@ -1,6 +1,7 @@
 import React from "react";
 import {
   createMuiTheme,
+  responsiveFontSizes,
   withStyles,
   makeStyles,
   ThemeProvider,
@@ -17,7 +18,19 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import HomeIcon from "@material-ui/icons/Home";
 import PersonIcon from "@material-ui/icons/Person";
-import { configure } from "@testing-library/react";
+import Box from '@material-ui/core/Box';
+
+let theme = createMuiTheme({
+  typography: {
+    fontFamily: ["Metrophobic", "sans-serif"].join(","),
+  },
+  primary: {
+    main: "#2980B9",
+  },
+});
+//Adjuts font size
+theme = responsiveFontSizes(theme);
+//import { configure } from "@testing-library/react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,16 +40,16 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2),
   },
   title: {
-    flexGrow: 0,
-    
+    flexGrow: 1,
   },
+  buttons:{ right: 0}
 }));
 
-const theme = createMuiTheme({
+/*const theme = createMuiTheme({
   primary: {
     main: "#0ea80e",
   },
-});
+});*/
 
 function Navbar() {
   const classes = useStyles();
@@ -59,54 +72,63 @@ function Navbar() {
 
   return (
     <ThemeProvider theme={theme}>
-      <AppBar
+      {/** <div style={{ position: "absolute", right: "0px" }}></div>*/}
+      <div className={classes.root}>    
+        <AppBar
         position="static"
-        style={{ marginLeft: "0%", backgroundColor: "#2471A3" }} 
+        style={{ backgroundColor: "#2471A3" }}
         //   #2980B9 blue   dark#2471A3
       >
         <Toolbar>
-          <Typography variant="h4" className={classes.title} style={{marginLeft:"0%"}}>
-            <ArrowForwardIcon />
-            <strong style={{marginLeft:"0%"}}>Welcome Admin </strong>
+          <Typography
+            variant="h4"
+            className={classes.title}
+                      >
+            {/** <ArrowForwardIcon /> */}
+            Welcome Admin
           </Typography>
-    <div style={{position: "absolute", right:"0px"}}>
-          <Button
-            color="inherit"
-            startIcon={<HomeIcon fontSize="small" />}
-            onClick={goHome}
-          >
-            {" "}
-            Home
-          </Button>
-
-          <Button
-            color="inherit"
-            startIcon={<PersonIcon fontSize="small" />}
-            onClick={Doctors}
-          >
-            {" "}
-            Patients
-          </Button>
-
-          <Button
-            color="inherit"
-            startIcon={<AddCircleOutlineIcon fontSize="small" />}
-            onClick={goAdd}
-          >
-            {" "}
-            Manage Devices
-          </Button>
-          <Button
-            color="inherit"
-            startIcon={<ExitToAppIcon fontSize="small" />}
-            onClick={Logout}
-          >
-            {" "}
-            logout
          
-          </Button></div>
+                     <Button
+              color="inherit"
+              startIcon={<HomeIcon fontSize="small" />}
+              onClick={goHome}
+            >
+              {" "}
+              <Typography variant="subtitle2">Home</Typography>
+            </Button>
+
+            <Button
+              color="inherit"
+              startIcon={<PersonIcon fontSize="small" />}
+              onClick={Doctors}
+            >
+              {" "}
+              <Typography variant="subtitle2">Patients</Typography>
+            </Button>
+
+            <Button
+              color="inherit"
+              startIcon={<AddCircleOutlineIcon fontSize="small" />}
+              onClick={goAdd}
+            >
+              {" "}
+              <Typography variant="subtitle2">Manage Devices</Typography>
+            </Button>
+
+         
+                     <Button
+              color="inherit"
+              startIcon={<ExitToAppIcon fontSize="small" />}
+              onClick={Logout}
+              className={classes.buttons}
+            >
+              {" "}
+              <Typography variant="subtitle2">logout</Typography>
+            </Button>
+            
         </Toolbar>
       </AppBar>
+      </div>
     </ThemeProvider>
   );
 }
