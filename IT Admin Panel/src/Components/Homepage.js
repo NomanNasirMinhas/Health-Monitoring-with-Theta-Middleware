@@ -6,13 +6,20 @@ import Grid from "@material-ui/core/Grid";
 import PropTypes from "prop-types";
 import { Link as link } from "react-router-dom";
 
+import AssignmentIcon from "@material-ui/icons/Assignment";
+
+//TOAST MESSAGE
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import {
   Card,
   CardActions,
   CardContent,
   Button,
   Typography,
-  CircularProgress,Slide
+  CircularProgress,
+  Slide,
 } from "@material-ui/core";
 import {
   createMuiTheme,
@@ -25,7 +32,6 @@ import {
 
 //**** TABLE ******/
 import EllipsisText from "react-ellipsis-text";
-
 
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -41,6 +47,7 @@ import IconButton from "@material-ui/core/IconButton";
 import FirstPageIcon from "@material-ui/icons/FirstPage";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import ListIcon from "@material-ui/icons/List";
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
@@ -67,11 +74,11 @@ const rows = [
 const useStylesTable = makeStyles({
   table: {
     maxWidth: "100%",
-     fontFamily:"Metrophobic"
+    fontFamily: "Metrophobic",
   },
   TableHead: {
     cell: { color: "white" },
-    fontFamily:"Metrophobic"
+    fontFamily: "Metrophobic",
   },
   paper: {
     maxwidth: "100%",
@@ -173,6 +180,7 @@ function Doctors(props) {
   const [totalDoctors, settotalDoctors] = React.useState("");
   const [totalPatients, settotalPatients] = React.useState(0);
 
+ 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -181,6 +189,8 @@ function Doctors(props) {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
+  
 
   const [seeds, setSeeds] = useState([]);
 
@@ -292,16 +302,16 @@ function Doctors(props) {
 
   return (
     <ThemeProvider theme={theme}>
+      
       <Navbar />
 
       <Typography variant="h2" style={{ marginTop: "2%", color: "#B4B4B4" }}>
         Doctors{" "}
       </Typography>
       <Slide direction="down" in={true} timeout={300}>
-      <Grid container spacing={0} style={{ marginTop:"2%"}}>
-       
-        <Grid item xs={12} >
-          {/**  <Paper
+        <Grid container spacing={0} style={{ marginTop: "2%" }}>
+          <Grid item xs={12}>
+            {/**  <Paper
             elevation={5}
             style={{
               width: "100%",
@@ -325,131 +335,152 @@ function Doctors(props) {
               </Typography>
 */}
 
-          <TableContainer className={classesTable.paper}>
-            <Table className={classesTable.table} aria-label="simple table">
-              <TableHead style={{ backgroundColor: "#2980B9" }}>
-                <TableRow>
-                  <TableCell align="center">
-                    <Typography variant="h6" style={{ color: "white" }}>
-                     Username
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="center">
-                    <Typography variant="h6" style={{ color: "white" }}>
-                      Name
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="center">
-                    <Typography variant="h6" style={{ color: "white" }}>
-                      Specialization
-                    </Typography>
-                  </TableCell>
-
-                  <TableCell align="left">
-                    <Typography variant="h6" style={{ color: "white" }}>
-                      Contact
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="left">
-                    <Typography variant="h6" style={{ color: "white" }}>
-                      Seed
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="center">
-                    <Typography variant="h6" style={{ color: "white" }}>
-                      Patients
-                    </Typography>
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {(rowsPerPage > 0
-                  ? seeds.slice(
-                      page * rowsPerPage,
-                      page * rowsPerPage + rowsPerPage
-                    )
-                  : seeds
-                ).map((obj) => (
-                  <TableRow hover key={obj.name}>
-                    <TableCell component="th" scope="row">
-                      <Typography variant="body2"> {obj.ID} </Typography>
-                    </TableCell>
+            <TableContainer className={classesTable.paper}>
+              <Table className={classesTable.table} aria-label="simple table">
+                <TableHead style={{ backgroundColor: "#2980B9" }}>
+                  <TableRow>
                     <TableCell align="center">
-                      <Typography variant="body2">
-                        {obj.Profile.name}
+                      <Typography variant="h6" style={{ color: "white" }}>
+                        Username
                       </Typography>
                     </TableCell>
                     <TableCell align="center">
-                      <Typography variant="body2">
-                        {" "}
-                        {obj.Profile.specialization}
+                      <Typography variant="h6" style={{ color: "white" }}>
+                        Name
                       </Typography>
                     </TableCell>
                     <TableCell align="center">
-                      {" "}
-                      <Typography variant="body2">{obj.Profile.contact}</Typography>
+                      <Typography variant="h6" style={{ color: "white" }}>
+                        Specialization
+                      </Typography>
+                    </TableCell>
+
+                    <TableCell align="left">
+                      <Typography variant="h6" style={{ color: "white" }}>
+                        Contact
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="left">
+                      <Typography variant="h6" style={{ color: "white" }}>
+                        Seed
+                      </Typography>
                     </TableCell>
                     <TableCell align="center">
-                      {" "}
-
-                      <Typography variant="body2">
-                        {<EllipsisText text={obj.SEED} length={"9"}/>}
-
-                        </Typography>
-                        </TableCell>
-
-                    <TableCell align="center">
-                      {
-                        <Button
-                          className={classesTable.hover}
-                          color="inherit"
-                          onClick={() => Patients(props, obj.SEED)}
-                          startIcon={
-                            <ListIcon
-                              fontSize="small"
-                              // component={link}
-                              //to={`/ViewPatient/${obj.SEED}`}
-                            />
-                          }
-                        >
-                          {" "}
-                          <Typography variant="button">Patients</Typography>
-                        </Button>
-                      }
+                      <Typography variant="h6" style={{ color: "white" }}>
+                        Patients
+                      </Typography>
                     </TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-              <TableFooter style={{ maxwidth: "100%" }}>
-                <TableRow>
-                  <TablePagination
-                    rowsPerPageOptions={[
-                      5,
-                      10,
-                      25,
-                      { label: "All", value: -1 },
-                    ]}
-                    colSpan={12}
-                    count={seeds.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    SelectProps={{
-                      inputProps: { "aria-label": "rows per page" },
-                      native: true,
-                    }}
-                    onChangePage={handleChangePage}
-                    onChangeRowsPerPage={handleChangeRowsPerPage}
-                    ActionsComponent={TablePaginationActions}
-                  />
-                </TableRow>
-              </TableFooter>
-            </Table>
-          </TableContainer>
-        </Grid>
-        
-      </Grid>
-      </Slide>
+                </TableHead>
+                <TableBody>
+                  {(rowsPerPage > 0
+                    ? seeds.slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                    : seeds
+                  ).map((obj) => (
+                    <TableRow hover key={obj.name}>
+                      <TableCell component="th" scope="row">
+                        <Typography variant="body2"> {obj.ID} </Typography>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Typography variant="body2">
+                          {obj.Profile.name}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="center">
+                        <Typography variant="body2">
+                          {" "}
+                          {obj.Profile.specialization}
+                        </Typography>
+                      </TableCell>
+                      <TableCell align="center">
+                        {" "}
+                        <Typography variant="body2">
+                          {obj.Profile.contact}
+                        </Typography>
+                      </TableCell>
 
+                      
+                      <TableCell align="center">
+                        {" "}
+                        <Typography variant="body2">
+                          {<EllipsisText text={obj.SEED} length={"15"} />}
+
+                          <CopyToClipboard text={obj.SEED}>
+                     
+                          <IconButton size="small"  onClick={ () => toast("Seed Copied!",
+                          {
+                            position: "top-right",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            })}>
+                            {" "}
+                            {/**style={{color:"#2980B9"}} */}
+                            <AssignmentIcon />
+                          </IconButton>
+                          </CopyToClipboard>
+                        </Typography>
+                      </TableCell>
+
+
+
+
+                      <TableCell align="center">
+                        {
+                          <Button
+                            className={classesTable.hover}
+                            color="inherit"
+                            onClick={() => Patients(props, obj.SEED)}
+                            startIcon={
+                              <ListIcon
+                                fontSize="small"
+                                // component={link}
+                                //to={`/ViewPatient/${obj.SEED}`}
+                              />
+                            }
+                          >
+                            {" "}
+                            <Typography variant="button">Patients</Typography>
+                          </Button>
+                        }
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+                <TableFooter style={{ maxwidth: "100%" }}>
+                  <TableRow>
+                    <TablePagination
+                      rowsPerPageOptions={[
+                        5,
+                        10,
+                        25,
+                        { label: "All", value: -1 },
+                      ]}
+                      colSpan={12}
+                      count={seeds.length}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      SelectProps={{
+                        inputProps: { "aria-label": "rows per page" },
+                        native: true,
+                      }}
+                      onChangePage={handleChangePage}
+                      onChangeRowsPerPage={handleChangeRowsPerPage}
+                      ActionsComponent={TablePaginationActions}
+                    />
+                  </TableRow>
+                </TableFooter>
+              </Table>
+            </TableContainer>
+          </Grid>
+        </Grid>
+      </Slide>
 
       <Grid
         container
@@ -506,9 +537,9 @@ function Doctors(props) {
             </Typography>
           </Paper>
         </Grid>
-         <Grid item xs={1}></Grid> 
-    
-    {/** 
+        <Grid item xs={1}></Grid>
+
+        {/** 
         <Grid item xs={4}>
           <Paper
             elevation={5}
@@ -532,10 +563,9 @@ function Doctors(props) {
           </Paper>
         </Grid>*/}
       </Grid>
-             
 
-
-          </ThemeProvider>
+      <ToastContainer/>
+    </ThemeProvider>
   );
 }
 export default Doctors;
