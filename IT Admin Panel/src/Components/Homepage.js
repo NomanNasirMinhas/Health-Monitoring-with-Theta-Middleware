@@ -7,10 +7,14 @@ import PropTypes from "prop-types";
 import { Link as link } from "react-router-dom";
 
 import AssignmentIcon from "@material-ui/icons/Assignment";
+import PermIdentityIcon from "@material-ui/icons/PermIdentity";
+import PeopleOutlineIcon from "@material-ui/icons/PeopleOutline";
+import DoneAllIcon from "@material-ui/icons/DoneAll";
+import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 
 //TOAST MESSAGE
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import {
   Card,
@@ -47,7 +51,7 @@ import IconButton from "@material-ui/core/IconButton";
 import FirstPageIcon from "@material-ui/icons/FirstPage";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import ListIcon from "@material-ui/icons/List";
-import {CopyToClipboard} from 'react-copy-to-clipboard';
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
@@ -179,8 +183,8 @@ function Doctors(props) {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [totalDoctors, settotalDoctors] = React.useState("");
   const [totalPatients, settotalPatients] = React.useState(0);
-
- 
+  const [PatientCount, setPatientCount] = React.useState([]);
+  let NewSeeds =[]
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -189,8 +193,6 @@ function Doctors(props) {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
-  
 
   const [seeds, setSeeds] = useState([]);
 
@@ -211,12 +213,55 @@ function Doctors(props) {
         setSeeds(fetched_data);
 
         console.log("Seeds =", seeds);
+        //get patient count
+
         //settotalDoctors(seeds.length);
       } catch (e) {}
     }
 
     getData();
   }, []);
+
+  useEffect(() => {
+    async function Patient_Count() {
+      //const patients=[];
+      //const patients_json=[];
+      // const
+      console.log(seeds.length);
+
+      for (var i = 0; i < seeds.length; i++) {
+        console.log("loop =", i);
+        let addresses_for = seeds[i].SEED;
+        // addresses_for
+        const patients = await fetch(
+          `https://thetamiddleware.herokuapp.com/getAllAddresses/${addresses_for}`
+        );
+        //convert to json
+        const patients_json = await patients.json();
+        if (patients_json == false || patients_json == null) {
+          // PatientCount.push(patients_json.length);
+          //console.log("patients_json =", PatientCount);
+          //console.log("patients_json length=", PatientCount);
+          console.log("addresses=", patients_json.length);
+          setPatientCount(PatientCount.concat(0));
+          NewSeeds.push( {seed_obj: seeds[i] , num_of_pat: 0} );
+          console.log("patient count if =", PatientCount);
+          console.log("New seeds =", NewSeeds);
+        } else {
+          console.log("addresses=", patients_json.length);
+          setPatientCount(PatientCount.concat(patients_json.length));
+          NewSeeds.push( {seed_obj: seeds[i] , num_of_pat:patients_json.length } )
+
+          console.log("patient count else =", PatientCount);
+          console.log("New seeds =", NewSeeds);
+        }
+      }
+    }
+
+    Patient_Count();
+  }, [seeds]);
+
+  //console.log("PC=",Patient_Count());
 
   useEffect(() => {
     async function getPatients() {
@@ -254,8 +299,6 @@ function Doctors(props) {
         settotalPatients(l.length);
       }
       console.log("total=", l, "length=", l.length);
-      {
-      }
     }
     getPatients();
   }, [seeds]);
@@ -274,9 +317,16 @@ function Doctors(props) {
     props.history.push(`/ViewPatient/${SEED}`);
   }
 
+  //navigate to doctor profile
+  function Profile(props, SEED){
+    console.log("To Profile");
+    props.history.push(`/doctor_profile/${SEED}`)
+  }
+
+  let p_count = 0;
   //IF FETCHING DATA------>
 
-  if (seeds == false) {
+  if (seeds == false  ) {
     return (
       <ThemeProvider theme={theme}>
         <Navbar />
@@ -299,10 +349,12 @@ function Doctors(props) {
   }
 
   // IF DATA IS FETCHED---->
+  //if(NewSeeds!=false && NewSeeds!=null){
+  let p = PatientCount;
+  let loop = 0;
 
   return (
     <ThemeProvider theme={theme}>
-      
       <Navbar />
 
       <Typography variant="h2" style={{ marginTop: "2%", color: "#B4B4B4" }}>
@@ -370,6 +422,11 @@ function Doctors(props) {
                         Patients
                       </Typography>
                     </TableCell>
+                    <TableCell align="center">
+                      <Typography variant="h6" style={{ color: "white" }}>
+                        Profile
+                      </Typography>
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -402,34 +459,33 @@ function Doctors(props) {
                         </Typography>
                       </TableCell>
 
-                      
                       <TableCell align="center">
                         {" "}
                         <Typography variant="body2">
                           {<EllipsisText text={obj.SEED} length={"15"} />}
 
                           <CopyToClipboard text={obj.SEED}>
-                     
-                          <IconButton size="small"  onClick={ () => toast("Seed Copied!",
-                          {
-                            position: "top-right",
-                            autoClose: 5000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            })}>
-                            {" "}
-                            {/**style={{color:"#2980B9"}} */}
-                            <AssignmentIcon />
-                          </IconButton>
+                            <IconButton
+                              size="small"
+                              onClick={() =>
+                                toast("Seed Copied!", {
+                                  position: "top-right",
+                                  autoClose: 5000,
+                                  hideProgressBar: false,
+                                  closeOnClick: true,
+                                  pauseOnHover: true,
+                                  draggable: true,
+                                  progress: undefined,
+                                })
+                              }
+                            >
+                              {" "}
+                              {/**style={{color:"#2980B9"}} */}
+                              <AssignmentIcon />
+                            </IconButton>
                           </CopyToClipboard>
                         </Typography>
                       </TableCell>
-
-
-
 
                       <TableCell align="center">
                         {
@@ -438,7 +494,7 @@ function Doctors(props) {
                             color="inherit"
                             onClick={() => Patients(props, obj.SEED)}
                             startIcon={
-                              <ListIcon
+                              <PeopleOutlineIcon
                                 fontSize="small"
                                 // component={link}
                                 //to={`/ViewPatient/${obj.SEED}`}
@@ -446,7 +502,38 @@ function Doctors(props) {
                             }
                           >
                             {" "}
-                            <Typography variant="button">Patients</Typography>
+                            <Typography variant="button">
+                              <strong style={{ color: "white" }}>
+                                {PatientCount == null &&
+                                PatientCount == undefined ? (
+                                  <CircularProgress
+                                    style={{ color: "white" }}
+                                  />
+                                ) : (
+                                   " Patients"
+                                )}{" "}
+                              </strong>
+                            </Typography>
+                          </Button>
+                        }
+                      </TableCell>
+
+                      <TableCell align="center">
+                        {
+                          <Button
+                            className={classesTable.hover}
+                            color="inherit"
+                            onClick={() => Profile(props, obj.SEED)}
+                            startIcon={
+                              <PermIdentityIcon
+                                fontSize="small"
+                                // component={link}
+                                //to={`/ViewPatient/${obj.SEED}`}
+                              />
+                            }
+                          >
+                            {" "}
+                            <Typography variant="button"> View</Typography>
                           </Button>
                         }
                       </TableCell>
@@ -498,7 +585,9 @@ function Doctors(props) {
             <Typography
               variant="h4"
               style={{ marginTop: "1%", color: "white", fontWeight: "bold" }}
+              startIcon={<FavoriteBorderIcon fontSize="small" />}
             >
+              <startIcon></startIcon>
               Registered Doctors{" "}
             </Typography>
             <Typography variant="h5">
@@ -564,8 +653,8 @@ function Doctors(props) {
         </Grid>*/}
       </Grid>
 
-      <ToastContainer/>
+      <ToastContainer />
     </ThemeProvider>
-  );
-}
+  )} ;
+
 export default Doctors;

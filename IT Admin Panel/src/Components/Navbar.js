@@ -99,7 +99,7 @@ function Navbar() {
 
             <Button
               color="inherit"
-              startIcon={<PersonIcon fontSize="small" />}
+              startIcon={<AddCircleOutlineIcon fontSize="small" />}
               onClick={Doctors}
             >
               {" "}
@@ -108,11 +108,11 @@ function Navbar() {
 
             <Button
               color="inherit"
-              startIcon={<AddCircleOutlineIcon fontSize="small" />}
+              startIcon={< PersonIcon fontSize="small" />}
               onClick={goAdd}
             >
               {" "}
-              <Typography variant="subtitle2">Manage Devices</Typography>
+              <Typography variant="subtitle2">Profile</Typography>
             </Button>
 
          

@@ -424,7 +424,7 @@ async function getAllAddresses(seed) {
     return false;
   }
 }
-
+getAllAddresses(MBNDML9YVMXWKOMQZKYNJZQQRIQUQYLSNNDLSHCEAKKDJYHBPEWXBNXNXWOGQTHYUCBPPECYHVQFTZFOQ);
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 //                                                                                            //
 //--------------------------------------New Function------------------------------------------//
