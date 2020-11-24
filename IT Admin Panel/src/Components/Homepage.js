@@ -184,7 +184,8 @@ function Doctors(props) {
   const [totalDoctors, settotalDoctors] = React.useState("");
   const [totalPatients, settotalPatients] = React.useState(0);
   const [PatientCount, setPatientCount] = React.useState([]);
-  let NewSeeds =[]
+  const [newSeedsArray, setnewSeedsArray] = React.useState([]);
+  let NewSeeds = [];
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -244,18 +245,22 @@ function Doctors(props) {
           //console.log("patients_json length=", PatientCount);
           console.log("addresses=", patients_json.length);
           setPatientCount(PatientCount.concat(0));
-          NewSeeds.push( {seed_obj: seeds[i] , num_of_pat: 0} );
+          NewSeeds.push({ seed_obj: seeds[i], num_of_pat: 0 });
           console.log("patient count if =", PatientCount);
           console.log("New seeds =", NewSeeds);
         } else {
           console.log("addresses=", patients_json.length);
           setPatientCount(PatientCount.concat(patients_json.length));
-          NewSeeds.push( {seed_obj: seeds[i] , num_of_pat:patients_json.length } )
+          NewSeeds.push({
+            seed_obj: seeds[i],
+            num_of_pat: patients_json.length,
+          });
 
           console.log("patient count else =", PatientCount);
           console.log("New seeds =", NewSeeds);
         }
       }
+      setnewSeedsArray(NewSeeds);
     }
 
     Patient_Count();
@@ -318,15 +323,15 @@ function Doctors(props) {
   }
 
   //navigate to doctor profile
-  function Profile(props, SEED){
-    console.log("To Profile");
-    props.history.push(`/doctor_profile/${SEED}`)
+  function Profile(obj) {
+    console.log("To Profile", obj);
+    props.history.push(`/doctor_profile/${JSON.stringify(obj)}`);
   }
 
   let p_count = 0;
   //IF FETCHING DATA------>
 
-  if (seeds == false  ) {
+  if (seeds == false) {
     return (
       <ThemeProvider theme={theme}>
         <Navbar />
@@ -407,12 +412,12 @@ function Doctors(props) {
                       </Typography>
                     </TableCell>
 
-                    <TableCell align="left">
+                    <TableCell align="center">
                       <Typography variant="h6" style={{ color: "white" }}>
                         Contact
                       </Typography>
                     </TableCell>
-                    <TableCell align="left">
+                    <TableCell align="center">
                       <Typography variant="h6" style={{ color: "white" }}>
                         Seed
                       </Typography>
@@ -431,40 +436,48 @@ function Doctors(props) {
                 </TableHead>
                 <TableBody>
                   {(rowsPerPage > 0
-                    ? seeds.slice(
+                    ? newSeedsArray.slice(
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage
                       )
-                    : seeds
+                    : newSeedsArray
                   ).map((obj) => (
                     <TableRow hover key={obj.name}>
                       <TableCell component="th" scope="row">
-                        <Typography variant="body2"> {obj.ID} </Typography>
+                        <Typography variant="body2">
+                          {" "}
+                          {obj.seed_obj.ID}{" "}
+                        </Typography>
                       </TableCell>
                       <TableCell align="center">
                         <Typography variant="body2">
-                          {obj.Profile.name}
+                          {obj.seed_obj.Profile.name}
                         </Typography>
                       </TableCell>
                       <TableCell align="center">
                         <Typography variant="body2">
                           {" "}
-                          {obj.Profile.specialization}
+                          {obj.seed_obj.Profile.specialization}
                         </Typography>
                       </TableCell>
                       <TableCell align="center">
                         {" "}
                         <Typography variant="body2">
-                          {obj.Profile.contact}
+                          {obj.seed_obj.Profile.contact}
                         </Typography>
                       </TableCell>
 
                       <TableCell align="center">
                         {" "}
                         <Typography variant="body2">
-                          {<EllipsisText text={obj.SEED} length={"15"} />}
+                          {
+                            <EllipsisText
+                              text={obj.seed_obj.SEED}
+                              length={"15"}
+                            />
+                          }
 
-                          <CopyToClipboard text={obj.SEED}>
+                          <CopyToClipboard text={obj.seed_obj.SEED}>
                             <IconButton
                               size="small"
                               onClick={() =>
@@ -510,7 +523,7 @@ function Doctors(props) {
                                     style={{ color: "white" }}
                                   />
                                 ) : (
-                                   " Patients"
+                                  `${obj.num_of_pat} Patients`
                                 )}{" "}
                               </strong>
                             </Typography>
@@ -523,7 +536,7 @@ function Doctors(props) {
                           <Button
                             className={classesTable.hover}
                             color="inherit"
-                            onClick={() => Profile(props, obj.SEED)}
+                            onClick={() => Profile(obj)}
                             startIcon={
                               <PermIdentityIcon
                                 fontSize="small"
@@ -655,6 +668,7 @@ function Doctors(props) {
 
       <ToastContainer />
     </ThemeProvider>
-  )} ;
+  );
+}
 
 export default Doctors;
