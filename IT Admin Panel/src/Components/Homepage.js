@@ -11,6 +11,7 @@ import PermIdentityIcon from "@material-ui/icons/PermIdentity";
 import PeopleOutlineIcon from "@material-ui/icons/PeopleOutline";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
+import Tooltip from "@material-ui/core/Tooltip";
 
 //TOAST MESSAGE
 import { ToastContainer, toast } from "react-toastify";
@@ -324,14 +325,16 @@ function Doctors(props) {
 
   //navigate to doctor profile
   function Profile(obj) {
-    console.log("To Profile", obj);
-    props.history.push(`/doctor_profile/${JSON.stringify(obj)}`);
+    //console.log("To Profile", obj);
+    localStorage.setItem("seed_obj", JSON.stringify(obj));
+    console.log("Sending object", JSON.parse(localStorage.getItem("seed_obj")));
+    props.history.push(`/doctor_profile`);
   }
 
   let p_count = 0;
   //IF FETCHING DATA------>
 
-  if (seeds == false) {
+  if (seeds == false || newSeedsArray ==null) {
     return (
       <ThemeProvider theme={theme}>
         <Navbar />
@@ -478,24 +481,26 @@ function Doctors(props) {
                           }
 
                           <CopyToClipboard text={obj.seed_obj.SEED}>
-                            <IconButton
-                              size="small"
-                              onClick={() =>
-                                toast("Seed Copied!", {
-                                  position: "top-right",
-                                  autoClose: 5000,
-                                  hideProgressBar: false,
-                                  closeOnClick: true,
-                                  pauseOnHover: true,
-                                  draggable: true,
-                                  progress: undefined,
-                                })
-                              }
-                            >
-                              {" "}
-                              {/**style={{color:"#2980B9"}} */}
-                              <AssignmentIcon />
-                            </IconButton>
+                            <Tooltip title="Copy" aria-label="add">
+                              <IconButton
+                                size="small"
+                                onClick={() =>
+                                  toast("Seed Copied!", {
+                                    position: "top-right",
+                                    autoClose: 5000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                  })
+                                }
+                              >
+                                {" "}
+                                {/**style={{color:"#2980B9"}} */}
+                                <AssignmentIcon />
+                              </IconButton>
+                            </Tooltip>
                           </CopyToClipboard>
                         </Typography>
                       </TableCell>
@@ -516,7 +521,7 @@ function Doctors(props) {
                           >
                             {" "}
                             <Typography variant="button">
-                              <strong style={{ color: "white" }}>
+                              
                                 {PatientCount == null &&
                                 PatientCount == undefined ? (
                                   <CircularProgress
@@ -525,7 +530,7 @@ function Doctors(props) {
                                 ) : (
                                   `${obj.num_of_pat} Patients`
                                 )}{" "}
-                              </strong>
+                           
                             </Typography>
                           </Button>
                         }
@@ -546,7 +551,7 @@ function Doctors(props) {
                             }
                           >
                             {" "}
-                            <Typography variant="button"> View</Typography>
+                            <Typography variant="button">View</Typography>
                           </Button>
                         }
                       </TableCell>

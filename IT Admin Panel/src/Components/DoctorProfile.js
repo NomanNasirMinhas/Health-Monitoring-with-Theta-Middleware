@@ -37,29 +37,38 @@ let theme = createMuiTheme({
 theme = responsiveFontSizes(theme);
 
 function DoctorProfile() {
-  var { obj} = useParams();
+  //var { obj} = useParams();
+  //const [name, setName]= React.useState();
+
   const [seeds, setSeeds]= React.useState();
-  console.log("SEED=",JSON.parse(obj));
+  //console.log("SEED=",JSON.parse(obj));
 
   //get seed data
   useEffect(() => {
     async function SeedInfo() {
       try {
+        const data= localStorage.getItem("seed_obj");
+        const local_seed = JSON.parse(data);  
+        //localStorage.removeItem("seed_obj");
+
+        //setting doctor object to variables
+        const name=local_seed.seed_obj.Profile.name;
+        const address=local_seed.seed_obj.Profile.address;
+        const contact=local_seed.seed_obj.Profile.contact;
+        const email=local_seed.seed_obj.Profile.email;
+        const specialization=local_seed.seed_obj.Profile.specialization;
+
+        //other info
+        const num_of_pat = local_seed.num_of_pat;
+        const id= local_seed.seed_obj.ID;
+        const seed= local_seed.seed_obj.SEED;
         
-    //    const response = await fetch( `https://thetamiddleware.herokuapp.com/getSeedInfo/${SEED}`);
-        //  console.log("response =",   seeds);
-      //  const fetched_data = await response.json();
-        //console.log("fetched-data =", fetched_data);
-        //setSeeds(fetched_data);
-
-        //console.log("Seeds =", seeds);
-        //get patient count
-
-        //settotalDoctors(seeds.length);
+        console.log( name, address, contact, email, specialization,  num_of_pat, id, seed);
+    //  
       } catch (e) {console.log("Cannot fetch")}
     }
 
-    //SeedInfo();
+    SeedInfo();
   }, []);
 
 
