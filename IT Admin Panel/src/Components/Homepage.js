@@ -319,7 +319,7 @@ function Doctors(props) {
 
   //Navigate to patients
   function Patients(props, SEED) {
-    console.log("To Patients");
+    console.log("To Patients" ,SEED);
     props.history.push(`/ViewPatient/${SEED}`);
   }
 
@@ -510,7 +510,7 @@ function Doctors(props) {
                           <Button
                             className={classesTable.hover}
                             color="inherit"
-                            onClick={() => Patients(props, obj.SEED)}
+                            onClick={() => Patients(props, obj.seed_obj.SEED)}
                             startIcon={
                               <PeopleOutlineIcon
                                 fontSize="small"

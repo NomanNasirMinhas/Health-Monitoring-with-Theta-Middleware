@@ -90,7 +90,7 @@ function Navbar() {
          
                      <Button
               color="inherit"
-              startIcon={<HomeIcon fontSize="small" />}
+              startIcon={<HomeIcon fontSize='large'/>}
               onClick={goHome}
             >
               {" "}
@@ -99,7 +99,7 @@ function Navbar() {
 
             <Button
               color="inherit"
-              startIcon={<AddCircleOutlineIcon fontSize="small" />}
+              startIcon={<AddCircleOutlineIcon fontSize='inherit' />}
               onClick={Doctors}
             >
               {" "}
@@ -108,7 +108,7 @@ function Navbar() {
 
             <Button
               color="inherit"
-              startIcon={< PersonIcon fontSize="small" />}
+              startIcon={< PersonIcon fontSize='inherit'/>}
               onClick={goAdd}
             >
               {" "}
@@ -118,7 +118,7 @@ function Navbar() {
          
                      <Button
               color="inherit"
-              startIcon={<ExitToAppIcon fontSize="small" />}
+              startIcon={<ExitToAppIcon fontSize='large' />}
               onClick={Logout}
               className={classes.buttons}
             >

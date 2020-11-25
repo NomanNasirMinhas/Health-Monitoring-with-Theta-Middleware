@@ -37,7 +37,13 @@ import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import TextField from "@material-ui/core/TextField";
-import { Dialog, DialogContent, DialogTitle, Slide, CircularProgress } from "@material-ui/core";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Slide,
+  CircularProgress,
+} from "@material-ui/core";
 const useStylesTable = makeStyles({
   table: {
     maxWidth: 700,
@@ -154,7 +160,7 @@ function ViewPatient() {
     );
     const to_json = await info.json();
 
-    console.log("To json",to_json);
+    console.log("To json", to_json);
     // if transactions fetched
     try {
       if (to_json != false) {
@@ -171,11 +177,12 @@ function ViewPatient() {
       }
     } catch (e) {
       swal({
-      text: "404 Not Found",
-      timer: 4000,
-      icon: "error",
-      buttons: false,
-    });}
+        text: "404 Not Found",
+        timer: 4000,
+        icon: "error",
+        buttons: false,
+      });
+    }
     console.log("Transactions=", Transactions);
   }
 
@@ -209,7 +216,8 @@ function ViewPatient() {
       <div>
         <Navbar />
         <Typography variant="h2" gutterBottom>
-          Fetching...
+          <br /> <br />
+          <CircularProgress size="200px" />
         </Typography>
       </div>
     );
@@ -260,58 +268,63 @@ function ViewPatient() {
       //  <Slide direction="up" in={true} timeout={800}>
       <ThemeProvider>
         <Navbar />
-        <Grid container spacing={0}>
-          <Grid item xs={2}>
-            <Paper className={classes.paper}>
-              <Typography variant="h6" gutterBottom>
-                <strong> Total Transactions </strong>
-              </Typography>
-              <Typography variant="h4" style={{ color: "#2980B9" }}>
-                <strong>{Transactions.length + 1}</strong>
-              </Typography>
-              <Button
-                className={classesTable.hover}
-                color="inherit"
-                startIcon={<ArrowBackIosIcon fontSize="small" />}
-                onClick={() => {
-                  setShow(false);
-                }}
-              >
-                Go Back
-              </Button>
-            </Paper>
-          </Grid>
-          <Grid item xs={1}></Grid>
-          <Grid item xs={6}>
-            <Paper
-              elevation={2}
-              className={classes.paper}
-              style={{ marginTop: "4%" }}
-            >
-              <div style={{ backgroundColor: "#2980B9", color: "white" }}>
-                <Typography
-                  variant="h5"
-                  style={{ backgroundColor: "#2980B9", color: "white" }}
-                >
-                  Transactions for {Name}
+        <Slide direction="down" in={true} timeout={300}>
+          <Grid container spacing={0}>
+            <Grid item xs={2}>
+              <Paper className={classes.paper}>
+                <Typography variant="h6" gutterBottom>
+                  <strong> Total Transactions </strong>
                 </Typography>
-              </div>
-              <TableContainer className={classesTable.paper}>
-                <Table className={classesTable.table} aria-label="simple table">
-                  {Transactions.map((obj) => (
-                    <TableRow>
-                      <TableCell>
-                        <strong>{obj}</strong>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                  ;
-                </Table>
-              </TableContainer>
-            </Paper>
+                <Typography variant="h4" style={{ color: "#2980B9" }}>
+                  <strong>{Transactions.length + 1}</strong>
+                </Typography>
+                <Button
+                  className={classesTable.hover}
+                  color="inherit"
+                  startIcon={<ArrowBackIosIcon fontSize="small" />}
+                  onClick={() => {
+                    setShow(false);
+                  }}
+                >
+                  Go Back
+                </Button>
+              </Paper>
+            </Grid>
+            <Grid item xs={1}></Grid>
+            <Grid item xs={6}>
+              <Paper
+                elevation={2}
+                className={classes.paper}
+                style={{ marginTop: "4%" }}
+              >
+                <div style={{ backgroundColor: "#2980B9", color: "white" }}>
+                  <Typography
+                    variant="h5"
+                    style={{ backgroundColor: "#2980B9", color: "white" }}
+                  >
+                    Transactions for {Name}
+                  </Typography>
+                </div>
+                <TableContainer className={classesTable.paper}>
+                  <Table
+                    className={classesTable.table}
+                    aria-label="simple table"
+                  >
+                    {Transactions.map((obj) => (
+                      <TableRow>
+                        <TableCell>
+                          <strong>{obj}</strong>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                    ;
+                  </Table>
+                </TableContainer>
+              </Paper>
+            </Grid>
+            <Grid item xs={3}></Grid>
           </Grid>
-          <Grid item xs={3}></Grid>
-        </Grid>
+        </Slide>
       </ThemeProvider>
     );
   }
@@ -319,9 +332,9 @@ function ViewPatient() {
   return (
     <ThemeProvider>
       <Navbar />
-
-      <Grid container spacing={3}>
-        {/**  <Grid item xs={2} className={classes.side}>
+      <Slide direction="down" in={true} timeout={300}>
+        <Grid container spacing={3}>
+          {/**  <Grid item xs={2} className={classes.side}>
           <Paper className={classes.paper}>
             <Typography variant="h3" gutterBottom>
               <strong> Patients </strong>
@@ -332,112 +345,118 @@ function ViewPatient() {
           </Paper>
         </Grid>
         <Grid item xs={1}></Grid> */}
-        {/**ADD TABLE */}
+          {/**ADD TABLE */}
 
-        <Grid item xs={2} className={classes.side}>
-          <Paper className={classes.paper}>
-            <Typography variant="h3" gutterBottom>
-              <strong> Patients </strong>
-            </Typography>
-            <Typography variant="h4" style={{ color: "#2980B9" }}>
-              <strong>{total}</strong>
-            </Typography>
-          </Paper>
-
-          <Paper className={classes.paper}>
-            <Grid item xs={2} className={classes.side}>
+          <Grid item xs={2} className={classes.side}>
+            <Paper className={classes.paper}>
               <Typography variant="h3" gutterBottom>
-                <strong> History </strong>
+                <strong> Patients </strong>
               </Typography>
-              <Table>
-                <TableBody>
-                  {addresses.map((obj) => (
+              <Typography variant="h4" style={{ color: "#2980B9" }}>
+                <strong>{total}</strong>
+              </Typography>
+            </Paper>
+
+            <Paper className={classes.paper}>
+              <Grid item xs={2} className={classes.side}>
+                <Typography variant="h3" gutterBottom>
+                  <strong> History </strong>
+                </Typography>
+                <Table>
+                  <TableBody>
+                    {addresses.map((obj) => (
+                      <TableRow>
+                        <TableCell>{obj.Profile.name}</TableCell>
+                        <TableCell>
+                          <Button
+                            className={classesTable.hover}
+                            color="inherit"
+                            /** onClick={()=>{setopenDialogue(true); sethistoryAddress(obj.ADDRESS)}} */
+                            onClick={() =>
+                              getInfo(obj.ADDRESS, obj.Profile.name)
+                            }
+                            startIcon={
+                              <ListIcon
+                                fontSize="small"
+                                // component={link}
+                                //to={`/ViewPatient/${obj.SEED}`}
+                              />
+                            }
+                          >
+                            {" "}
+                            View
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Grid>
+            </Paper>
+          </Grid>
+
+          <Grid xs={10}>
+            <Paper classNam e={classes.paper}>
+              <Typography
+                variant="h2"
+                style={{
+                  marginTop: "2%",
+                  color: "#B4B4B4",
+                  fontWeight: "bold",
+                }}
+                gutterBottom
+              >
+                <strong> Patients </strong>
+              </Typography>
+
+              <TableContainer className={classesTable.paper}>
+                <Table className={classesTable.table} aria-label="simple table">
+                  <TableHead style={{ backgroundColor: "#2980B9" }}>
                     <TableRow>
-                      <TableCell>{obj.Profile.name}</TableCell>
-                      <TableCell>
-                        <Button
-                          className={classesTable.hover}
-                          color="inherit"
-                          /** onClick={()=>{setopenDialogue(true); sethistoryAddress(obj.ADDRESS)}} */
-                          onClick={() => getInfo(obj.ADDRESS, obj.Profile.name)}
-                          startIcon={
-                            <ListIcon
-                              fontSize="small"
-                              // component={link}
-                              //to={`/ViewPatient/${obj.SEED}`}
-                            />
-                          }
+                      <TableCell className={classesTable.cell} align="left">
+                        <strong>Patient's Name</strong>
+                      </TableCell>
+                      <TableCell className={classesTable.cell} align="left">
+                        <strong>Patient's ID</strong>
+                      </TableCell>
+                      <TableCell className={classesTable.cell} align="center">
+                        <strong>Age</strong>
+                      </TableCell>
+                      <TableCell className={classesTable.cell} align="center">
+                        <strong>Contact</strong>
+                      </TableCell>
+                      <TableCell className={classesTable.cell} align="center">
+                        <strong>Address</strong>
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {addresses.map((obj) => (
+                      <TableRow hover key={obj.name}>
+                        <TableCell
+                          component="th"
+                          scope="row"
+                          //style={{ color: "green" }}
                         >
-                          {" "}
-                          View
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Grid>
-          </Paper>
+                          <strong>{obj.Profile.name} </strong>
+                        </TableCell>
+                        <TableCell align="center">{obj.ID}</TableCell>
+                        <TableCell align="center">{obj.Profile.age}</TableCell>
+                        <TableCell align="center">
+                          {obj.Profile.contact}
+                        </TableCell>
+                        <TableCell align="center">{obj.ADDRESS}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Paper>
+
+            {/** END */}
+          </Grid>
         </Grid>
-
-        <Grid xs={10}>
-          <Paper classNam e={classes.paper}>
-            <Typography
-              variant="h2"
-              style={{ marginTop: "2%", color: "#B4B4B4", fontWeight: "bold" }}
-              gutterBottom
-            >
-              <strong> Patients </strong>
-            </Typography>
-
-            <TableContainer className={classesTable.paper}>
-              <Table className={classesTable.table} aria-label="simple table">
-                <TableHead style={{ backgroundColor: "#2980B9" }}>
-                  <TableRow>
-                    <TableCell className={classesTable.cell} align="left">
-                      <strong>Patient's Name</strong>
-                    </TableCell>
-                    <TableCell className={classesTable.cell} align="left">
-                      <strong>Patient's ID</strong>
-                    </TableCell>
-                    <TableCell className={classesTable.cell} align="center">
-                      <strong>Age</strong>
-                    </TableCell>
-                    <TableCell className={classesTable.cell} align="center">
-                      <strong>Contact</strong>
-                    </TableCell>
-                    <TableCell className={classesTable.cell} align="center">
-                      <strong>Address</strong>
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {addresses.map((obj) => (
-                    <TableRow hover key={obj.name}>
-                      <TableCell
-                        component="th"
-                        scope="row"
-                        //style={{ color: "green" }}
-                      >
-                        <strong>{obj.Profile.name} </strong>
-                      </TableCell>
-                      <TableCell align="center">{obj.ID}</TableCell>
-                      <TableCell align="center">{obj.Profile.age}</TableCell>
-                      <TableCell align="center">
-                        {obj.Profile.contact}
-                      </TableCell>
-                      <TableCell align="center">{obj.ADDRESS}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Paper>
-
-          {/** END */}
-        </Grid>
-      </Grid>
-
+      </Slide>
       <Dialog
         fullWidth
         maxWidth="sm"
