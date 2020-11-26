@@ -85,12 +85,11 @@ export default function ViewHistory({ history }) {
         setHistoryDate(false)
         SetCircularVisible(true)
         try {
-            var response = await fetch(`https://thetamiddleware.herokuapp.com/getAllHash/${address}&${date}`);
+            var response = await fetch(`https://thetamiddleware.herokuapp.com/getAllHash/${address}&${date}&vitals`);
         } catch (error) {
            alert(error)
         }
         var resObj = await response.json();
-        console.log(resObj)
         if (!resObj)
             SetEmpty(true)
 

@@ -12,6 +12,7 @@ import YourProfile from './views/YourProfile/YourProfile'
 import LiveReadings from './views/LiveReadings/LiveReadings';
 import AddPatient from './views/AddPatient/AddPatient'
 import './App.css'
+import PatientProfile from './views/ViewPatientProfile/PatientProfile';
 
 // const authentication = {
 //   isLoggedIn: false,
@@ -45,7 +46,7 @@ ReactDOM.render(
             <Route path="/dashboard"
                 component={HomePage} />
             <Route path="/viewpatientprofile/:address"
-                component={ViewPatientProfile} />
+                component={PatientProfile} />
             <Route path="/yourprofile"
                 component={YourProfile} />
             <Route path="/livereadings"

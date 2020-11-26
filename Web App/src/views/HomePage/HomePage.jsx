@@ -15,6 +15,7 @@ import {
   Slide,
   TableContainer,
   Grid,
+  IconButton,
 } from "@material-ui/core";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import Header from "../../components/Header/Header";
@@ -26,7 +27,7 @@ import CardBody from "../../components/Card/CardBody.js";
 import CardFooter from "../../components/Card/CardFooter.js";
 import styles from "../../assets/jss/dashboardStyle";
 import Thermometer from "../../assets/icons/thermometer";
-import BP from "../../assets/icons/BP";
+import Oxygen from "../../assets/icons/oxygen";
 import Frequency from "../../assets/icons/frequency";
 import { Link as link } from "react-router-dom";
 import { Bar } from "react-chartjs-2";
@@ -103,35 +104,6 @@ const Options = {
     ],
   },
 };
-const StackedOptions = {
-  legend: {
-    display: false,
-  },
-  scales: {
-    yAxes: [
-      {
-        gridLines: {
-          color: "rgba(255, 255, 255, 0.2)",
-        },
-        ticks: {
-          fontColor: "#FFFFFF",
-        },
-        stacked: true,
-      },
-    ],
-    xAxes: [
-      {
-        gridLines: {
-          display: false,
-        },
-        ticks: {
-          fontColor: "#FFFFFF",
-        },
-        stacked: true,
-      },
-    ],
-  },
-};
 
 export default function HomePage() {
   const [Response, SetResponse] = React.useState([]);
@@ -150,18 +122,23 @@ export default function HomePage() {
         `https://thetamiddleware.herokuapp.com/getLastTx/${prop[i].ADDRESS}&vitals`
       );
       hash = await hash.json();
-      var tx = await fetch(
-        `https://thetamiddleware.herokuapp.com/getTx/${hash}`
-      );
-      tx = await tx.json();
-      if (tx !== false) {
-        info = {
-          name: prop[i].Profile.name,
-          Temp: JSON.parse(tx).Temp,
-          HR: JSON.parse(tx).HR,
-          BP: JSON.parse(tx).BP,
-        };
-        transaction.push(info);
+      
+      if (hash !== false) {
+        var tx = await fetch(
+          `https://thetamiddleware.herokuapp.com/getTx/${hash}`
+        );
+        tx = await tx.json();
+
+      
+        if (tx !== false) {
+          info = {
+            name: prop[i].Profile.name,
+            Temp: tx.response.Temp,
+            HR: tx.response.HR,
+            SpO2: tx.response.SpO2,
+          };
+          transaction.push(info);
+        }
       }
       //console.log(JSON.parse(tx).Temp);
       //transaction.push({name: tx.name, value: tx.value})
@@ -171,46 +148,39 @@ export default function HomePage() {
   };
 
   const maxValues = (props) => {
-    //[ {name: "Fatima Umar", Temp: '100', BP: {sys: '100', dia:'80'}, Temp: '100'},
-    //  {name: "Fatima Umar", Temp: '100', BP: {sys: '100', dia:'80'}, Temp: '100'},
-    //  {name: "Fatima Umar", Temp: '100', BP: {sys: '100', dia:'80'}, Temp: '100'},
+    //[ {name: "Fatima Umar", Temp: '100', SpO2: 100, HR: '100'},
+    //  {name: "Fatima Umar", Temp: '100', SpO2: 100, HR: '100'},
+    //  {name: "Fatima Umar", Temp: '100', SpO2: 100, HR: '100'},
     //]
     let maxTemp = 0,
-      maxBPM = 0;
-    let maxBP = {
-      systolic: 0,
-      diastolic: 0,
-    };
-    let maxTemp_Name, maxBP_Name, maxBPM_Name;
+      maxHR = 0,
+      maxSpO2 = 0;
+    let maxTemp_Name, maxSpO2_Name, maxHR_Name;
     for (var i = 0; i < props.length; i++) {
       var prop = props[i];
       if (prop.Temp > maxTemp) {
         maxTemp = prop.Temp;
         maxTemp_Name = prop.name;
       }
-      if (prop.HR > maxBPM) {
-        maxBPM = prop.HR;
-        maxBPM_Name = prop.name;
+      if (prop.HR > maxHR) {
+        maxHR = prop.HR;
+        maxHR_Name = prop.name;
       }
       if (
-        prop.BP.systolic > maxBP.systolic &&
-        prop.BP.diastolic > maxBP.diastolic
-      ) {
-        maxBP.systolic = prop.BP.systolic;
-        maxBP.diastolic = prop.BP.diastolic;
-        maxBP_Name = prop.name;
+        prop.SpO2 > maxSpO2) {
+        maxSpO2 = prop.SpO2;
+        maxSpO2_Name = prop.name;
       }
     }
 
     const x = [
       { name: maxTemp_Name, value: maxTemp },
       {
-        name: maxBP_Name,
-        value: { sys: maxBP.systolic, diastolic: maxBP.diastolic },
+        name: maxSpO2_Name,
+        value: maxSpO2,
       },
-      { name: maxBPM_Name, value: maxBPM },
+      { name: maxHR_Name, value: maxHR },
     ];
-    console.log(x);
     return x;
   };
 
@@ -221,7 +191,6 @@ export default function HomePage() {
         `https://thetamiddleware.herokuapp.com/getAllAddresses/${seed}`
       );
       obj = await obj.json();
-      console.log(obj)
       if (obj === false) {
         SetEmpty(true);
       } else {
@@ -245,286 +214,268 @@ export default function HomePage() {
           size={100}
         />
       ) : (
-        <Slide direction="down" in={true} timeout={300}>
-          <Grid container className={classes.content}>
-            {empty ? (
-              <ErrorMessage />
-            ) : (
-              <>
-                <Grid container justify="space-between" spacing={4}>
-                  <Grid item md={4} xs={12}>
-                    <Card>
-                      <CardHeader color="warning" stats icon>
-                        <CardIcon color="danger">
-                          <Thermometer color="primary" />
-                        </CardIcon>
-                        <p className={Class.cardCategory}>Record Temperature</p>
-                        <h3 className={Class.cardTitle}>
-                          {maximumValues && maximumValues[0].value}{" "}
-                          <small>F</small>
-                        </h3>
-                      </CardHeader>
-                      <CardFooter stats>
-                        <div className={Class.stats}>
-                          {maximumValues && maximumValues[0].name}
-                        </div>
-                      </CardFooter>
-                    </Card>
-                  </Grid>
-                  <Grid item md={4} xs={12}>
-                    <Card>
-                      <CardHeader color="warning" stats icon>
-                        <CardIcon color="warning">
-                          <Frequency />
-                        </CardIcon>
-                        <p className={Class.cardCategory}>Record BPM</p>
-                        <h3 className={Class.cardTitle}>
-                          {maximumValues && maximumValues[2].value}{" "}
-                          <small>BPM</small>
-                        </h3>
-                      </CardHeader>
-                      <CardFooter stats>
-                        <div className={Class.stats}>
-                          {maximumValues && maximumValues[2].name}
-                        </div>
-                      </CardFooter>
-                    </Card>
-                  </Grid>
-                  <Grid item md={4} xs={12}>
-                    <Card>
-                      <CardHeader color="success" stats icon>
-                        <CardIcon color="success">
-                          <BP />
-                        </CardIcon>
-                        <p className={Class.cardCategory}>
-                          Record Blood Pressure
-                        </p>
-                        <h3 className={Class.cardTitle}>
-                          {maximumValues &&
-                            `${maximumValues[1].value.diastolic}/${maximumValues[1].value.sys}`}{" "}
-                          <small>mm/Hg</small>
-                        </h3>
-                      </CardHeader>
-                      <CardFooter stats>
-                        <div className={Class.stats}>
-                          {maximumValues[1].name}
-                        </div>
-                      </CardFooter>
-                    </Card>
-                  </Grid>
-                </Grid>
-                <Grid item>
-                  <Typography variant="h5" color="secondary">
-                    Recent Statistics
+          <Slide direction="down" in={true} timeout={300}>
+            <Grid container className={classes.content}>
+              {empty ? (
+                <ErrorMessage />
+              ) : (
+                  <>
+                    <Grid container justify="space-between" spacing={4}>
+                      <Grid item md={4} xs={12}>
+                        <Card>
+                          <CardHeader color="warning" stats icon>
+                            <CardIcon color="danger">
+                              <Thermometer color="primary" />
+                            </CardIcon>
+                            <p className={Class.cardCategory}>Record Temperature</p>
+                            <h3 className={Class.cardTitle}>
+                              {maximumValues && maximumValues[0].value}{" "}
+                              <small>F</small>
+                            </h3>
+                          </CardHeader>
+                          <CardFooter stats>
+                            <div className={Class.stats}>
+                              {maximumValues && maximumValues[0].name}
+                            </div>
+                          </CardFooter>
+                        </Card>
+                      </Grid>
+                      <Grid item md={4} xs={12}>
+                        <Card>
+                          <CardHeader color="warning" stats icon>
+                            <CardIcon color="warning">
+                              <Frequency />
+                            </CardIcon>
+                            <p className={Class.cardCategory}>Record Heart Rate</p>
+                            <h3 className={Class.cardTitle}>
+                              {maximumValues && maximumValues[2].value}{" "}
+                              <small>BPM</small>
+                            </h3>
+                          </CardHeader>
+                          <CardFooter stats>
+                            <div className={Class.stats}>
+                              {maximumValues && maximumValues[2].name}
+                            </div>
+                          </CardFooter>
+                        </Card>
+                      </Grid>
+                      <Grid item md={4} xs={12}>
+                        <Card>
+                          <CardHeader color="success" stats icon>
+                            <CardIcon color="success">
+                              <Oxygen />
+                            </CardIcon>
+                            <p className={Class.cardCategory}>
+                              Record Oxygen Level
+                            </p>
+                            <h3 className={Class.cardTitle}>
+                              {maximumValues && maximumValues[1].value}{" "}
+                              <small>SpO<small>2</small></small>
+                            </h3>
+                          </CardHeader>
+                          <CardFooter stats>
+                            <div className={Class.stats}>
+                              {maximumValues && maximumValues[1].name}
+                            </div>
+                          </CardFooter>
+                        </Card>
+                      </Grid>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="h5" color="secondary">
+                        Recent Statistics
                   </Typography>
-                </Grid>
-                {/* ------------------------------------------------------------------------------------- */}
-                <Grid container justify="space-around" spacing={3}>
-                  <Grid item md={4} xs={12}>
-                    <Card chart>
-                      <CardHeader color="danger">
-                        <Thermometer />
-                        <Bar
-                          data={{
-                            labels: Response.map((rows) => {
-                              return rows.Profile.name;
-                            }),
-                            datasets: [
-                              {
-                                data: transactions.map((rows) => {
-                                  return rows.Temp;
+                    </Grid>
+                    {/* ------------------------------------------------------------------------------------- */}
+                    <Grid container justify="space-around" spacing={3}>
+                      <Grid item md={4} xs={12}>
+                        <Card chart>
+                          <CardHeader color="danger">
+                            <Thermometer />
+                            <Bar
+                              data={{
+                                labels: transactions.map((rows) => {
+                                  return rows.name;
                                 }),
-                                backgroundColor: " rgba(255, 255, 255, 0.8)",
-                                borderColor: " rgba(255, 255, 255, 1)",
-                                borderWidth: 1,
-                                hoverBackgroundColor: "rgba(255, 255, 255, 1)",
-                                hoverBorderColor: "rgba(255, 255, 255, 1",
-                              },
-                            ],
-                          }}
-                          options={Options}
-                        />
-                      </CardHeader>
-                      <CardBody>
-                        <h4 className={Class.cardTitle}>Temperature</h4>
-                        {/* <p className={Class.cardCategory}>
+                                datasets: [
+                                  {
+                                    data: transactions.map((rows) => {
+                                      return rows.Temp;
+                                    }),
+                                    backgroundColor: " rgba(255, 255, 255, 0.8)",
+                                    borderColor: " rgba(255, 255, 255, 1)",
+                                    borderWidth: 1,
+                                    hoverBackgroundColor: "rgba(255, 255, 255, 1)",
+                                    hoverBorderColor: "rgba(255, 255, 255, 1",
+                                  },
+                                ],
+                              }}
+                              options={Options}
+                            />
+                          </CardHeader>
+                          <CardBody>
+                            <h4 className={Class.cardTitle}>Temperature</h4>
+                            {/* <p className={Class.cardCategory}>
                       <span className={Class.successText}>55%</span> increase in
                       today sales.
                     </p> */}
-                      </CardBody>
-                      {/* <CardFooter chart>
+                          </CardBody>
+                          {/* <CardFooter chart>
                     <div className={Class.stats}>updated 4 minutes ago</div>
                   </CardFooter> */}
-                    </Card>
-                  </Grid>
-                  <Grid item md={4} xs={12}>
-                    <Card chart>
-                      <CardHeader color="warning">
-                        <Frequency />
-                        <Bar
-                          data={{
-                            labels: Response.map((rows) => {
-                              return rows.Profile.name;
-                            }),
-                            datasets: [
-                              {
-                                data: transactions.map((rows) => {
-                                  return rows.HR;
+                        </Card>
+                      </Grid>
+                      <Grid item md={4} xs={12}>
+                        <Card chart>
+                          <CardHeader color="warning">
+                            <Frequency />
+                            <Bar
+                              data={{
+                                labels: transactions.map((rows) => {
+                                  return rows.name;
                                 }),
-                                backgroundColor: " rgba(255, 255, 255, 0.8)",
-                                borderColor: " rgba(255, 255, 255, 1)",
-                                borderWidth: 1,
-                                hoverBackgroundColor: "rgba(255, 255, 255, 1)",
-                                hoverBorderColor: "rgba(255, 255, 255, 1",
-                              },
-                            ],
-                          }}
-                          options={Options}
-                        />
-                      </CardHeader>
-                      <CardBody>
-                        <h4 className={Class.cardTitle}>Beats Per Minute</h4>
-                        {/* <p className={Class.cardCategory}>
+                                datasets: [
+                                  {
+                                    data: transactions.map((rows) => {
+                                      return rows.HR;
+                                    }),
+                                    backgroundColor: " rgba(255, 255, 255, 0.8)",
+                                    borderColor: " rgba(255, 255, 255, 1)",
+                                    borderWidth: 1,
+                                    hoverBackgroundColor: "rgba(255, 255, 255, 1)",
+                                    hoverBorderColor: "rgba(255, 255, 255, 1",
+                                  },
+                                ],
+                              }}
+                              options={Options}
+                            />
+                          </CardHeader>
+                          <CardBody>
+                            <h4 className={Class.cardTitle}>Heart Rate</h4>
+                            {/* <p className={Class.cardCategory}>
                       <span className={Class.successText}>55%</span> increase in
                       today sales.
                     </p> */}
-                      </CardBody>
-                      {/* <CardFooter chart>
+                          </CardBody>
+                          {/* <CardFooter chart>
                     <div className={Class.stats}>updated 4 minutes ago</div>
                   </CardFooter> */}
-                    </Card>
-                  </Grid>
-                  <Grid item md={4} xs={12}>
-                    <Card chart>
-                      <CardHeader color="success">
-                        <BP />
-                        <Bar
-                          data={{
-                            labels: Response.map((rows) => {
-                              return rows.Profile.name;
-                            }),
-                            datasets: [
-                              {
-                                label: "Systolic",
-                                //systolic
-                                //diastolic
-                                data: transactions.map((rows) => {
-                                  return rows.BP.systolic;
+                        </Card>
+                      </Grid>
+                      <Grid item md={4} xs={12}>
+                        <Card chart>
+                          <CardHeader color="success">
+                            <Oxygen />
+                            <Bar
+                              data={{
+                                labels: transactions.map((rows) => {
+                                  return rows.name;
                                 }),
-                                backgroundColor: "rgba(88, 214, 141, 0.8)",
-                                borderColor: "rgba(88, 214, 141, 1)",
-                                borderWidth: 1,
-                                hoverBackgroundColor: "rgba(88, 214, 141, 1)",
-                                hoverBorderColor: "rgba(88, 214, 141, 1)",
-                              },
-                              {
-                                //systolic
-                                label: "Diastolic",
-                                data: transactions.map((rows) => {
-                                  return rows.BP.diastolic;
-                                }),
-                                backgroundColor: " rgba(255, 255, 255, 0.8)",
-                                borderColor: " rgba(255, 255, 255, 1)",
-                                borderWidth: 1,
-                                hoverBackgroundColor: "rgba(255, 255, 255, 1)",
-                                hoverBorderColor: "rgba(255, 255, 255, 1)",
-                              },
-                            ],
-                          }}
-                          options={StackedOptions}
-                        />
-                      </CardHeader>
-                      <CardBody>
-                        <h4 className={Class.cardTitle}>Blood Pressure</h4>
-                        {/* <p className={Class.cardCategory}>
+                                datasets: [
+                                  {
+                                    data: transactions.map((rows) => {
+                                      return rows.SpO2;
+                                    }),
+                                    backgroundColor: " rgba(255, 255, 255, 0.8)",
+                                    borderColor: " rgba(255, 255, 255, 1)",
+                                    borderWidth: 1,
+                                    hoverBackgroundColor: "rgba(255, 255, 255, 1)",
+                                    hoverBorderColor: "rgba(255, 255, 255, 1",
+                                  },
+                                ],
+                              }}
+                              options={Options}
+                            />
+                          </CardHeader>
+                          <CardBody>
+                            <h4 className={Class.cardTitle}>Oxygen Level</h4>
+                            {/* <p className={Class.cardCategory}>
                       <span className={Class.successText}>55%</span> increase in
                       today sales.
                     </p> */}
-                      </CardBody>
-                      {/* <CardFooter chart>
+                          </CardBody>
+                          {/* <CardFooter chart>
                     <div className={Class.stats}>updated 4 minutes ago</div>
                   </CardFooter> */}
-                    </Card>
-                  </Grid>
-                </Grid>
-                <Slide direction="up" in={true} timeout={300}>
-                  <Grid item xs={12}>
-                    <TableContainer className={classes.fonts} component={Paper}>
-                      <Table className={classes.table}>
-                        <TableHead>
-                          <TableRow>
-                            <StyledTableCell align="center">
-                              Patient's ID
+                        </Card>
+                      </Grid>
+                    </Grid>
+                    <Slide direction="up" in={true} timeout={300}>
+                      <Grid item xs={12}>
+                        <TableContainer className={classes.fonts} component={Paper}>
+                          <Table className={classes.table}>
+                            <TableHead>
+                              <TableRow>
+                                <StyledTableCell align="center">
+                                  Patient's ID
                             </StyledTableCell>
-                            <StyledTableCell align="center">
-                              Name
+                                <StyledTableCell align="center">
+                                  Name
                             </StyledTableCell>
-                            <StyledTableCell align="center">
-                              Age
+                                <StyledTableCell align="center">
+                                  Age
                             </StyledTableCell>
-                            <StyledTableCell align="center">
-                              Gender
+                                <StyledTableCell align="center">
+                                  Gender
                             </StyledTableCell>
-                            <StyledTableCell align="center">
-                              Date of Admission
+                                <StyledTableCell align="center">
+                                  Date of Admission
                             </StyledTableCell>
-                            <StyledTableCell align="center">
-                              Contact
+                                <StyledTableCell align="center">
+                                  Contact
                             </StyledTableCell>
-                            <StyledTableCell align="center">
-                              Action
+                                <StyledTableCell align="center">
+                                  Action
                             </StyledTableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {Response.map((row) => (
-                            <TableRow key={row.ID}>
-                              <StyledTableCell
-                                align="center"
-                                component="th"
-                                scope="row"
-                              >
-                                {row.ID}
-                              </StyledTableCell>
-                              <StyledTableCell align="center">
-                                {row.Profile.name}
-                              </StyledTableCell>
-                              <StyledTableCell align="center">
-                                {row.Profile.age}
-                              </StyledTableCell>
-                              <StyledTableCell align="center">
-                                {row.Profile.gender}
-                              </StyledTableCell>
-                              <StyledTableCell align="center">
-                                {row.Profile.date}
-                              </StyledTableCell>
-                              <StyledTableCell align="center">
-                                {row.Profile.contact}
-                              </StyledTableCell>
-                              <StyledTableCell align="center">
-                                <Button
-                                  component={link}
-                                  color="secondary"
-                                  disableElevation
-                                  variant="outlined"
-                                  to={`/viewpatientprofile/${row.ADDRESS}`}
-                                  startIcon={<VisibilityIcon />}
-                                >
-                                  View Profile
-                                </Button>
-                              </StyledTableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  </Grid>
-                </Slide>
-              </>
-            )}
-          </Grid>
-        </Slide>
-      )}
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {Response.map((row) => (
+                                <TableRow key={row.ID}>
+                                  <StyledTableCell
+                                    align="center"
+                                    component="th"
+                                    scope="row"
+                                  >
+                                    {row.ID}
+                                  </StyledTableCell>
+                                  <StyledTableCell align="center">
+                                    {row.Profile.name}
+                                  </StyledTableCell>
+                                  <StyledTableCell align="center">
+                                    {row.Profile.age}
+                                  </StyledTableCell>
+                                  <StyledTableCell align="center">
+                                    {row.Profile.gender}
+                                  </StyledTableCell>
+                                  <StyledTableCell align="center">
+                                    {row.Profile.date}
+                                  </StyledTableCell>
+                                  <StyledTableCell align="center">
+                                    {row.Profile.contact}
+                                  </StyledTableCell>
+                                  <StyledTableCell align="center">
+                                    <IconButton
+                                      component={link}
+                                      color="secondary"
+                                      to={`/viewpatientprofile/${row.ADDRESS}`}
+                                      
+                                    >
+                                    <VisibilityIcon/>
+                                </IconButton>
+                                  </StyledTableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                      </Grid>
+                    </Slide>
+                  </>
+                )}
+            </Grid>
+          </Slide>
+        )}
     </ThemeProvider>
   );
 }
