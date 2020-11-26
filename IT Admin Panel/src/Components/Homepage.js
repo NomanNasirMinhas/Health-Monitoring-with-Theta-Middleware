@@ -589,7 +589,7 @@ function Doctors(props) {
 
       <Grid
         container
-        spacing={1}
+        spacing={0}
         style={{ alignSelf: "bottom" }}
         justify="space-between"
       >

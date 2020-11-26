@@ -13,7 +13,7 @@ import {
   createMuiTheme,
   withStyles,
   ThemeProvider,
-  useTheme,
+  useTheme,responsiveFontSizes
 } from "@material-ui/core/styles";
 
 import Paper from "@material-ui/core/Paper";
@@ -44,6 +44,18 @@ import {
   Slide,
   CircularProgress,
 } from "@material-ui/core";
+
+let theme = createMuiTheme({
+  typography: {
+    fontFamily: ["Metrophobic", "sans-serif"].join(","),
+  },
+  primary: {
+    main: "#2980B9",
+  },
+});
+//Adjuts font size
+theme = responsiveFontSizes(theme);
+
 const useStylesTable = makeStyles({
   table: {
     maxWidth: 700,
@@ -73,11 +85,6 @@ const useStyles1 = makeStyles((theme) => ({
   },
 }));
 
-const theme = createMuiTheme({
-  primary: {
-    main: " #2980B9", //   #2980B9 blue   dark#2471A3  button #1B4F72
-  },
-});
 
 const rows = [
   { id: 1, name: "home", assigned_devices: 3 },
@@ -266,7 +273,7 @@ function ViewPatient() {
   if (Show) {
     return (
       //  <Slide direction="up" in={true} timeout={800}>
-      <ThemeProvider>
+      <ThemeProvider theme={theme}>
         <Navbar />
         <Slide direction="down" in={true} timeout={300}>
           <Grid container spacing={0}>
@@ -332,8 +339,8 @@ function ViewPatient() {
   return (
     <ThemeProvider>
       <Navbar />
-      <Slide direction="down" in={true} timeout={300}>
-        <Grid container spacing={3}>
+      
+     
           {/**  <Grid item xs={2} className={classes.side}>
           <Paper className={classes.paper}>
             <Typography variant="h3" gutterBottom>
@@ -346,11 +353,12 @@ function ViewPatient() {
         </Grid>
         <Grid item xs={1}></Grid> */}
           {/**ADD TABLE */}
-
+{/** 
+          
           <Grid item xs={2} className={classes.side}>
             <Paper className={classes.paper}>
               <Typography variant="h3" gutterBottom>
-                <strong> Patients </strong>
+                 Patients 
               </Typography>
               <Typography variant="h4" style={{ color: "#2980B9" }}>
                 <strong>{total}</strong>
@@ -371,7 +379,7 @@ function ViewPatient() {
                           <Button
                             className={classesTable.hover}
                             color="inherit"
-                            /** onClick={()=>{setopenDialogue(true); sethistoryAddress(obj.ADDRESS)}} */
+                            /** onClick={()=>{setopenDialogue(true); sethistoryAddress(obj.ADDRESS)}} 
                             onClick={() =>
                               getInfo(obj.ADDRESS, obj.Profile.name)
                             }
@@ -394,8 +402,10 @@ function ViewPatient() {
               </Grid>
             </Paper>
           </Grid>
-
-          <Grid xs={10}>
+        */}
+          <Slide direction="down" in={true} timeout={300}>
+        <Grid container spacing={0}>
+          <Grid xs={12}>
             <Paper classNam e={classes.paper}>
               <Typography
                 variant="h2"
@@ -406,17 +416,17 @@ function ViewPatient() {
                 }}
                 gutterBottom
               >
-                <strong> Patients </strong>
+              {total}  Patients
               </Typography>
 
               <TableContainer className={classesTable.paper}>
                 <Table className={classesTable.table} aria-label="simple table">
                   <TableHead style={{ backgroundColor: "#2980B9" }}>
                     <TableRow>
-                      <TableCell className={classesTable.cell} align="left">
+                      <TableCell className={classesTable.cell} align="center">
                         <strong>Patient's Name</strong>
                       </TableCell>
-                      <TableCell className={classesTable.cell} align="left">
+                      <TableCell className={classesTable.cell} align="center">
                         <strong>Patient's ID</strong>
                       </TableCell>
                       <TableCell className={classesTable.cell} align="center">
@@ -427,6 +437,12 @@ function ViewPatient() {
                       </TableCell>
                       <TableCell className={classesTable.cell} align="center">
                         <strong>Address</strong>
+                      </TableCell>
+                      <TableCell className={classesTable.cell} align="center">
+                        <strong>Transactions</strong>
+                      </TableCell>
+                      <TableCell className={classesTable.cell} align="center">
+                        <strong>Transaction Type</strong>
                       </TableCell>
                     </TableRow>
                   </TableHead>
@@ -446,6 +462,27 @@ function ViewPatient() {
                           {obj.Profile.contact}
                         </TableCell>
                         <TableCell align="center">{obj.ADDRESS}</TableCell>
+                        <TableCell>
+                          <Button
+                            className={classesTable.hover}
+                            color="inherit"
+                            /** onClick={()=>{setopenDialogue(true); sethistoryAddress(obj.ADDRESS)}} */
+                            onClick={() =>
+                              getInfo(obj.ADDRESS, obj.Profile.name)
+                            }
+                            startIcon={
+                              <ListIcon
+                                fontSize="small"
+                                // component={link}
+                                //to={`/ViewPatient/${obj.SEED}`}
+                              />
+                            }
+                          >
+                            {" "}
+                            View
+                          </Button>
+                        </TableCell>
+                        <TableCell><Typography>Prescription</Typography></TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

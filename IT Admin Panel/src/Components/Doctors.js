@@ -11,6 +11,8 @@ import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import { useHistory } from "react-router-dom";
+import EllipsisText from "react-ellipsis-text";
+
 
 import Grid from "@material-ui/core/Grid";
 import {
@@ -362,21 +364,10 @@ function Homepage(props) {
         </Typography>
 
         {/* TABLE START*/}
-
-        <Grid container spacing={0} style={{ flaot: "right" }}>
-          {/** <Grid item xs={0.5}></Grid> */}
+        <Grid container spacing={0} >
 
           <Grid item xs={12}>
-            <Paper
-              elevation={5}
-              style={{
-                maxWidth: "100%",
-                width: "100%",
-                margin: "auto",
-                marginTop: "2%",
-                border: "solid grey 0.9px",
-              }}
-            >
+            
               {/**   <Typography variant="h3" style={{backgroundColor:"#B4B4B4"}}> </Typography>
               <Typography
                 variant="h3"
@@ -515,43 +506,49 @@ function Homepage(props) {
                         </TableCell>
                         <TableCell align="center">
                           {" "}
-                          <strong>{obj.data.ADDRESS}</strong>
+                          <EllipsisText
+                              text={obj.data.ADDRESS}
+                              length={"15"}
+                            />
+                         
                         </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                   <TableFooter style={{ maxwidth: "100%" }}>
-                    <TableRow>
-                      <TablePagination
-                        rowsPerPageOptions={[
-                          5,
-                          10,
-                          25,
-                          { label: "All", value: -1 },
-                        ]}
-                        colSpan={12}
-                        count={patients.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        SelectProps={{
-                          inputProps: { "aria-label": "rows per page" },
-                          native: true,
-                        }}
-                        onChangePage={handleChangePage}
-                        onChangeRowsPerPage={handleChangeRowsPerPage}
-                        ActionsComponent={TablePaginationActions}
-                      />
-                    </TableRow>
-                  </TableFooter>
+                  <TableRow>
+                    <TablePagination
+                      rowsPerPageOptions={[
+                        5,
+                        10,
+                        25,
+                        { label: "All", value: -1 },
+                      ]}
+                      colSpan={12}
+                      count={seeds.length}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      SelectProps={{
+                        inputProps: { "aria-label": "rows per page" },
+                        native: true,
+                      }}
+                      onChangePage={handleChangePage}
+                      onChangeRowsPerPage={handleChangeRowsPerPage}
+                      ActionsComponent={TablePaginationActions}
+                    />
+                  </TableRow>
+                </TableFooter>
                 </Table>
               </TableContainer>
-            </Paper>
+            
           </Grid>
 
           {/**  <Grid item xs={0.5}></Grid>
         {/********************* */}
         </Grid>
-      </ThemeProvider>
+ 
+
+             </ThemeProvider>
     );
   }
 }
