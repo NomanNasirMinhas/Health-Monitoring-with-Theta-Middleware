@@ -45,7 +45,7 @@ export default function Profile({ route, navigation }) {
   const [patientDeviceID, setPatientDeviceID] = useState("Loading....");
   const [spinnerText, setSpinnerText] = useState("Fetching From IOTA...\nPlease Wait...")
   const [hasLastTx, setHasLastTx] = useState(false);
-  const [lastTx, setLastTx] = useState([0, 0, 0, 0]);
+  const [lastTx, setLastTx] = useState([0, 0, 0]);
   const [lastNotif, setLastNotif] = useState({now: 0});
   const [lastPresc, setLastPresc] = useState({now: 0});
   const [notifFinished, setNotifFinished] = useState(false);
@@ -53,6 +53,7 @@ export default function Profile({ route, navigation }) {
   const [finished, setFinished] = useState(false);
   const [online, setOnline] = useState("Checking Device Status....")
   const [boolOnline, setBoolOnline] = useState(0);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   // Last Prescription States
   const[prescTitle, setPrescTitle] = useState("Loading... Please Wait...")
@@ -90,24 +91,33 @@ export default function Profile({ route, navigation }) {
         );
 
         var resObj = await response.json();
-        console.log("Last TX ", resObj)
+        // console.log("Last TX ", resObj)
         if (resObj !== false) {
           var responseTx = await fetch(
             `https://thetamiddleware.herokuapp.com/getTx/${resObj}`
           );
           var resObjTx = await responseTx.json();
           // resObjTx = JSON.parse(resObjTx["response"]);
-          console.log(resObjTx.response.HR)
+          // console.log(resObjTx)
 
+          if(resObjTx.response === false)
+          {
+            Alert.alert("IOTA is Down For Maintainance");
+            setPatientHR("N/A");
+          setPatientTemp("N/A");
+          setPatientSpO2("N/A");
+          setFinished(true);
+          }
+          else
           // Alert.alert(JSON.stringify(resObjTx))
-          setPatientHR(resObjTx.response.HR.toString());
+          {setPatientHR(resObjTx.response.HR.toString());
           setPatientTemp(resObjTx.response.Temp.toString());
           setPatientSpO2(resObjTx.response.SpO2.toString())
           // setPatientBPsys(resObjTx.BP.systolic.toString());
           // setPatientBPdiast(resObjTx.BP.diastolic.toString());
           setLastTx([resObjTx.response.HR, resObjTx.response.Temp, resObjTx.response.SpO2]);
           setHasLastTx(true);
-          setFinished(true);
+          setFinished(true);}
         }
         // alert("Finished")
         else {
@@ -142,12 +152,13 @@ export default function Profile({ route, navigation }) {
           `https://thetamiddleware.herokuapp.com/getLastTx/${info.ADDRESS}&prescription`
         );
         prescHash = await prescHash.json();
-
+        console.log("Presc Hash ", notifHash)
         if(prescHash !== false){
           var logTx = await fetch(
             `https://thetamiddleware.herokuapp.com/getTx/${prescHash}`
           );
           var prescData = await logTx.json();
+          // console.log("Prescriptions ", prescData)
           // prescData = JSON.parse(prescData);
           setPrescTitle(prescData.response.PrescriptionName)
           setPrescDetails(prescData.response.PrescriptionDetails)
@@ -167,12 +178,13 @@ export default function Profile({ route, navigation }) {
           `https://thetamiddleware.herokuapp.com/getLastTx/${info.ADDRESS}&docNotification`
         );
         notifHash = await notifHash.json();
-
+          // console.log("Notif Hash ", notifHash)
         if(notifHash !== false){
           var logTx = await fetch(
             `https://thetamiddleware.herokuapp.com/getTx/${notifHash}`
           );
           var notifData = await logTx.json();
+          // console.log("Notification ", notifData)
           // notifData = JSON.parse(notifData);
 
           setNotifTitle(notifData.response.NotificationTitle)
@@ -210,6 +222,13 @@ export default function Profile({ route, navigation }) {
   var resObj = await response.json();
   // Alert.alert("All Hashes", JSON.stringify(resObj.length));
   // setHashArray(resObj)
+  // console.log("Prescription Length ", resObj)
+  if(resObj === false)
+  {
+    Alert.alert("No Prescription Yet");
+    setFinished(true)
+  }
+  else{
   setSpinnerText('Fetching Prescriptions from IOTA\nPlease Wait...')
   for(var i=0; i<resObj.length; i++)
   {
@@ -221,7 +240,7 @@ export default function Profile({ route, navigation }) {
   }
   setFinished(true)
   navigation.navigate('Prescriptions', {data: PrescArray})
-
+  }
     }
     catch(e){
       setFinished(true)
@@ -240,6 +259,12 @@ export default function Profile({ route, navigation }) {
   var resObj = await response.json();
   // Alert.alert("All Hashes", JSON.stringify(resObj.length));
   // setHashArray(resObj)
+  if(resObj === false)
+  {
+    Alert.alert("No Prescription Yet");
+    setFinished(true)
+  }
+  else{
   setSpinnerText('Fetching Notifications from IOTA\nPlease Wait...')
   for(var i=0; i<resObj.length; i++)
   {
@@ -253,6 +278,7 @@ export default function Profile({ route, navigation }) {
   navigation.navigate('Notifications', {data: NotificationArray})
 
     }
+  }
     catch(e){
       setFinished(true)
       console.log("Error Occurred ", e)

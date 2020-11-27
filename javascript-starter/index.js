@@ -89,10 +89,8 @@ async function sendData() {
           TimeStamp: timestamp(),
           HR: getHeartRate(50,70),
           Temp: getBPM(70,90),
-          BP:{
-            systolic: getBPsys(60,90),
-            diastolic: getBPdias(100,130)
-          }
+          SpO2: getBPsys(90,100),
+
         }
         readings=JSON.stringify(readings);
         await fetch("https://thetamiddleware.herokuapp.com/sendTx", {

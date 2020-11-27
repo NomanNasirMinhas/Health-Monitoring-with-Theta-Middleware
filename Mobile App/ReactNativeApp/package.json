@@ -26,6 +26,7 @@
     "react-native-action-bar": "^2.0.5",
     "react-native-chart-kit": "^6.6.1",
     "react-native-crypto": "^2.2.0",
+    "react-native-datepicker": "^1.7.2",
     "react-native-elements": "^3.0.0-alpha.1",
     "react-native-floating-action": "^1.21.0",
     "react-native-gesture-handler": "^1.6.1",

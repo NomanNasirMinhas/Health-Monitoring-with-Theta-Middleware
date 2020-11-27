@@ -9,6 +9,7 @@ import { AppLoading } from 'expo';
 import { Dimensions } from "react-native";
 import { useFonts } from 'expo-font';
 import { LineChart } from "react-native-chart-kit";
+import DatePicker from 'react-native-datepicker'
 
 //this.state = {
 
@@ -23,10 +24,10 @@ export default function Readings({route, navigation}) {
   var [txInfo, setTxInfo] = useState([])
   var [tempArray, setTempArray] = useState([])
   var [hrArray, setHrArray] = useState([])
-  var [systArray, setSystArray] = useState([])
+  var [showDate, setShowDate] = useState(true)
+  var [date, setDate] = useState('26-11-2020')
+  var [hasDate, setHasDate] = useState(false)
   var [SpO2Array, setSpO2Array] = useState([])
-  var [diastArray, setDiastArray] = useState([])
-  var [BPArray, setBPArray] = useState([])
   var [tempArray, setTempArray] = useState([])
 
   var rawTxs=[]
@@ -42,17 +43,19 @@ export default function Readings({route, navigation}) {
   useEffect(() => {
     (async () => {
 
+
       try{
         const { address } = route.params;
         setHistState('Fetching Transaction Hashes\nPlease Wait......')
-    var response = await fetch(`https://thetamiddleware.herokuapp.com/getAllHash/${address.toString()}&17-11-2020&vitals`);
+    var response = await fetch(`https://thetamiddleware.herokuapp.com/getAllHash/${address.toString()}&${date}&vitals`);
     var resObj = await response.json();
     // Alert.alert("All Hashes", JSON.stringify(resObj.length));
     if(resObj === false){
-      Alert.alert("No Transactions Found");
-      navigation.goBack();
+      Alert.alert("No Transactions Found", "Please Select another Date");
+      // navigation.goBack();
     }
     else{
+    setFinished(false)
     setHashArray(resObj.reverse())
     setHistState('Fetching Transactions from IOTA\nPlease Wait..........')
     for(var i=0; i<resObj.length; i++)
@@ -70,6 +73,7 @@ export default function Readings({route, navigation}) {
     for(var i=0; i<rawTxs.length; i++)
     {
     var val = rawTxs[i]
+    // console.log(val)
     var row=[]
       row.push(val.TimeStamp.toString());
       row.push(val.HR);
@@ -92,8 +96,9 @@ export default function Readings({route, navigation}) {
     // setDiastArray(diastData)
     setTableState(tableData)
     setFinished(true)
-    console.log(tableData)
+    // console.log(tableData)
   }
+  setFinished(true)
       }
       catch(e){
         setFinished(true)
@@ -104,7 +109,7 @@ export default function Readings({route, navigation}) {
 
 
     })();
-  }, []);
+  }, [date]);
 
 
   var tableHead= ['Time','Heart Rate (BpM)', 'Temp (F)', 'SpO2 - %'];
@@ -131,17 +136,7 @@ export default function Readings({route, navigation}) {
 
   return (
     <View style={styles.container}>
-      <Spinner
-          visible={!finished}
-          textContent={histState}
-          textStyle={styles.text}
-        />
-      <ScrollView horizontal={false} showsVerticalScrollIndicator={true} >
-
-      {finished &&
-      <View style={{marginBottom:30, paddingHorizontal:5, paddingTop:20}}>
-        <Card.Divider />
-        <Text style={[styles.text, { color: "white", fontFamily: 'Secular', fontSize:30 }]}>
+      <Text style={[styles.text, { color: "white", fontFamily: 'Secular', fontSize:30 }]}>
               Your Vital Sign's History
             </Text>
         <View style={styles.buttonContainer}>
@@ -157,6 +152,54 @@ export default function Readings({route, navigation}) {
           ></Button>
         </View>
         <Card.Divider />
+        <View>
+        <Text style={[styles.text, { color: "white", fontFamily: 'Metropolis', fontSize:18 }]}>
+        Please Pick A Date To See History
+      </Text>
+
+          <DatePicker
+          style={{width: 100, marginLeft: 140}}
+          date={date}
+          mode="date"
+          placeholder="Please Select Transactions Date"
+          format="DD-MM-YYYY"
+          minDate="01-01-2000"
+          maxDate="01-01-2025"
+          confirmBtnText="Confirm"
+          showIcon = {false}
+          cancelBtnText="Cancel"
+          customStyles={{
+            dateIcon: {
+              position: 'relative',
+              margin: 'auto',
+
+            },
+            dateText:{
+              color:'white',
+              margin:'auto',
+
+            },
+            placeholderText: {
+              color: 'white'
+            }
+            // ... You can check the source to find the other keys.
+          }}
+          onDateChange={(dateIn) => {setDate(dateIn); setShowDate(true); console.log("Date ",date)}}
+
+        /></View>
+
+<Spinner
+          visible={!finished}
+          textContent={histState}
+          textStyle={styles.text}
+        />
+
+      <ScrollView horizontal={false} showsVerticalScrollIndicator={true} >
+
+      {finished &&
+      <View style={{marginBottom:30, paddingHorizontal:5, paddingTop:20}}>
+        <Card.Divider />
+
         <Text style={[styles.text, { color: "white", fontFamily: 'MetropolisBold', fontSize:30 }]}>
               Infographics
             </Text>
