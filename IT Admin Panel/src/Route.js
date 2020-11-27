@@ -13,6 +13,8 @@ import {
   import Add from './Components/Add';
   import ViewPatient from './Components/ViewPatient';
   import DoctorProfile from './Components/DoctorProfile';
+  import PatientProfile from './Components/PatientProfile';
+  
   import ResetPassword from './Components/ResetPassword';
  
   //import Dashboard from './Components/Dashboard';
@@ -34,6 +36,7 @@ function RouteConfig() {
           <Route exact path="/doctors" component={Doctors}></Route>
           <Route exact path="/add_device" component={Add}></Route>
           <Route exact path="/doctor_profile" component={DoctorProfile}></Route>
+          <Route exact path="/patient_profile" component={PatientProfile}></Route>
           <Route exact path="/ViewPatient/:SEED" exact component={ViewPatient}>
          {/**   <Route exact path="/Dashboard" component={Dashboard}></Route> */}
           </Route>

@@ -21,6 +21,9 @@ import Grid from "@material-ui/core/Grid";
 import PropTypes from "prop-types";
 import PermIdentityIcon from "@material-ui/icons/PermIdentity";
 
+import EllipsisText from "react-ellipsis-text";
+
+
 
 //**** TABLE ******/
 import Table from "@material-ui/core/Table";
@@ -161,6 +164,8 @@ function ViewPatient(props) {
   console.log("ADDRESS", addresses);
 
   async function getInfo(address, name) {
+    
+
     console.log("Address to find", address);
     setName(name);
 
@@ -274,9 +279,9 @@ function ViewPatient(props) {
 
     function Profile(obj) {
       //console.log("To Profile", obj);
-      localStorage.setItem("seed_obj", JSON.stringify(obj));
-      console.log("Sending object", JSON.parse(localStorage.getItem("seed_obj")));
-      props.history.push(`/doctor_profile`);
+      localStorage.setItem("patient_profile", JSON.stringify(obj));
+      console.log("Sending object", JSON.parse(localStorage.getItem("patient_profile")));
+      props.history.push(`/patient_profile`);
     }
 
   if (Show) {
@@ -345,6 +350,8 @@ function ViewPatient(props) {
     );
   }
 
+  if(addresses!=null){
+
   return (
     <ThemeProvider>
       <Navbar />
@@ -412,10 +419,10 @@ function ViewPatient(props) {
             </Paper>
           </Grid>
         */}
-          <Slide direction="down" in={true} timeout={300}>
+          
         <Grid container spacing={0} style={{alignSelf:"center", justify:"center"  } }>
           <Grid xs={12}>
-            <Paper classNam e={classes.paper}>
+            
               <Typography
                 variant="h2"
                 style={{
@@ -427,8 +434,9 @@ function ViewPatient(props) {
               >
               {total}  Patients
               </Typography>
-
-              <TableContainer className={classesTable.paper} style={{alignSelf:"center", justifyContent:"center", justify:"center"}}>
+              <Slide direction="right" in={true} timeout={300}>
+              <TableContainer className={classesTable.paper} style={{alignSelf:"center",display:"flex", justifyContent:"center", justify:"center"}}>
+              <Paper classNam e={classes.paper}>
                 <Table className={classesTable.table} aria-label="simple table">
                   <TableHead style={{ backgroundColor: "#2980B9" }}>
                     <TableRow>
@@ -473,7 +481,11 @@ function ViewPatient(props) {
                         <TableCell align="center">
                           {obj.Profile.contact}
                         </TableCell>
-                        <TableCell align="center">{obj.ADDRESS}</TableCell>
+                        <TableCell align="center">
+                        <EllipsisText
+                    text={obj.ADDRESS}
+                    length={"30"}/>
+                          </TableCell>
                         <TableCell>
                           <Button
                             className={classesTable.hover}
@@ -518,13 +530,15 @@ function ViewPatient(props) {
                     ))}
                   </TableBody>
                 </Table>
+                </Paper>
               </TableContainer>
-            </Paper>
+              </Slide>
+          
 
             {/** END */}
           </Grid>
         </Grid>
-      </Slide>
+     
       <Dialog
         fullWidth
         maxWidth="sm"
@@ -548,7 +562,7 @@ function ViewPatient(props) {
         </DialogContent>
       </Dialog>
     </ThemeProvider>
-  );
+  ); }
 }
 
 export default ViewPatient;
