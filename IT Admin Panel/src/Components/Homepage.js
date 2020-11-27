@@ -480,7 +480,8 @@ function Doctors(props) {
                             />
                           }
 
-                          <CopyToClipboard text={obj.seed_obj.SEED}>
+                          <CopyToClipboard text={obj.seed_obj.SEED}
+                          onCopy={()=> console.log("COPIED=", obj.seed_obj.SEED)}>
                             <Tooltip title="Copy" aria-label="add">
                               <IconButton
                                 size="small"

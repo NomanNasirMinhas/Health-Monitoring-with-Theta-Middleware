@@ -19,6 +19,8 @@ import {
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import PropTypes from "prop-types";
+import PermIdentityIcon from "@material-ui/icons/PermIdentity";
+
 
 //**** TABLE ******/
 import Table from "@material-ui/core/Table";
@@ -110,7 +112,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ViewPatient() {
+function ViewPatient(props) {
   const classesTable = useStylesTable();
   var { SEED } = useParams();
   console.log(SEED);
@@ -163,7 +165,7 @@ function ViewPatient() {
     setName(name);
 
     const info = await fetch(
-      `https://thetamiddleware.herokuapp.com/getAllHash/${address}&${"08-11-2020"}`
+      `https://thetamiddleware.herokuapp.com/getAllHash/${address}&${"26-11-2020"}&${"vitals"}`
     );
     const to_json = await info.json();
 
@@ -269,6 +271,13 @@ function ViewPatient() {
 
       );
     }*/
+
+    function Profile(obj) {
+      //console.log("To Profile", obj);
+      localStorage.setItem("seed_obj", JSON.stringify(obj));
+      console.log("Sending object", JSON.parse(localStorage.getItem("seed_obj")));
+      props.history.push(`/doctor_profile`);
+    }
 
   if (Show) {
     return (
@@ -404,7 +413,7 @@ function ViewPatient() {
           </Grid>
         */}
           <Slide direction="down" in={true} timeout={300}>
-        <Grid container spacing={0}>
+        <Grid container spacing={0} style={{alignSelf:"center", justify:"center"  } }>
           <Grid xs={12}>
             <Paper classNam e={classes.paper}>
               <Typography
@@ -419,7 +428,7 @@ function ViewPatient() {
               {total}  Patients
               </Typography>
 
-              <TableContainer className={classesTable.paper}>
+              <TableContainer className={classesTable.paper} style={{alignSelf:"center", justifyContent:"center", justify:"center"}}>
                 <Table className={classesTable.table} aria-label="simple table">
                   <TableHead style={{ backgroundColor: "#2980B9" }}>
                     <TableRow>
@@ -443,6 +452,9 @@ function ViewPatient() {
                       </TableCell>
                       <TableCell className={classesTable.cell} align="center">
                         <strong>Transaction Type</strong>
+                      </TableCell>
+                      <TableCell className={classesTable.cell} align="center">
+                        <strong>Profile</strong>
                       </TableCell>
                     </TableRow>
                   </TableHead>
@@ -482,7 +494,26 @@ function ViewPatient() {
                             View
                           </Button>
                         </TableCell>
-                        <TableCell><Typography>Prescription</Typography></TableCell>
+                        <TableCell><Typography>Vitals</Typography></TableCell>
+                        <TableCell align="center">
+                        {
+                          <Button
+                            className={classesTable.hover}
+                            color="inherit"
+                            onClick={() => Profile(obj)}
+                            startIcon={
+                              <PermIdentityIcon
+                                fontSize="small"
+                                // component={link}
+                                //to={`/ViewPatient/${obj.SEED}`}
+                              />
+                            }
+                          >
+                            {" "}
+                            <Typography variant="button">View</Typography>
+                          </Button>
+                        }
+                      </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

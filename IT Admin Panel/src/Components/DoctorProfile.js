@@ -2,7 +2,7 @@ import React from "react";
 
 import Navbar from "./Navbar";
 import { useParams } from "react-router-dom";
-import { useEffect, useState,useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 
 //grid import
 import Grid from "@material-ui/core/Grid";
@@ -23,9 +23,6 @@ import { ToastContainer, toast } from "react-toastify";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 
 //import QRCode from "react-qr-code";
-
-
-
 
 //import theme provider
 import {
@@ -59,15 +56,13 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "3%",
     marginBottom: "3%",
   },
-  div: { marginTop: "4%"},
+  div: { marginTop: "4%" },
 }));
 
 function DoctorProfile() {
   //var { obj} = useParams();
-  
+
   //var QRCode = require('qrcode.react');
-  
- 
 
   //var QRCode = require('qrcode.react');
 
@@ -79,11 +74,10 @@ function DoctorProfile() {
   const [specialization, setSpecialization] = React.useState();
   const [num_of_pat, setNum_of_pat] = React.useState();
   const [seed, setSeed] = React.useState();
+  const [dummy, setDummy]= React.useState();
   const canvas = useRef(null);
-  
-  
+
   //console.log("SEED=",JSON.parse(obj));
-  
 
   //get seed data
   useEffect(() => {
@@ -111,9 +105,8 @@ function DoctorProfile() {
         const id = local_seed.seed_obj.ID;
         //const seed = local_seed.seed_obj.SEED;
         setSeed(local_seed.seed_obj.SEED);
-        // dummy= local_seed.seed_obj.SEED;
+        setDummy= seed;
 
-        
         console.log(
           name,
           address,
@@ -133,7 +126,7 @@ function DoctorProfile() {
     SeedInfo();
   }, []);
 
-  var QRCode = require('qrcode.react');
+  var QRCode = require("qrcode.react");
   //var dummy=seed.json();
 
   return (
@@ -195,7 +188,8 @@ function DoctorProfile() {
         <Slide direction="right" in={true} timeout={300}>
           <Grid item xs="8">
             <Paper elevaion={5} style={{ marginRight: "2%" }}>
-              <div
+              <div>             
+                 <div
                 style={{
                   height: "80px",
                   width: "100%",
@@ -207,50 +201,63 @@ function DoctorProfile() {
               <Typography variant="h2" style={{ color: "#B4B4B4" }}>
                 Total Patients
               </Typography>
-              <div style={{marginTop:"2%", marginBottom:"2%", backgroundColor:"#B4B4B4"}}>
+              <div
+                style={{
+                  marginTop: "2%",
+                  marginBottom: "2%",
+                  backgroundColor: "#B4B4B4",
+                }}
+              >
                 <Slide direction="left" in={true} timeout={300}>
-                  <Typography variant="h3" style={{color:"white"}}>{num_of_pat}</Typography>
+                  <Typography variant="h3" style={{ color: "white" }}>
+                    {num_of_pat}
+                  </Typography>
                 </Slide>
               </div>
               <Typography variant="h2" style={{ color: "#B4B4B4" }}>
                 SEED
               </Typography>
-              <div style={{marginTop:"2%", marginBottom:"2%", backgroundColor:"#B4B4B4"}}>
-               
-                  <Typography variant="body2" style={{color:"black"}}>
-                          
-                  {seed}          
+              <div
+                style={{
+                  marginTop: "2%",
+                  marginBottom: "2%",
+                  backgroundColor: "#B4B4B4",
+                }}
+              >
+                <Typography variant="body2" style={{ color: "black" }}>
+                  {seed}
 
-                          <CopyToClipboard text={seed}>
-                            <Tooltip title="Copy" aria-label="add">
-                              <IconButton
-                                size="small"
-                                onClick={() =>
-                                  toast("Seed Copied!", {
-                                    position: "top-right",
-                                    autoClose: 5000,
-                                    hideProgressBar: false,
-                                    closeOnClick: true,
-                                    pauseOnHover: true,
-                                    draggable: true,
-                                    progress: undefined,
-                                  })
-                                }
-                              >
-                                {" "}
-                                {/**style={{color:"#2980B9"}} */}
-                                <AssignmentIcon />
-                              </IconButton>
-                            </Tooltip>
-                          </CopyToClipboard>
-                        </Typography>
-                
-                        
+                  <CopyToClipboard text={seed}>
+                    <Tooltip title="Copy" aria-label="add">
+                      <IconButton
+                        size="small"
+                        onClick={() =>
+                          toast("Seed Copied!", {
+                            position: "top-right",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                          })
+                        }
+                      >
+                        {" "}
+                        {/**style={{color:"#2980B9"}} */}
+                        <AssignmentIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </CopyToClipboard>
+                </Typography>
               </div>
 
-             
-              
-              <QRCode value="MBNDML9YVMXWKOMQZKYNJZQQRIQUQYLSNNDLSHCEAKKDJYHBPEWXBNXNXWOGQTHYUCBPPECYHVQFTZFOQ" includeMargin="true"	 size="400"/>
+              <QRCode
+                value="MBNDML9YVMXWKOMQZKYNJZQQRIQUQYLSNNDLSHCEAKKDJYHBPEWXBNXNXWOGQTHYUCBPPECYHVQFTZFOQ"
+                includeMargin="true"
+                size="400"
+              />
+              </div>
 
             </Paper>
           </Grid>
