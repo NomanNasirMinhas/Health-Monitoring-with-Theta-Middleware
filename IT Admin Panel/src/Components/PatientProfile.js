@@ -178,10 +178,10 @@ function PatientProfile() {
                 `https://thetamiddleware.herokuapp.com/getTx/${resObj}`
             );
             var resObjTx = await responseTx.json();
-           console.log("Transaction",resObjTx.response);
+           console.log("Transaction=s",resObjTx.response);
             if (resObjTx !== false) {
                 SetLastReading(resObjTx.response);
-                console.log("last Reading",LastReading);
+                console.log("last Response",LastReading);
             }
             
         }
@@ -315,11 +315,13 @@ function PatientProfile() {
 
 
                     <div>
+                      <Tooltip title="Copy" aria-label="add"> 
                     <QRCode
+                    onHover={()=>(<Tooltip title="Right Clip to copy" aria-label="add"></Tooltip>)}
                   value={Address}
                   includeMargin="true"
                   size="400"
-                />
+                /></Tooltip>
                     </div>
 
              
@@ -352,7 +354,7 @@ function PatientProfile() {
                 
 
                 
-                <Typography variant="h6" style={{borderStyle:"groove" ,marginTop:"2%", alignContent:"left"}}>Hash: {}</Typography>
+                <Typography variant="h6" style={{borderStyle:"groove" ,marginTop:"2%"}}>Hash: {}</Typography>
                 </div>
 
                 

@@ -34,7 +34,7 @@ import {
   useTheme,
 } from "@material-ui/core/styles";
 
-import { Typography, Slide } from "@material-ui/core";
+import { Typography, Slide,CircularProgress } from "@material-ui/core";
 
 // theme set
 
@@ -128,12 +128,22 @@ function DoctorProfile() {
 
   var QRCode = require("qrcode.react");
   //var dummy=seed.json();
+ if(seed==null || seed ==undefined){ 
+return(
+  <ThemeProvider theme={theme}>
+      <Navbar />
+<CircularProgress size="200px"/>
+</ThemeProvider>
+);
 
+ }
+
+if(seed!=null){
   return (
     <ThemeProvider theme={theme}>
       <Navbar />
 
-      <Grid container spacing={3} style={{ marginTop: "2%" }}>
+      <Grid container spacing={0} style={{ marginTop: "2%" }}>
         <Slide direction="left" in={true} timeout={300}>
           <Grid item xs="4">
             <Paper
@@ -186,8 +196,10 @@ function DoctorProfile() {
         </Slide>
 
         <Slide direction="right" in={true} timeout={300}>
+       
           <Grid item xs="8">
-            <Paper elevaion={5} style={{ marginRight: "2%" }}>
+          <Paper elevaion={5} style={{ marginRight: "2%" , marginLeft:"2%"}}>
+           
               <div>             
                  <div
                 style={{
@@ -225,8 +237,9 @@ function DoctorProfile() {
                 }}
               >
                 <Typography variant="body2" style={{ color: "black" }}>
-                  {seed}
-
+              {seed}
+              
+                  </Typography>
                   <CopyToClipboard text={seed}>
                     <Tooltip title="Copy" aria-label="add">
                       <IconButton
@@ -249,11 +262,11 @@ function DoctorProfile() {
                       </IconButton>
                     </Tooltip>
                   </CopyToClipboard>
-                </Typography>
+               
               </div>
 
               <QRCode
-                value="MBNDML9YVMXWKOMQZKYNJZQQRIQUQYLSNNDLSHCEAKKDJYHBPEWXBNXNXWOGQTHYUCBPPECYHVQFTZFOQ"
+                value={seed}
                 includeMargin="true"
                 size="400"
               />
@@ -264,6 +277,6 @@ function DoctorProfile() {
         </Slide>
       </Grid>
     </ThemeProvider>
-  );
+  )};
 }
 export default DoctorProfile;

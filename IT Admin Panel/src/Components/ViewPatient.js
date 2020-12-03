@@ -1,5 +1,10 @@
 import React from "react";
+
+
+
 import Navbar from "./Navbar";
+import "./body.css";
+
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
@@ -9,6 +14,10 @@ import ListIcon from "@material-ui/icons/List";
 import swal from "sweetalert";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import DatePicker from "react-datepicker";
+
+
+
+
 import {
   createMuiTheme,
   withStyles,
@@ -51,6 +60,7 @@ import {
 } from "@material-ui/core";
 
 let theme = createMuiTheme({
+  body:{ backgroundColor:"#F6FFF8"},
   typography: {
     fontFamily: ["Metrophobic", "sans-serif"].join(","),
   },
@@ -109,7 +119,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "2%",
   },
   paper: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(0),
     textAlign: "center",
     color: theme.palette.text.secondary,
   },
@@ -165,7 +175,7 @@ function ViewPatient(props) {
 
   async function getInfo(address, name) {
     
-
+    
     console.log("Address to find", address);
     setName(name);
 
@@ -177,6 +187,7 @@ function ViewPatient(props) {
     console.log("To json", to_json);
     // if transactions fetched
     try {
+     
       if (to_json != false) {
         setTransactions(to_json);
         setShow(true);
@@ -291,16 +302,17 @@ function ViewPatient(props) {
         <Navbar />
         <Slide direction="down" in={true} timeout={300}>
           <Grid container spacing={0}>
-            <Grid item xs={2}>
-              <Paper className={classes.paper}>
+            <Grid item xs={3} >
+              <Paper elevation={2} className={classes.paper} style={{ backgroundColor:"#F6FFF8", marginLeft:"2%",  marginTop: "12%"}}>
                 <Typography variant="h6" gutterBottom>
                   <strong> Total Transactions </strong>
                 </Typography>
                 <Typography variant="h4" style={{ color: "#2980B9" }}>
-                  <strong>{Transactions.length + 1}</strong>
+                  <strong>{Transactions.length }</strong>
                 </Typography>
                 <Button
                   className={classesTable.hover}
+                  style={{marginBottom:"2%", marginTop:"2%" }}
                   color="inherit"
                   startIcon={<ArrowBackIosIcon fontSize="small" />}
                   onClick={() => {
@@ -311,16 +323,16 @@ function ViewPatient(props) {
                 </Button>
               </Paper>
             </Grid>
-            <Grid item xs={1}></Grid>
-            <Grid item xs={6}>
+         
+            <Grid item xs={9}>
               <Paper
                 elevation={2}
                 className={classes.paper}
-                style={{ marginTop: "4%" }}
+                style={{  backgroundColor:"#F6FFF8",marginTop: "4%" ,  marginLeft:"2%", marginRight:"1%" }}
               >
                 <div style={{ backgroundColor: "#2980B9", color: "white" }}>
                   <Typography
-                    variant="h5"
+                    variant="h4"
                     style={{ backgroundColor: "#2980B9", color: "white" }}
                   >
                     Transactions for {Name}
@@ -328,22 +340,22 @@ function ViewPatient(props) {
                 </div>
                 <TableContainer className={classesTable.paper}>
                   <Table
-                    className={classesTable.table}
+                    className={classesTable.table} style={{backgroundColor:"#F6FFF8"}}
                     aria-label="simple table"
                   >
                     {Transactions.map((obj) => (
                       <TableRow>
-                        <TableCell>
-                          <strong>{obj}</strong>
+                        <TableCell align="center" >
+                    <Typography>{obj}</Typography>
                         </TableCell>
                       </TableRow>
                     ))}
-                    ;
+                    
                   </Table>
                 </TableContainer>
               </Paper>
             </Grid>
-            <Grid item xs={3}></Grid>
+            
           </Grid>
         </Slide>
       </ThemeProvider>
@@ -353,7 +365,7 @@ function ViewPatient(props) {
   if(addresses!=null){
 
   return (
-    <ThemeProvider>
+    <ThemeProvider theme={theme} style={{backgroundColor:"#F2FDFF"}}>
       <Navbar />
       
      
@@ -420,7 +432,7 @@ function ViewPatient(props) {
           </Grid>
         */}
           
-        <Grid container spacing={0} style={{alignSelf:"center", justify:"center"  } }>
+        <Grid container spacing={1} >
           <Grid xs={12}>
             
               <Typography
@@ -436,33 +448,33 @@ function ViewPatient(props) {
               </Typography>
               <Slide direction="right" in={true} timeout={300}>
               <TableContainer className={classesTable.paper} style={{alignSelf:"center",display:"flex", justifyContent:"center", justify:"center"}}>
-              <Paper classNam e={classes.paper}>
+              <Paper className={classes.paper}>
                 <Table className={classesTable.table} aria-label="simple table">
                   <TableHead style={{ backgroundColor: "#2980B9" }}>
                     <TableRow>
                       <TableCell className={classesTable.cell} align="center">
-                        <strong>Patient's Name</strong>
+                      <Typography variant="h6" style={{ color: "white" }}>Patient's Name</Typography>
                       </TableCell>
                       <TableCell className={classesTable.cell} align="center">
-                        <strong>Patient's ID</strong>
+                      <Typography variant="h6" style={{ color: "white" }}>Patient's ID</Typography>
                       </TableCell>
                       <TableCell className={classesTable.cell} align="center">
-                        <strong>Age</strong>
+                      <Typography variant="h6" style={{ color: "white" }}>Age</Typography>
                       </TableCell>
                       <TableCell className={classesTable.cell} align="center">
-                        <strong>Contact</strong>
+                      <Typography variant="h6" style={{ color: "white" }}>Contact</Typography>
                       </TableCell>
                       <TableCell className={classesTable.cell} align="center">
-                        <strong>Address</strong>
+                      <Typography variant="h6" style={{ color: "white" }}>Address</Typography>
                       </TableCell>
                       <TableCell className={classesTable.cell} align="center">
-                        <strong>Transactions</strong>
+                      <Typography variant="h6" style={{ color: "white" }}>Transactions</Typography>
                       </TableCell>
                       <TableCell className={classesTable.cell} align="center">
-                        <strong>Transaction Type</strong>
+                      <Typography variant="h6" style={{ color: "white" }}>Transaction Type</Typography>
                       </TableCell>
                       <TableCell className={classesTable.cell} align="center">
-                        <strong>Profile</strong>
+                      <Typography variant="h6" style={{ color: "white" }}>Profile</Typography>
                       </TableCell>
                     </TableRow>
                   </TableHead>
@@ -474,17 +486,28 @@ function ViewPatient(props) {
                           scope="row"
                           //style={{ color: "green" }}
                         >
-                          <strong>{obj.Profile.name} </strong>
+                          <Typography variant="body2">{obj.Profile.name} </Typography>
                         </TableCell>
-                        <TableCell align="center">{obj.ID}</TableCell>
-                        <TableCell align="center">{obj.Profile.age}</TableCell>
+
                         <TableCell align="center">
-                          {obj.Profile.contact}
+                        <Typography variant="body2"> {obj.ID}</Typography>
                         </TableCell>
+
+                        <TableCell align="center"><Typography variant="body2">{obj.Profile.age}
+                        </Typography>
+                        </TableCell>
+                        
                         <TableCell align="center">
+                        <Typography variant="body2"> {obj.Profile.contact}
+                        </Typography>
+                        </TableCell>
+
+                        <TableCell align="center">
+                        <Typography variant="body2">
                         <EllipsisText
                     text={obj.ADDRESS}
                     length={"30"}/>
+                    </Typography>
                           </TableCell>
                         <TableCell>
                           <Button
@@ -503,10 +526,11 @@ function ViewPatient(props) {
                             }
                           >
                             {" "}
-                            View
+                            <Typography variant="button"> View</Typography>
                           </Button>
                         </TableCell>
-                        <TableCell><Typography>Vitals</Typography></TableCell>
+
+                        <TableCell><Typography variant="body2">Vitals</Typography></TableCell>
                         <TableCell align="center">
                         {
                           <Button
@@ -522,7 +546,9 @@ function ViewPatient(props) {
                             }
                           >
                             {" "}
-                            <Typography variant="button">View</Typography>
+                            <Typography variant="button">
+                              View
+                              </Typography>
                           </Button>
                         }
                       </TableCell>

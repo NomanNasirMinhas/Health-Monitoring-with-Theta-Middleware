@@ -5,6 +5,11 @@ import { useHistory } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import PersonSharpIcon from "@material-ui/icons/PersonSharp";
 import { Link } from "react-router-dom";
+
+
+//css link
+import "./body.css";
+
 import {
   Button,
   Typography,

@@ -2,6 +2,9 @@ import React from "react";
 import { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 
+//import css
+import "./body.css";
+
 import Grid from "@material-ui/core/Grid";
 import PropTypes from "prop-types";
 import { Link as link } from "react-router-dom";
@@ -77,6 +80,9 @@ const rows = [
   { id: 6, name: "Dr. Vltamash", assigned_devices: 3 },
 ];
 const useStylesTable = makeStyles({
+  row: 
+  {backgroundColor:"white"},
+  
   table: {
     maxWidth: "100%",
     fontFamily: "Metrophobic",
@@ -186,6 +192,7 @@ function Doctors(props) {
   const [totalPatients, settotalPatients] = React.useState(0);
   const [PatientCount, setPatientCount] = React.useState([]);
   const [newSeedsArray, setnewSeedsArray] = React.useState([]);
+  const [showToast, setShowToast] = React.useState(false);
   let NewSeeds = [];
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -319,7 +326,7 @@ function Doctors(props) {
 
   //Navigate to patients
   function Patients(props, SEED) {
-    console.log("To Patients" ,SEED);
+    console.log("To Patients", SEED);
     props.history.push(`/ViewPatient/${SEED}`);
   }
 
@@ -334,7 +341,7 @@ function Doctors(props) {
   let p_count = 0;
   //IF FETCHING DATA------>
 
-  if (seeds == false || newSeedsArray ==null) {
+  if (seeds == false || newSeedsArray == null) {
     return (
       <ThemeProvider theme={theme}>
         <Navbar />
@@ -398,7 +405,7 @@ function Doctors(props) {
             <TableContainer className={classesTable.paper}>
               <Table className={classesTable.table} aria-label="simple table">
                 <TableHead style={{ backgroundColor: "#2980B9" }}>
-                  <TableRow>
+                  <TableRow >
                     <TableCell align="center">
                       <Typography variant="h6" style={{ color: "white" }}>
                         Username
@@ -445,7 +452,7 @@ function Doctors(props) {
                       )
                     : newSeedsArray
                   ).map((obj) => (
-                    <TableRow hover key={obj.name}>
+                    <TableRow hover key={obj.name} className={classesTable.row}>
                       <TableCell component="th" scope="row">
                         <Typography variant="body2">
                           {" "}
@@ -480,8 +487,12 @@ function Doctors(props) {
                             />
                           }
 
-                          <CopyToClipboard text={obj.seed_obj.SEED}
-                          onCopy={()=> console.log("COPIED=", obj.seed_obj.SEED)}>
+                          <CopyToClipboard
+                            text={obj.seed_obj.SEED}
+                            onCopy={() =>
+                              console.log("COPIED=", obj.seed_obj.SEED)
+                            }
+                          >
                             <Tooltip title="Copy" aria-label="add">
                               <IconButton
                                 size="small"
@@ -522,16 +533,12 @@ function Doctors(props) {
                           >
                             {" "}
                             <Typography variant="button">
-                              
-                                {PatientCount == null &&
-                                PatientCount == undefined ? (
-                                  <CircularProgress
-                                    style={{ color: "white" }}
-                                  />
-                                ) : (
-                                  `${obj.num_of_pat} Patients`
-                                )}{" "}
-                           
+                              {PatientCount == null &&
+                              PatientCount == undefined ? (
+                                <CircularProgress style={{ color: "white" }} />
+                              ) : (
+                                `${obj.num_of_pat} Patients`
+                              )}{" "}
                             </Typography>
                           </Button>
                         }
@@ -559,7 +566,7 @@ function Doctors(props) {
                     </TableRow>
                   ))}
                 </TableBody>
-                <TableFooter style={{ maxwidth: "100%" }}>
+                <TableFooter className={classesTable.row} style={{ maxwidth: "100%" }}>
                   <TableRow>
                     <TablePagination
                       rowsPerPageOptions={[
