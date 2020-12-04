@@ -2,7 +2,7 @@ import React from 'react';
 import Navbar from "./Navbar";
 import { useState, useEffect } from "react";
 
-import db from '../Config';
+import db from '../Firebase';
 
 
 function AdminProfile(){
@@ -25,7 +25,7 @@ function AdminProfile(){
 
            return(<div>
                <Navbar/>
-               OMG FIREBASE LAG GYE 
+              FIREBASE LAG GYE 
 
            </div>)
 }
