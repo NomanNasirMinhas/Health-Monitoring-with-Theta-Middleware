@@ -63,7 +63,7 @@ function Navbar() {
     history.push("/home");
   }
   function goAdd() {
-    history.push("/add_device");
+    history.push("/adminprofile");
   }
   function Logout() {
     localStorage.clear();

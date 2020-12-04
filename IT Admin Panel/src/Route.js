@@ -14,6 +14,7 @@ import {
   import ViewPatient from './Components/ViewPatient';
   import DoctorProfile from './Components/DoctorProfile';
   import PatientProfile from './Components/PatientProfile';
+  import AdminProfile from './Components/AdminProfile';
   
   import ResetPassword from './Components/ResetPassword';
  
@@ -37,9 +38,10 @@ function RouteConfig() {
           <Route exact path="/add_device" component={Add}></Route>
           <Route exact path="/doctor_profile" component={DoctorProfile}></Route>
           <Route exact path="/patient_profile" component={PatientProfile}></Route>
-          <Route exact path="/ViewPatient/:SEED" exact component={ViewPatient}>
+          <Route exact path="/ViewPatient/:SEED"  component={ViewPatient}></Route>
+          <Route path="/adminprofile" component={AdminProfile}></Route>
          {/**   <Route exact path="/Dashboard" component={Dashboard}></Route> */}
-          </Route>
+         
           {/* <Route exact path="*" component={NotFound}></Route> */}
         </Switch>
 
