@@ -37,12 +37,19 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   menuButton: {
-    marginRight: theme.spacing(2),
+    marginRight: theme.spacing(1),
+  },
+  buttons:{
+    '& > *': {
+      margin: theme.spacing(1),
+      padding: theme.spacing(1),
+      right:0
+    },
   },
   title: {
     flexGrow: 1,
   },
-  buttons:{ right: 0}
+ 
 }));
 
 /*const theme = createMuiTheme({
@@ -88,44 +95,66 @@ function Navbar() {
             Welcome Admin
           </Typography>
          
-                     <Button
+         <div style={{display:"flex", alignContent:"justifyContent", alignItems:"justifyContent"}}>
+
+           <div className={classes.buttons}>                 
+              <Button
+              
               color="inherit"
+              variant="outlined"
               startIcon={<HomeIcon fontSize='large'/>}
               onClick={goHome}
             >
               {" "}
               <Typography variant="subtitle2">Home</Typography>
             </Button>
+            </div>
 
+            <div className={classes.buttons}>
             <Button
+               
               color="inherit"
+              variant="outlined"
               startIcon={<AddCircleOutlineIcon fontSize='inherit' />}
               onClick={Doctors}
             >
               {" "}
               <Typography variant="subtitle2">Patients</Typography>
             </Button>
+            </div>
 
+
+            <div className={classes.buttons}
+>
             <Button
               color="inherit"
+              variant="outlined"
+             
+
               startIcon={< PersonIcon fontSize='inherit'/>}
               onClick={goAdd}
             >
               {" "}
               <Typography variant="subtitle2">Profile</Typography>
             </Button>
-
+            </div>
          
-                     <Button
+
+            <div className={classes.buttons}
+>
+              <Button
               color="inherit"
+              variant="outlined"
+
               startIcon={<ExitToAppIcon fontSize='large' />}
               onClick={Logout}
-              className={classes.buttons}
+              
             >
               {" "}
               <Typography variant="subtitle2">logout</Typography>
             </Button>
-            
+            </div> 
+            </div>
         </Toolbar>
       </AppBar>
       </div>

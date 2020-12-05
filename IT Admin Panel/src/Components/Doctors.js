@@ -441,7 +441,7 @@ function Homepage(props) {
               </Table>
             </TableContainer>*/}
 
-              <TableContainer className={classesTable.paper}>
+              <TableContainer className={classesTable.paper} style={{marginTop:"2%"}}>
                 <Table className={classesTable.table} aria-label="simple table">
                   <TableHead style={{ backgroundColor: "#2980B9" }}>
                     <TableRow>
@@ -482,7 +482,7 @@ function Homepage(props) {
                   )*/}
 
                     {patients.map((obj) => (
-                      <TableRow hover key={obj.data.Profile.name}>
+                      <TableRow hover key={obj.data.Profile.name} style={{backgroundColor:"white"}}>
                         <TableCell component="th" scope="row">
                           <strong> {obj.data.Profile.name} </strong>
                         </TableCell>
@@ -515,7 +515,7 @@ function Homepage(props) {
                       </TableRow>
                     ))}
                   </TableBody>
-                  <TableFooter style={{ maxwidth: "100%" }}>
+                  <TableFooter style={{ maxwidth: "100%" , backgroundColor:"white"}}>
                   <TableRow>
                     <TablePagination
                       rowsPerPageOptions={[

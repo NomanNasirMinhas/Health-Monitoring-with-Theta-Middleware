@@ -3,6 +3,8 @@ import React from "react";
 import Navbar from "./Navbar";
 import { useParams } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
+import Divider from '@material-ui/core/Divider';
+
 
 //grid import
 import Grid from "@material-ui/core/Grid";
@@ -167,7 +169,7 @@ function PatientProfile() {
       //SetPatient(obj.Profile);
       //Returns Hash
       var response = await fetch(
-        `https://thetamiddleware.herokuapp.com/getLastTx/${Address}&${"vitals"}`
+        `https://thetamiddleware.herokuapp.com/getLastTx/${Address}&vitals`
       );
 
       var resObj = await response.json();
@@ -200,7 +202,7 @@ function PatientProfile() {
       <ThemeProvider theme={theme}>
         <Navbar />
         <Typography variant="h2" style={{ marginTop: "2%", color: "#B4B4B4" }}>
-          {name}'s Profiles
+          {name}'s Profile
         </Typography>
         <Grid container spacing={0} style={{ marginTop: "2%" }}>
           <Slide direction="left" in={true} timeout={300}>
@@ -209,6 +211,8 @@ function PatientProfile() {
                 elevation={5}
                 style={{
                   marginLeft: "2%",
+                  backgroundColor:"#E5E8EA"
+                  ,
                 
                   bordeStyle: "groove",
 
@@ -217,7 +221,8 @@ function PatientProfile() {
                   maxHeight: "100%",
                 }}
               >
-                <div
+               
+               {/** <div
                   style={{
                     justifyContent: "center",
                     alignItems: "center",
@@ -226,7 +231,26 @@ function PatientProfile() {
                   }}
                 >
                   <Typography variant="h3"> ID : {id}</Typography>
-                </div>
+                </div> */}
+
+                <div
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  display: "flex",
+                }}
+              >
+                <Avatar
+                  className={classes.large}
+                  style={{ backgroundColor: "#2980B9" }}
+                >
+                  <Typography variant="h4">{id}</Typography>
+                </Avatar>
+              </div>
+
+              <div>
+              <Divider />
+              </div>
 
                 <div className={classes.div} style={{ color: "black"  }}>
 
@@ -276,6 +300,8 @@ function PatientProfile() {
                   </Slide>
                   </Grid>
 
+                  <div style={{marginTop:"2%"}}><Divider /></div>
+
 
                   <Typography variant="h2" style={{ marginTop: "2%", color: "#B4B4B4" }}>
           QR Codes
@@ -319,9 +345,9 @@ function PatientProfile() {
 
                   </Grid>
 
+                  <div style={{marginTop:"2%"}}><Divider /></div>
 
-
-                  <Grid container spacing={0} style={{ marginTop: "2%"  }}>
+                  <Grid container spacing={0} style={{ marginTop: "2%" , marginBottom:"2%" }}>
                     <Grid item xs={2}></Grid>
                     <Grid item xs={8}>
                       <Paper elevation={5} >
