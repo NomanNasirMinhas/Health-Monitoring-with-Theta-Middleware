@@ -187,7 +187,7 @@ const PatientProfile = (props) => {
                                 component={Link}
                                 size="large"
                                 disabled={Empty}
-                                to="/livereadings"
+                                to={`/livereadings/${address}`}
                                 startIcon={<TimelineIcon />}
                             >
                                 Live Readings

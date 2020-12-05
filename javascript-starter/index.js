@@ -84,21 +84,39 @@ async function sendData() {
       var readings=null;
       // var msg = await getLastTransaction(testAddress)
       // console.log(msg)
-      while(true){
-        readings={
-          TimeStamp: timestamp(),
-          HR: getHeartRate(50,70),
-          Temp: getBPM(70,90),
-          SpO2: getBPsys(90,100),
+      // while(true){
+        // readings={
+        //   TimeStamp: timestamp(),
+        //   HR: getHeartRate(50,70),
+        //   Temp: getBPM(70,90),
+        //   SpO2: getBPsys(90,100),
 
+        // }
+        // var docLog = {
+        //   TimeStamp: "14:44:7\n5-12-2020",
+        //   LogType:0,
+        //   LogDetails:"Doctor Offline"
+        // }
+
+        // var docNotification = {
+        //   TimeStamp: "14:44:7\n5-12-2020",
+        //   title:"Appointment",
+        //   details:"You can meet doctor at 7pm on coming Monday"
+        // }
+
+        var prescriptions = {
+          TimeStamp: "14:44:7\n5-12-2020",
+          title:"Amoxil 50mg",
+          details:"Three Times per day"
         }
-        readings=JSON.stringify(readings);
+
+        readings=JSON.stringify(prescriptions);
         await fetch("https://thetamiddleware.herokuapp.com/sendTx", {
           method: "POST",
           body: JSON.stringify({
               seed: testSeed,
               address: testAddress,
-              txType:"vitals",
+              txType:"prescription",
               Data: readings
           }),
     headers: {
@@ -106,7 +124,7 @@ async function sendData() {
     }
 })
 
-      }
+      // }
 
   }
 

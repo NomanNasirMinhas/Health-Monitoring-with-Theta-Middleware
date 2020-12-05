@@ -49,7 +49,7 @@ ReactDOM.render(
                 component={PatientProfile} />
             <Route path="/yourprofile"
                 component={YourProfile} />
-            <Route path="/livereadings"
+            <Route path="/livereadings/:address"
                 component={LiveReadings} />
             <Route path="/addpatient"
                 component={AddPatient} />

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Typography,
   makeStyles,
@@ -12,6 +12,7 @@ import CardBody from "../../components/Card/CardBody";
 import CardHeader from "../../components/Card/CardHeader";
 import Header from "../../components/Header/Header";
 import theme from "../../assets/theme/theme";
+import { Link, useParams } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,6 +30,33 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const LiveReadings = () => {
+  const seed = localStorage.getItem("seed") || "";
+  let { address } = useParams();
+  const [mamReadings, setMamReadings] = useState([]);
+
+  useEffect(() => {
+    async function fetchMam() {
+      var root = await fetch(
+        `https://thetamiddleware.herokuapp.com/getMAMroot/${seed}&${address}`
+      );
+      root = await root.json();
+      console.log("Root is ", root);
+      const Mam = require("@iota/mam");
+      const { asciiToTrytes, trytesToAscii } = require("@iota/converter");
+      const mode = "public";
+      const provider = "https://nodes.devnet.iota.org:443";
+      let mamState = Mam.init(provider);
+      const logData = (data) => {
+        var parsedData = JSON.parse(trytesToAscii(data));
+        console.log("Fetched and parsed", parsedData, "\n");
+        setMamReadings(mamReadings.push(JSON.stringify(parsedData)));
+      };
+
+      await Mam.fetch(root, mode, null, logData);
+    }
+    fetchMam();
+  }, []);
+  console.log("MAM Array ", mamReadings);
   var biPolarBarChartData = {
     labels: ["W1", "W2", "W3", "W4", "W5", "W6", "W7", "W8", "W9", "W10"],
     series: [[1, 2, 4, 8, 6, -2, -1, -4, -6, -2]],
@@ -44,6 +72,7 @@ const LiveReadings = () => {
   };
 
   const classes = useStyles();
+
   return (
     <ThemeProvider theme={theme}>
       <Header />
@@ -56,6 +85,9 @@ const LiveReadings = () => {
 
         <Slide direction="down" in={true} timeout={300}>
           <Grid container xs={12}>
+            <Typography variant="h2" color="secondary" align="center">
+              Address = {address}
+            </Typography>
             <Grid container className={classes.labels}>
               <Grid item>
                 <Typography variant="h4" className={classes.headerText}>
