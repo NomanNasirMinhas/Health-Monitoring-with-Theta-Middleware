@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles, Typography } from "@material-ui/core";
 import Thermometer from "../../assets/icons/thermometer";
 import Oxygen from "../../assets/icons/oxygen";
@@ -63,7 +63,19 @@ const ErrorMessage = () => {
   );
 };
 
+async function GetVitals(address) {
+  var response = await fetch(`https://thetamiddleware.herokuapp.com/getLastTx/${address}&vitals`);
+  var resObj = await response.json();
+  var responseTx = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${resObj}`);
+  var resObjTx = await responseTx.json();
+  console.log(resObjTx)
+}
+
 const VitalsCard = (props) => {
+  useEffect(() => {
+    GetVitals(props.Address)
+  }, [])
+  
   const classes = useStyles();
   return (
     <div className={classes.cardBody}>
@@ -125,11 +137,11 @@ const VitalsCard = (props) => {
 };
 
 VitalsCard.propTypes = {
+  Address: PropTypes.string,
   Empty: PropTypes.bool.isRequired,
-  Temp: PropTypes.string.isRequired,
-  HR: PropTypes.string.isRequired,
-  SpO2: PropTypes.string.isRequired,
-
+  Temp: PropTypes.number.isRequired,
+  HR: PropTypes.number.isRequired,
+  SpO2: PropTypes.number.isRequired,
 }
 
 export default VitalsCard;

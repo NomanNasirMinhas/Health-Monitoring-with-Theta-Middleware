@@ -16,6 +16,7 @@ import {
   TableContainer,
   Grid,
   IconButton,
+  Backdrop,
 } from "@material-ui/core";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import Header from "../../components/Header/Header";
@@ -122,14 +123,14 @@ export default function HomePage() {
         `https://thetamiddleware.herokuapp.com/getLastTx/${prop[i].ADDRESS}&vitals`
       );
       hash = await hash.json();
-      
+
       if (hash !== false) {
         var tx = await fetch(
           `https://thetamiddleware.herokuapp.com/getTx/${hash}`
         );
         tx = await tx.json();
 
-      
+
         if (tx !== false) {
           info = {
             name: prop[i].Profile.name,
@@ -208,11 +209,9 @@ export default function HomePage() {
     <ThemeProvider theme={theme}>
       <Header />
       {visible ? (
-        <CircularProgress
-          className={classes.CircularProgress}
-          color="secondary"
-          size={100}
-        />
+        <Backdrop open={visible}>
+          <CircularProgress color="secondary" />
+        </Backdrop>
       ) : (
           <Slide direction="down" in={true} timeout={300}>
             <Grid container className={classes.content}>
@@ -459,10 +458,10 @@ export default function HomePage() {
                                       component={link}
                                       color="secondary"
                                       to={`/viewpatientprofile/${row.ADDRESS}`}
-                                      
+
                                     >
-                                    <VisibilityIcon/>
-                                </IconButton>
+                                      <VisibilityIcon />
+                                    </IconButton>
                                   </StyledTableCell>
                                 </TableRow>
                               ))}

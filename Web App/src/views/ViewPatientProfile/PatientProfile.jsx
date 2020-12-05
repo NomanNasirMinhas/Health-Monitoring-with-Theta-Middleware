@@ -6,6 +6,7 @@ import {
     Button,
     Dialog,
     Slide,
+    Backdrop,
     CircularProgress,
     DialogTitle,
     DialogContentText,
@@ -13,10 +14,8 @@ import {
     DialogActions,
     ThemeProvider,
     Grow,
-    IconButton,
 } from "@material-ui/core";
 import Header from "../../components/Header/Header";
-import ButtonDrawer from "../../components/ButtonDrawer/ButtonDrawer";
 import theme from "../../assets/theme/theme";
 import { Link, useParams } from "react-router-dom";
 import VitalsCard from "../../components/VitalsCard/VitalsCard";
@@ -25,18 +24,14 @@ import AssessmentIcon from "@material-ui/icons/Assessment";
 import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import HistoryIcon from "@material-ui/icons/History";
 import TimelineIcon from "@material-ui/icons/Timeline";
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import PrescriptionCard from "../../components/PrescriptionCard/PrescriptionCard";
+
 const useStyles = makeStyles((theme) => ({
     body: {
         display: "flex",
-        flexDirection: "column",
+        // flexDirection: "column",
         minHeight: "1vh",
         marginTop: theme.spacing(3),
-    },
-    CircularProgress: {
-        position: "absolute",
-        top: "40%",
-        left: "46%",
     },
     bottom: {
         position: "fixed",
@@ -71,41 +66,41 @@ const PatientProfile = (props) => {
         props.history.push("/dashboard");
     };
 
-    useEffect(() => {
-        async function getProfile() {
-            var obj = await fetch(
-                `https://thetamiddleware.herokuapp.com/getAddressInfo/${seed}&${address}`
-            );
-            obj = await obj.json();
-            SetPatient(obj.Profile);
-            //Returns Hash
-            var response = await fetch(
-                `https://thetamiddleware.herokuapp.com/getLastTx/${address}&vitals`
-            );
+    async function getProfile() {
+        var obj = await fetch(
+            `https://thetamiddleware.herokuapp.com/getAddressInfo/${seed}&${address}`
+        );
+        obj = await obj.json();
+        SetPatient(obj.Profile);
+        //Returns Hash
+        var response = await fetch(
+            `https://thetamiddleware.herokuapp.com/getLastTx/${address}&vitals`
+        );
 
-            var resObj = await response.json();
-            if (resObj !== false) {
-                //Passing Hash of transaction
-                var responseTx = await fetch(
-                    `https://thetamiddleware.herokuapp.com/getTx/${resObj}`
-                );
-                var resObjTx = await responseTx.json();
-                console.log(resObjTx)
-                if (resObjTx !== false) {
-                    SetEmpty(false);
-                    SetCircularVisible(false);
-                    SetLastReading(resObjTx.response);
-                }
-                else {
-                    SetEmpty(true);
-                    SetCircularVisible(false);
-                }
+        var resObj = await response.json();
+        if (resObj !== false) {
+            //Passing Hash of transaction
+            var responseTx = await fetch(
+                `https://thetamiddleware.herokuapp.com/getTx/${resObj}`
+            );
+            var resObjTx = await responseTx.json();
+            if (resObjTx !== false) {
+                SetEmpty(false);
+                SetCircularVisible(false);
+                SetLastReading(resObjTx.response);
             }
             else {
                 SetEmpty(true);
                 SetCircularVisible(false);
             }
         }
+        else {
+            SetEmpty(true);
+            SetCircularVisible(false);
+        }
+    }
+
+    useEffect(() => {
         getProfile();
     }, []);
 
@@ -123,13 +118,13 @@ const PatientProfile = (props) => {
         <ThemeProvider theme={theme}>
             <Header />
             {circularVisible ?
-                <CircularProgress className={classes.CircularProgress}
-                    color="secondary"
-                    size={100}
-                /> :
+                <Backdrop open={circularVisible}>
+                    <CircularProgress color="secondary" />
+                </Backdrop>
+                :
                 (
                     <Fragment>
-                        <Grid container justify="space-around" className={classes.body}>
+                        <Grid container justify="space-around" className={classes.body} spacing={3}>
                             <Grid item xs={12} md={5}>
                                 <PatientCard
                                     name={patient.name}
@@ -147,55 +142,57 @@ const PatientProfile = (props) => {
                                 </Typography>
 
                                 <VitalsCard
+                                    Address={address}
                                     Empty={Empty}
                                     HR={LastReading?.HR}
                                     Temp={LastReading?.Temp}
                                     SpO2={LastReading?.SpO2}
                                 />
                             </Grid>
-                            <Grid item>
-                                <div className={classes.bottom}>
-                                    <Button
-                                        style={{ textTransform: "capitalize" }}
-                                        size="large"
-                                        onClick={() => {
-                                            setOpenDischarge(true);
-                                        }}
-                                        startIcon={<AssignmentTurnedInIcon />}
-                                    >
-                                        Discharge Patient
-                                    </Button>
-                                    <Button
-                                        style={{ textTransform: "capitalize" }}
-                                        size="large"
-                                        disabled={Empty}
-                                        startIcon={<AssessmentIcon />}
-                                    >
-                                        Generate Report
-                                    </Button>
-                                    <Button
-                                        style={{ textTransform: "capitalize" }}
-                                        component={Link}
-                                        to={`/viewhistory/${patient.name}&${patient.age}&${patient.address}`}
-                                        size="large"
-                                        disabled={Empty}
-                                        startIcon={<HistoryIcon />}
-                                    >
-                                        View History
-                                    </Button>
-                                    <Button
-                                        style={{ textTransform: "capitalize" }}
-                                        component={Link}
-                                        size="large"
-                                        disabled={Empty}
-                                        to="/livereadings"
-                                        startIcon={<TimelineIcon />}
-                                    >
-                                        Live Readings
-                                    </Button>
-                                </div>
+                            <Grid item xs={12} md={5}>
+                                <PrescriptionCard />
                             </Grid>
                         </Grid>
+                        <div className={classes.bottom}>
+                            <Button
+                                style={{ textTransform: "capitalize" }}
+                                size="large"
+                                onClick={() => {
+                                    setOpenDischarge(true);
+                                }}
+                                startIcon={<AssignmentTurnedInIcon />}
+                            >
+                                Discharge Patient
+                                    </Button>
+                            <Button
+                                style={{ textTransform: "capitalize" }}
+                                size="large"
+                                disabled={Empty}
+                                startIcon={<AssessmentIcon />}
+                            >
+                                Generate Report
+                                    </Button>
+                            <Button
+                                style={{ textTransform: "capitalize" }}
+                                component={Link}
+                                to={`/viewhistory/${patient.name}&${patient.age}&${patient.address}`}
+                                size="large"
+                                disabled={Empty}
+                                startIcon={<HistoryIcon />}
+                            >
+                                View History
+                                    </Button>
+                            <Button
+                                style={{ textTransform: "capitalize" }}
+                                component={Link}
+                                size="large"
+                                disabled={Empty}
+                                to="/livereadings"
+                                startIcon={<TimelineIcon />}
+                            >
+                                Live Readings
+                                    </Button>
+                        </div>
                         <Dialog
                             fullWidth
                             maxWidth="sm"
