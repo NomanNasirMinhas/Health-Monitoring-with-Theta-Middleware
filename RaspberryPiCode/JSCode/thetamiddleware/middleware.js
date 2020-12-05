@@ -648,7 +648,7 @@ async function publishMAMmsg(func, seed, address) {
   	const Mam = require('@iota/mam');
 	const { asciiToTrytes, trytesToAscii } = require('@iota/converter');
 	const mode = 'public';
-	const provider = 'https://nodes.thetangle.org:443';
+	const provider = 'https://nodes.devnet.iota.org';
 
 	let mamState = Mam.init(provider);
 
