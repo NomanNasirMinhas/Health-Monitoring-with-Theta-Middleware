@@ -186,7 +186,7 @@ function ViewPatient(props) {
 
     console.log("To json", to_json);
     // if transactions fetched
-    try {
+    try { 
      
       if (to_json != false) {
         setTransactions(to_json);

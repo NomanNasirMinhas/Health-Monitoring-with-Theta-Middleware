@@ -6,6 +6,8 @@ import { useEffect, useState, useRef } from "react";
 
 //grid import
 import Grid from "@material-ui/core/Grid";
+import Divider from '@material-ui/core/Divider';
+
 import Paper from "@material-ui/core/Paper";
 
 //Avatar import
@@ -144,14 +146,16 @@ if(seed!=null){
       <Navbar />
 
       <Grid container spacing={0} style={{ marginTop: "2%" }}>
-        <Slide direction="left" in={true} timeout={300}>
+       
+          <Grid item xs="4"></Grid>
+          <Slide direction="left" in={true} timeout={300}>
           <Grid item xs="4">
             <Paper
               elevation={5}
               style={{
                 marginLeft: "3%",
                 alignItems: "center",
-
+                backgroundColor:"#EDFFFE",
                 justifyContent: "center",
                 maxHeight: "100%",
               }}
@@ -165,11 +169,12 @@ if(seed!=null){
               >
                 <Avatar
                   className={classes.large}
-                  style={{ backgroundColor: "#9DA2A4 " }}
+                  style={{ backgroundColor: "#018D87" }} 
                 >
                   <Typography variant="h4">{name}</Typography>
                 </Avatar>
               </div>
+              <div><Divider variant="middle"/></div>
               <div className={classes.div}>
                 <Typography variant="h6">
                   {" "}
@@ -193,7 +198,64 @@ if(seed!=null){
               </div>
             </Paper>{" "}
           </Grid>
-        </Slide>
+          </Slide>
+          <Grid item xs="4"></Grid>
+
+          
+
+
+       
+
+        </Grid>
+
+        <div style={{marginTop:"2%", marginBottom:"2%"}}><Divider variant="middle"/></div>
+
+
+        <Typography variant="h2" style={{ marginTop: "2%", color: "#B4B4B4" }}>
+          QR Code
+        </Typography>
+
+
+
+                  <Grid container spacing={0} style={{ marginTop: "2%" , marginBottom:"2%" }}>
+                    <Grid item xs={2}></Grid>
+                    <Grid item xs={8}>
+                      <div>
+                      <Paper elevation={5} component={"div"} style={{backgroundColor:"#EDFFFE"}}>
+
+                      <div
+                    style={{
+                      justifyContent: "center",
+                      alignItems: "center",
+                      display: "flex",
+                      backgroundColor: "#018D87",
+                      color: "white",
+                     
+                      
+                    }}
+                  >
+                    <Typography variant="h5" style={{ marginTop: "2%" }}>
+                      Doctor's Seed : <EllipsisText text={seed} length={"20"} />
+                    </Typography>
+                  </div>
+
+                  <div>
+                    <QRCode value={seed} includeMargin="true" size="400" bgColor="#EDFFFE"/>
+                  </div>
+
+                      
+                      </Paper>
+                      </div>
+                    </Grid>
+                    <Grid item xs={2}></Grid>
+
+                    
+
+                    
+
+                  </Grid>
+
+        {/**
 
         <Slide direction="right" in={true} timeout={300}>
        
@@ -257,7 +319,7 @@ if(seed!=null){
                         }
                       >
                         {" "}
-                        {/**style={{color:"#2980B9"}} */}
+                      
                         <AssignmentIcon />
                       </IconButton>
                     </Tooltip>
@@ -275,7 +337,7 @@ if(seed!=null){
             </Paper>
           </Grid>
         </Slide>
-      </Grid>
+      </Grid> */}
     </ThemeProvider>
   )};
 }

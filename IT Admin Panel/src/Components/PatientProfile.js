@@ -84,7 +84,7 @@ function PatientProfile() {
   const [specialization, setSpecialization] = React.useState();
   const [admission_date, setAdmission_date] = React.useState();
   const [gender, setGender] = React.useState();
-  const [LastReading, SetLastReading] = useState("");
+  const [LastReading, SetLastReading] = useState('');
 
   const [seed, setSeed] = React.useState();
   const [dummy, setDummy] = React.useState();
@@ -168,8 +168,10 @@ function PatientProfile() {
       //obj = await obj.json();
       //SetPatient(obj.Profile);
       //Returns Hash
+      //docLOg
+      //deviceLog
       var response = await fetch(
-        `https://thetamiddleware.herokuapp.com/getLastTx/${Address}&vitals`
+        `https://thetamiddleware.herokuapp.com/getLastTx/${Address}&deviceLog`
       );
 
       var resObj = await response.json();
@@ -182,8 +184,9 @@ function PatientProfile() {
         );
         var resObjTx = await responseTx.json();
         console.log("Transaction response=", resObjTx.response);
+        var stringData = JSON.stringify(resObjTx.response)
         if (resObjTx != false) {
-          SetLastReading(resObjTx.response);
+          SetLastReading(stringData);
           console.log("last Response", LastReading);
         }
       } else {
@@ -205,13 +208,16 @@ function PatientProfile() {
           {name}'s Profile
         </Typography>
         <Grid container spacing={0} style={{ marginTop: "2%" }}>
+          <Grid item xs="3"></Grid>
           <Slide direction="left" in={true} timeout={300}>
-            <Grid item xs="7">
+            
+            <Grid item xs="6">
               <Paper
                 elevation={5}
+                component={"div"}
                 style={{
                   marginLeft: "2%",
-                  backgroundColor:"#E5E8EA"
+                  backgroundColor:"#EDFFFE"
                   ,
                 
                   bordeStyle: "groove",
@@ -242,14 +248,14 @@ function PatientProfile() {
               >
                 <Avatar
                   className={classes.large}
-                  style={{ backgroundColor: "#2980B9" }}
+                  style={{ backgroundColor: "#018D87" }}
                 >
                   <Typography variant="h4">{id}</Typography>
                 </Avatar>
               </div>
 
               <div>
-              <Divider />
+              <Divider variant="middle"/>
               </div>
 
                 <div className={classes.div} style={{ color: "black"  }}>
@@ -298,9 +304,10 @@ function PatientProfile() {
                   </Paper>
                   </Grid>
                   </Slide>
+                  <Grid item xs="3"></Grid>
                   </Grid>
 
-                  <div style={{marginTop:"2%"}}><Divider /></div>
+                  <div style={{marginTop:"2%"}}><Divider variant="middle"/></div>
 
 
                   <Typography variant="h2" style={{ marginTop: "2%", color: "#B4B4B4" }}>
@@ -312,14 +319,15 @@ function PatientProfile() {
                   <Grid container spacing={0} style={{ marginTop: "2%"  }}>
                     <Grid item xs={2}></Grid>
                     <Grid item xs={8}>
-                      <Paper elevation={5} >
+                      <div>
+                      <Paper elevation={5} component={"div"} style={{backgroundColor:"#EDFFFE"}}>
 
                       <div
                     style={{
                       justifyContent: "center",
                       alignItems: "center",
                       display: "flex",
-                      backgroundColor: "#2980B9",
+                      backgroundColor: "#018D87",
                       color: "white",
                      
                       
@@ -331,11 +339,12 @@ function PatientProfile() {
                   </div>
 
                   <div>
-                    <QRCode value={seed} includeMargin="true" size="400" />
+                    <QRCode value={seed} includeMargin="true" size="400" bgColor="#EDFFFE"/>
                   </div>
 
                       
                       </Paper>
+                      </div>
                     </Grid>
                     <Grid item xs={2}></Grid>
 
@@ -345,12 +354,12 @@ function PatientProfile() {
 
                   </Grid>
 
-                  <div style={{marginTop:"2%"}}><Divider /></div>
+                  <div style={{marginTop:"2%"}}><Divider variant="middle"/></div>
 
                   <Grid container spacing={0} style={{ marginTop: "2%" , marginBottom:"2%" }}>
                     <Grid item xs={2}></Grid>
                     <Grid item xs={8}>
-                      <Paper elevation={5} >
+                      <Paper elevation={5}  style={{backgroundColor:"#EDFFFE"}}>
                       
 
                       <div
@@ -358,7 +367,7 @@ function PatientProfile() {
                       justifyContent: "center",
                       alignItems: "center",
                       display: "flex",
-                      backgroundColor: "#2980B9",
+                      backgroundColor: "#018D87",
                       color: "white",
                     }}
                   >
@@ -380,6 +389,7 @@ function PatientProfile() {
                         value={Address}
                         includeMargin="true"
                         size="400"
+                        bgColor="#EDFFFE"
                       />
                     </Tooltip>
                   </div>
