@@ -446,29 +446,56 @@ function Homepage(props) {
                   <TableHead style={{ backgroundColor: "#2980B9" }}>
                     <TableRow>
                       <TableCell align="center">
-                        <strong style={{ color: "white" }}>Name</strong>
-                      </TableCell>
-                      <TableCell align="center">
-                        <strong style={{ color: "white" }}>Patient ID</strong>
-                      </TableCell>
-                      <TableCell align="center">
-                        <strong style={{ color: "white" }}>Age</strong>
-                      </TableCell>
-                      <TableCell align="center">
-                        <strong style={{ color: "white" }}>Contact</strong>
-                      </TableCell>
-                      <TableCell align="center">
-                        <strong style={{ color: "white" }}>Gender</strong>
+                      <Typography variant="h6" style={{ color: "white" }}>
+                        Name
+                      </Typography>
+                        
                       </TableCell>
 
                       <TableCell align="center">
-                        <strong style={{ color: "white" }}>Admitted on</strong>
+                      <Typography variant="h6" style={{ color: "white" }}>
+                        Patient ID
+                      </Typography>
+                        
                       </TableCell>
+
                       <TableCell align="center">
-                        <strong style={{ color: "white" }}>Doctor</strong>
+                        <Typography variant="h6" style={{ color: "white" }}>
+                        Age
+                      </Typography>
                       </TableCell>
+
                       <TableCell align="center">
-                        <strong style={{ color: "white" }}>Address</strong>
+                        <Typography variant="h6" style={{ color: "white" }}>
+                        Contact
+                      </Typography>
+                      </TableCell>
+
+                      <TableCell align="center">
+                      <Typography variant="h6" style={{ color: "white" }}>
+                        Gender
+                      </Typography>
+                       
+                      </TableCell>
+
+                      <TableCell align="center">
+                      <Typography variant="h6" style={{ color: "white" }}>
+                        Admitted on
+                      </Typography>
+                        
+                      </TableCell>
+
+                      <TableCell align="center">
+                      <Typography variant="h6" style={{ color: "white" }}>
+                        Doctor
+                      </Typography>
+                        
+                      </TableCell>
+
+                      <TableCell align="center">
+                      <Typography variant="h6" style={{ color: "white" }}>
+                        Address
+                      </Typography>
                       </TableCell>
                     </TableRow>
                   </TableHead>
@@ -484,32 +511,73 @@ function Homepage(props) {
                     {patients.map((obj) => (
                       <TableRow hover key={obj.data.Profile.name} style={{backgroundColor:"white"}}>
                         <TableCell component="th" scope="row">
-                          <strong> {obj.data.Profile.name} </strong>
+                        <Typography variant="body2">
+                          {" "}
+                          {obj.data.Profile.name} 
+                        </Typography>
+                         
                         </TableCell>
+
                         <TableCell align="center">
-                          <strong>{obj.data.ID}</strong>
+                        <Typography variant="body2">
+                          {" "}
+                          {obj.data.ID}
+                        </Typography>
+                          
                         </TableCell>
+                        
                         <TableCell align="center">
-                          <strong>{obj.data.Profile.age}</strong>
+                        <Typography variant="body2">
+                          {" "}
+                          {obj.data.Profile.age}
+                        </Typography>
+                         
                         </TableCell>
+
                         <TableCell align="center">
-                          <strong> {obj.data.Profile.contact}</strong>
+                        <Typography variant="body2">
+                          {" "}
+                          {obj.data.Profile.contact}
+                        </Typography>
+                          
                         </TableCell>
+
+                        
+
                         <TableCell align="center">
-                          <strong> {obj.data.Profile.gender}</strong>
+                        <Typography variant="body2">
+                          {" "}
+                          {obj.data.Profile.gender}
+                        </Typography>
+                         
                         </TableCell>
+
                         <TableCell align="center">
-                          <strong> {obj.data.Profile.date}</strong>
+                        <Typography variant="body2">
+                          {" "}
+                          {obj.data.Profile.date}
+                        </Typography>
+                          
                         </TableCell>
+
                         <TableCell align="center">
-                          <strong> {obj.name}</strong>
+                        <Typography variant="body2">
+                          {" "}
+                          {obj.name}
+                        </Typography>
+                          
                         </TableCell>
+
                         <TableCell align="center">
+                          {" "}
+                          <Typography variant="body2">
                           {" "}
                           <EllipsisText
                               text={obj.data.ADDRESS}
                               length={"15"}
                             />
+                        </Typography>
+                          
                          
                         </TableCell>
                       </TableRow>

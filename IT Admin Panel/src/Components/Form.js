@@ -187,6 +187,8 @@ export const Form = () => {
       <Slide direction="up" in={true} timeout={800}>
         <Paper
           elevation={2}
+          variant="outlined"
+
           style={{
             width: "40%",
             alignItems: "center",
