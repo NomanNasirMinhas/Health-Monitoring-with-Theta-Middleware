@@ -642,9 +642,10 @@ async function getPrivateTransactionInfo(seed, address, hash)
 //--------------------------------------New Function------------------------------------------//
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-async function publishMAMmsg(func, seed, address) {
+async function publishMAMmsg(seed, address) {
 	console.log("MAM Stream has started.......")
-  
+  console.log("Seed is ", seed)
+  console.log("Address is ", address)
   	const Mam = require('@iota/mam');
 	const { asciiToTrytes, trytesToAscii } = require('@iota/converter');
 	const mode = 'public';
@@ -701,8 +702,8 @@ const publishAll = async () => {
                 message: msg,
                 timestamp: (new Date()).toLocaleString()
               })
-
-              await fetch("https://thetamiddleware.herokuapp.com/updateStreamRoot", {
+      try{
+               await fetch("https://thetamiddleware.herokuapp.com/updateStreamRoot", {
 		  method: "POST",
 		  body: JSON.stringify({
 		      seed: seed,
@@ -712,8 +713,14 @@ const publishAll = async () => {
 				"Content-type": "application/json; charset=UTF-8"
 			    }
 			})
-              //console.log("Root is ", root)
+              console.log("Root is ", root)
 
+        }
+        catch(e){
+        console.log(e)
+          }
+        
+         
         }
         else{
             await publish({
@@ -730,7 +737,7 @@ const publishAll = async () => {
     return root
   }
   //console.log("Check 1")
-  publishAll(func)
+  publishAll()
 
 }
 
