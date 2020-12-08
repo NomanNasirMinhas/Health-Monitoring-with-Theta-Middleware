@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
-import { makeStyles, Typography } from "@material-ui/core";
+import React, { useContext, useEffect, useState } from "react";
+import { makeStyles, Typography, CircularProgress, Divider } from "@material-ui/core";
 import Thermometer from "../../assets/icons/thermometer";
 import Oxygen from "../../assets/icons/oxygen";
 import Frequency from "../../assets/icons/frequency";
 import PropTypes from 'prop-types'
+import { UserContext } from "../../Context";
 const useStyles = makeStyles((theme) => ({
   tileTopText: {
     fontSize: "1.1rem",
@@ -53,6 +54,11 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     borderRadius: "4px",
   },
+  timeStamp: {
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
+  }
 }));
 
 const ErrorMessage = () => {
@@ -63,23 +69,34 @@ const ErrorMessage = () => {
   );
 };
 
-async function GetVitals(address) {
-  var response = await fetch(`https://thetamiddleware.herokuapp.com/getLastTx/${address}&vitals`);
-  var resObj = await response.json();
-  var responseTx = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${resObj}`);
-  var resObjTx = await responseTx.json();
-  console.log(resObjTx)
-}
-
 const VitalsCard = (props) => {
+  const [Vitals, setVitals] = useState({});
+  const { Empty, setEmpty } = useContext(UserContext);
+  const [loading, setloading] = useState(true);
+  async function GetVitals(address) {
+    var response = await fetch(`https://thetamiddleware.herokuapp.com/getLastTx/${address}&vitals`);
+    var resObj = await response.json();
+    if (resObj !== false) {
+      var responseTx = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${resObj}`);
+      var resObjTx = await responseTx.json();
+      if (resObjTx !== false) {
+        setVitals(resObjTx.response);
+        setEmpty(false);
+      }
+    }
+    else {
+      setEmpty(true);
+    }
+    setloading(false);
+  }
   useEffect(() => {
     GetVitals(props.Address)
   }, [])
-  
+
   const classes = useStyles();
   return (
     <div className={classes.cardBody}>
-      {props.Empty ? (
+      {loading ? <CircularProgress color="secondary" /> : Empty ? (
         <ErrorMessage />
       ) : (
           <>
@@ -93,7 +110,7 @@ const VitalsCard = (props) => {
                 </div>
                 <div className={classes.flexBoxBottom}>
                   <h2 className={classes.tileBottomText}>
-                    {props.Temp} <small>F</small>
+                    {Vitals.Temp} <small>F</small>
                   </h2>
                 </div>
               </div>
@@ -109,7 +126,7 @@ const VitalsCard = (props) => {
                 </div>
                 <div className={classes.flexBoxBottom}>
                   <h2 className={classes.tileBottomText}>
-                    {props.HR} <small>BPM</small>
+                    {Vitals.HR} <small>BPM</small>
                   </h2>
                 </div>
               </div>
@@ -125,10 +142,15 @@ const VitalsCard = (props) => {
                 </div>
                 <div className={classes.flexBoxBottom}>
                   <h2 className={classes.tileBottomText}>
-                    {props.SpO2}<small> SpO<small>2</small></small>
+                    {Vitals.SpO2}<small> SpO<small>2</small></small>
                   </h2>
                 </div>
               </div>
+            </div>
+            <div className={classes.timeStamp}>
+              <Typography variant="subtitle1" color="secondary">
+                Updated At <br/>{Vitals.TimeStamp}
+              </Typography>
             </div>
           </>
         )}

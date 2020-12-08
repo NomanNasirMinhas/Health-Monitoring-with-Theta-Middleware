@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from "react"
+import React, { Fragment, useState, useEffect, useContext } from "react"
 import {
     Typography,
     makeStyles,
@@ -25,11 +25,12 @@ import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import HistoryIcon from "@material-ui/icons/History";
 import TimelineIcon from "@material-ui/icons/Timeline";
 import PrescriptionCard from "../../components/PrescriptionCard/PrescriptionCard";
+import { UserContext } from "../../Context";
+
 
 const useStyles = makeStyles((theme) => ({
     body: {
         display: "flex",
-        // flexDirection: "column",
         minHeight: "1vh",
         marginTop: theme.spacing(3),
     },
@@ -56,8 +57,7 @@ const PatientProfile = (props) => {
     const [openDischarge, setOpenDischarge] = useState(false);
     const [dischargeDialogue, SetDischargeDialogue] = useState(false);
     const [visible, setVisible] = useState(false);
-    const [LastReading, SetLastReading] = useState();
-    const [Empty, SetEmpty] = useState(false);
+    const { Empty } = useContext(UserContext);
     const [patient, SetPatient] = useState();
     const seed = localStorage.getItem("seed") || "";
 
@@ -72,32 +72,7 @@ const PatientProfile = (props) => {
         );
         obj = await obj.json();
         SetPatient(obj.Profile);
-        //Returns Hash
-        var response = await fetch(
-            `https://thetamiddleware.herokuapp.com/getLastTx/${address}&vitals`
-        );
-
-        var resObj = await response.json();
-        if (resObj !== false) {
-            //Passing Hash of transaction
-            var responseTx = await fetch(
-                `https://thetamiddleware.herokuapp.com/getTx/${resObj}`
-            );
-            var resObjTx = await responseTx.json();
-            if (resObjTx !== false) {
-                SetEmpty(false);
-                SetCircularVisible(false);
-                SetLastReading(resObjTx.response);
-            }
-            else {
-                SetEmpty(true);
-                SetCircularVisible(false);
-            }
-        }
-        else {
-            SetEmpty(true);
-            SetCircularVisible(false);
-        }
+        SetCircularVisible(false);
     }
 
     useEffect(() => {
@@ -124,35 +99,32 @@ const PatientProfile = (props) => {
                 :
                 (
                     <Fragment>
-                        <Grid container justify="space-around" className={classes.body} spacing={3}>
-                            <Grid item xs={12} md={5}>
-                                <PatientCard
-                                    name={patient.name}
-                                    age={patient.age}
-                                    gender={patient.gender}
-                                    address={patient.address}
-                                    AdmissionDate={patient.date}
-                                    contact={patient.contact}
-                                />
-                            </Grid>
+                        <Grow in={true} timeout={200}>
+                            <Grid container justify="space-around" className={classes.body} >
+                                <Grid item xs={12} md={5}>
+                                    <PatientCard
+                                        name={patient.name}
+                                        age={patient.age}
+                                        gender={patient.gender}
+                                        address={patient.address}
+                                        AdmissionDate={patient.date}
+                                        contact={patient.contact}
+                                    />
+                                </Grid>
 
-                            <Grid item xs={12} md={5}>
-                                <Typography variant="h5" color="secondary">
-                                    Recent Vitals
+                                <Grid item xs={12} md={5}>
+                                    <Typography variant="h5" color="secondary">
+                                        Recent Vitals
                                 </Typography>
-
-                                <VitalsCard
-                                    Address={address}
-                                    Empty={Empty}
-                                    HR={LastReading?.HR}
-                                    Temp={LastReading?.Temp}
-                                    SpO2={LastReading?.SpO2}
-                                />
+                                    <VitalsCard
+                                        Address={address}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} md={5}>
+                                    <PrescriptionCard />
+                                </Grid>
                             </Grid>
-                            <Grid item xs={12} md={5}>
-                                <PrescriptionCard />
-                            </Grid>
-                        </Grid>
+                        </Grow>
                         <div className={classes.bottom}>
                             <Button
                                 style={{ textTransform: "capitalize" }}
