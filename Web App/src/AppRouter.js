@@ -19,15 +19,15 @@ const AppRouter = () => {
         <Router>
             <Switch>
                 <Route path="/" exact component={Login} />
+                <Route path="/forgotpassword" component={ForgotPassword} />
+                <Route path="/createaccount" component={CreateAccount} />
+                <Route path="/dashboard" component={HomePage} />
                 <UserContext.Provider value={{ Empty, setEmpty }}>
-                    <Route path="/forgotpassword" component={ForgotPassword} />
-                    <Route path="/createaccount" component={CreateAccount} />
-                    <Route path="/dashboard" component={HomePage} />
                     <Route path="/viewpatientprofile/:address" component={PatientProfile} />
                     <Route path="/yourprofile" component={YourProfile} />
                     <Route path="/livereadings/:address" component={LiveReadings} />
                     <Route path="/addpatient" component={AddPatient} />
-                    <Route path="/viewhistory/:name&:age&:address" component={ViewHistory} />
+                    <Route path="/viewhistory/:name&:gender&:admissionDate&:address" component={ViewHistory} />
                 </UserContext.Provider>
                 <Route path="*" component={() => "404 NOT FOUND"} />
             </Switch>

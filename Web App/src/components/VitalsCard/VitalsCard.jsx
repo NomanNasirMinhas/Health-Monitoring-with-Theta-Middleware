@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-import { makeStyles, Typography, CircularProgress, Divider } from "@material-ui/core";
+import { makeStyles, Typography, CircularProgress } from "@material-ui/core";
 import Thermometer from "../../assets/icons/thermometer";
 import Oxygen from "../../assets/icons/oxygen";
 import Frequency from "../../assets/icons/frequency";
-import PropTypes from 'prop-types'
+import Vital from "../../assets/icons/Vital"
 import { UserContext } from "../../Context";
 const useStyles = makeStyles((theme) => ({
   tileTopText: {
@@ -63,8 +63,9 @@ const useStyles = makeStyles((theme) => ({
 
 const ErrorMessage = () => {
   return (
-    <div style={{ fontSize: "2rem", color: "#000000" }}>
-      <Typography variant="h3">Currently, there are no readings</Typography>
+    <div style={{ fontSize: "10rem", display: "inherit" }}>
+      <Vital fontSize="inherit" htmlColor="rgb(255,255,255,0)" />
+      <Typography color="secondary" variant="subtitle1">There are no readings</Typography>
     </div>
   );
 };
@@ -95,11 +96,11 @@ const VitalsCard = (props) => {
 
   const classes = useStyles();
   return (
-    <div className={classes.cardBody}>
+    <>
       {loading ? <CircularProgress color="secondary" /> : Empty ? (
         <ErrorMessage />
       ) : (
-          <>
+          <div className={classes.cardBody}>
             <div className={classes.minicard} style={{ background: "#E8413E" }}>
               <div className={classes.flexBox}><Thermometer fontSize="inherit" /></div>
               <div className={classes.secondRow}>
@@ -149,21 +150,13 @@ const VitalsCard = (props) => {
             </div>
             <div className={classes.timeStamp}>
               <Typography variant="subtitle1" color="secondary">
-                Updated At <br/>{Vitals.TimeStamp}
+                Updated At <br />{Vitals.TimeStamp}
               </Typography>
             </div>
-          </>
+          </div>
         )}
-    </div>
+    </>
   );
 };
-
-VitalsCard.propTypes = {
-  Address: PropTypes.string,
-  Empty: PropTypes.bool.isRequired,
-  Temp: PropTypes.number.isRequired,
-  HR: PropTypes.number.isRequired,
-  SpO2: PropTypes.number.isRequired,
-}
 
 export default VitalsCard;

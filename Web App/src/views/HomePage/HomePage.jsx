@@ -8,7 +8,6 @@ import {
   TableCell,
   TableHead,
   CircularProgress,
-  Button,
   TableRow,
   Paper,
   ThemeProvider,
@@ -17,6 +16,7 @@ import {
   Grid,
   IconButton,
   Backdrop,
+  Tooltip,
 } from "@material-ui/core";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import Header from "../../components/Header/Header";
@@ -29,6 +29,7 @@ import CardFooter from "../../components/Card/CardFooter.js";
 import styles from "../../assets/jss/dashboardStyle";
 import Thermometer from "../../assets/icons/thermometer";
 import Oxygen from "../../assets/icons/oxygen";
+import Patient from "../../assets/icons/patient";
 import Frequency from "../../assets/icons/frequency";
 import { Link as link } from "react-router-dom";
 import { Bar } from "react-chartjs-2";
@@ -71,9 +72,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 const ErrorMessage = () => {
   return (
-    <div style={{ fontSize: "2rem", color: "#6af2fd" }}>
-      Currently, there are no patients under your supervision
-    </div>
+    <>
+      <Grid container justify="space-evenly">
+        <Grid item md={3}>
+          <Patient style={{fontSize: "20.5em"}}/>
+        </Grid>
+      </Grid>
+      <Grid container justify="space-evenly">
+        <Grid item md={6}>
+          <Typography align="center" color="secondary" variant="h5">
+            Currently, there are no patients under your supervision.
+        </Typography>
+        </Grid>
+      </Grid>
+    </>
   );
 };
 
@@ -401,7 +413,7 @@ export default function HomePage() {
                     </Grid>
                     <Slide direction="up" in={true} timeout={300}>
                       <Grid item xs={12}>
-                        <TableContainer className={classes.fonts} component={Paper}>
+                        <TableContainer>
                           <Table className={classes.table}>
                             <TableHead>
                               <TableRow>
@@ -454,14 +466,16 @@ export default function HomePage() {
                                     {row.Profile.contact}
                                   </StyledTableCell>
                                   <StyledTableCell align="center">
-                                    <IconButton
-                                      component={link}
-                                      color="secondary"
-                                      to={`/viewpatientprofile/${row.ADDRESS}`}
+                                    <Tooltip arrow title="View Patient's Profile">
+                                      <IconButton
+                                        component={link}
+                                        color="secondary"
+                                        to={`/viewpatientprofile/${row.ADDRESS}`}
 
-                                    >
-                                      <VisibilityIcon />
-                                    </IconButton>
+                                      >
+                                        <VisibilityIcon />
+                                      </IconButton>
+                                    </Tooltip>
                                   </StyledTableCell>
                                 </TableRow>
                               ))}

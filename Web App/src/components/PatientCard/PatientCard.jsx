@@ -51,31 +51,48 @@ const PatientCard = (props) => {
                 <Avatar className={classes.large}>{Initials(props.name)}</Avatar>
             </div>
             <div>
-            <Divider variant="fullWidth" light orientation="vertical"/>
+                <Divider variant="fullWidth" light orientation="vertical" />
             </div>
             <div className={classes.content}>
-                <p className={classes.p}>Name</p>
-                <h4>{props.name}</h4>
+                {props.name ? (
+                    <>
+                        <p className={classes.p}>Name</p>
+                        <h4>{props.name}</h4>
+                    </>)
+                    : ""}
+                {props.age ? (
+                    <>
+                        <p className={classes.p}>Age</p>
+                        <h4>{props.age}</h4>
+                    </>)
+                    : ""}
+                {props.gender ? (
+                    <>
+                        <p className={classes.p}>Gender</p>
+                        <h4>{props.gender}</h4>
+                    </>)
+                    : ""}
 
+                {props.address ? (
+                    <>
+                        <p className={classes.p}>Address</p>
+                        <h4>{props.address}</h4>
+                    </>)
+                    : ""}
 
-                <p className={classes.p}>Age</p>
-                <h4>{props.age}</h4>
+                {props.AdmissionDate ? (
+                    <>
+                        <p className={classes.p}>Admission Date</p>
+                        <h4>{props.AdmissionDate}</h4>
+                    </>)
+                    : ""}
 
-
-                <p className={classes.p}>Gender</p>
-                <h4>{props.gender}</h4>
-
-
-                <p className={classes.p}>Address</p>
-                <h4>{props.address}</h4>
-
-
-                <p className={classes.p}>Admission Date</p>
-                <h4>{props.AdmissionDate}</h4>
-
-
-                <p className={classes.p}>Contact</p>
-                <h4>{props.contact}</h4>
+                {props.contact ? (
+                    <>
+                        <p className={classes.p}>Contact</p>
+                        <h4>{props.contact}</h4>
+                    </>)
+                    : ""}
             </div>
 
         </Box>

@@ -5,7 +5,6 @@ import {
     Grid,
     Button,
     Dialog,
-    Slide,
     Backdrop,
     CircularProgress,
     DialogTitle,
@@ -33,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         minHeight: "1vh",
         marginTop: theme.spacing(3),
+        marginBottom: theme.spacing(9),
     },
     bottom: {
         position: "fixed",
@@ -115,13 +115,18 @@ const PatientProfile = (props) => {
                                 <Grid item xs={12} md={5}>
                                     <Typography variant="h5" color="secondary">
                                         Recent Vitals
-                                </Typography>
+                                    </Typography>
                                     <VitalsCard
                                         Address={address}
                                     />
                                 </Grid>
                                 <Grid item xs={12} md={5}>
-                                    <PrescriptionCard />
+                                    <Typography gutterBottom variant="h5" color="secondary">
+                                        Prescription
+                            </Typography>
+                                    <PrescriptionCard
+                                        Address={address}
+                                    />
                                 </Grid>
                             </Grid>
                         </Grow>
@@ -147,7 +152,7 @@ const PatientProfile = (props) => {
                             <Button
                                 style={{ textTransform: "capitalize" }}
                                 component={Link}
-                                to={`/viewhistory/${patient.name}&${patient.age}&${patient.address}`}
+                                to={`/viewhistory/${patient.name}&${patient.gender}&${patient.date}&${address}`}
                                 size="large"
                                 disabled={Empty}
                                 startIcon={<HistoryIcon />}

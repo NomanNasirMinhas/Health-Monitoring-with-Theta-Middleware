@@ -8,9 +8,11 @@ import {
     TableCell,
     TableContainer,
     TableHead,
+    TablePagination,
     TableRow,
+    Grow,
     Paper,
-    Typography,
+    Backdrop,
     Grid,
     ThemeProvider,
     Slide,
@@ -19,10 +21,16 @@ import {
     DialogTitle,
     DialogContent,
     DialogActions,
-    Button
+    Button,
+    Typography,
+    IconButton,
+    Hidden
 } from '@material-ui/core';
-
+import Thermometer from "../../assets/icons/thermometer";
+import Oxygen from "../../assets/icons/oxygen";
+import Frequency from "../../assets/icons/frequency";
 import Header from "../../components/Header/Header"
+import HistoryIcon from '@material-ui/icons/History';
 import theme from "../../assets/theme/theme"
 import DateFnsUtils from '@date-io/date-fns';
 import moment from "moment";
@@ -30,26 +38,33 @@ import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
+import PatientCard from '../../components/PatientCard/PatientCard';
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
         backgroundColor: theme.palette.primary.main,
         color: theme.palette.common.white,
+        fontFamily: "Roboto Condensed",
+        borderColor: "rgba(255, 255, 255, 0.12)",
+        fontWeight: "bold",
     },
     body: {
+        backgroundColor: "rgba(60, 60, 70, 1)",
+        borderColor: "rgba(255, 255, 255, 0.12)",
+        opacity: "100%",
+        color: "rgba(255, 255, 255, 1)",
         fontSize: 14,
+        fontFamily: "Roboto Condensed",
     },
 }))(TableCell);
 
-const StyledTableRow = withStyles((theme) => ({
-    root: {
-        '&:nth-of-type(odd)': {
-            backgroundColor: "#99c1e5",
-        },
-    },
-}))(TableRow);
-
 const useStyles = makeStyles((theme) => ({
+    pagination: {
+        background: "darkgray"
+    },
+    container: {
+        maxHeight: 440,
+    },
     content: {
         padding: theme.spacing(3)
     },
@@ -59,24 +74,33 @@ const useStyles = makeStyles((theme) => ({
     labels: {
         padding: theme.spacing(3)
     },
-    CircularProgress: {
-        position: "absolute",
-        top: "45%",
-        left: "46%"
-    }
+    historyIcon: {
+        fontSize: "13.4rem",
+        color: "white",
+    },
 }));
 
 export default function ViewHistory({ history }) {
     const classes = useStyles();
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [circularVisible, SetCircularVisible] = React.useState(true)
     const [Empty, SetEmpty] = React.useState(false)
-    const { name, age, address } = useParams();
+    const { name, gender, admissionDate, address } = useParams();
     const [historyDate, setHistoryDate] = React.useState(true);
     const [array, setArray] = React.useState();
     let historyArray = [];
     const [date, setDate] = useState(moment());
     const [inputValue, setInputValue] = useState(moment().format("DD-MM-YYYY"));
 
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(+event.target.value);
+        setPage(0);
+    };
     const onDateChange = (date, value) => {
         setDate(value);
         setInputValue(value);
@@ -87,7 +111,7 @@ export default function ViewHistory({ history }) {
         try {
             var response = await fetch(`https://thetamiddleware.herokuapp.com/getAllHash/${address}&${date}&vitals`);
         } catch (error) {
-           alert(error)
+            alert(error)
         }
         var resObj = await response.json();
         if (!resObj)
@@ -97,9 +121,13 @@ export default function ViewHistory({ history }) {
         for (var i = 0; i < resObj.length; i++) {
             var responseTx = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${resObj[i].toString()}`);
             var resObjTx = await responseTx.json();
-            var parsed = JSON.parse(resObjTx)
-            historyArray.push(parsed)
+            if (resObjTx.response !== false) {
+                console.log(resObjTx.response)
+                historyArray.push(resObjTx.response)
+            }
         }
+        if (historyArray.length === 0)
+            SetEmpty(true)
         setArray(historyArray)
         SetCircularVisible(false)
     }
@@ -162,78 +190,77 @@ export default function ViewHistory({ history }) {
                     </DialogActions>
                 </DialogContent>
             </Dialog>
-            {circularVisible ? <CircularProgress className={classes.CircularProgress} color="secondary" /> :
+            {circularVisible ? <Backdrop open={circularVisible}><CircularProgress color="secondary" /></Backdrop> :
                 <div className={classes.content}>
-                    <Grid container spacing={3}>
-                        <Grid item xs={12}>
-                            <Slide direction="down" in={true} timeout={300}>
-                                <Typography
-                                    variant="h2"
-                                    color="secondary">
-                                    Patient's Profile
-                        </Typography>
-                            </Slide>
-                        </Grid>
-                    </Grid>
-                    <Slide direction="down" in={true} timeout={300}>
-                        <Grid container className={classes.labels}>
-                            <Grid item>
-                                <Typography variant="h4" className={classes.headerText} color="secondary">
-                                    Patient's Name:
-                            </Typography>
+                    <Slide in={true}>
+                        <Grid container justify="space-between">
+                            <Grid item xs={12} md={5}>
+                                <PatientCard
+                                    name={name}
+                                    gender={gender}
+                                    AdmissionDate={admissionDate}
+                                />
                             </Grid>
-                            <Grid item>
-                                <Typography variant="h4" >
-                                    {name}
-                                </Typography>
-                            </Grid>
+                            <Hidden smDown>
+                                <Grid item md={5} style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                    <div>
+                                        <HistoryIcon className={classes.historyIcon} />
+                                    </div>
+                                </Grid>
+                            </Hidden>
                         </Grid>
                     </Slide>
+                    {Empty ? "NIL" :
+                        <Grow in={true}>
 
-                    <Slide direction="down" in={true} timeout={300}>
-                        <Grid container className={classes.labels}>
-                            <Grid item>
-                                <Typography variant="h4" className={classes.headerText} color="secondary">
-                                    Patient's Age:
+                            <Grid container>
+                                <Grid item xs={12}>
+                                    <Typography gutterBottom variant="h5" color="secondary">
+                                        History Log
                                 </Typography>
+                                    <Paper>
+                                        <TableContainer className={classes.container}>
+                                            <Table stickyHeader aria-label="sticky table" className={classes.table}>
+                                                <TableHead>
+                                                    <TableRow>
+                                                        <StyledTableCell align="center">Timestamp</StyledTableCell>
+                                                        <StyledTableCell align="center"><IconButton disabled><Frequency className={classes.wrapIcon} /></IconButton>Heart Rate(BPM)</StyledTableCell>
+                                                        <StyledTableCell align="center"><IconButton disabled><Thermometer className={classes.wrapIcon} /></IconButton>Body Temp (F)</StyledTableCell>
+                                                        <StyledTableCell align="center"><IconButton disabled><Oxygen className={classes.wrapIcon} /></IconButton>SpO<small>2</small></StyledTableCell>
+                                                    </TableRow>
+                                                </TableHead>
+                                                <TableBody>
+                                                    {array?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                                                        return (
+                                                            <TableRow hover role="checkbox" tabIndex={-1} key={row.TimeStamp}>
+                                                                <StyledTableCell align="center" component="th" scope="row">
+                                                                    {row.TimeStamp}
+                                                                </StyledTableCell>
+                                                                <StyledTableCell align="center">{row.HR}</StyledTableCell>
+                                                                <StyledTableCell align="center">{row.Temp}</StyledTableCell>
+                                                                <StyledTableCell align="center">{row.SpO2}</StyledTableCell>
+                                                            </TableRow>
+                                                        );
+                                                    })}
+                                                </TableBody>
+                                            </Table>
+                                        </TableContainer>
+                                        <TablePagination
+                                            className={classes.pagination}
+                                            rowsPerPageOptions={[10, 25, 100]}
+                                            component="div"
+                                            count={array?.length}
+                                            rowsPerPage={rowsPerPage}
+                                            page={page}
+                                            onChangePage={handleChangePage}
+                                            onChangeRowsPerPage={handleChangeRowsPerPage}
+                                        />
+                                    </Paper>
+                                </Grid>
                             </Grid>
+                        </Grow>
 
-                            <Grid item>
-                                <Typography variant="h4">
-                                    {age}
-                                </Typography>
-                            </Grid>
-                        </Grid>
-                    </Slide>
-                    {Empty ? "" :
-                        <Slide direction="left" in={true} timeout={500}>
-                            <TableContainer component={Paper}>
-                                <Table className={classes.table}>
-                                    <TableHead>
-                                        <TableRow>
-                                            <StyledTableCell align="center">Timestamp</StyledTableCell>
-                                            <StyledTableCell align="center">Heart Rate(BPM)</StyledTableCell>
-                                            <StyledTableCell align="center">Body Temp (F)</StyledTableCell>
-                                            <StyledTableCell align="center">Systolic BP</StyledTableCell>
-                                            <StyledTableCell align="center">Diastolic BP</StyledTableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {array?.map((row) => (
-                                            <StyledTableRow key={row.TimeStamp}>
-                                                <StyledTableCell align="center" component="th" scope="row">
-                                                    {row.TimeStamp}
-                                                </StyledTableCell>
-                                                <StyledTableCell align="center">{row.HR}</StyledTableCell>
-                                                <StyledTableCell align="center">{row.Temp}</StyledTableCell>
-                                                <StyledTableCell align="center">{row.BP.systolic}</StyledTableCell>
-                                                <StyledTableCell align="center">{row.BP.diastolic}</StyledTableCell>
-                                            </StyledTableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
-                        </Slide>}
+                    }
                 </div>}
         </ThemeProvider>
     );
