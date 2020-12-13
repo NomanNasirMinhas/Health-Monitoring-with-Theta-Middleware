@@ -13,6 +13,13 @@ import {
     DialogActions,
     ThemeProvider,
     Grow,
+    Hidden,
+    IconButton,
+    Menu,
+    MenuItem,
+    Divider,
+    ListItemIcon,
+    ListItemText,
 } from "@material-ui/core";
 import Header from "../../components/Header/Header";
 import theme from "../../assets/theme/theme";
@@ -25,6 +32,9 @@ import HistoryIcon from "@material-ui/icons/History";
 import TimelineIcon from "@material-ui/icons/Timeline";
 import PrescriptionCard from "../../components/PrescriptionCard/PrescriptionCard";
 import { UserContext } from "../../Context";
+import ListOutlinedIcon from '@material-ui/icons/ListOutlined';
+import AppointmentCard from "../../components/AppointmentCard/AppointmentCard";
+import { AccountCircle } from "@material-ui/icons";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -60,6 +70,17 @@ const PatientProfile = (props) => {
     const { Empty } = useContext(UserContext);
     const [patient, SetPatient] = useState();
     const seed = localStorage.getItem("seed") || "";
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+
+    const handleMenu = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
     const redirect = () => {
         SetDischargeDialogue(false);
@@ -101,6 +122,71 @@ const PatientProfile = (props) => {
                     <Fragment>
                         <Grow in={true} timeout={200}>
                             <Grid container justify="space-around" className={classes.body} >
+                                <Grid item xs={12}>
+                                    <Hidden mdUp>
+                                        <div>
+                                            <IconButton
+                                                onClick={handleMenu}
+                                                color="secondary"
+                                            >
+                                                <ListOutlinedIcon />
+                                            </IconButton>
+
+                                            <Menu
+                                                id="menu-appbar"
+                                                anchorEl={anchorEl}
+                                                anchorOrigin={{
+                                                    vertical: 'top',
+                                                    horizontal: 'right',
+                                                }}
+                                                keepMounted
+                                                transformOrigin={{
+                                                    vertical: 'top',
+                                                    horizontal: 'right',
+                                                }}
+                                                open={open}
+                                                onClose={handleClose}
+                                            >
+                                                <MenuItem onClick={() => {
+                                                    setOpenDischarge(true);
+                                                }}>
+                                                    <ListItemIcon>
+                                                        <AssignmentTurnedInIcon />
+                                                    </ListItemIcon>
+                                                    <ListItemText>
+                                                        Discharge Patient
+                                                    </ListItemText>
+                                                </MenuItem>
+                                                <MenuItem >
+                                                    <ListItemIcon>
+                                                        <AssessmentIcon />
+                                                    </ListItemIcon>
+                                                    <ListItemText>
+                                                        Generate Report
+                                                </ListItemText>
+                                                </MenuItem>
+                                                <MenuItem component={Link}
+                                                    to={`/viewhistory/${patient.name}&${patient.gender}&${patient.date}&${address}`}>
+                                                    <ListItemIcon>
+                                                        <HistoryIcon />
+                                                    </ListItemIcon>
+                                                    <ListItemText>
+                                                        View History
+                                                    </ListItemText>
+                                                </MenuItem>
+                                                <Divider />
+                                                <MenuItem to={`/livereadings/${address}`}>
+                                                    <ListItemIcon>
+                                                        <TimelineIcon />
+                                                    </ListItemIcon>
+                                                    <ListItemText>
+                                                        Live Readings
+                                                </ListItemText>
+                                                </MenuItem>
+                                            </Menu>
+                                        </div>
+                                    </Hidden>
+                                </Grid>
                                 <Grid item xs={12} md={5}>
                                     <PatientCard
                                         name={patient.name}
@@ -113,6 +199,14 @@ const PatientProfile = (props) => {
                                 </Grid>
 
                                 <Grid item xs={12} md={5}>
+                                    <Typography gutterBottom variant="h5" color="secondary">
+                                        Prescription
+                                </Typography>
+                                    <PrescriptionCard
+                                        Address={address}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} md={5}>
                                     <Typography variant="h5" color="secondary">
                                         Recent Vitals
                                     </Typography>
@@ -122,54 +216,54 @@ const PatientProfile = (props) => {
                                 </Grid>
                                 <Grid item xs={12} md={5}>
                                     <Typography gutterBottom variant="h5" color="secondary">
-                                        Prescription
-                            </Typography>
-                                    <PrescriptionCard
-                                        Address={address}
-                                    />
+                                        Appointments
+                                    </Typography>
+                                    <AppointmentCard />
                                 </Grid>
                             </Grid>
                         </Grow>
-                        <div className={classes.bottom}>
-                            <Button
-                                style={{ textTransform: "capitalize" }}
-                                size="large"
-                                onClick={() => {
-                                    setOpenDischarge(true);
-                                }}
-                                startIcon={<AssignmentTurnedInIcon />}
-                            >
-                                Discharge Patient
+                        <Hidden smDown>
+                            <div className={classes.bottom}>
+                                <Button
+                                    style={{ textTransform: "capitalize" }}
+                                    size="large"
+                                    onClick={() => {
+                                        setOpenDischarge(true);
+                                    }}
+                                    startIcon={<AssignmentTurnedInIcon />}
+                                >
+                                    Discharge Patient
                                     </Button>
-                            <Button
-                                style={{ textTransform: "capitalize" }}
-                                size="large"
-                                disabled={Empty}
-                                startIcon={<AssessmentIcon />}
-                            >
-                                Generate Report
+                                <Button
+                                    style={{ textTransform: "capitalize" }}
+                                    size="large"
+                                    disabled={Empty}
+                                    startIcon={<AssessmentIcon />}
+                                >
+                                    Generate Report
                                     </Button>
-                            <Button
-                                style={{ textTransform: "capitalize" }}
-                                component={Link}
-                                to={`/viewhistory/${patient.name}&${patient.gender}&${patient.date}&${address}`}
-                                size="large"
-                                disabled={Empty}
-                                startIcon={<HistoryIcon />}
-                            >
-                                View History
+                                <Button
+                                    style={{ textTransform: "capitalize" }}
+                                    component={Link}
+                                    to={`/viewhistory/${patient.name}&${patient.gender}&${patient.date}&${address}`}
+                                    size="large"
+                                    disabled={Empty}
+                                    startIcon={<HistoryIcon />}
+                                >
+                                    View History
                                     </Button>
-                            <Button
-                                style={{ textTransform: "capitalize" }}
-                                component={Link}
-                                size="large"
-                                disabled={Empty}
-                                to={`/livereadings/${address}`}
-                                startIcon={<TimelineIcon />}
-                            >
-                                Live Readings
+                                <Button
+                                    style={{ textTransform: "capitalize" }}
+                                    component={Link}
+                                    size="large"
+                                    disabled={Empty}
+                                    to={`/livereadings/${address}`}
+                                    startIcon={<TimelineIcon />}
+                                >
+                                    Live Readings
                                     </Button>
-                        </div>
+                            </div>
+                        </Hidden>
                         <Dialog
                             fullWidth
                             maxWidth="sm"

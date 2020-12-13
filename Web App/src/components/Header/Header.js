@@ -6,7 +6,8 @@ import {
   IconButton,
   Menu,
   Typography,
-  ThemeProvider
+  ThemeProvider,
+  Hidden
 } from '@material-ui/core';
 import {
   Divider,
@@ -14,6 +15,7 @@ import {
   MenuItem,
   SvgIcon,
 } from "@material-ui/core"
+import MenuOpenIcon from '@material-ui/icons/MenuOpen';
 import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
 import AccountCircle from "@material-ui/icons/AccountCircle"
 import { withRouter, Link } from 'react-router-dom';
@@ -118,24 +120,59 @@ const Header = props => {
               {date()}, Doctor
           </Typography>
 
+            <Hidden smDown>
+              <div className={classes.buttons}>
+                <Button
+                  component={Link}
+                  variant="outlined"
+                  color="inherit"
+                  to="/dashboard">
+                  Homepage
+                </Button>
 
-            <div className={classes.buttons}>
-              <Button
-                component={Link}
-                variant="outlined"
-                color="inherit"
-                to="/dashboard">
-                Homepage
-            </Button>
+                <Button
+                  component={Link}
+                  variant="outlined"
+                  color="inherit"
+                  to="/addpatient">
+                  Add Patient
+                </Button>
+              </div>
+            </Hidden>
 
-              <Button
-                component={Link}
-                variant="outlined"
-                color="inherit"
-                to="/addpatient">
-                Add Patient
-            </Button>
-            </div>
+            <Hidden mdUp>
+              <div>
+                <IconButton
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleMenu}
+                  color="inherit"
+                >
+                  <MenuOpenIcon />
+                </IconButton>
+
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={open}
+                  onClose={handleClose}
+                >
+                  <MenuItem component={Link} to="/dashboard">Homepage</MenuItem>
+                  <Divider />
+                  <MenuItem component={Link} to="/addpatient">Add Patient</MenuItem>
+                </Menu>
+              </div>
+            </Hidden>
             <div>
               <IconButton
                 aria-label="account of current user"
@@ -162,7 +199,7 @@ const Header = props => {
                 open={open}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleProfile}>Your Profile</MenuItem>
+                <MenuItem onClick={handleProfile}>View My Profile</MenuItem>
                 <Divider />
                 <MenuItem onClick={logOut}>Log Out</MenuItem>
               </Menu>

@@ -413,8 +413,8 @@ export default function HomePage() {
                     </Grid>
                     <Slide direction="up" in={true} timeout={300}>
                       <Grid item xs={12}>
-                        <TableContainer>
-                          <Table className={classes.table}>
+                        <TableContainer style={{borderRadius: "6px", maxHeight:"300px"}}>
+                          <Table stickyHeader className={classes.table}>
                             <TableHead>
                               <TableRow>
                                 <StyledTableCell align="center">

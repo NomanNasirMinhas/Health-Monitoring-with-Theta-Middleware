@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
         display: "grid",
         minHeight: "25vh",
         background: "#3C3C46",
-        borderRadius: "3px",
+        borderRadius: "31px",
         color: "lightcyan"
     },
     circle: {
@@ -40,7 +40,8 @@ const useStyles = makeStyles((theme) => ({
     prescriptionBox: {
         display: "flex",
         alignItems: "center",
-        justifyContent: "space-evenly"
+        justifyContent: "space-evenly",
+        padding: "1em"
     },
     errorMessage: {
         display: "flex"
@@ -111,7 +112,7 @@ const PrescriptionCard = (props) => {
         return (
             <div className={classes.errorMessage}>
                 <div style={{ margin: "auto" }}>
-                    <NoDrugs color="secondary" style={{ fontSize: "8em" }} />
+                    <NoDrugs color="secondary" style={{ paddingTop: "15px", fontSize: "8em" }} />
                 </div>
                 <div style={{ margin: "auto" }}>
                     <Typography variant="h5" color="inherit">
@@ -125,6 +126,7 @@ const PrescriptionCard = (props) => {
     async function getPrescription() {
         setLoading(true);
         let x;
+        setprescriptionArray([]);
         var response = await fetch(`https://thetamiddleware.herokuapp.com/getAllHash/${props.Address}&0&prescription`);
         response = await response.json();
         if (response !== false) {
@@ -132,7 +134,8 @@ const PrescriptionCard = (props) => {
                 setEmpty(false);
                 x = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${response[i]}`);
                 x = await x.json();
-                setprescriptionArray(array => [...array, x]);
+                if (x.response !== false)
+                    setprescriptionArray(array => [...array, x]);
             }
         }
         setLoading(false);
@@ -147,7 +150,6 @@ const PrescriptionCard = (props) => {
 
     useEffect(() => {
         getPrescription();
-        console.log(prescriptionArray);
     }, [])
 
     return (
@@ -158,8 +160,8 @@ const PrescriptionCard = (props) => {
                         <div style={{ display: "grid" }}>
                             <div>
                                 {Empty ? (<ErrorMessage />) :
-                                    <TableContainer>
-                                        <Table className={classes.table}>
+                                    <TableContainer style={{ borderRadius: "3px", maxHeight: "30vh" }}>
+                                        <Table stickyHeader className={classes.table}>
                                             <TableHead>
                                                 <TableRow>
                                                     <StyledTableCell align="center">
@@ -223,7 +225,7 @@ const PrescriptionCard = (props) => {
                                         );
                                         console.log(await response.json());
                                         actions.setSubmitting(false);
-                                        actions.handleReset();
+                                        getPrescription();
                                         console.log("Done");
                                     }}
                                 >
@@ -237,47 +239,46 @@ const PrescriptionCard = (props) => {
                                         isSubmitting,
                                         handleReset,
                                     }) => (
-                                            <Form style={{ display: "contents" }} onSubmit={handleSubmit}>
-                                                <CssTextField
-                                                    disabled={isSubmitting}
-                                                    autoComplete="off"
-                                                    variant="outlined"
-                                                    id="Name"
-                                                    label="Name"
-                                                    value={values.Name}
-                                                    onChange={handleChange}
-                                                    onBlur={handleBlur}
-                                                    helperText={touched.Name ? errors.Name : ""}
-                                                    error={touched.Name && Boolean(errors.Name)}
-                                                />
-                                                <CssTextField
-                                                    disabled={isSubmitting}
-                                                    autoComplete="off"
-                                                    variant="outlined"
-                                                    id="Details"
-                                                    label="Details"
-                                                    value={values.Details}
-                                                    onChange={handleChange}
-                                                    onBlur={handleBlur}
-                                                    helperText={touched.Details ? errors.Details : ""}
-                                                    error={touched.Details && Boolean(errors.Details)}
-                                                />
-                                                <IconButton
-                                                    type="submit"
-                                                    disabled={isSubmitting}
-                                                >
-                                                    {isSubmitting ? (
-                                                        <CircularProgress color="secondary" />
-                                                    ) : (
-                                                            <Tooltip arrow title="Add Prescription">
-                                                                <IconButton color="secondary">
-                                                                    <AddIcon />
-                                                                </IconButton>
-                                                            </Tooltip>
-                                                        )}
-                                                </IconButton>
-                                            </Form>
-                                        )}
+                                        <Form style={{ display: "contents" }} onSubmit={handleSubmit}>
+                                            <CssTextField
+                                                disabled={isSubmitting}
+                                                autoComplete="off"
+                                                variant="outlined"
+                                                id="Name"
+                                                label="Name"
+                                                value={values.Name}
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                helperText={touched.Name ? errors.Name : ""}
+                                                error={touched.Name && Boolean(errors.Name)}
+                                            />
+                                            <CssTextField
+                                                disabled={isSubmitting}
+                                                autoComplete="off"
+                                                variant="outlined"
+                                                id="Details"
+                                                label="Details"
+                                                value={values.Details}
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                helperText={touched.Details ? errors.Details : ""}
+                                                error={touched.Details && Boolean(errors.Details)}
+                                            />
+                                            <IconButton
+                                                type="submit"
+                                                color="secondary"
+                                                disabled={isSubmitting}
+                                            >
+                                                {isSubmitting ? (
+                                                    <CircularProgress color="secondary" />
+                                                ) : (
+                                                        <Tooltip arrow title="Add Prescription">
+                                                            <AddIcon />
+                                                        </Tooltip>
+                                                    )}
+                                            </IconButton>
+                                        </Form>
+                                    )}
                                 </Formik>
                             </div>
                         </div>
