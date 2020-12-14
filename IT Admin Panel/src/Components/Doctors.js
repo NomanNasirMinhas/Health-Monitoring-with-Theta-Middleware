@@ -511,11 +511,11 @@ function Homepage(props) {
                   )*/}
 
                     {patients.map((obj) => (
-                      <TableRow hover key={obj.data.Profile.name} style={{backgroundColor:"white"}}>
+                      <TableRow hover key={obj} style={{backgroundColor:"white"}}>
                         <TableCell component="th" scope="row">
                         <Typography variant="body2">
                           {" "}
-                          {obj.data.Profile.name} 
+                          {obj.data.Profile==null ? "Empty" : obj.data.Profile.name} 
                         </Typography>
                          
                         </TableCell>
@@ -531,7 +531,7 @@ function Homepage(props) {
                         <TableCell align="center">
                         <Typography variant="body2">
                           {" "}
-                          {obj.data.Profile.age}
+                          {obj.data.Profile==null ? "Empty" : obj.data.Profile.age}
                         </Typography>
                          
                         </TableCell>
@@ -539,7 +539,7 @@ function Homepage(props) {
                         <TableCell align="center">
                         <Typography variant="body2">
                           {" "}
-                          {obj.data.Profile.contact}
+                          {obj.data.Profile== null ? "Empty" : obj.data.Profile.contact}
                         </Typography>
                           
                         </TableCell>
@@ -549,7 +549,7 @@ function Homepage(props) {
                         <TableCell align="center">
                         <Typography variant="body2">
                           {" "}
-                          {obj.data.Profile.gender}
+                          {obj.data.Profile==null ? "Empty" : obj.data.Profile.gender}
                         </Typography>
                          
                         </TableCell>
@@ -557,7 +557,7 @@ function Homepage(props) {
                         <TableCell align="center">
                         <Typography variant="body2">
                           {" "}
-                          {obj.data.Profile.date}
+                          {obj.data.Profile==null ? "Empty" : obj.data.Profile.date}
                         </Typography>
                           
                         </TableCell>
@@ -595,7 +595,7 @@ function Homepage(props) {
                         { label: "All", value: -1 },
                       ]}
                       colSpan={12}
-                      count={seeds.length}
+                      count={patients.length}
                       rowsPerPage={rowsPerPage}
                       page={page}
                       SelectProps={{

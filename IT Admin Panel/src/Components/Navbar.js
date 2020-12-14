@@ -43,7 +43,12 @@ const useStyles = makeStyles((theme) => ({
     '& > *': {
       margin: theme.spacing(1),
       padding: theme.spacing(1),
-      right:0
+      right:0,
+
+      "&:hover": {
+        backgroundColor: "#2980B9", //#3498DB,
+        padding: "10px"
+      },
     },
   },
   title: {

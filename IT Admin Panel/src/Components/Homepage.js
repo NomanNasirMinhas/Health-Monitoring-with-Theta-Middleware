@@ -98,8 +98,10 @@ const useStylesTable = makeStyles({
   hover: {
     backgroundColor: "#1B4F72", //   #2980B9 blue   dark#2471A3  button #1B4F72
     color: "white",
+   
     "&:hover": {
       backgroundColor: "#2980B9", //#3498DB
+      padding: "10px"
     },
   },
 });
@@ -650,6 +652,7 @@ function Doctors(props) {
         spacing={0}
         style={{ alignSelf: "bottom" }}
         justify="space-between"
+        display="bottom"
       >
         {/**  <Grid item xs={1}></Grid> */}
         <Grid item xs={1}></Grid>

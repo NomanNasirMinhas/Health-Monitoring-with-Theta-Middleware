@@ -85,16 +85,19 @@ const useStylesTable = makeStyles({
     backgroundColor: "#1B4F72", //   #2980B9 blue   dark#2471A3  button #1B4F72
     color: "white",
     "&:hover": {
-      backgroundColor: "#2980B9",
-    },
+        padding: "10px",
+        backgroundColor: "#2980B9", //#3498DB
+      },
+   
   },
 });
 
 const useStyles1 = makeStyles((theme) => ({
   root: {
-    flexGrow: 1,
-  },
-  menuButton: {
+    flexShrink: 0,
+    marginLeft: theme.spacing(2.5),
+  }, 
+   menuButton: {
     marginRight: theme.spacing(2),
   },
   title: {
@@ -127,8 +130,89 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/* TABLE PAGINATION */
+
+function TablePaginationActions(props) {
+  const classes = useStyles1();
+  const theme = useTheme();
+  const { count, page, rowsPerPage, onChangePage } = props;
+
+  const handleFirstPageButtonClick = (event) => {
+    onChangePage(event, 0);
+  };
+
+  const handleBackButtonClick = (event) => {
+    onChangePage(event, page - 1);
+  };
+
+  const handleNextButtonClick = (event) => {
+    onChangePage(event, page + 1);
+  };
+
+  const handleLastPageButtonClick = (event) => {
+    onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
+  };
+
+  return (
+    <ThemeProvider theme={theme}>
+      <div className={classes.root}>
+        <IconButton
+          onClick={handleFirstPageButtonClick}
+          disabled={page === 0}
+          aria-label="first page"
+        >
+          {theme.direction === "rtl" ? <LastPageIcon /> : <FirstPageIcon />}
+        </IconButton>
+        <IconButton
+          onClick={handleBackButtonClick}
+          disabled={page === 0}
+          aria-label="previous page"
+        >
+          {theme.direction === "rtl" ? (
+            <KeyboardArrowRight />
+          ) : (
+            <KeyboardArrowLeft />
+          )}
+        </IconButton>
+        <IconButton
+          onClick={handleNextButtonClick}
+          disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+          aria-label="next page"
+        >
+          {theme.direction === "rtl" ? (
+            <KeyboardArrowLeft />
+          ) : (
+            <KeyboardArrowRight />
+          )}
+        </IconButton>
+        <IconButton
+          onClick={handleLastPageButtonClick}
+          disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+          aria-label="last page"
+        >
+          {theme.direction === "rtl" ? <FirstPageIcon /> : <LastPageIcon />}
+        </IconButton>
+      </div>{" "}
+    </ThemeProvider>
+  );
+}
+TablePaginationActions.propTypes = {
+  count: PropTypes.number.isRequired,
+  onChangePage: PropTypes.func.isRequired,
+  page: PropTypes.number.isRequired,
+  rowsPerPage: PropTypes.number.isRequired,
+};
+
+
+
+
+
 function ViewPatient(props) {
   const classesTable = useStylesTable();
+
+
+  
+
   var { SEED } = useParams();
   console.log(SEED);
   const [addresses, setAddresses] = useState(null);
@@ -148,7 +232,7 @@ function ViewPatient(props) {
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+    setRowsPerPage(parseInt(event.target.value,10));
     setPage(0);
   };
 
@@ -175,11 +259,11 @@ function ViewPatient(props) {
   }, []);
   console.log("ADDRESS", addresses);
 
-  async function getInfo(address, name) {
-    
+  async function getInfo(address) {
+  
     
     console.log("Address to find", address);
-    setName(name);
+    //setName(name);
 
     const info = await fetch(
       `https://thetamiddleware.herokuapp.com/getAllHash/${address}&${"26-11-2020"}&${"vitals"}`
@@ -376,7 +460,7 @@ function ViewPatient(props) {
       <div style={{marginLeft:"1%"}}>
       <Button 
         className={classesTable.hover}
-        style={{ marginTop:"2%",left:"0" }}
+        style={{ marginTop:"2%",marginLeft:"0" }}
         color="inherit"
         startIcon={<KeyboardBackspaceTwoToneIcon fontSize="small" />}
         onClick={() => {
@@ -449,7 +533,7 @@ function ViewPatient(props) {
           
         <Grid container spacing={0} >
           <Grid item xs={1}></Grid>
-          <Grid xs={10}>
+          <Grid xs={10} style={{marginBottom:"3%"}}>
             
               <Typography
                 variant="h2"
@@ -497,25 +581,26 @@ function ViewPatient(props) {
                   </TableHead>
                   <TableBody>
                     {addresses.map((obj) => (
+                      
                       <TableRow hover key={obj.name}>
                         <TableCell
                           component="th"
                           scope="row"
                           //style={{ color: "green" }}
                         >
-                          <Typography variant="body2">{ obj.Profile.name==null ? <CircularProgress size="20px" style={{color:"white"}}/>: obj.Profile.name} </Typography>
+                          <Typography variant="body2">{obj.Profile==null ? "empty": obj.Profile.name} </Typography>
                         </TableCell>
 
                         <TableCell align="center">
-                        <Typography variant="body2"> {(obj.ID==null) ? "empty": obj.ID}</Typography>
+                        <Typography variant="body2"> { obj.ID}</Typography>
                         </TableCell>
 
-                        <TableCell align="center"><Typography variant="body2">{obj.Profile.age}
+                        <TableCell align="center"><Typography variant="body2">{obj.Profile==null ? "empty" : obj.Profile.age}
                         </Typography>
                         </TableCell>
                         
                         <TableCell align="center">
-                        <Typography variant="body2"> {(obj.Profile.contact==null) ? "empty" : obj.Profile.contact  }
+                        <Typography variant="body2"> {(obj.Profile==null) ? "empty" : obj.Profile.contact  }
                         </Typography>
                         </TableCell>
 
@@ -532,7 +617,7 @@ function ViewPatient(props) {
                             color="inherit"
                             /** onClick={()=>{setopenDialogue(true); sethistoryAddress(obj.ADDRESS)}} */
                             onClick={() =>
-                              getInfo(obj.ADDRESS, obj.Profile.name)
+                              getInfo(obj.ADDRESS)
                             }
                             startIcon={
                               <ListIcon
@@ -572,6 +657,35 @@ function ViewPatient(props) {
                       </TableRow>
                     ))}
                   </TableBody>
+
+                  <TableFooter
+                  className={classesTable.row}
+                  style={{ maxwidth: "100%" }}
+                >
+                  <TableRow>
+                    <TablePagination
+                      rowsPerPageOptions={[
+                        5,
+                        10,
+                        10,
+                        { label: "All", value: -1 },
+                      ]}
+                      colSpan={12}
+                      count={addresses.length}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      SelectProps={{
+                        inputProps: { "aria-label": "rows per page" },
+                        native: true,
+                      }}
+                      onChangePage={handleChangePage}
+                      onChangeRowsPerPage={handleChangeRowsPerPage}
+                      ActionsComponent={TablePaginationActions}
+                    />
+                  </TableRow>
+                </TableFooter>
+
+
                 </Table>
               
               </TableContainer>
