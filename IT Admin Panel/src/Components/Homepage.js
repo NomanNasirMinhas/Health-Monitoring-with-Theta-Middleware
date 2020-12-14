@@ -15,6 +15,8 @@ import PeopleOutlineIcon from "@material-ui/icons/PeopleOutline";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import Tooltip from "@material-ui/core/Tooltip";
+import Badge from '@material-ui/core/Badge';
+
 
 //TOAST MESSAGE
 import { ToastContainer, toast } from "react-toastify";
@@ -80,9 +82,8 @@ const rows = [
   { id: 6, name: "Dr. Vltamash", assigned_devices: 3 },
 ];
 const useStylesTable = makeStyles({
-  row: 
-  {backgroundColor:"white"},
-  
+  row: { backgroundColor: "white" },
+
   table: {
     maxWidth: "100%",
     fontFamily: "Metrophobic",
@@ -204,6 +205,7 @@ function Doctors(props) {
   };
 
   const [seeds, setSeeds] = useState([]);
+  const [status, setStatus] = useState([]);
 
   useEffect(() => {
     async function getData() {
@@ -222,6 +224,7 @@ function Doctors(props) {
         setSeeds(fetched_data);
 
         console.log("Seeds =", seeds);
+
         //get patient count
 
         //settotalDoctors(seeds.length);
@@ -247,13 +250,27 @@ function Doctors(props) {
         );
         //convert to json
         const patients_json = await patients.json();
+
+        // get STATUSES--------------------------------------
+
+         //get statuses
+         const response = await fetch(
+          `https://thetamiddleware.herokuapp.com/getLastTx/${addresses_for}&docLog`
+        );
+
+        
+         const resObj = await response.json();
+          resObj==false ? status.concat(0) : status.concat(1);
+
+        //----------------------------------------------
+
         if (patients_json == false || patients_json == null) {
           // PatientCount.push(patients_json.length);
           //console.log("patients_json =", PatientCount);
           //console.log("patients_json length=", PatientCount);
           console.log("addresses=", patients_json.length);
           setPatientCount(PatientCount.concat(0));
-          NewSeeds.push({ seed_obj: seeds[i], num_of_pat: 0 });
+          NewSeeds.push({ seed_obj: seeds[i], num_of_pat: 0, stat : resObj });
           console.log("patient count if =", PatientCount);
           console.log("New seeds =", NewSeeds);
         } else {
@@ -262,6 +279,7 @@ function Doctors(props) {
           NewSeeds.push({
             seed_obj: seeds[i],
             num_of_pat: patients_json.length,
+            stat: resObj
           });
 
           console.log("patient count else =", PatientCount);
@@ -280,6 +298,7 @@ function Doctors(props) {
     async function getPatients() {
       let s = [];
       let l = [];
+
       {
         /** let s=[]
       for(var i=0; i<= seeds.length ;i++){
@@ -289,9 +308,13 @@ function Doctors(props) {
       {
         seeds.map((obj) => {
           s.push(obj.SEED);
-          console.log("extract", s);
+
+          console.log("seeds extract", s);
         });
       }
+
+      //get Status
+
       let count = 0;
       let current = "";
       for (var i = 0; i <= s.length; i++) {
@@ -405,7 +428,12 @@ function Doctors(props) {
             <TableContainer className={classesTable.paper}>
               <Table className={classesTable.table} aria-label="simple table">
                 <TableHead style={{ backgroundColor: "#2980B9" }}>
-                  <TableRow >
+                  <TableRow>
+                    <TableCell align="center">
+                      <Typography variant="h6" style={{ color: "white" }}>
+                        Status
+                      </Typography>
+                    </TableCell>
                     <TableCell align="center">
                       <Typography variant="h6" style={{ color: "white" }}>
                         Username
@@ -453,6 +481,25 @@ function Doctors(props) {
                     : newSeedsArray
                   ).map((obj) => (
                     <TableRow hover key={obj.name} className={classesTable.row}>
+                      
+                      <TableCell component="th" scope="row">
+                        
+                          {" "}
+                          
+                          {obj.stat==false ?
+                          <Typography variant="body2">
+                           <Badge 
+                           color="error"
+                           variant="dot"></Badge><strong>-- </strong>Offline</Typography>
+
+                           : 
+                           <Typography variant="body2">
+                             <Badge color="primary" variant="dot"></Badge><strong>-- </strong>Online
+                             </Typography>
+                             }{" "}
+                        
+                      </TableCell>
+
                       <TableCell component="th" scope="row">
                         <Typography variant="body2">
                           {" "}
@@ -566,7 +613,10 @@ function Doctors(props) {
                     </TableRow>
                   ))}
                 </TableBody>
-                <TableFooter className={classesTable.row} style={{ maxwidth: "100%" }}>
+                <TableFooter
+                  className={classesTable.row}
+                  style={{ maxwidth: "100%" }}
+                >
                   <TableRow>
                     <TablePagination
                       rowsPerPageOptions={[

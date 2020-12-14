@@ -3,8 +3,7 @@ import React from "react";
 import Navbar from "./Navbar";
 import { useParams } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
-import Divider from '@material-ui/core/Divider';
-
+import Divider from "@material-ui/core/Divider";
 
 //grid import
 import Grid from "@material-ui/core/Grid";
@@ -54,9 +53,9 @@ let theme = createMuiTheme({
 theme = responsiveFontSizes(theme);
 
 const useStyles = makeStyles((theme) => ({
-  details:{
-    justifyContent:"left",
-    alignItems:"left",
+  details: {
+    justifyContent: "left",
+    alignItems: "left",
   },
   large: {
     width: theme.spacing(20),
@@ -84,9 +83,13 @@ function PatientProfile() {
   const [specialization, setSpecialization] = React.useState();
   const [admission_date, setAdmission_date] = React.useState();
   const [gender, setGender] = React.useState();
-  const [LastReading, SetLastReading] = useState('');
+  const [LastReading, SetLastReading] = useState("");
 
   const [seed, setSeed] = React.useState();
+  const [hr, setHR] = React.useState();
+  const [spo2, setO2] = React.useState();
+  const [temp, setTemp] = React.useState();
+  
   const [dummy, setDummy] = React.useState();
   const canvas = useRef(null);
 
@@ -170,8 +173,10 @@ function PatientProfile() {
       //Returns Hash
       //docLOg
       //deviceLog
+      //vitals
+      //prescription
       var response = await fetch(
-        `https://thetamiddleware.herokuapp.com/getLastTx/${Address}&deviceLog`
+        `https://thetamiddleware.herokuapp.com/getLastTx/${Address}&vitals`
       );
 
       var resObj = await response.json();
@@ -184,9 +189,12 @@ function PatientProfile() {
         );
         var resObjTx = await responseTx.json();
         console.log("Transaction response=", resObjTx.response);
-        var stringData = JSON.stringify(resObjTx.response)
+        var stringData = JSON.stringify(resObjTx.response);
         if (resObjTx != false) {
           SetLastReading(stringData);
+          setHR(resObjTx.response.HR);
+          setO2(resObjTx.response.SpO2);
+          setTemp(resObjTx.response.Temp);
           console.log("last Response", LastReading);
         }
       } else {
@@ -210,25 +218,21 @@ function PatientProfile() {
         <Grid container spacing={0} style={{ marginTop: "2%" }}>
           <Grid item xs="3"></Grid>
           <Slide direction="left" in={true} timeout={300}>
-            
             <Grid item xs="6">
               <Paper
                 elevation={5}
                 component={"div"}
                 style={{
                   marginLeft: "2%",
-                  backgroundColor:"#EDFFFE"
-                  ,
-                
+                  backgroundColor: "#EDFFFE",
                   bordeStyle: "groove",
 
                   color: "white",
-                  
+
                   maxHeight: "100%",
                 }}
               >
-               
-               {/** <div
+                {/** <div
                   style={{
                     justifyContent: "center",
                     alignItems: "center",
@@ -240,171 +244,228 @@ function PatientProfile() {
                 </div> */}
 
                 <div
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    display: "flex",
+                  }}
+                >
+                  <Avatar
+                    className={classes.large}
+                    style={{ backgroundColor: "#018D87" }}
+                  >
+                    <Typography variant="h4">{id}</Typography>
+                  </Avatar>
+                </div>
+
+                <div>
+                  <Divider variant="middle" />
+                </div>
+
+                <div className={classes.div} style={{ color: "black" }}>
+                  <div className={classes.div}>
+
+                    <div className={classes.details}>
+                      <Typography variant="h6">
+                        {" "}
+                        {/**  <HomeIcon
+                        fontSize="small"
+                        style={{ color: "black" }}
+                    />*/}{" "}
+                        Address: {patient_address}
+                      </Typography>
+                    </div>
+
+                    <div className={classes.details}>
+                      <Typography variant="h6">
+                        {" "}
+                        Admitted on : {admission_date}
+                      </Typography>
+                    </div>
+                    <div className={classes.details}>
+                      <Typography variant="h6">
+                        {/**<PhoneIcon fontSize="small" />*/} Contact: {contact}
+                      </Typography>
+                    </div>
+                    <div className={classes.details}>
+                      <Typography variant="h6">
+                        {/**<WcIcon fontSize="small" /> */}Gender: {gender}
+                      </Typography>
+                    </div>
+
+                    <div className={classes.details}>
+                      <Typography variant="h6"> Age : {age}</Typography>
+                    </div>
+                  
+                  </div>
+                  
+                </div>
+                </Paper>
+            </Grid>
+          </Slide>
+          <Grid item xs="3"></Grid>
+        </Grid>
+
+        <div style={{ marginTop: "2%" }}>
+          <Divider variant="middle" />
+        </div>
+
+        <Grid container spacing={0} style={{marginTop:"2%"}} >
+          <Grid item xs={2}></Grid>
+          <Grid item xs={8}>
+            <div>
+              <Paper elevation={5} style={{ backgroundColor: "#EDFFFE" }}>
+                <div
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    display: "flex",
+                    backgroundColor: "#018D87",
+                    color: "white",
+                  }}
+                >
+                  <Typography variant="h3">Last Readings</Typography>
+                </div>
+                
+                <Grid container spacing={0} style={{ marginTop: "2%", marginBottom:"2%" }}>
+                <Grid item xs={4}> </Grid>
+
+                  <Grid item xs={4} style={{ marginTop: "2%", color:"white" }}>
+                  <Paper elevation={4} variant="outlined" style={{borderColor:"RED",color:"white" ,backgroundColor:"#CD6155"}}>
+                      <Typography variant="h4">Heart Rate</Typography>
+                <Typography variant="h6">
+                  {hr==null ? <CircularProgress size="20px" style={{color:"white"}} /> : hr}
+                  </Typography>
+                    </Paper>
+                  </Grid>
+
+                  <Grid item xs={4}></Grid>
+
+                   <Grid item xs={4}> </Grid>
+
+                  <Grid item xs={4} style={{ marginTop: "2%" }}>
+                  <Paper elevation={4} variant="outlined" 
+                  style={{borderColor:"Green",backgroundColor:"#27AE60",color:"white"}}>
+                      <Typography variant="h4" >Oxygen Level</Typography>
+                <Typography variant="h6">
+                  {spo2==null ? <CircularProgress size="20px" style={{color:"white"}} /> : spo2}
+                  </Typography>
+                    </Paper>
+                  </Grid>
+
+                  <Grid item xs={4}></Grid>
+
+
+                  <Grid item xs={4}> </Grid>
+
+                  <Grid item xs={4} style={{ marginTop: "2%", marginBottom:"2%" }}>
+                  <Paper elevation={4} variant="outlined"
+                   style={{borderColor:"#2980B9",backgroundColor:"#3498DB",color:"white"}}>
+                      <Typography variant="h4">Temperature</Typography>
+                <Typography variant="h6">
+                  {temp==null? <CircularProgress size="20px" style={{color:"white"}}/> : temp}
+                  </Typography>
+                    </Paper>
+                  </Grid>
+
+                  <Grid item xs={4}></Grid>
+
+                  </Grid>
+              </Paper>
+            </div>
+          </Grid>
+          <Grid item xs={2}></Grid>
+        </Grid>
+
+        <div style={{ marginTop: "2%" }}>
+          <Divider variant="middle" />
+        </div>
+
+        <Typography variant="h2" style={{ marginTop: "2%", color: "#B4B4B4" }}>
+          QR Codes
+        </Typography>
+
+        <Grid container spacing={0} style={{ marginTop: "2%" }}>
+          <Grid item xs={2}></Grid>
+          <Grid item xs={8}>
+            <div>
+              <Paper
+                elevation={5}
+                component={"div"}
+                style={{ backgroundColor: "#EDFFFE" }}
+              >
+                <div
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    display: "flex",
+                    backgroundColor: "#018D87",
+                    color: "white",
+                  }}
+                >
+                  <Typography variant="h5" style={{ marginTop: "2%" }}>
+                    Doctor's Seed : <EllipsisText text={seed} length={"20"} />
+                  </Typography>
+                </div>
+
+                <div>
+                  <QRCode
+                    value={seed}
+                    includeMargin="true"
+                    size="400"
+                    bgColor="#EDFFFE"
+                  />
+                </div>
+              </Paper>
+            </div>
+          </Grid>
+          <Grid item xs={2}></Grid>
+        </Grid>
+
+        <div style={{ marginTop: "2%" }}>
+          <Divider variant="middle" />
+        </div>
+
+        <Grid
+          container
+          spacing={0}
+          style={{ marginTop: "2%", marginBottom: "2%" }}
+        >
+          <Grid item xs={2}></Grid>
+          <Grid item xs={8}>
+            <Paper elevation={5} style={{ backgroundColor: "#EDFFFE" }}>
+              <div
                 style={{
                   justifyContent: "center",
                   alignItems: "center",
                   display: "flex",
+                  backgroundColor: "#018D87",
+                  color: "white",
                 }}
               >
-                <Avatar
-                  className={classes.large}
-                  style={{ backgroundColor: "#018D87" }}
-                >
-                  <Typography variant="h4">{id}</Typography>
-                </Avatar>
+                <Typography variant="h5" style={{ marginTop: "2%" }}>
+                  Patient's Address :{" "}
+                  <EllipsisText text={Address} length={"20"} />
+                </Typography>
               </div>
 
               <div>
-              <Divider variant="middle"/>
+                <Tooltip title="Copy" aria-label="add">
+                  <QRCode
+                    
+                    value={Address}
+                    includeMargin="true"
+                    size="400"
+                    bgColor="#EDFFFE"
+                  />
+                </Tooltip>
               </div>
+            </Paper>
+          </Grid>
+          <Grid item xs={2}></Grid>
+        </Grid>
 
-                <div className={classes.div} style={{ color: "black"  }}>
-
-                  <div  className={classes.div}
-                   >
-
-                  <div className={classes.details}>
-                    <Typography variant="h6">
-                      {" "}
-                    {/**  <HomeIcon
-                        fontSize="small"
-                        style={{ color: "black" }}
-                    />*/}{" "}
-                     Address: {patient_address}
-                    </Typography>
-                  </div>
-
-                  <div
-                    className={classes.details}
-                  >
-                    <Typography variant="h6">
-                      {" "}
-                      Admitted on : {admission_date}
-                    </Typography>
-                  </div>
-                  <div className={classes.details}>
-                    <Typography variant="h6">
-                      {/**<PhoneIcon fontSize="small" />*/} Contact: {contact}
-                    </Typography>
-                  </div>
-                  <div className={classes.details}>
-                    <Typography variant="h6">
-
-                      {/**<WcIcon fontSize="small" /> */}Gender:  {gender}
-                    </Typography>
-                  </div>
-                 
-                  <div
-                     className={classes.details}
-                  >
-                    <Typography variant="h6"> Age : {age}</Typography>
-                  </div>
-                  </div>
-                  </div>
-                  </Paper>
-                  </Grid>
-                  </Slide>
-                  <Grid item xs="3"></Grid>
-                  </Grid>
-
-                  <div style={{marginTop:"2%"}}><Divider variant="middle"/></div>
-
-
-                  <Typography variant="h2" style={{ marginTop: "2%", color: "#B4B4B4" }}>
-          QR Codes
-        </Typography>
-
-
-
-                  <Grid container spacing={0} style={{ marginTop: "2%"  }}>
-                    <Grid item xs={2}></Grid>
-                    <Grid item xs={8}>
-                      <div>
-                      <Paper elevation={5} component={"div"} style={{backgroundColor:"#EDFFFE"}}>
-
-                      <div
-                    style={{
-                      justifyContent: "center",
-                      alignItems: "center",
-                      display: "flex",
-                      backgroundColor: "#018D87",
-                      color: "white",
-                     
-                      
-                    }}
-                  >
-                    <Typography variant="h5" style={{ marginTop: "2%" }}>
-                      Doctor's Seed : <EllipsisText text={seed} length={"20"} />
-                    </Typography>
-                  </div>
-
-                  <div>
-                    <QRCode value={seed} includeMargin="true" size="400" bgColor="#EDFFFE"/>
-                  </div>
-
-                      
-                      </Paper>
-                      </div>
-                    </Grid>
-                    <Grid item xs={2}></Grid>
-
-                    
-
-                    
-
-                  </Grid>
-
-                  <div style={{marginTop:"2%"}}><Divider variant="middle"/></div>
-
-                  <Grid container spacing={0} style={{ marginTop: "2%" , marginBottom:"2%" }}>
-                    <Grid item xs={2}></Grid>
-                    <Grid item xs={8}>
-                      <Paper elevation={5}  style={{backgroundColor:"#EDFFFE"}}>
-                      
-
-                      <div
-                    style={{
-                      justifyContent: "center",
-                      alignItems: "center",
-                      display: "flex",
-                      backgroundColor: "#018D87",
-                      color: "white",
-                    }}
-                  >
-                    <Typography variant="h5" style={{ marginTop: "2%" }}>
-                      Patient's Address :{" "}
-                      <EllipsisText text={Address} length={"20"} />
-                    </Typography>
-                  </div>
-
-                  <div>
-                    <Tooltip title="Copy" aria-label="add">
-                      <QRCode
-                        onHover={() => (
-                          <Tooltip
-                            title="Right Clip to copy"
-                            aria-label="add"
-                          ></Tooltip>
-                        )}
-                        value={Address}
-                        includeMargin="true"
-                        size="400"
-                        bgColor="#EDFFFE"
-                      />
-                    </Tooltip>
-                  </div>
-                
-                      </Paper>
-                    </Grid>
-                    <Grid item xs={2}></Grid>
-
-                    
-
-                    
-
-                  </Grid>
-                  
-                  {/** 
+        {/** 
 
                   <div
                     style={{
@@ -533,7 +594,6 @@ function PatientProfile() {
             </Grid>
           </Slide>
         */}
-        
       </ThemeProvider>
     );
   } else {

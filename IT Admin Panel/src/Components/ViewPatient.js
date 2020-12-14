@@ -50,6 +50,8 @@ import FirstPageIcon from "@material-ui/icons/FirstPage";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
+import KeyboardBackspaceTwoToneIcon from '@material-ui/icons/KeyboardBackspaceTwoTone';
+
 import TextField from "@material-ui/core/TextField";
 import {
   Dialog,
@@ -294,27 +296,31 @@ function ViewPatient(props) {
       console.log("Sending object", JSON.parse(localStorage.getItem("patient_profile")));
       props.history.push(`/patient_profile`);
     }
+    function goBack(){
+      props.history.push(`/home`)
+    }
 
   if (Show) {
     return (
       //  <Slide direction="up" in={true} timeout={800}>
       <ThemeProvider theme={theme}>
         <Navbar />
+        
         <Slide direction="down" in={true} timeout={300}>
           <Grid container spacing={0}>
             <Grid item xs={3} >
               <Paper elevation={2} className={classes.paper} style={{ backgroundColor:"#F6FFF8", marginLeft:"2%",  marginTop: "12%"}}>
                 <Typography variant="h6" gutterBottom>
-                  <strong> Total Transactions </strong>
+                   Total Transactions
                 </Typography>
                 <Typography variant="h4" style={{ color: "#2980B9" }}>
-                  <strong>{Transactions.length }</strong>
+                  {Transactions.length }
                 </Typography>
                 <Button
                   className={classesTable.hover}
                   style={{marginBottom:"2%", marginTop:"2%" }}
                   color="inherit"
-                  startIcon={<ArrowBackIosIcon fontSize="small" />}
+                  startIcon={<KeyboardBackspaceTwoToneIcon fontSize="small" />}
                   onClick={() => {
                     setShow(false);
                   }}
@@ -367,7 +373,16 @@ function ViewPatient(props) {
   return (
     <ThemeProvider theme={theme} style={{backgroundColor:"#F2FDFF"}}>
       <Navbar />
-      
+      <div style={{marginLeft:"1%"}}>
+      <Button 
+        className={classesTable.hover}
+        style={{ marginTop:"2%",left:"0" }}
+        color="inherit"
+        startIcon={<KeyboardBackspaceTwoToneIcon fontSize="small" />}
+        onClick={() => {
+        goBack();
+          }} >Back</Button>
+          </div>
      
           {/**  <Grid item xs={2} className={classes.side}>
           <Paper className={classes.paper}>
@@ -432,8 +447,9 @@ function ViewPatient(props) {
           </Grid>
         */}
           
-        <Grid container spacing={1} >
-          <Grid xs={12}>
+        <Grid container spacing={0} >
+          <Grid item xs={1}></Grid>
+          <Grid xs={10}>
             
               <Typography
                 variant="h2"
@@ -447,8 +463,9 @@ function ViewPatient(props) {
               {total}  Patients
               </Typography>
               <Slide direction="right" in={true} timeout={300}>
-              <TableContainer className={classesTable.paper} style={{alignSelf:"center",display:"flex", justifyContent:"center", justify:"center"}}>
               <Paper className={classes.paper}>
+              <TableContainer className={classesTable.paper} style={{display:"flex", justifyContent:"center", }}>
+              
                 <Table className={classesTable.table} aria-label="simple table">
                   <TableHead style={{ backgroundColor: "#2980B9" }}>
                     <TableRow>
@@ -486,11 +503,11 @@ function ViewPatient(props) {
                           scope="row"
                           //style={{ color: "green" }}
                         >
-                          <Typography variant="body2">{obj.Profile.name} </Typography>
+                          <Typography variant="body2">{ obj.Profile.name==null ? <CircularProgress size="20px" style={{color:"white"}}/>: obj.Profile.name} </Typography>
                         </TableCell>
 
                         <TableCell align="center">
-                        <Typography variant="body2"> {obj.ID}</Typography>
+                        <Typography variant="body2"> {(obj.ID==null) ? "empty": obj.ID}</Typography>
                         </TableCell>
 
                         <TableCell align="center"><Typography variant="body2">{obj.Profile.age}
@@ -498,14 +515,14 @@ function ViewPatient(props) {
                         </TableCell>
                         
                         <TableCell align="center">
-                        <Typography variant="body2"> {obj.Profile.contact}
+                        <Typography variant="body2"> {(obj.Profile.contact==null) ? "empty" : obj.Profile.contact  }
                         </Typography>
                         </TableCell>
 
                         <TableCell align="center">
                         <Typography variant="body2">
                         <EllipsisText
-                    text={obj.ADDRESS}
+                    text={obj.ADDRESS }
                     length={"30"}/>
                     </Typography>
                           </TableCell>
@@ -556,13 +573,16 @@ function ViewPatient(props) {
                     ))}
                   </TableBody>
                 </Table>
-                </Paper>
+              
               </TableContainer>
+              </Paper>
               </Slide>
           
 
             {/** END */}
           </Grid>
+          <Grid item xs={1}></Grid>
+
         </Grid>
      
       <Dialog

@@ -64,9 +64,10 @@ const theme = createMuiTheme({
 
 const useStyles1 = makeStyles((theme) => ({
   root: {
-    flexGrow: 1,
-  },
-  menuButton: {
+    flexShrink: 0,
+    marginLeft: theme.spacing(2.5),
+  }, 
+   menuButton: {
     marginRight: theme.spacing(2),
   },
   title: {
@@ -129,47 +130,48 @@ function TablePaginationActions(props) {
   };
 
   return (
-    <div className={classes.root}>
-      <IconButton
-        onClick={handleFirstPageButtonClick}
-        disabled={page === 0}
-        aria-label="first page"
-      >
-        {theme.direction === "rtl" ? <LastPageIcon /> : <FirstPageIcon />}
-      </IconButton>
-      <IconButton
-        onClick={handleBackButtonClick}
-        disabled={page === 0}
-        aria-label="previous page"
-      >
-        {theme.direction === "rtl" ? (
-          <KeyboardArrowRight />
-        ) : (
-          <KeyboardArrowLeft />
-        )}
-      </IconButton>
-      <IconButton
-        onClick={handleNextButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="next page"
-      >
-        {theme.direction === "rtl" ? (
-          <KeyboardArrowLeft />
-        ) : (
-          <KeyboardArrowRight />
-        )}
-      </IconButton>
-      <IconButton
-        onClick={handleLastPageButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="last page"
-      >
-        {theme.direction === "rtl" ? <FirstPageIcon /> : <LastPageIcon />}
-      </IconButton>
-    </div>
+    <ThemeProvider theme={theme}>
+      <div className={classes.root}>
+        <IconButton
+          onClick={handleFirstPageButtonClick}
+          disabled={page === 0}
+          aria-label="first page"
+        >
+          {theme.direction === "rtl" ? <LastPageIcon /> : <FirstPageIcon />}
+        </IconButton>
+        <IconButton
+          onClick={handleBackButtonClick}
+          disabled={page === 0}
+          aria-label="previous page"
+        >
+          {theme.direction === "rtl" ? (
+            <KeyboardArrowRight />
+          ) : (
+            <KeyboardArrowLeft />
+          )}
+        </IconButton>
+        <IconButton
+          onClick={handleNextButtonClick}
+          disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+          aria-label="next page"
+        >
+          {theme.direction === "rtl" ? (
+            <KeyboardArrowLeft />
+          ) : (
+            <KeyboardArrowRight />
+          )}
+        </IconButton>
+        <IconButton
+          onClick={handleLastPageButtonClick}
+          disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+          aria-label="last page"
+        >
+          {theme.direction === "rtl" ? <FirstPageIcon /> : <LastPageIcon />}
+        </IconButton>
+      </div>{" "}
+    </ThemeProvider>
   );
 }
-
 TablePaginationActions.propTypes = {
   count: PropTypes.number.isRequired,
   onChangePage: PropTypes.func.isRequired,
@@ -583,7 +585,7 @@ function Homepage(props) {
                       </TableRow>
                     ))}
                   </TableBody>
-                  <TableFooter style={{ maxwidth: "100%" , backgroundColor:"white"}}>
+                  <TableFooter className={classesTable.row} style={{ maxwidth: "100%", backgroundColor:"white " }}>
                   <TableRow>
                     <TablePagination
                       rowsPerPageOptions={[
@@ -606,6 +608,7 @@ function Homepage(props) {
                     />
                   </TableRow>
                 </TableFooter>
+
                 </Table>
               </TableContainer>
             
