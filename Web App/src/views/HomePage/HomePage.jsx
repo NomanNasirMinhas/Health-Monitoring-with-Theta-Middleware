@@ -32,6 +32,8 @@ import Patient from "../../assets/icons/patient";
 import Frequency from "../../assets/icons/frequency";
 import { Link as link } from "react-router-dom";
 import { Bar } from "react-chartjs-2";
+import moment from "moment";
+
 const useStyle = makeStyles(styles);
 
 const StyledTableCell = withStyles((theme) => ({
@@ -480,7 +482,7 @@ export default function HomePage() {
                                     {row.Profile.gender}
                                   </StyledTableCell>
                                   <StyledTableCell align="center">
-                                    {row.Profile.date}
+                                    {moment(row.Profile.date, "DD-MM-YYYY").format("MMMM Do YYYY")}
                                   </StyledTableCell>
                                   <StyledTableCell align="center">
                                     {row.Profile.contact}

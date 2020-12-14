@@ -1,6 +1,7 @@
 import React from "react";
 import { blue } from "@material-ui/core/colors";
 import { Avatar, Box, Divider, makeStyles } from "@material-ui/core";
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
     box: {
@@ -83,7 +84,7 @@ const PatientCard = (props) => {
                 {props.AdmissionDate ? (
                     <>
                         <p className={classes.p}>Admission Date</p>
-                        <h4>{props.AdmissionDate}</h4>
+                        <h4>{moment(props.AdmissionDate, "DD-MM-YYYY").format("MMMM Do YYYY")}</h4>
                     </>)
                     : ""}
 
