@@ -11,6 +11,7 @@ import PatientProfile from './views/ViewPatientProfile/PatientProfile';
 import AddPatient from './views/AddPatient/AddPatient';
 import { UserContext } from "./Context"
 import './App.css'
+import ViewReport from './views/ViewReport/ViewReport';
 
 const AppRouter = () => {
 
@@ -27,6 +28,7 @@ const AppRouter = () => {
                     <Route path="/yourprofile" component={YourProfile} />
                     <Route path="/livereadings/:address" component={LiveReadings} />
                     <Route path="/addpatient" component={AddPatient} />
+                    <Route path="/report/:name&:gender&:admissionDate&:address" component={ViewReport} />
                     <Route path="/viewhistory/:name&:gender&:admissionDate&:address" component={ViewHistory} />
                 </UserContext.Provider>
                 <Route path="*" component={() => "404 NOT FOUND"} />

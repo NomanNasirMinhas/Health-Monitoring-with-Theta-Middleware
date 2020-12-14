@@ -4,3 +4,21 @@
 body {
   background: rgba(18, 67, 116, 0.884);
 }
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.6);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgba(60, 60, 70, 1);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(85, 85, 85, 0.582);
+}

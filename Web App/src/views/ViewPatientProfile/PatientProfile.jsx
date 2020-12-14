@@ -34,8 +34,6 @@ import PrescriptionCard from "../../components/PrescriptionCard/PrescriptionCard
 import { UserContext } from "../../Context";
 import ListOutlinedIcon from '@material-ui/icons/ListOutlined';
 import AppointmentCard from "../../components/AppointmentCard/AppointmentCard";
-import { AccountCircle } from "@material-ui/icons";
-
 
 const useStyles = makeStyles((theme) => ({
     body: {
@@ -63,7 +61,6 @@ const PatientProfile = (props) => {
     const classes = useStyles();
     let { address } = useParams();
     const [circularVisible, SetCircularVisible] = useState(true);
-    const [openGenerateReport, setOpenGenerateReport] = useState(false);
     const [openDischarge, setOpenDischarge] = useState(false);
     const [dischargeDialogue, SetDischargeDialogue] = useState(false);
     const [visible, setVisible] = useState(false);
@@ -157,7 +154,8 @@ const PatientProfile = (props) => {
                                                         Discharge Patient
                                                     </ListItemText>
                                                 </MenuItem>
-                                                <MenuItem >
+                                                <MenuItem disabled={Empty} component={Link}
+                                                    to={`/report/${patient.name}&${patient.gender}&${patient.date}&${address}`}>
                                                     <ListItemIcon>
                                                         <AssessmentIcon />
                                                     </ListItemIcon>
@@ -165,7 +163,7 @@ const PatientProfile = (props) => {
                                                         Generate Report
                                                 </ListItemText>
                                                 </MenuItem>
-                                                <MenuItem component={Link}
+                                                <MenuItem disabled={Empty} component={Link}
                                                     to={`/viewhistory/${patient.name}&${patient.gender}&${patient.date}&${address}`}>
                                                     <ListItemIcon>
                                                         <HistoryIcon />
@@ -175,7 +173,7 @@ const PatientProfile = (props) => {
                                                     </ListItemText>
                                                 </MenuItem>
                                                 <Divider />
-                                                <MenuItem to={`/livereadings/${address}`}>
+                                                <MenuItem disabled={Empty} to={`/livereadings/${address}`}>
                                                     <ListItemIcon>
                                                         <TimelineIcon />
                                                     </ListItemIcon>
@@ -187,6 +185,7 @@ const PatientProfile = (props) => {
                                         </div>
                                     </Hidden>
                                 </Grid>
+
                                 <Grid item xs={12} md={5}>
                                     <PatientCard
                                         name={patient.name}
@@ -237,6 +236,8 @@ const PatientProfile = (props) => {
                                 <Button
                                     style={{ textTransform: "capitalize" }}
                                     size="large"
+                                    component={Link}
+                                    to={`/report/${patient.name}&${patient.gender}&${patient.date}&${address}`}
                                     disabled={Empty}
                                     startIcon={<AssessmentIcon />}
                                 >

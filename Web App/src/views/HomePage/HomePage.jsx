@@ -9,7 +9,6 @@ import {
   TableHead,
   CircularProgress,
   TableRow,
-  Paper,
   ThemeProvider,
   Slide,
   TableContainer,
@@ -75,7 +74,7 @@ const ErrorMessage = () => {
     <>
       <Grid container justify="space-evenly">
         <Grid item md={3}>
-          <Patient style={{fontSize: "20.5em"}}/>
+          <Patient style={{ fontSize: "20.5em" }} />
         </Grid>
       </Grid>
       <Grid container justify="space-evenly">
@@ -130,31 +129,39 @@ export default function HomePage() {
   const LastTransaction = async (prop) => {
     let transaction = [];
     let info = {};
-    for (var i = 0; i < prop.length; i++) {
-      var hash = await fetch(
-        `https://thetamiddleware.herokuapp.com/getLastTx/${prop[i].ADDRESS}&vitals`
-      );
-      hash = await hash.json();
+    try {
+      for (var i = 0; i < prop.length; i++) {
+        if (prop[i].Profile !== null) {
+          var hash = await fetch(
+            `https://thetamiddleware.herokuapp.com/getLastTx/${prop[i].ADDRESS}&vitals`
+          );
+          hash = await hash.json();
 
-      if (hash !== false) {
-        var tx = await fetch(
-          `https://thetamiddleware.herokuapp.com/getTx/${hash}`
-        );
-        tx = await tx.json();
+          if (hash !== false) {
+            var tx = await fetch(
+              `https://thetamiddleware.herokuapp.com/getTx/${hash}`
+            );
+            tx = await tx.json();
 
 
-        if (tx !== false) {
-          info = {
-            name: prop[i].Profile.name,
-            Temp: tx.response.Temp,
-            HR: tx.response.HR,
-            SpO2: tx.response.SpO2,
-          };
-          transaction.push(info);
+            if (tx !== false) {
+              info = {
+                name: prop[i].Profile.name,
+                Temp: tx.response.Temp,
+                HR: tx.response.HR,
+                SpO2: tx.response.SpO2,
+              };
+              transaction.push(info);
+            }
+
+          }
         }
+        //console.log(JSON.parse(tx).Temp);
+        //transaction.push({name: tx.name, value: tx.value})
       }
-      //console.log(JSON.parse(tx).Temp);
-      //transaction.push({name: tx.name, value: tx.value})
+    }
+    catch (error) {
+      console.error(error);
     }
     //[{name: "Fatima Umar", temp: '100'},{name: "Noman", bp: "120/80"},{name: 'Usman', bpm: "80"}]
     return transaction;
@@ -197,6 +204,18 @@ export default function HomePage() {
     return x;
   };
 
+  const doctorAddress = (patientList) => {
+    try {
+      for (var i = 0; i < patientList.length; i++) {
+        if (patientList[i].Profile !== null) {
+          SetResponse(array => [...array, patientList[i]])
+        }
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   useEffect(() => {
     async function getPatient() {
       var seed = localStorage.getItem("seed") || "";
@@ -207,7 +226,8 @@ export default function HomePage() {
       if (obj === false) {
         SetEmpty(true);
       } else {
-        SetResponse(obj);
+        doctorAddress(obj);
+        //SetResponse(obj);
         const x = await LastTransaction(obj);
         SetTransactions(x);
         SetMaximumValues(maxValues(x));
@@ -413,7 +433,7 @@ export default function HomePage() {
                     </Grid>
                     <Slide direction="up" in={true} timeout={300}>
                       <Grid item xs={12}>
-                        <TableContainer style={{borderRadius: "6px", maxHeight:"300px"}}>
+                        <TableContainer style={{ borderRadius: "6px", maxHeight: "300px" }}>
                           <Table stickyHeader className={classes.table}>
                             <TableHead>
                               <TableRow>
