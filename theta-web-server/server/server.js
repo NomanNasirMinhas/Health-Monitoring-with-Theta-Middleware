@@ -42,6 +42,16 @@ const uri = process.env.MONGO_URI;
 
 var message = () =>{return "Message from Function"}
 
+const server = app.listen(port, () => {
+  console.log(`Server is running on port: ${port}`);
+});
+
+const io = require('socket.io')(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});
 
 MongoClient.connect(uri, { useUnifiedTopology: true }, (err, client) => {
   if (err) return console.error(err);
@@ -105,25 +115,9 @@ MongoClient.connect(uri, { useUnifiedTopology: true }, (err, client) => {
   app.get("/getTx/:hash", async (req, res) => {
     const hash = req.params.hash;
     try {
-      // const result = await getPublicTransactionInfo(hash);
-      // res.status(201).json(result);
-      const Iota = require("@iota/core");
-      const Extract = require("@iota/extract-json");
-      const iota = Iota.composeAPI({
-        provider:'https://nodes.iota.cafe:443',
-      });
+      const result = await getPublicTransactionInfo(hash);
+      res.status(201).json({response: result});
 
-      const tailTransactionHash = hash;
-      const Converter = require("@iota/converter");
-
-      iota.getBundle(tailTransactionHash)
-      .then(bundle => {
-        res.status(201).json({response: JSON.parse(Extract.extractJson(bundle))});
-      })
-      .catch(err => {
-        console.log(err)
-        res.status(201).json({response: false});
-      });
       } catch (err) {
         res.status(400).json({ message: err.message });
       }
@@ -192,28 +186,36 @@ MongoClient.connect(uri, { useUnifiedTopology: true }, (err, client) => {
 
   //GET All SEED CALL
   app.get("/getMAM/:seed&:address", async (req, res) => {
+    try {
     const seed = req.params.seed;
     const address = req.params.address;
-    try {
-      // const result = await fetchPublicMAM(dbo, seed, address);
-      // res.status(201).json(result);
-      const Mam = require("@iota/mam");
-      const { asciiToTrytes, trytesToAscii } = require("@iota/converter");
-      const mode = "public";
-      const provider = 'https://nodes.iota.cafe:443';
+    const Mam = require("@iota/mam");
+    const { asciiToTrytes, trytesToAscii } = require("@iota/converter");
+    const mode = "public";
+    const provider = "https://nodes.devnet.iota.org:443";
 
-      let mamState = Mam.init(provider);
+    let mamState = Mam.init(provider);
+      io.on("connection", async (socket) => {
+        console.log("MAM Fetch Socket Called");
 
-      const logData = (data) => {
-        res.write(JSON.stringify(trytesToAscii(data)));
-        // console.log("Data Recieved to Middleware ", rec)
-      }
-        // console.log("Fetched and parsed", JSON.parse(trytesToAscii(data)), "\n");
+        const logData = (data) => {
+          var rec = JSON.stringify(trytesToAscii(data));
+          io.emit("mamMsg", "rec");
+          console.log("Data Recieved to Middleware ", rec)
+        }
+          // console.log("Fetched and parsed", JSON.parse(trytesToAscii(data)), "\n");
+  
+        root = await getStreamRoot(dbo, seed, address);
+        console.log(`root is ${root}`)
+  
+        await Mam.fetch(root, mode, null, logData);
 
-      root = await getStreamRoot(dbo, seed, address);
-      console.log(`root is ${root}`)
-      await Mam.fetch(root, mode, null, logData);
-      res.end(true)
+      });
+
+
+
+      res.status(201).json(true);
+
     } catch (err) {
       res.status(400).json({ message: err.message });
     }
@@ -361,6 +363,3 @@ MongoClient.connect(uri, { useUnifiedTopology: true }, (err, client) => {
   });
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port: ${port}`);
-});

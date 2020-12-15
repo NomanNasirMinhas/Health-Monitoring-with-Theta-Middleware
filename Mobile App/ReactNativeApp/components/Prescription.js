@@ -46,9 +46,9 @@ export default function Readings({route, navigation}) {
 
     const Item = ({ item }) => (
       <View style={styles.item}>
-        <Text style={styles.text}>{item.PrescriptionName}</Text>
+        <Text style={styles.text}>{item.title}</Text>
         <Card.Divider />
-        <Text style={styles.subText}>Details: {item.PrescriptionDetails}</Text>
+        <Text style={styles.subText}>Details: {item.details}</Text>
         <Text style={styles.subText}>Prescribed At: {item.TimeStamp}</Text>
 
       </View>
@@ -190,7 +190,8 @@ const styles = StyleSheet.create({
   item: {
     backgroundColor: '#AED6F1',
     padding: 20,
-    borderRadius:20
+    borderRadius:20,
+    marginBottom:10
   },
   title: {
     fontSize: 32,

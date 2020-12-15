@@ -53,6 +53,7 @@ function getDate() {
 
 function getNode() {
   const node = process.env.IOTA_NODE;
+  console.log("Node Address ",node)
   return node;
 }
 
@@ -219,11 +220,19 @@ async function getSingleHash(dbo, address, time) {
 
 async function getAllHash(dbo, address, txDate, type) {
   var transactionArray = [];
+  let info
   try {
-    var info = await dbo
+    if(txDate.toString() === '0')
+    {info = await dbo
+    .collection(address)
+    .find({ $and: [{txType:type}] }, { projection: { _id: 1 } })
+    .toArray();}
+
+    else
+    {info = await dbo
       .collection(address)
       .find({ $and: [{date: txDate}, {txType:type}] }, { projection: { _id: 1 } })
-      .toArray();
+      .toArray();}
 
     if(info.length == 0)
     return false;
@@ -494,15 +503,6 @@ async function getSeedInfo(dbo, seed) {
 //--------------------------------------New Function------------------------------------------//
 //                                                                                            //
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-var txData=null;
-
-function setTxData(data){
-  txData = data
-}
-
-function getTxData(){
-  return txData;
-}
 
 async function getPublicTransactionInfo(hash) {
   try {
@@ -515,20 +515,14 @@ async function getPublicTransactionInfo(hash) {
     const tailTransactionHash = hash;
     const Converter = require("@iota/converter");
 
-    iota.getBundle(tailTransactionHash)
-.then(bundle => {
-    console.log(JSON.parse(Extract.extractJson(bundle)));
-})
-.catch(err => {
-    console.error(err);
-});
-    // var txData = await iota.getBundle(tailTransactionHash);
-    // //var txMsg = JSON.parse(Extract.extractJson(txData));
+    var txData = await iota.getBundle(tailTransactionHash);
+
+    var txMsg = await JSON.parse(Extract.extractJson(txData));
     // var txMsg = Converter.trytesToAscii(
     //   txData[0].signatureMessageFragment.substring(0, 2186)
     // );
 
-    return true;
+    return txMsg;
   } catch (err) {
     console.log(err)
     return false;

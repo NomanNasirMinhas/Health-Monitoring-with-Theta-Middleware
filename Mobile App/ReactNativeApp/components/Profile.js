@@ -67,8 +67,8 @@ export default function Profile({ route, navigation }) {
 
 
   var maxWidth = Dimensions.get("window").width;
-  var PrescArray = [];
-  var NotificationArray = [];
+
+
   var HistoryArray = []
   var lastPrescVar = false;
 
@@ -158,10 +158,10 @@ export default function Profile({ route, navigation }) {
             `https://thetamiddleware.herokuapp.com/getTx/${prescHash}`
           );
           var prescData = await logTx.json();
-          // console.log("Prescriptions ", prescData)
+          console.log("Prescriptions ", prescData)
           // prescData = JSON.parse(prescData);
-          setPrescTitle(prescData.response.PrescriptionName)
-          setPrescDetails(prescData.response.PrescriptionDetails)
+          setPrescTitle(prescData.response.title)
+          setPrescDetails(prescData.response.details)
           setPrescTime(prescData.response.TimeStamp)
           // setLastPresc({...lastPresc, now:{prescData}})
           // setPrescFinished(true)
@@ -184,11 +184,11 @@ export default function Profile({ route, navigation }) {
             `https://thetamiddleware.herokuapp.com/getTx/${notifHash}`
           );
           var notifData = await logTx.json();
-          // console.log("Notification ", notifData)
+          console.log("Notification ", notifData)
           // notifData = JSON.parse(notifData);
 
-          setNotifTitle(notifData.response.NotificationTitle)
-          setNotifDetails(notifData.response.NotificationDetails)
+          setNotifTitle(notifData.response.title)
+          setNotifDetails(notifData.response.details)
           setNotifTime(notifData.response.TimeStamp)
           // setLastNotif({...lastNotif, now: {notifData}})
           // setNotifFinished(true)
@@ -214,11 +214,12 @@ export default function Profile({ route, navigation }) {
   const handlePrescription = async () => {
     try{
       setFinished(false)
+      var PrescArray = [];
       const address = patientAddress;
       // setHistState(spinnierText)
   setSpinnerText('Fetching Hashes of Prescriptions\nPlease Wait...')
 
-  var response = await fetch(`https://thetamiddleware.herokuapp.com/getAllHash/${address.toString()}&08-11-2020&prescription`);
+  var response = await fetch(`https://thetamiddleware.herokuapp.com/getAllHash/${address.toString()}&0&prescription`);
   var resObj = await response.json();
   // Alert.alert("All Hashes", JSON.stringify(resObj.length));
   // setHashArray(resObj)
@@ -234,11 +235,16 @@ export default function Profile({ route, navigation }) {
   {
     var responseTx = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${resObj[i].toString()}`);
   var resObjTx = await responseTx.json();
+  console.log(resObjTx)
   // var parsed = JSON.parse(resObjTx)
+  if(resObjTx.response !== false)
     PrescArray.push(resObjTx.response)
 
   }
   setFinished(true)
+  if (PrescArray.length === 0)
+  Alert.alert("No Prescription Yet");
+  else
   navigation.navigate('Prescriptions', {data: PrescArray})
   }
     }
@@ -251,17 +257,18 @@ export default function Profile({ route, navigation }) {
   const handleNotifications = async () => {
     try{
       setFinished(false)
+      var NotificationArray = [];
       const address = patientAddress;
       // setHistState(spinnierText)
   setSpinnerText('Fetching Hashes of Notifications\nPlease Wait...')
 
-  var response = await fetch(`https://thetamiddleware.herokuapp.com/getAllHash/${address.toString()}&08-11-2020&docNotification`);
+  var response = await fetch(`https://thetamiddleware.herokuapp.com/getAllHash/${address.toString()}&0&docNotification`);
   var resObj = await response.json();
   // Alert.alert("All Hashes", JSON.stringify(resObj.length));
   // setHashArray(resObj)
   if(resObj === false)
   {
-    Alert.alert("No Prescription Yet");
+    Alert.alert("No Notifications Yet");
     setFinished(true)
   }
   else{
@@ -271,11 +278,16 @@ export default function Profile({ route, navigation }) {
     var responseTx = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${resObj[i].toString()}`);
   var resObjTx = await responseTx.json();
   // var parsed = JSON.parse(resObjTx)
-    NotificationArray.push(resObjTx.response)
-
+  if(resObjTx.response !== false)
+    {console.log("Notif call ",resObjTx.response)
+    NotificationArray.push(resObjTx.response)}
   }
   setFinished(true)
-  navigation.navigate('Notifications', {data: NotificationArray})
+  if(NotificationArray.length === 0)
+  Alert.alert("No Notifications Yet");
+  else
+  { console.log("Notitifications ", NotificationArray.length)
+    navigation.navigate('Notifications', {data: NotificationArray})}
 
     }
   }

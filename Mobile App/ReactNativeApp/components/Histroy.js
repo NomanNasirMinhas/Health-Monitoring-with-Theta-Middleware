@@ -25,10 +25,11 @@ export default function Readings({route, navigation}) {
   var [tempArray, setTempArray] = useState([])
   var [hrArray, setHrArray] = useState([])
   var [showDate, setShowDate] = useState(true)
-  var [date, setDate] = useState('26-11-2020')
+  var [date, setDate] = useState('05-12-2020')
   var [hasDate, setHasDate] = useState(false)
   var [SpO2Array, setSpO2Array] = useState([])
   var [tempArray, setTempArray] = useState([])
+  var [hasValidData, setHasValidData] = useState(false)
 
   var rawTxs=[]
   var tempData=[]
@@ -62,12 +63,20 @@ export default function Readings({route, navigation}) {
     {
       var responseTx = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${resObj[i].toString()}`);
     var resObjTx = await responseTx.json();
-    // console.log(resObjTx.response)
+    console.log(resObjTx.response)
     // var parsed = JSON.parse(resObjTx)
     // Alert.alert(JSON.stringify(parsed))
-    rawTxs.push(resObjTx.response)
+    if(resObjTx.response !== false)
+      rawTxs.push(resObjTx.response)
     }
-    setTxInfo(rawTxs)
+    if(rawTxs.length === 0)
+    { Alert.alert(`No Transactions for ${date}`)
+      setHasValidData(false)
+    }
+    else
+    {
+      setHasValidData(true)
+      setTxInfo(rawTxs)
     // Alert.alert("Fetched",JSON.stringify(txInfo))
 
     for(var i=0; i<rawTxs.length; i++)
@@ -95,6 +104,7 @@ export default function Readings({route, navigation}) {
     // setSystArray(systData)
     // setDiastArray(diastData)
     setTableState(tableData)
+  }
     setFinished(true)
     // console.log(tableData)
   }
@@ -196,7 +206,7 @@ export default function Readings({route, navigation}) {
 
       <ScrollView horizontal={false} showsVerticalScrollIndicator={true} >
 
-      {finished &&
+      {finished && hasValidData &&
       <View style={{marginBottom:30, paddingHorizontal:5, paddingTop:20}}>
         <Card.Divider />
 

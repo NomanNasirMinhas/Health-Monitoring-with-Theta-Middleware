@@ -15,6 +15,8 @@ import Prescriptions from "./components/Prescription";
 import HistoryCards from "./components/HistoryCards";
 import LiveReading from "./components/LiveReadings";
 import LiveReadings from "./components/LiveReadings";
+import { Buffer } from 'buffer';
+global.Buffer = Buffer;
 
 function DetailsScreen({ navigation }) {
   return (

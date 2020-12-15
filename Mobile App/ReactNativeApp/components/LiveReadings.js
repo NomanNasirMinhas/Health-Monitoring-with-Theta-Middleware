@@ -9,6 +9,7 @@ import { AppLoading } from 'expo';
 import { Dimensions } from "react-native";
 import { useFonts } from 'expo-font';
 import { LineChart } from "react-native-chart-kit";
+import { io } from 'socket.io-client';
 
 //this.state = {
 
@@ -28,6 +29,7 @@ export default function LiveReadings({route, navigation}) {
   var [BPArray, setBPArray] = useState([])
   var [tempArray, setTempArray] = useState([])
   var [streamRoot, setStreamRoot] = useState('')
+  const socket = io('https://thetamiddleware.herokuapp.com/');
 
   var tempData=[]
   var hrData=[]
@@ -43,15 +45,15 @@ export default function LiveReadings({route, navigation}) {
       try{
         const { address } = route.params;
         const { seed } = route.params;
-        
+
 
         setHistState('Fetching Transaction Hashes\nPlease Wait......')
-        var rawRoot = await fetch(`https://thetamiddleware.herokuapp.com/getMAMroot/${seed.toString()}&${address.toString()}`);
-        var root = await rawRoot.json();
-        console.log('Fetching from tangle, please wait...');
-        console.log("Stream Root ",root);
-
-
+        var root = await fetch(
+          `https://thetamiddleware.herokuapp.com/getMAMroot/${seed}&${address}`
+        );
+        root = await root.json();
+        console.log("Root is ", root);
+        
     setFinished(true)
       }
       catch(e){
