@@ -89,7 +89,10 @@ function PatientProfile() {
   const [hr, setHR] = React.useState();
   const [spo2, setO2] = React.useState();
   const [temp, setTemp] = React.useState();
-  
+  const [timeStamp, setTimeStamp] = React.useState();
+  const [devStatus, setdevStatus] = React.useState();
+  const [lastOnline, setlastOnline] = React.useState();
+
   const [dummy, setDummy] = React.useState();
   const canvas = useRef(null);
 
@@ -175,12 +178,14 @@ function PatientProfile() {
       //deviceLog
       //vitals
       //prescription
+
       var response = await fetch(
         `https://thetamiddleware.herokuapp.com/getLastTx/${Address}&vitals`
       );
 
       var resObj = await response.json();
       console.log("last Transaction=", resObj);
+
       if (resObj != false) {
         console.log("tx=", resObj);
         //Passing Hash of transaction
@@ -195,12 +200,32 @@ function PatientProfile() {
           setHR(resObjTx.response.HR);
           setO2(resObjTx.response.SpO2);
           setTemp(resObjTx.response.Temp);
+          setTimeStamp(resObjTx.response.TimeStamp);
           console.log("last Response", LastReading);
         }
       } else {
         // SetLastReading('No Reading');
         console.log("last Reading", "No Reading");
       }
+
+      //------------------deviceLog------------------
+      var patLog = await fetch(
+        `https://thetamiddleware.herokuapp.com/getLastTx/${Address}&deviceLog`
+      );
+      var patLogObj = await patLog.json();
+      console.log("patLOGS= ", patLogObj);
+
+      if (patLogObj != false) {
+        var patLogDetails = await fetch(
+          `https://thetamiddleware.herokuapp.com/getTx/${patLogObj}`
+        );
+        var patDetails = await patLogDetails.json();
+        console.log("Patient details:", patDetails);
+        setdevStatus(patDetails.response.LogDetails);
+        setlastOnline(patDetails.response.TimeStamp);
+      }
+
+      //----------------------------------
     }
     getProfile();
   }, [Address]);
@@ -264,7 +289,6 @@ function PatientProfile() {
 
                 <div className={classes.div} style={{ color: "black" }}>
                   <div className={classes.div}>
-
                     <div className={classes.details}>
                       <Typography variant="h6">
                         {" "}
@@ -296,11 +320,9 @@ function PatientProfile() {
                     <div className={classes.details}>
                       <Typography variant="h6"> Age : {age}</Typography>
                     </div>
-                  
                   </div>
-                  
                 </div>
-                </Paper>
+              </Paper>
             </Grid>
           </Slide>
           <Grid item xs="3"></Grid>
@@ -310,7 +332,10 @@ function PatientProfile() {
           <Divider variant="middle" />
         </div>
 
-        <Grid container spacing={0} style={{marginTop:"2%"}} >
+        <Typography variant="h2" style={{ marginTop: "2%", color: "#B4B4B4" }}>
+          Device Log
+        </Typography>
+        <Grid container spacing={0} style={{ marginTop: "2%" }}>
           <Grid item xs={2}></Grid>
           <Grid item xs={8}>
             <div>
@@ -324,53 +349,134 @@ function PatientProfile() {
                     color: "white",
                   }}
                 >
-                  <Typography variant="h3">Last Readings</Typography>
+                  <Typography variant="h3">Last Reading</Typography>
                 </div>
-                
-                <Grid container spacing={0} style={{ marginTop: "2%", marginBottom:"2%" }}>
-                <Grid item xs={4}> </Grid>
 
-                  <Grid item xs={4} style={{ marginTop: "2%", color:"white" }}>
-                  <Paper elevation={4} variant="outlined" style={{borderColor:"RED",color:"white" ,backgroundColor:"#CD6155"}}>
-                      <Typography variant="h4">Heart Rate</Typography>
-                <Typography variant="h6">
-                  {hr==null ? <CircularProgress size="20px" style={{color:"white"}} /> : hr}
-                  </Typography>
+                <Grid
+                  container
+                  spacing={0}
+                  style={{ marginTop: "2%", marginBottom: "2%" }}
+                >
+                  <Grid item xs={4}>
+                    {" "}
+                  </Grid>
+
+                  <Grid item xs={4} style={{ marginTop: "2%", color: "white" }}>
+                    <Paper
+                      elevation={4}
+                      variant="outlined"
+                      style={{
+                        marginBottom: "3%",
+                        borderColor: "#018D87",
+                        color: "white",
+                        backgroundColor: "#3498DB",
+                      }}
+                    >
+                      <Typography variant="h4">Recorded at</Typography>
+                      <div style={{ marginTop: "2%" }}>
+                        <Divider variant="middle" />
+                      </div>
+                      <Typography variant="h5">
+                        {timeStamp == null ? (
+                          <CircularProgress
+                            size="20px"
+                            style={{ color: "white" }}
+                          />
+                        ) : (
+                          timeStamp
+                        )}
+                      </Typography>
+                    </Paper>
+                  </Grid>
+
+                  <Grid item xs={4}></Grid>
+                </Grid>
+
+                <div
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    display: "flex",
+                    backgroundColor: "#018D87",
+                    color: "white",
+                  }}
+                >
+                  <Typography variant="h3">Device Status</Typography>
+                </div>
+
+                <Grid
+                  container
+                  spacing={0}
+                  style={{ marginTop: "2%", marginBottom: "2%" }}
+                >
+                  <Grid item xs={4}>
+                    {" "}
+                  </Grid>
+
+                  <Grid item xs={4} style={{ marginTop: "2%", color: "white" }}>
+                    <Paper
+                      elevation={4}
+                      variant="outlined"
+                      style={{
+                        marginBottom: "3%",
+                        borderColor: "#018D87",
+                        color: "white",
+                        backgroundColor: "#3498DB",
+                      }}
+                    >
+                      <Typography variant="h4">Currently</Typography>
+                      <div style={{ marginTop: "2%" }}>
+                        <Divider variant="middle" />
+                      </div>
+                      <Typography variant="h5">
+                        {devStatus == null ? (
+                          <CircularProgress
+                            size="20px"
+                            style={{ color: "white" }}
+                          />
+                        ) : (
+                          devStatus
+                        )}
+                      </Typography>
                     </Paper>
                   </Grid>
 
                   <Grid item xs={4}></Grid>
 
-                   <Grid item xs={4}> </Grid>
+                  <Grid item xs={4}>
+                    {" "}
+                  </Grid>
 
-                  <Grid item xs={4} style={{ marginTop: "2%" }}>
-                  <Paper elevation={4} variant="outlined" 
-                  style={{borderColor:"Green",backgroundColor:"#27AE60",color:"white"}}>
-                      <Typography variant="h4" >Oxygen Level</Typography>
-                <Typography variant="h6">
-                  {spo2==null ? <CircularProgress size="20px" style={{color:"white"}} /> : spo2}
-                  </Typography>
+                  <Grid item xs={4} style={{ marginTop: "2%", color: "white" }}>
+                    <Paper
+                      elevation={4}
+                      variant="outlined"
+                      style={{
+                        marginBottom: "3%",
+                        borderColor: "#018D87",
+                        color: "white",
+                        backgroundColor: "#3498DB",
+                      }}
+                    >
+                      <Typography variant="h4">Last Online at</Typography>
+                      <div style={{ marginTop: "2%" }}>
+                        <Divider variant="middle" style={{backgroundColor :"white"}}/>
+                      </div>
+                      <Typography variant="h5">
+                        {lastOnline == null ? (
+                          <CircularProgress
+                            size="20px"
+                            style={{ color: "white" }}
+                          />
+                        ) : (
+                          lastOnline
+                        )}
+                      </Typography>
                     </Paper>
                   </Grid>
 
                   <Grid item xs={4}></Grid>
-
-
-                  <Grid item xs={4}> </Grid>
-
-                  <Grid item xs={4} style={{ marginTop: "2%", marginBottom:"2%" }}>
-                  <Paper elevation={4} variant="outlined"
-                   style={{borderColor:"#2980B9",backgroundColor:"#3498DB",color:"white"}}>
-                      <Typography variant="h4">Temperature</Typography>
-                <Typography variant="h6">
-                  {temp==null? <CircularProgress size="20px" style={{color:"white"}}/> : temp}
-                  </Typography>
-                    </Paper>
-                  </Grid>
-
-                  <Grid item xs={4}></Grid>
-
-                  </Grid>
+                </Grid>
               </Paper>
             </div>
           </Grid>
@@ -403,7 +509,7 @@ function PatientProfile() {
                     color: "white",
                   }}
                 >
-                  <Typography variant="h5" style={{ marginTop: "2%" }}>
+                  <Typography variant="h3" style={{ marginTop: "2%" }}>
                     Doctor's Seed : <EllipsisText text={seed} length={"20"} />
                   </Typography>
                 </div>
@@ -443,7 +549,7 @@ function PatientProfile() {
                   color: "white",
                 }}
               >
-                <Typography variant="h5" style={{ marginTop: "2%" }}>
+                <Typography variant="h3" style={{ marginTop: "2%" }}>
                   Patient's Address :{" "}
                   <EllipsisText text={Address} length={"20"} />
                 </Typography>
@@ -452,7 +558,6 @@ function PatientProfile() {
               <div>
                 <Tooltip title="Copy" aria-label="add">
                   <QRCode
-                    
                     value={Address}
                     includeMargin="true"
                     size="400"

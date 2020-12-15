@@ -1,7 +1,5 @@
 import React from "react";
 
-
-
 import Navbar from "./Navbar";
 import "./body.css";
 
@@ -14,15 +12,14 @@ import ListIcon from "@material-ui/icons/List";
 import swal from "sweetalert";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import DatePicker from "react-datepicker";
-
-
-
+import GroupIcon from "@material-ui/icons/Group";
 
 import {
   createMuiTheme,
   withStyles,
   ThemeProvider,
-  useTheme,responsiveFontSizes
+  useTheme,
+  responsiveFontSizes,
 } from "@material-ui/core/styles";
 
 import Paper from "@material-ui/core/Paper";
@@ -31,8 +28,6 @@ import PropTypes from "prop-types";
 import PermIdentityIcon from "@material-ui/icons/PermIdentity";
 
 import EllipsisText from "react-ellipsis-text";
-
-
 
 //**** TABLE ******/
 import Table from "@material-ui/core/Table";
@@ -50,7 +45,7 @@ import FirstPageIcon from "@material-ui/icons/FirstPage";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
-import KeyboardBackspaceTwoToneIcon from '@material-ui/icons/KeyboardBackspaceTwoTone';
+import KeyboardBackspaceTwoToneIcon from "@material-ui/icons/KeyboardBackspaceTwoTone";
 
 import TextField from "@material-ui/core/TextField";
 import {
@@ -62,7 +57,7 @@ import {
 } from "@material-ui/core";
 
 let theme = createMuiTheme({
-  body:{ backgroundColor:"#F6FFF8"},
+  body: { backgroundColor: "#F6FFF8" },
   typography: {
     fontFamily: ["Metrophobic", "sans-serif"].join(","),
   },
@@ -85,10 +80,9 @@ const useStylesTable = makeStyles({
     backgroundColor: "#1B4F72", //   #2980B9 blue   dark#2471A3  button #1B4F72
     color: "white",
     "&:hover": {
-        padding: "10px",
-        backgroundColor: "#2980B9", //#3498DB
-      },
-   
+      padding: "10px",
+      backgroundColor: "#2980B9", //#3498DB
+    },
   },
 });
 
@@ -96,15 +90,14 @@ const useStyles1 = makeStyles((theme) => ({
   root: {
     flexShrink: 0,
     marginLeft: theme.spacing(2.5),
-  }, 
-   menuButton: {
+  },
+  menuButton: {
     marginRight: theme.spacing(2),
   },
   title: {
     flexGrow: 1,
   },
 }));
-
 
 const rows = [
   { id: 1, name: "home", assigned_devices: 3 },
@@ -203,15 +196,8 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-
-
-
-
 function ViewPatient(props) {
   const classesTable = useStylesTable();
-
-
-  
 
   var { SEED } = useParams();
   console.log(SEED);
@@ -232,7 +218,7 @@ function ViewPatient(props) {
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value,10));
+    setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
@@ -260,8 +246,6 @@ function ViewPatient(props) {
   console.log("ADDRESS", addresses);
 
   async function getInfo(address) {
-  
-    
     console.log("Address to find", address);
     //setName(name);
 
@@ -272,8 +256,7 @@ function ViewPatient(props) {
 
     console.log("To json", to_json);
     // if transactions fetched
-    try { 
-     
+    try {
       if (to_json != false) {
         setTransactions(to_json);
         setShow(true);
@@ -374,51 +357,66 @@ function ViewPatient(props) {
       );
     }*/
 
-    function Profile(obj) {
-      //console.log("To Profile", obj);
-      localStorage.setItem("patient_profile", JSON.stringify(obj));
-      console.log("Sending object", JSON.parse(localStorage.getItem("patient_profile")));
-      props.history.push(`/patient_profile`);
-    }
-    function goBack(){
-      props.history.push(`/home`)
-    }
+  function Profile(obj) {
+    //console.log("To Profile", obj);
+    localStorage.setItem("patient_profile", JSON.stringify(obj));
+    console.log(
+      "Sending object",
+      JSON.parse(localStorage.getItem("patient_profile"))
+    );
+    props.history.push(`/patient_profile`);
+  }
+  function goBack() {
+    props.history.push(`/home`);
+  }
 
   if (Show) {
     return (
       //  <Slide direction="up" in={true} timeout={800}>
       <ThemeProvider theme={theme}>
         <Navbar />
-        
+        <div style={{ float: "left", marginLeft: "1%", marginTop: "1%" }}>
+          <Button
+            className={classesTable.hover}
+            style={{ marginBottom: "2%", marginTop: "2%" }}
+            color="inherit"
+            startIcon={<KeyboardBackspaceTwoToneIcon fontSize="small" />}
+            onClick={() => {
+              setShow(false);
+            }}
+          ></Button>
+        </div>
         <Slide direction="down" in={true} timeout={300}>
           <Grid container spacing={0}>
-            <Grid item xs={3} >
-              <Paper elevation={2} className={classes.paper} style={{ backgroundColor:"#F6FFF8", marginLeft:"2%",  marginTop: "12%"}}>
+            <Grid item xs={3}>
+              <Paper
+                elevation={2}
+                className={classes.paper}
+                style={{
+                  backgroundColor: "#F6FFF8",
+                  marginLeft: "2%",
+                  marginTop: "12%",
+                }}
+              >
                 <Typography variant="h6" gutterBottom>
-                   Total Transactions
+                  Total Transactions
                 </Typography>
                 <Typography variant="h4" style={{ color: "#2980B9" }}>
-                  {Transactions.length }
+                  {Transactions.length}
                 </Typography>
-                <Button
-                  className={classesTable.hover}
-                  style={{marginBottom:"2%", marginTop:"2%" }}
-                  color="inherit"
-                  startIcon={<KeyboardBackspaceTwoToneIcon fontSize="small" />}
-                  onClick={() => {
-                    setShow(false);
-                  }}
-                >
-                  Go Back
-                </Button>
               </Paper>
             </Grid>
-         
+
             <Grid item xs={9}>
               <Paper
                 elevation={2}
                 className={classes.paper}
-                style={{  backgroundColor:"#F6FFF8",marginTop: "4%" ,  marginLeft:"2%", marginRight:"1%" }}
+                style={{
+                  backgroundColor: "#F6FFF8",
+                  marginTop: "4%",
+                  marginLeft: "2%",
+                  marginRight: "1%",
+                }}
               >
                 <div style={{ backgroundColor: "#2980B9", color: "white" }}>
                   <Typography
@@ -430,45 +428,44 @@ function ViewPatient(props) {
                 </div>
                 <TableContainer className={classesTable.paper}>
                   <Table
-                    className={classesTable.table} style={{backgroundColor:"#F6FFF8"}}
+                    className={classesTable.table}
+                    style={{ backgroundColor: "#F6FFF8" }}
                     aria-label="simple table"
                   >
                     {Transactions.map((obj) => (
                       <TableRow>
-                        <TableCell align="center" >
-                    <Typography>{obj}</Typography>
+                        <TableCell align="center">
+                          <Typography>{obj}</Typography>
                         </TableCell>
                       </TableRow>
                     ))}
-                    
                   </Table>
                 </TableContainer>
               </Paper>
             </Grid>
-            
           </Grid>
         </Slide>
       </ThemeProvider>
     );
   }
 
-  if(addresses!=null){
+  if (addresses != null) {
+    return (
+      <ThemeProvider theme={theme} style={{ backgroundColor: "#F2FDFF" }}>
+        <Navbar />
+        <div style={{ float: "left", marginLeft: "1%", marginTop: "1%" }}>
+          <Button
+            className={classesTable.hover}
+            style={{ marginTop: "2%", marginLeft: "0" }}
+            color="inherit"
+            startIcon={<KeyboardBackspaceTwoToneIcon fontSize="small" />}
+            onClick={() => {
+              goBack();
+            }}
+          ></Button>
+        </div>
 
-  return (
-    <ThemeProvider theme={theme} style={{backgroundColor:"#F2FDFF"}}>
-      <Navbar />
-      <div style={{marginLeft:"1%"}}>
-      <Button 
-        className={classesTable.hover}
-        style={{ marginTop:"2%",marginLeft:"0" }}
-        color="inherit"
-        startIcon={<KeyboardBackspaceTwoToneIcon fontSize="small" />}
-        onClick={() => {
-        goBack();
-          }} >Back</Button>
-          </div>
-     
-          {/**  <Grid item xs={2} className={classes.side}>
+        {/**  <Grid item xs={2} className={classes.side}>
           <Paper className={classes.paper}>
             <Typography variant="h3" gutterBottom>
               <strong> Patients </strong>
@@ -479,8 +476,8 @@ function ViewPatient(props) {
           </Paper>
         </Grid>
         <Grid item xs={1}></Grid> */}
-          {/**ADD TABLE */}
-{/** 
+        {/**ADD TABLE */}
+        {/** 
           
           <Grid item xs={2} className={classes.side}>
             <Paper className={classes.paper}>
@@ -530,199 +527,219 @@ function ViewPatient(props) {
             </Paper>
           </Grid>
         */}
-          
-        <Grid container spacing={0} >
+
+        <Grid container spacing={0}>
           <Grid item xs={1}></Grid>
-          <Grid xs={10} style={{marginBottom:"3%"}}>
-            
-              <Typography
-                variant="h2"
-                style={{
-                  marginTop: "2%",
-                  color: "#B4B4B4",
-                  fontWeight: "bold",
-                }}
-                gutterBottom
-              >
-              {total}  Patients
-              </Typography>
-              <Slide direction="right" in={true} timeout={300}>
+          <Grid xs={10} style={{ marginBottom: "3%" }}>
+            <Typography
+              variant="h2"
+              style={{
+                marginTop: "2%",
+                color: "#B4B4B4",
+                fontWeight: "bold",
+              }}
+              gutterBotto
+            >
+              <GroupIcon fontSize="large" />
+              {total} Patients
+            </Typography>
+            <Slide direction="right" in={true} timeout={300}>
               <Paper className={classes.paper}>
-              <TableContainer className={classesTable.paper} style={{display:"flex", justifyContent:"center", }}>
-              
-                <Table className={classesTable.table} aria-label="simple table">
-                  <TableHead style={{ backgroundColor: "#2980B9" }}>
-                    <TableRow>
-                      <TableCell className={classesTable.cell} align="center">
-                      <Typography variant="h6" style={{ color: "white" }}>Patient's Name</Typography>
-                      </TableCell>
-                      <TableCell className={classesTable.cell} align="center">
-                      <Typography variant="h6" style={{ color: "white" }}>Patient's ID</Typography>
-                      </TableCell>
-                      <TableCell className={classesTable.cell} align="center">
-                      <Typography variant="h6" style={{ color: "white" }}>Age</Typography>
-                      </TableCell>
-                      <TableCell className={classesTable.cell} align="center">
-                      <Typography variant="h6" style={{ color: "white" }}>Contact</Typography>
-                      </TableCell>
-                      <TableCell className={classesTable.cell} align="center">
-                      <Typography variant="h6" style={{ color: "white" }}>Address</Typography>
-                      </TableCell>
-                      <TableCell className={classesTable.cell} align="center">
-                      <Typography variant="h6" style={{ color: "white" }}>Transactions</Typography>
-                      </TableCell>
-                      <TableCell className={classesTable.cell} align="center">
-                      <Typography variant="h6" style={{ color: "white" }}>Transaction Type</Typography>
-                      </TableCell>
-                      <TableCell className={classesTable.cell} align="center">
-                      <Typography variant="h6" style={{ color: "white" }}>Profile</Typography>
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {addresses.map((obj) => (
-                      
-                      <TableRow hover key={obj.name}>
-                        <TableCell
-                          component="th"
-                          scope="row"
-                          //style={{ color: "green" }}
-                        >
-                          <Typography variant="body2">{obj.Profile==null ? "empty": obj.Profile.name} </Typography>
-                        </TableCell>
-
-                        <TableCell align="center">
-                        <Typography variant="body2"> { obj.ID}</Typography>
-                        </TableCell>
-
-                        <TableCell align="center"><Typography variant="body2">{obj.Profile==null ? "empty" : obj.Profile.age}
-                        </Typography>
-                        </TableCell>
-                        
-                        <TableCell align="center">
-                        <Typography variant="body2"> {(obj.Profile==null) ? "empty" : obj.Profile.contact  }
-                        </Typography>
-                        </TableCell>
-
-                        <TableCell align="center">
-                        <Typography variant="body2">
-                        <EllipsisText
-                    text={obj.ADDRESS }
-                    length={"30"}/>
-                    </Typography>
-                          </TableCell>
-                        <TableCell>
-                          <Button
-                            className={classesTable.hover}
-                            color="inherit"
-                            /** onClick={()=>{setopenDialogue(true); sethistoryAddress(obj.ADDRESS)}} */
-                            onClick={() =>
-                              getInfo(obj.ADDRESS)
-                            }
-                            startIcon={
-                              <ListIcon
-                                fontSize="small"
-                                // component={link}
-                                //to={`/ViewPatient/${obj.SEED}`}
-                              />
-                            }
-                          >
-                            {" "}
-                            <Typography variant="button"> View</Typography>
-                          </Button>
-                        </TableCell>
-
-                        <TableCell><Typography variant="body2">Vitals</Typography></TableCell>
-                        <TableCell align="center">
-                        {
-                          <Button
-                            className={classesTable.hover}
-                            color="inherit"
-                            onClick={() => Profile(obj)}
-                            startIcon={
-                              <PermIdentityIcon
-                                fontSize="small"
-                                // component={link}
-                                //to={`/ViewPatient/${obj.SEED}`}
-                              />
-                            }
-                          >
-                            {" "}
-                            <Typography variant="button">
-                              View
-                              </Typography>
-                          </Button>
-                        }
-                      </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-
-                  <TableFooter
-                  className={classesTable.row}
-                  style={{ maxwidth: "100%" }}
+                <TableContainer
+                  className={classesTable.paper}
+                  style={{ display: "flex", justifyContent: "center" }}
                 >
-                  <TableRow>
-                    <TablePagination
-                      rowsPerPageOptions={[
-                        5,
-                        10,
-                        10,
-                        { label: "All", value: -1 },
-                      ]}
-                      colSpan={12}
-                      count={addresses.length}
-                      rowsPerPage={rowsPerPage}
-                      page={page}
-                      SelectProps={{
-                        inputProps: { "aria-label": "rows per page" },
-                        native: true,
-                      }}
-                      onChangePage={handleChangePage}
-                      onChangeRowsPerPage={handleChangeRowsPerPage}
-                      ActionsComponent={TablePaginationActions}
-                    />
-                  </TableRow>
-                </TableFooter>
+                  <Table
+                    className={classesTable.table}
+                    aria-label="simple table"
+                  >
+                    <TableHead style={{ backgroundColor: "#2980B9" }}>
+                      <TableRow>
+                        <TableCell className={classesTable.cell} align="center">
+                          <Typography variant="h6" style={{ color: "white" }}>
+                            Patient's Name
+                          </Typography>
+                        </TableCell>
+                        <TableCell className={classesTable.cell} align="center">
+                          <Typography variant="h6" style={{ color: "white" }}>
+                            Patient's ID
+                          </Typography>
+                        </TableCell>
+                        <TableCell className={classesTable.cell} align="center">
+                          <Typography variant="h6" style={{ color: "white" }}>
+                            Age
+                          </Typography>
+                        </TableCell>
+                        <TableCell className={classesTable.cell} align="center">
+                          <Typography variant="h6" style={{ color: "white" }}>
+                            Contact
+                          </Typography>
+                        </TableCell>
+                        <TableCell className={classesTable.cell} align="center">
+                          <Typography variant="h6" style={{ color: "white" }}>
+                            Address
+                          </Typography>
+                        </TableCell>
+                        <TableCell className={classesTable.cell} align="center">
+                          <Typography variant="h6" style={{ color: "white" }}>
+                            Transactions
+                          </Typography>
+                        </TableCell>
+                        <TableCell className={classesTable.cell} align="center">
+                          <Typography variant="h6" style={{ color: "white" }}>
+                            Transaction Type
+                          </Typography>
+                        </TableCell>
+                        <TableCell className={classesTable.cell} align="center">
+                          <Typography variant="h6" style={{ color: "white" }}>
+                            Profile
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {addresses.map((obj) => (
+                        <TableRow hover key={obj.name}>
+                          <TableCell
+                            component="th"
+                            scope="row"
+                            //style={{ color: "green" }}
+                          >
+                            <Typography variant="body2">
+                              {obj.Profile == null ? "empty" : obj.Profile.name}{" "}
+                            </Typography>
+                          </TableCell>
 
+                          <TableCell align="center">
+                            <Typography variant="body2"> {obj.ID}</Typography>
+                          </TableCell>
 
-                </Table>
-              
-              </TableContainer>
+                          <TableCell align="center">
+                            <Typography variant="body2">
+                              {obj.Profile == null ? "empty" : obj.Profile.age}
+                            </Typography>
+                          </TableCell>
+
+                          <TableCell align="center">
+                            <Typography variant="body2">
+                              {" "}
+                              {obj.Profile == null
+                                ? "empty"
+                                : obj.Profile.contact}
+                            </Typography>
+                          </TableCell>
+
+                          <TableCell align="center">
+                            <Typography variant="body2">
+                              <EllipsisText text={obj.ADDRESS} length={"30"} />
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Button
+                              className={classesTable.hover}
+                              color="inherit"
+                              /** onClick={()=>{setopenDialogue(true); sethistoryAddress(obj.ADDRESS)}} */
+                              onClick={() => getInfo(obj.ADDRESS)}
+                              startIcon={
+                                <ListIcon
+                                  fontSize="small"
+                                  // component={link}
+                                  //to={`/ViewPatient/${obj.SEED}`}
+                                />
+                              }
+                            >
+                              {" "}
+                              <Typography variant="button"> View</Typography>
+                            </Button>
+                          </TableCell>
+
+                          <TableCell>
+                            <Typography variant="body2">Vitals</Typography>
+                          </TableCell>
+                          <TableCell align="center">
+                            {
+                              <Button
+                                className={classesTable.hover}
+                                color="inherit"
+                                onClick={() => Profile(obj)}
+                                startIcon={
+                                  <PermIdentityIcon
+                                    fontSize="small"
+                                    // component={link}
+                                    //to={`/ViewPatient/${obj.SEED}`}
+                                  />
+                                }
+                              >
+                                {" "}
+                                <Typography variant="button">View</Typography>
+                              </Button>
+                            }
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+
+                    <TableFooter
+                      className={classesTable.row}
+                      style={{ maxwidth: "100%" }}
+                    >
+                      <TableRow>
+                        <TablePagination
+                          rowsPerPageOptions={[
+                            5,
+                            10,
+                            10,
+                            { label: "All", value: -1 },
+                          ]}
+                          colSpan={12}
+                          count={addresses.length}
+                          rowsPerPage={rowsPerPage}
+                          page={page}
+                          SelectProps={{
+                            inputProps: { "aria-label": "rows per page" },
+                            native: true,
+                          }}
+                          onChangePage={handleChangePage}
+                          onChangeRowsPerPage={handleChangeRowsPerPage}
+                          ActionsComponent={TablePaginationActions}
+                        />
+                      </TableRow>
+                    </TableFooter>
+                  </Table>
+                </TableContainer>
               </Paper>
-              </Slide>
-          
+            </Slide>
 
             {/** END */}
           </Grid>
           <Grid item xs={1}></Grid>
-
         </Grid>
-     
-      <Dialog
-        fullWidth
-        maxWidth="sm"
-        open={openDialogue}
-        //onChange={()=>{}}
-        onClose={handleClose}
-      >
-        <DialogTitle>Select date</DialogTitle>
-        <DialogContent>
-          <TextField
-            label="Date"
-            type="date"
-            onChange={(date) => setdate(date)}
-            format="yyyy-MM-dd"
-            max="2020-10-30"
-            min="2017-05-11"
-            value={date}
-            defaultValue="2019-05-24"
-          ></TextField>
-          {/** <DatePicker  onChange={date => setdate(date)} />*/}
-        </DialogContent>
-      </Dialog>
-    </ThemeProvider>
-  ); }
+
+        <Dialog
+          fullWidth
+          maxWidth="sm"
+          open={openDialogue}
+          //onChange={()=>{}}
+          onClose={handleClose}
+        >
+          <DialogTitle>Select date</DialogTitle>
+          <DialogContent>
+            <TextField
+              label="Date"
+              type="date"
+              onChange={(date) => setdate(date)}
+              format="yyyy-MM-dd"
+              max="2020-10-30"
+              min="2017-05-11"
+              value={date}
+              defaultValue="2019-05-24"
+            ></TextField>
+            {/** <DatePicker  onChange={date => setdate(date)} />*/}
+          </DialogContent>
+        </Dialog>
+      </ThemeProvider>
+    );
+  }
 }
 
 export default ViewPatient;
