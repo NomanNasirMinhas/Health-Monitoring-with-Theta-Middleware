@@ -108,6 +108,7 @@ function DoctorProfile() {
         //const seed = local_seed.seed_obj.SEED;
         setSeed(local_seed.seed_obj.SEED);
         setDummy= seed;
+        
 
         console.log(
           name,
@@ -119,7 +120,16 @@ function DoctorProfile() {
           id,
           seed
         );
-        //
+
+       
+        //setdevStatus(patDetails.response.LogDetails);
+        //setlastOnline(patDetails.response.TimeStamp);
+      
+
+      //----------------------------------
+
+
+        //-----------------Doctor Log ends
       } catch (e) {
         console.log("Cannot fetch");
       }
@@ -127,6 +137,31 @@ function DoctorProfile() {
 
     SeedInfo();
   }, []);
+
+  useEffect(() => {
+    async function DocLogs() {
+
+   //-------------------------DOCTOR LOGSS--------------------
+
+           //------------------deviceLog------------------
+           console.log("REached")
+      var patLog = await fetch(
+        `https://thetamiddleware.herokuapp.com/getLastTx/${seed}&docLog`
+      );
+      var patLogObj = await patLog.json();
+      console.log("docLOGS= ", patLogObj);
+
+      if (patLogObj != false) {
+        var patLogDetails = await fetch(
+          `https://thetamiddleware.herokuapp.com/getTx/${patLogObj}`
+        );
+        var docDetails = await patLogDetails.json();
+        console.log("Doctor details:", docDetails);
+        }
+      }
+      DocLogs();
+
+      }, [seed]);
 
   var QRCode = require("qrcode.react");
   //var dummy=seed.json();

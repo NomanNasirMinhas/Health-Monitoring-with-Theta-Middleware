@@ -104,6 +104,15 @@ const useStylesTable = makeStyles({
       padding: "10px"
     },
   },
+  
+papers:{
+ 
+    "&:hover": {
+     
+      padding: "30px"
+    },
+  
+  },
 });
 
 const useStyles1 = makeStyles((theme) => ({
@@ -658,8 +667,10 @@ function Doctors(props) {
         <Grid item xs={1}></Grid>
         <Grid item xs={4}>
           <Paper
+          className={classesTable.papers}
             elevation={5}
             style={{ backgroundColor: "#08A24A", marginTop: "2%" }}
+
           >
             <Typography
               variant="h4"
@@ -684,6 +695,7 @@ function Doctors(props) {
         <Grid item xs={2}></Grid>
         <Grid item xs={4}>
           <Paper
+          className={classesTable.papers}
             elevation={5}
             style={{ backgroundColor: "#2B8FA3", marginTop: "2%" }}
           >

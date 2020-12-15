@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from "./Navbar";
 import { useState, useEffect } from "react";
+//import {Img} from 'react-image'
 
 import db from '../Firebase';
 
@@ -12,8 +13,11 @@ function AdminProfile(){
            useEffect(() => {
                function getData(){
                    console.log("in fucntion");
-           db.collection("profile").get().then(querySnapshot =>{
+         db.collection("profile").get().then(querySnapshot =>{
                const data= querySnapshot.docs.map(doc=> doc.data());
+
+              
+               
                console.log("data=",data);
            });
 

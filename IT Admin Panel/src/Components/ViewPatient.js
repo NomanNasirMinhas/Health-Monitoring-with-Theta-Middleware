@@ -245,9 +245,9 @@ function ViewPatient(props) {
   }, []);
   console.log("ADDRESS", addresses);
 
-  async function getInfo(address) {
+  async function getInfo(address,name) {
     console.log("Address to find", address);
-    //setName(name);
+   setName(name);
 
     const info = await fetch(
       `https://thetamiddleware.herokuapp.com/getAllHash/${address}&${"26-11-2020"}&${"vitals"}`
@@ -639,7 +639,7 @@ function ViewPatient(props) {
                               className={classesTable.hover}
                               color="inherit"
                               /** onClick={()=>{setopenDialogue(true); sethistoryAddress(obj.ADDRESS)}} */
-                              onClick={() => getInfo(obj.ADDRESS)}
+                              onClick={() => getInfo(obj.ADDRESS,obj.Profile.name)}
                               startIcon={
                                 <ListIcon
                                   fontSize="small"
