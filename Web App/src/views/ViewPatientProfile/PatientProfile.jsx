@@ -151,7 +151,8 @@ const PatientProfile = (props) => {
                                                     </ListItemText>
                                                 </MenuItem>
                                                 <Divider />
-                                                <MenuItem disabled={Empty} to={`/livereadings/${patient.name}&${patient.gender}&${patient.date}&${address}`}>
+                                                <MenuItem disabled={Empty} component={Link}
+                                                     to={`/livereadings/${patient.name}&${patient.gender}&${patient.date}&${address}`}>
                                                     <ListItemIcon>
                                                         <TimelineIcon />
                                                     </ListItemIcon>
