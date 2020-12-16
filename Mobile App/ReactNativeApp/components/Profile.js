@@ -37,7 +37,7 @@ export default function Profile({ route, navigation }) {
   const [patientDate, setPatientDate] = useState("Loading....");
   const [patientHR, setPatientHR] = useState("Loading....");
   const [patientTemp, setPatientTemp] = useState("Loading....");
-  const [patientBPsys, setPatientBPsys] = useState("Loading....");
+  const [patientHealth, setPatientHealth] = useState('...');
   const [patientBPdiast, setPatientBPdiast] = useState("Loading....");
   const [patientSpO2, setPatientSpO2] = useState("Loading....");
   const [patientAddress, setPatientAddress] = useState("Loading....");
@@ -46,6 +46,7 @@ export default function Profile({ route, navigation }) {
   const [spinnerText, setSpinnerText] = useState("Fetching From IOTA...\nPlease Wait...")
   const [hasLastTx, setHasLastTx] = useState(false);
   const [lastTx, setLastTx] = useState([0, 0, 0]);
+  // const [prediction, setPrediction] = useState(0)
   const [lastNotif, setLastNotif] = useState({now: 0});
   const [lastPresc, setLastPresc] = useState({now: 0});
   const [notifFinished, setNotifFinished] = useState(false);
@@ -68,14 +69,13 @@ export default function Profile({ route, navigation }) {
 
   var maxWidth = Dimensions.get("window").width;
 
-
   var HistoryArray = []
   var lastPrescVar = false;
-
+  const { info } = route.params;
   useEffect(() => {
     (async () => {
       try {
-        const { info } = route.params;
+
         // Alert.alert(JSON.stringify(info))
         // console.log(info)
         setPatientName(info.Profile.name.toString());
@@ -115,7 +115,14 @@ export default function Profile({ route, navigation }) {
           setPatientSpO2(resObjTx.response.SpO2.toString())
           // setPatientBPsys(resObjTx.BP.systolic.toString());
           // setPatientBPdiast(resObjTx.BP.diastolic.toString());
+          var prediction = await fetch(
+            `https://thetamiddleware.herokuapp.com/getPrediction/${patientTemp}&${patientHR}&${patientSpO2}`);
+            prediction = await prediction.json();
           setLastTx([resObjTx.response.HR, resObjTx.response.Temp, resObjTx.response.SpO2]);
+          // setPredGraphData([prediction])
+            setPatientHealth(prediction.toFixed(2).toString())
+            // predictionData.data.push(prediction)
+            console.log("Health Stability = ", patientHealth)
           setHasLastTx(true);
           setFinished(true);}
         }
@@ -406,40 +413,53 @@ export default function Profile({ route, navigation }) {
         <Card.Divider />
         <View style={styles.buttonContainer}>
           <Button
-            title="Live Readings"
+            // title="Live Readings"
             buttonStyle={styles.buttonStyle}
+            icon={<Image source={require('./../assets/Icons/live.png') }/>}
             titleStyle={styles.buttonText}
-            style={{ width: 150, marginRight: 10 }}
+            style={{ width: 50, marginRight: 10 }}
             onPress={
               () =>
               navigation.navigate("LiveReadings", { seed: patientSeed , address: patientAddress })
             }
           ></Button>
           <Button
-            style={{ width: 150, marginLeft: 10 }}
+            style={{ width: 50, marginLeft: 10, marginRight:10 }}
             buttonStyle={styles.buttonStyle}
             titleStyle={styles.buttonText}
-            title="View History"
+            icon={<Image source={require('./../assets/Icons/history.png') }/>}
+            // title="View History"
             onPress={
               () =>
               navigation.navigate("History", { address: patientAddress })
             }
           ></Button>
-        </View>
-        <View style={styles.buttonContainer}>
           <Button
-            title="Prescriptions"
+            // title="Prescriptions"
             buttonStyle={styles.buttonStyle}
+            icon={<Image source={require('./../assets/Icons/prescription.png') }/>}
             titleStyle={styles.buttonText}
-            style={{ width: 150, marginRight: 10 }}
+            style={{ width: 50, marginLeft: 10,marginRight: 10 }}
             onPress={handlePrescription}
           ></Button>
           <Button
-            style={{ width: 150, marginLeft: 10}}
+            style={{ width: 50, marginLeft: 10, marginRight:10}}
             buttonStyle={styles.buttonStyle}
+            icon={<Image source={require('./../assets/Icons/notification.png') }/>}
             titleStyle={styles.buttonText}
-            title="Notifications"
+            // title="Notifications"
             onPress={handleNotifications}
+          ></Button>
+          <Button
+            style={{ width: 50, marginLeft: 10}}
+            buttonStyle={styles.buttonStyle}
+            icon={<Image source={require('./../assets/Icons/refresh.png') }/>}
+            titleStyle={styles.buttonText}
+            // title="Notifications"
+            onPress={
+              () =>
+              navigation.navigate("Profile", {info: info})
+            }
           ></Button>
         </View>
 
@@ -453,6 +473,12 @@ export default function Profile({ route, navigation }) {
 
           <View>
             {/* Bar Chart Starts From Here */}
+
+            <Card.Title>
+          <Text style={[styles.text, { color: 'white', fontWeight: "900", fontSize: 26, fontFamily:'Righteous' }]}>
+            Predicted Health Stability: {patientHealth} %
+          </Text>
+        </Card.Title>
 
             <BarChart
               data={{
