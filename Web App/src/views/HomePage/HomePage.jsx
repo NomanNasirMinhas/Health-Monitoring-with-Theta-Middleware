@@ -1,11 +1,9 @@
 import React, { useEffect } from "react";
 import {
-  withStyles,
   makeStyles,
   Table,
   Typography,
   TableBody,
-  TableCell,
   TableHead,
   CircularProgress,
   TableRow,
@@ -17,6 +15,7 @@ import {
   Backdrop,
   Tooltip,
 } from "@material-ui/core";
+import { ErrorMessage, Options, StyledTableCell, useStyles } from "./FunctionsHomePage"
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import Header from "../../components/Header/Header";
 import theme from "../../assets/theme/theme";
@@ -35,89 +34,6 @@ import { Bar } from "react-chartjs-2";
 import moment from "moment";
 
 const useStyle = makeStyles(styles);
-
-const StyledTableCell = withStyles((theme) => ({
-  head: {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.common.white,
-    fontFamily: "Roboto Condensed",
-    borderColor: "rgba(255, 255, 255, 0.12)",
-    fontWeight: "bold",
-  },
-  body: {
-    backgroundColor: "rgba(60, 60, 70, 1)",
-    borderColor: "rgba(255, 255, 255, 0.12)",
-    opacity: "100%",
-    color: "rgba(255, 255, 255, 1)",
-    fontSize: 14,
-    fontFamily: "Roboto Condensed",
-  },
-}))(TableCell);
-
-const useStyles = makeStyles((theme) => ({
-  content: {
-    padding: theme.spacing(3),
-  },
-  table: {
-    minWidth: 700,
-    fontFamily: "Roboto Condensed",
-  },
-  titletext: {
-    marginBottom: "40px",
-  },
-  CircularProgress: {
-    position: "absolute",
-    top: "45%",
-    left: "46%",
-  },
-}));
-const ErrorMessage = () => {
-  return (
-    <>
-      <Grid container justify="space-evenly">
-        <Grid item md={3}>
-          <Patient style={{ fontSize: "20.5em" }} />
-        </Grid>
-      </Grid>
-      <Grid container justify="space-evenly">
-        <Grid item md={6}>
-          <Typography align="center" color="secondary" variant="h5">
-            Currently, there are no patients under your supervision.
-        </Typography>
-        </Grid>
-      </Grid>
-    </>
-  );
-};
-
-const Options = {
-  legend: {
-    display: false,
-  },
-  scales: {
-    yAxes: [
-      {
-        gridLines: {
-          color: "rgba(255, 255, 255, 0.2)",
-        },
-        ticks: {
-          fontColor: "#FFFFFF",
-          beginAtZero: true,
-        },
-      },
-    ],
-    xAxes: [
-      {
-        gridLines: {
-          display: false,
-        },
-        ticks: {
-          fontColor: "#FFFFFF",
-        },
-      },
-    ],
-  },
-};
 
 export default function HomePage() {
   const [Response, SetResponse] = React.useState([]);

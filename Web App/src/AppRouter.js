@@ -14,7 +14,6 @@ import './App.css'
 import ViewReport from './views/ViewReport/ViewReport';
 
 const AppRouter = () => {
-
     const [Empty, setEmpty] = useState(false);
     return (
         <Router>
@@ -26,7 +25,7 @@ const AppRouter = () => {
                 <UserContext.Provider value={{ Empty, setEmpty }}>
                     <Route path="/viewpatientprofile/:address" component={PatientProfile} />
                     <Route path="/yourprofile" component={YourProfile} />
-                    <Route path="/livereadings/:address" component={LiveReadings} />
+                    <Route path="/livereadings/:name&:gender&:admissionDate&:address" component={LiveReadings} />
                     <Route path="/addpatient" component={AddPatient} />
                     <Route path="/report/:name&:gender&:admissionDate&:address" component={ViewReport} />
                     <Route path="/viewhistory/:name&:gender&:admissionDate&:address" component={ViewHistory} />

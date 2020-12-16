@@ -34,28 +34,7 @@ import PrescriptionCard from "../../components/PrescriptionCard/PrescriptionCard
 import { UserContext } from "../../Context";
 import ListOutlinedIcon from '@material-ui/icons/ListOutlined';
 import AppointmentCard from "../../components/AppointmentCard/AppointmentCard";
-
-const useStyles = makeStyles((theme) => ({
-    body: {
-        display: "flex",
-        minHeight: "1vh",
-        marginTop: theme.spacing(3),
-        marginBottom: theme.spacing(9),
-    },
-    bottom: {
-        position: "fixed",
-        display: "flex",
-        flexWrap: "wrap",
-        alignItems: "center",
-        justifyContent: "space-around",
-        borderRadius: "3px",
-        height: "8vh",
-        left: "0",
-        bottom: "0",
-        width: "100%",
-        backgroundColor: "rgb(240, 248, 255,0.5)",
-    },
-}));
+import useStyles from "./FunctionsPP"
 
 const PatientProfile = (props) => {
     const classes = useStyles();
@@ -73,7 +52,6 @@ const PatientProfile = (props) => {
     const handleMenu = (event) => {
         setAnchorEl(event.currentTarget);
     };
-
 
     const handleClose = () => {
         setAnchorEl(null);
@@ -173,7 +151,7 @@ const PatientProfile = (props) => {
                                                     </ListItemText>
                                                 </MenuItem>
                                                 <Divider />
-                                                <MenuItem disabled={Empty} to={`/livereadings/${address}`}>
+                                                <MenuItem disabled={Empty} to={`/livereadings/${patient.name}&${patient.gender}&${patient.date}&${address}`}>
                                                     <ListItemIcon>
                                                         <TimelineIcon />
                                                     </ListItemIcon>
@@ -258,7 +236,7 @@ const PatientProfile = (props) => {
                                     component={Link}
                                     size="large"
                                     disabled={Empty}
-                                    to={`/livereadings/${address}`}
+                                    to={`/livereadings/${patient.name}&${patient.gender}&${patient.date}&${address}`}
                                     startIcon={<TimelineIcon />}
                                 >
                                     Live Readings
