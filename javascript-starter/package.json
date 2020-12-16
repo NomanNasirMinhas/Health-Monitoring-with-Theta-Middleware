@@ -18,7 +18,7 @@
     "@iota/extract-json": "^1.0.0-beta.23",
     "@iota/mam": "^0.7.3",
     "@iota/signing": "^1.0.0-beta.23",
-    "@tensorflow/tfjs": "^2.8.0",
+    "@tensorflow/tfjs-node": "^2.8.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",

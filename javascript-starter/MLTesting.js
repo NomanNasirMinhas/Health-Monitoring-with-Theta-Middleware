@@ -2,11 +2,14 @@
 async function test()
 {
     try
-    {const tf = require('@tensorflow/tfjs');
+    {
+    const tf = require('@tensorflow/tfjs-node');
     const model = await tf.loadLayersModel('https://storage.googleapis.com/fyp_model/model.json');
-    const example = [90, 80, 99]
-    const prediction = model.predict(example);
-    console.log(prediction)
+    const data = tf.tensor([[90, 80, 99]])
+    console.log(data.shape)
+    var predication = await model.predict(data).data();
+    // predication = JSON.parse(predication);
+    console.log("Stability  = ",predication[0])
 }
 catch(e)
 {
