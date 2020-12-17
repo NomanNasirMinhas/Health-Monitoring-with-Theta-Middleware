@@ -6,11 +6,14 @@ import { useEffect, useState, useRef } from "react";
 
 //grid import
 import Grid from "@material-ui/core/Grid";
-import Divider from '@material-ui/core/Divider';
+import Divider from "@material-ui/core/Divider";
 
 import Paper from "@material-ui/core/Paper";
+import Button from "@material-ui/core/Button";
+import { useHistory } from "react-router-dom";
 
 //Avatar import
+import DeleteIcon from "@material-ui/icons/Delete";
 import Avatar from "@material-ui/core/Avatar";
 import HomeIcon from "@material-ui/icons/Home";
 import PhoneIcon from "@material-ui/icons/Phone";
@@ -26,6 +29,14 @@ import AssignmentIcon from "@material-ui/icons/Assignment";
 
 //import QRCode from "react-qr-code";
 
+//Dialog box imports
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import swal from "sweetalert";
+
 //import theme provider
 import {
   createMuiTheme,
@@ -36,7 +47,7 @@ import {
   useTheme,
 } from "@material-ui/core/styles";
 
-import { Typography, Slide,CircularProgress } from "@material-ui/core";
+import { Typography, Slide, CircularProgress } from "@material-ui/core";
 
 // theme set
 
@@ -59,6 +70,15 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: "3%",
   },
   div: { marginTop: "4%" },
+
+  hover: {
+    backgroundColor: "#018D87", //   #2980B9 blue   dark#2471A3  button #1B4F72
+    color: "white",
+    "&:hover": {
+      padding: "10px",
+      backgroundColor: "#922B21", //#3498DB
+    },
+  },
 }));
 
 function DoctorProfile() {
@@ -68,15 +88,27 @@ function DoctorProfile() {
 
   //var QRCode = require('qrcode.react');
 
+  let history = useHistory(); // assigning useHistory
+  const [open, setOpen] = React.useState(false); //dialog box for deleting doctor
+  //handle dialog box open
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  //close dialog handle
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const classes = useStyles();
   const [name, setName] = React.useState();
+  const [subName, setsubName] = React.useState();
   const [address, setAddress] = React.useState();
   const [contact, setContact] = React.useState();
   const [email, setEmail] = React.useState();
   const [specialization, setSpecialization] = React.useState();
   const [num_of_pat, setNum_of_pat] = React.useState();
   const [seed, setSeed] = React.useState();
-  const [dummy, setDummy]= React.useState();
+  const [dummy, setDummy] = React.useState();
   const canvas = useRef(null);
 
   //console.log("SEED=",JSON.parse(obj));
@@ -92,6 +124,7 @@ function DoctorProfile() {
         //setting doctor object to variables
         //const name=local_seed.seed_obj.Profile.name;
         setName(local_seed.seed_obj.Profile.name);
+        setsubName(local_seed.seed_obj.Profile.name.substring(0,1).toUpperCase());
         //const address = local_seed.seed_obj.Profile.address;
         setAddress(local_seed.seed_obj.Profile.address);
         //const contact = local_seed.seed_obj.Profile.contact;
@@ -107,8 +140,7 @@ function DoctorProfile() {
         const id = local_seed.seed_obj.ID;
         //const seed = local_seed.seed_obj.SEED;
         setSeed(local_seed.seed_obj.SEED);
-        setDummy= seed;
-        
+        setDummy = seed;
 
         console.log(
           name,
@@ -121,13 +153,10 @@ function DoctorProfile() {
           seed
         );
 
-       
         //setdevStatus(patDetails.response.LogDetails);
         //setlastOnline(patDetails.response.TimeStamp);
-      
 
-      //----------------------------------
-
+        //----------------------------------
 
         //-----------------Doctor Log ends
       } catch (e) {
@@ -140,11 +169,10 @@ function DoctorProfile() {
 
   useEffect(() => {
     async function DocLogs() {
+      //-------------------------DOCTOR LOGSS--------------------
 
-   //-------------------------DOCTOR LOGSS--------------------
-
-           //------------------deviceLog------------------
-           console.log("REached")
+      //------------------deviceLog------------------
+      console.log("REached");
       var patLog = await fetch(
         `https://thetamiddleware.herokuapp.com/getLastTx/${seed}&docLog`
       );
@@ -157,138 +185,143 @@ function DoctorProfile() {
         );
         var docDetails = await patLogDetails.json();
         console.log("Doctor details:", docDetails);
-        }
       }
-      DocLogs();
+    }
+    DocLogs();
+  }, [seed]);
 
-      }, [seed]);
+  function Delete(seedReceived) {
+    //console.log("going back from:", seed)
+
+    //Open Dialog Box
+    handleClickOpen();
+  }
 
   var QRCode = require("qrcode.react");
   //var dummy=seed.json();
- if(seed==null || seed ==undefined){ 
-return(
-  <ThemeProvider theme={theme}>
-      <Navbar />
-<CircularProgress size="200px"/>
-</ThemeProvider>
-);
+  if (seed == null || seed == undefined) {
+    return (
+      <ThemeProvider theme={theme}>
+        <Navbar />
+        <CircularProgress size="200px" />
+      </ThemeProvider>
+    );
+  }
 
- }
+  if (seed != null) {
+    return (
+      <ThemeProvider theme={theme}>
+        <Navbar />
+        <Typography variant="h2" style={{ marginTop: "2%", color: "#B4B4B4" }}>
+          {name}'s Profile
+        </Typography>
 
-if(seed!=null){
-  return (
-    <ThemeProvider theme={theme}>
-      <Navbar />
-
-      <Grid container spacing={0} style={{ marginTop: "2%" }}>
-       
+        <Grid container spacing={0} style={{ marginTop: "2%" }}>
           <Grid item xs="4"></Grid>
           <Slide direction="left" in={true} timeout={300}>
-          <Grid item xs="4">
-            <Paper
-              elevation={5}
-              style={{
-                marginLeft: "3%",
-                alignItems: "center",
-                backgroundColor:"#EDFFFE",
-                justifyContent: "center",
-                maxHeight: "100%",
-              }}
-            >
-              <div
+            <Grid item xs="4">
+              <Paper
+                elevation={5}
                 style={{
-                  justifyContent: "center",
+                  marginLeft: "3%",
                   alignItems: "center",
-                  display: "flex",
+                  backgroundColor: "#EDFFFE",
+                  justifyContent: "center",
+                  maxHeight: "100%",
                 }}
               >
-                <Avatar
-                  className={classes.large}
-                  style={{ backgroundColor: "#018D87" }} 
+                <div
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    display: "flex",
+                  }}
                 >
-                  <Typography variant="h4">{name}</Typography>
-                </Avatar>
-              </div>
-              <div><Divider variant="middle"/></div>
-              <div className={classes.div}>
-                <Typography variant="h6">
-                  {" "}
-                  <HomeIcon fontSize="small" /> {address}
-                </Typography>
-                <div className={classes.div}>
-                  <Typography variant="h6">
-                    <PhoneIcon fontSize="small" /> {contact}
-                  </Typography>
+                  <Avatar
+                    className={classes.large}
+                    style={{ backgroundColor: "#018D87" }}
+                  >
+                    <Typography variant="h4">{subName}</Typography>
+                  </Avatar>
+                </div>
+                <div>
+                  <Divider variant="middle" />
                 </div>
                 <div className={classes.div}>
                   <Typography variant="h6">
-                    <MailIcon fontSize="small" /> {email}
+                    {" "}
+                    <HomeIcon fontSize="small" /> {address}
                   </Typography>
+                  <div className={classes.div}>
+                    <Typography variant="h6">
+                      <PhoneIcon fontSize="small" /> {contact}
+                    </Typography>
+                  </div>
+                  <div className={classes.div}>
+                    <Typography variant="h6">
+                      <MailIcon fontSize="small" /> {email}
+                    </Typography>
+                  </div>
+                  <div className={classes.div}>
+                    <Typography variant="h6">
+                      <StarsIcon fontSize="small" /> {specialization}
+                    </Typography>
+                  </div>{" "}
                 </div>
-                <div className={classes.div}>
-                  <Typography variant="h6">
-                    <StarsIcon fontSize="small" /> {specialization}
-                  </Typography>
-                </div>{" "}
-              </div>
-            </Paper>{" "}
-          </Grid>
+              </Paper>{" "}
+            </Grid>
           </Slide>
           <Grid item xs="4"></Grid>
-
-          
-
-
-       
-
         </Grid>
 
-        <div style={{marginTop:"2%", marginBottom:"2%"}}><Divider variant="middle"/></div>
-
+        <div style={{ marginTop: "2%", marginBottom: "2%" }}>
+          <Divider variant="middle" />
+        </div>
 
         <Typography variant="h2" style={{ marginTop: "2%", color: "#B4B4B4" }}>
           QR Code
         </Typography>
 
+        <Grid
+          container
+          spacing={0}
+          style={{ marginTop: "2%", marginBottom: "2%" }}
+        >
+          <Grid item xs={2}></Grid>
+          <Grid item xs={8}>
+            <div>
+              <Paper
+                elevation={5}
+                component={"div"}
+                style={{ backgroundColor: "#EDFFFE" }}
+              >
+                <div
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    display: "flex",
+                    backgroundColor: "#018D87",
+                    color: "white",
+                  }}
+                >
+                  <Typography variant="h5" style={{ marginTop: "2%" }}>
+                    Doctor's Seed : <EllipsisText text={seed} length={"20"} />
+                  </Typography>
+                </div>
 
-
-                  <Grid container spacing={0} style={{ marginTop: "2%" , marginBottom:"2%" }}>
-                    <Grid item xs={2}></Grid>
-                    <Grid item xs={8}>
-                      <div>
-                      <Paper elevation={5} component={"div"} style={{backgroundColor:"#EDFFFE"}}>
-
-                      <div
-                    style={{
-                      justifyContent: "center",
-                      alignItems: "center",
-                      display: "flex",
-                      backgroundColor: "#018D87",
-                      color: "white",
-                     
-                      
-                    }}
-                  >
-                    <Typography variant="h5" style={{ marginTop: "2%" }}>
-                      Doctor's Seed : <EllipsisText text={seed} length={"20"} />
-                    </Typography>
-                  </div>
-
-                  <div>
-                    <QRCode value={seed} includeMargin="true" size="400" bgColor="#EDFFFE"/>
-                  </div>
-
-                      
-                      </Paper>
-                      </div>
-                    </Grid>
-                    <Grid item xs={2}></Grid>
-
-                    
-
-                    
-
-                  </Grid>
+                <div>
+                  <QRCode
+                    value={seed}
+                    includeMargin="true"
+                    size="400"
+                    bgColor="#EDFFFE"
+                  />
+                </div>
+              </Paper>
+            </div>
+          </Grid>
+          <Grid item xs={2}></Grid>
+        </Grid>
 
         {/**
 
@@ -373,7 +406,70 @@ if(seed!=null){
           </Grid>
         </Slide>
       </Grid> */}
-    </ThemeProvider>
-  )};
+
+        <div style={{ marginBottom: "2%" }}>
+          <Button
+            className={classes.hover}
+            onClick={() => handleClickOpen()}
+            startIcon={<DeleteIcon fontSize="large" />}
+          >
+            <Typography variant="h6">Delete</Typography>
+          </Button>
+        </div>
+
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogTitle id="alert-dialog-slide-title">
+            {"Are you sure you want to delete?"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              <Typography variant="h6">Name: {name}</Typography>
+            </DialogContentText>
+            <DialogContentText>
+              <Typography variant="h6">Email: {email}</Typography>
+            </DialogContentText>
+            <DialogContentText>
+            <Typography variant="h6">Contact: {contact}</Typography>
+            </DialogContentText>
+
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={ ()=>{handleClose();
+             swal({
+              text: "Terminated",
+              timer: 2000,
+              icon: "success",
+              buttons: false,
+            });
+            }} color="primary">
+              NO!
+            </Button>
+
+            <Button
+              onClick={() => {
+                fetch(`https://thetamiddleware.herokuapp.com/dropSeed/${seed}`);
+                //swal alert
+                swal({
+                  text: "Doctor Profile Deleted!",
+                  timer: 2000,
+                  icon: "success",
+                  buttons: false,
+                });
+                history.push(`/home`);
+              }}
+              color="primary"
+            >
+              YES! Continue
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </ThemeProvider>
+    );
+  }
 }
 export default DoctorProfile;

@@ -37,6 +37,7 @@
     "react-virtualized": "^9.22.2",
     "react-virtualized-auto-sizer": "^1.0.2",
     "react-window": "^1.8.6",
+    "run": "^1.4.0",
     "yup": "^0.29.3"
   },
   "scripts": {

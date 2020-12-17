@@ -375,7 +375,7 @@ function Doctors(props) {
   let p_count = 0;
   //IF FETCHING DATA------>
 
-  if (seeds == false || newSeedsArray == null) {
+  if ( (seeds == false) || ( newSeedsArray == false) ) {
     return (
       <ThemeProvider theme={theme}>
         <Navbar />
@@ -393,6 +393,73 @@ function Doctors(props) {
         </Grid>
         {/**  <Typography variant="h1"> Loading...</Typography>*/}
         <CircularProgress size="200px" />
+
+        <Grid
+        container
+        spacing={0}
+        style={{ alignSelf: "bottom" }}
+        justify="space-between"
+        display="bottom"
+      >
+        {/**  <Grid item xs={1}></Grid> */}
+        <Grid item xs={1}></Grid>
+        <Grid item xs={4}>
+          <Paper
+          className={classesTable.papers}
+            elevation={5}
+            style={{ backgroundColor: "#08A24A", marginTop: "2%" }}
+
+          >
+            <Typography
+              variant="h4"
+              style={{ marginTop: "1%", color: "white", fontWeight: "bold" }}
+              startIcon={<FavoriteBorderIcon fontSize="small" />}
+            >
+              <startIcon></startIcon>
+              Registered Doctors{" "}
+            </Typography>
+            <Typography variant="h5">
+              <strong style={{ color: "white" }}>
+                {totalPatients == 0 ? (
+                  <CircularProgress style={{ color: "white" }} />
+                ) : (
+                  totalDoctors
+                )}{" "}
+              </strong>
+            </Typography>
+          </Paper>
+        </Grid>
+        {/**  <Grid item xs={1}></Grid> */}
+        <Grid item xs={2}></Grid>
+        <Grid item xs={4}>
+          <Paper
+          className={classesTable.papers}
+            elevation={5}
+            style={{ backgroundColor: "#2B8FA3", marginTop: "2%" }}
+          >
+            <Typography
+              variant="h4"
+              style={{ marginTop: "1%", color: "white", fontWeight: "bold" }}
+            >
+              Registered Patients{" "}
+            </Typography>
+            <Typography variant="h5">
+              <strong style={{ color: "white" }}>
+                {" "}
+                {totalPatients == 0 ? (
+                  <CircularProgress style={{ color: "white" }} />
+                ) : (
+                  totalPatients
+                )}{" "}
+              </strong>
+            </Typography>
+          </Paper>
+        </Grid>
+        <Grid item xs={1}></Grid>
+        </Grid>
+
+        
+
       </ThemeProvider>
     );
   }

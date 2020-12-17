@@ -3,6 +3,8 @@ import React from "react";
 import Navbar from "./Navbar";
 import "./body.css";
 
+import { useHistory } from "react-router-dom";
+
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
@@ -197,6 +199,8 @@ TablePaginationActions.propTypes = {
 };
 
 function ViewPatient(props) {
+  let history = useHistory(); // assigning useHistory
+
   const classesTable = useStylesTable();
 
   var { SEED } = useParams();
@@ -321,6 +325,17 @@ function ViewPatient(props) {
     return (
       <div>
         <Navbar />
+        <div style={{ float: "left", marginLeft: "1%", marginTop: "1%" }}>
+          <Button
+            className={classesTable.hover}
+            style={{ marginBottom: "2%", marginTop: "2%" }}
+            color="inherit"
+            startIcon={<KeyboardBackspaceTwoToneIcon fontSize="small" />}
+            onClick={() => {
+              history.push(`/home`);
+            }}
+          ></Button>
+        </div>
         <Typography variant="h2" style={{ color: "#B4B4B4", margin: "auto" }}>
           <strong>No Patient added </strong>
         </Typography>

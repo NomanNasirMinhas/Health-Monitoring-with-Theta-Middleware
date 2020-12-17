@@ -76,6 +76,8 @@ function PatientProfile() {
   const classes = useStyles();
   const [id, setId] = React.useState();
   const [name, setName] = React.useState();
+  const [subName, setsubName] = React.useState();
+
   const [patient_address, setPatient_Address] = React.useState();
   const [Address, setAddress] = React.useState();
   const [contact, setContact] = React.useState();
@@ -114,6 +116,7 @@ function PatientProfile() {
         //setting doctor object to variables
         //const name=local_seed.seed_obj.Profile.name;
         setName(local_object.Profile.name);
+        setsubName(local_object.Profile.name.substring(0,1).toUpperCase());
         setId(local_object.ID);
         //const address = local_seed.seed_obj.Profile.address;
         setPatient_Address(local_object.Profile.address);
@@ -279,7 +282,7 @@ function PatientProfile() {
                     className={classes.large}
                     style={{ backgroundColor: "#018D87" }}
                   >
-                    <Typography variant="h4">{id}</Typography>
+                    <Typography variant="h4">{subName}</Typography>
                   </Avatar>
                 </div>
 
@@ -289,6 +292,19 @@ function PatientProfile() {
 
                 <div className={classes.div} style={{ color: "black" }}>
                   <div className={classes.div}>
+
+                  <div className={classes.details}>
+                      <Typography variant="h6">
+                        {" "}
+                        {/**  <HomeIcon
+                        fontSize="small"
+                        style={{ color: "black" }}
+                    />*/}{" "}
+                        Patient ID: {id}
+                      </Typography>
+                    </div>
+
+
                     <div className={classes.details}>
                       <Typography variant="h6">
                         {" "}

@@ -197,10 +197,11 @@ export const Form = () => {
             float: "center",
             margin: "auto",
             marginTop: "30px",
-            backgroundColor: "#FBFCFC",
+             borderColor:"#3498DB",
+            backgroundColor: "#F3FEFF",//#FBFCFC
           }}
         >
-          <Typography component="h6" variant="h3" style={{ color: "black" }}>
+          <Typography component="h6" variant="h3" style={{ marginTop:"2%",color: "black" }}>
             <PersonSharpIcon fontSize="large" color="inherit" /> Login
           </Typography>
 
