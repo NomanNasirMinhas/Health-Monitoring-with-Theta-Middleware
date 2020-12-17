@@ -1,4 +1,5 @@
 const express = require("express");
+const http = require('http')
 const cors = require("cors");
 const MongoClient = require("mongodb").MongoClient;
 var {
@@ -22,7 +23,13 @@ var {
   publishMAMmsg,
   fetchPublicMAM,
   dropAddress,
-  getStreamRoot
+  getStreamRoot,
+  updateSeedProfile,
+  updateSeedPassword,
+  changePresDescription,
+  dropSeed,
+  getAllOldSeeds,
+  getAlphaAddress
 
 } = require("./middleware");
 
@@ -51,6 +58,11 @@ const io = require('socket.io')(server, {
     origin: "*",
     methods: ["GET", "POST"]
   }
+});
+
+io.on('connection', (socket) => {
+  console.log('Client connected');
+  socket.on('disconnect', () => console.log('Client disconnected'));
 });
 
 MongoClient.connect(uri, { useUnifiedTopology: true }, (err, client) => {
@@ -93,6 +105,18 @@ MongoClient.connect(uri, { useUnifiedTopology: true }, (err, client) => {
     console.log("Forgot Password Called")
     try {
       const result = await dropAddress(dbo, seed, address);
+      res.status(201).json(result);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  });
+
+  //Drop Seed Information
+  app.get("/dropSeed/:seed", async (req, res) => {
+    const seed = req.params.seed;
+
+    try {
+      const result = await dropSeed(dbo, seed);
       res.status(201).json(result);
     } catch (err) {
       res.status(400).json({ message: err.message });
@@ -166,6 +190,18 @@ MongoClient.connect(uri, { useUnifiedTopology: true }, (err, client) => {
     const pass = req.params.password;
     try {
       const result = await getAllSeeds(dbo, id, pass);
+      res.status(201).json(result);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  });
+
+  //GET All OLD SEED CALL
+  app.get("/getAllOldSeeds/:id&:password", async (req, res) => {
+    const id = req.params.id;
+    const pass = req.params.password;
+    try {
+      const result = await getAllOldSeeds(dbo, id, pass);
       res.status(201).json(result);
     } catch (err) {
       res.status(400).json({ message: err.message });
@@ -271,6 +307,18 @@ MongoClient.connect(uri, { useUnifiedTopology: true }, (err, client) => {
     }
   });
 
+  //GET Alpha ADDRESS CALL
+  app.get("/getAlphaAddress/:seed", async (req, res) => {
+    const seed = req.params.seed;
+
+    try {
+      const result = await getAlphaAddress(dbo, seed);
+      res.status(201).json(result);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  });
+
   //GET ADDRESS INFO CALL
   app.get("/getAddressInfo/:seed&:address", async (req, res) => {
     const seed = req.params.seed;
@@ -279,6 +327,26 @@ MongoClient.connect(uri, { useUnifiedTopology: true }, (err, client) => {
     try {
       const result = await getAddressInfo(dbo, seed, address);
       res.status(201).json(result);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  });
+
+  //GET ADDRESS INFO CALL
+  app.get("/getPrediction/:temp&:hr&:spo2", async (req, res) => {
+    const temp = req.params.temp;
+    const hr = req.params.hr;
+    const spo2 = req.params.spo2;
+
+    try {
+      const tf = require('@tensorflow/tfjs');
+      const model = await tf.loadLayersModel('https://storage.googleapis.com/fyp_model/model.json');
+      const data =  tf.tensor([[Number(temp), Number(hr), Number(spo2)]]);
+      var prediction = await model.predict(data).data();
+      prediction = (prediction[0]+ (prediction[0]/10))
+      if (prediction > 99.9)
+        prediction = 99.9
+      res.status(201).json(prediction);
     } catch (err) {
       res.status(400).json({ message: err.message });
     }
@@ -361,5 +429,44 @@ MongoClient.connect(uri, { useUnifiedTopology: true }, (err, client) => {
       res.status(400).json({ message: err.message });
     }
   });
+
+  //UPDATE SEED PROFILE
+  app.post("/updateSeedInfo/", async (req, res) => {
+    const seed = req.body.seed;
+    const info = req.body.info;
+    try {
+      const result = await updateSeedProfile(dbo, seed, info);
+      res.status(201).json(result);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  });
+
+  //UPDATE SEED PASSWORD
+  app.post("/updateSeedPassword/", async (req, res) => {
+    const seed = req.body.seed;
+    const pass = req.body.password;
+    try {
+      const result = await updateSeedPassword(dbo, seed, pass);
+      res.status(201).json(result);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  });
+
+  //UPDATE Prescription Status
+  app.post("/changePresDescription/", async (req, res) => {
+    const address = req.body.address;
+    const hash = req.body.txHash;
+    const status = req.body.status;
+
+    try {
+      const result = await changePresDescription(dbo, address, hash, status);
+      res.status(201).json(result);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  });
+
 });
 
