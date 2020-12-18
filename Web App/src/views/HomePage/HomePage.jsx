@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import {
   makeStyles,
   Table,
@@ -27,11 +27,11 @@ import CardFooter from "../../components/Card/CardFooter.js";
 import styles from "../../assets/jss/dashboardStyle";
 import Thermometer from "../../assets/icons/thermometer";
 import Oxygen from "../../assets/icons/oxygen";
-import Patient from "../../assets/icons/patient";
 import Frequency from "../../assets/icons/frequency";
 import { Link as link } from "react-router-dom";
 import { Bar } from "react-chartjs-2";
 import moment from "moment";
+import { PatientListContext } from "../../PatientListContext"
 
 const useStyle = makeStyles(styles);
 
@@ -41,6 +41,7 @@ export default function HomePage() {
   const [empty, SetEmpty] = React.useState(false);
   const [transactions, SetTransactions] = React.useState("");
   const [maximumValues, SetMaximumValues] = React.useState([]);
+  const { setPatientList } = useContext(PatientListContext);
   const classes = useStyles();
   const Class = useStyle();
 
@@ -60,8 +61,6 @@ export default function HomePage() {
               `https://thetamiddleware.herokuapp.com/getTx/${hash}`
             );
             tx = await tx.json();
-
-
             if (tx !== false) {
               info = {
                 name: prop[i].Profile.name,
@@ -141,9 +140,11 @@ export default function HomePage() {
         `https://thetamiddleware.herokuapp.com/getAllAddresses/${seed}`
       );
       obj = await obj.json();
-      if (obj === false) {
+      if (obj.length <= 1 || obj === false) {
         SetEmpty(true);
+        setPatientList(1);
       } else {
+        setPatientList(obj.length)
         doctorAddress(obj);
         //SetResponse(obj);
         const x = await LastTransaction(obj);
@@ -356,7 +357,7 @@ export default function HomePage() {
                             <TableHead>
                               <TableRow>
                                 <StyledTableCell align="center">
-                                  Patient's ID
+                                  CNIC
                             </StyledTableCell>
                                 <StyledTableCell align="center">
                                   Name

@@ -127,7 +127,7 @@ export default function SignUp(props) {
                         deviceNum: 0,
                         secLevel: 3,
                         id: x[1],
-                        password: "PASSWORD",
+                        password: "This is the address of doctor",
                         info: null,
                     }),
                 }

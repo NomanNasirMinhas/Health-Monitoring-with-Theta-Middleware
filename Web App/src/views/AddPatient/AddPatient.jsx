@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import {
   Button,
   TextField,
@@ -29,6 +29,7 @@ import QRCode from "qrcode.react";
 import moment from "moment";
 import * as Yup from "yup";
 import { Formik, Form } from "formik";
+import { PatientListContext } from "../../PatientListContext";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -100,17 +101,11 @@ const AddPatientSchema = Yup.object().shape({
     .min(2, "Too Short!")
     .max(20, "Too Long!")
     .required("Required"),
-  Username: Yup.string()
-    .min(2, "Too Short!")
-    .max(20, "Too Long!")
+  CNIC: Yup.number()
     .required("Required"),
   Age: Yup.number()
     .positive("Age is invalid")
     .max(150, "Too Long!")
-    .required("Required"),
-  PatientNumber: Yup.number()
-    .positive("Patient number is invalid")
-    .max(20, "Too Long!")
     .required("Required"),
   Gender: Yup.string().required("Please specify your gender"),
   Address: Yup.string().required("Please state your address"),
@@ -141,53 +136,14 @@ const AddPatientSchema = Yup.object().shape({
 export default function AddPatient() {
   //{$seed}&{address}
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-  const [date, SetDate] = React.useState(moment().format("DD-MM-YYYY"));
-  const [DeviceAddress, SetDeviceAddress] = React.useState("");
+  const [open, setOpen] = useState(false);
+  const [date, SetDate] = useState(moment().format("DD-MM-YYYY"));
+  const [DeviceAddress, SetDeviceAddress] = useState("");
+  const { patientList, setPatientList } = useContext(PatientListContext);
   const seed = localStorage.getItem("seed") || "";
   const onDateChange = (date, value) => {
     SetDate(value);
   };
-
-  // const handleSubmit = async () => {
-  //     setVisible(true)
-  //     var profile = {
-  //         name: name,
-  //         age: age,
-  //         gender: gender,
-  //         address: address,
-  //         contact: contact,
-  //         date: date
-  //     }
-
-  //     await fetch('https://thetamiddleware.herokuapp.com/addAddress/', {
-  //         method: 'POST',
-  //         headers: {
-  //             'Content-Type': 'application/json'
-  //         },
-  //         body: JSON.stringify({
-  //             seed: seed,
-  //             deviceNum: 6,
-  //             secLevel: 3,
-  //             id: "IDalph6",
-  //             password: "PASSWORD",
-  //             info: profile
-  //         }
-  //         )
-  //     }).then((result) => result.json()
-  //         .then((resp) => {
-  //             if (resp[0] === true) {
-  //                 SetDeviceAddress(resp[1])
-  //                 setOpen(true)
-  //             }
-  //             else {
-  //                 alert("Issue occured while adding patient. Contact administrator")
-  //                 window.location.reload(false);
-  //             }
-  //         }))
-
-  //     console.log("Done")
-  // }
 
   const handleClose = () => {
     setOpen(false);
@@ -208,8 +164,7 @@ export default function AddPatient() {
             <div className={classes.paper}>
               <Formik
                 initialValues={{
-                  Username: "",
-                  PatientNumber: "",
+                  CNIC: "",
                   Name: "",
                   Age: "",
                   Gender: "",
@@ -226,7 +181,6 @@ export default function AddPatient() {
                     contact: values.Contact,
                     date: date,
                   };
-
                   await fetch(
                     "https://thetamiddleware.herokuapp.com/addAddress/",
                     {
@@ -236,9 +190,9 @@ export default function AddPatient() {
                       },
                       body: JSON.stringify({
                         seed: seed,
-                        deviceNum: values.PatientNumber,
+                        deviceNum: patientList,
                         secLevel: 3,
-                        id: values.Username,
+                        id: values.CNIC,
                         password: "PASSWORD",
                         info: profile,
                       }),
@@ -248,6 +202,8 @@ export default function AddPatient() {
                       if (resp[0] === true) {
                         SetDeviceAddress(resp[1]);
                         setOpen(true);
+                        setPatientList(prevState => prevState + 1);
+                        console.log(patientList)
                       } else {
                         alert(
                           "Issue occured while adding patient. Contact administrator"
@@ -295,35 +251,20 @@ export default function AddPatient() {
                           variant="outlined"
                           fullWidth
                           type="number"
-                          id="PatientNumber"
-                          label="Patient Number"
+                          id="CNIC"
+                          label="CNIC"
                           color="secondary"
-                          value={values.PatientNumber}
+                          value={values.CNIC}
                           onChange={handleChange}
                           onBlur={handleBlur}
                           helperText={
-                            touched.PatientNumber ? errors.PatientNumber : ""
+                            touched.CNIC ? errors.CNIC : ""
                           }
                           error={
-                            touched.PatientNumber &&
-                            Boolean(errors.PatientNumber)
+                            touched.CNIC &&
+                            Boolean(errors.CNIC)
                           }
                           autoComplete="off"
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <CssTextField
-                          disabled={isSubmitting}
-                          autoComplete="off"
-                          variant="outlined"
-                          fullWidth
-                          id="Username"
-                          label="User Name"
-                          value={values.Username}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          helperText={touched.Username ? errors.Username : ""}
-                          error={touched.Username && Boolean(errors.Username)}
                         />
                       </Grid>
                       <Grid item xs={12} sm={6}>
@@ -428,8 +369,8 @@ export default function AddPatient() {
                       {isSubmitting ? (
                         <CircularProgress color="secondary" />
                       ) : (
-                        "Add Patient"
-                      )}
+                          "Add Patient"
+                        )}
                     </Button>
                     <Dialog
                       maxWidth="md"

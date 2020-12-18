@@ -31,7 +31,7 @@ import AssignmentTurnedInIcon from "@material-ui/icons/AssignmentTurnedIn";
 import HistoryIcon from "@material-ui/icons/History";
 import TimelineIcon from "@material-ui/icons/Timeline";
 import PrescriptionCard from "../../components/PrescriptionCard/PrescriptionCard";
-import { UserContext } from "../../Context";
+import { UserContext } from "../../PatientVitalsContext";
 import ListOutlinedIcon from '@material-ui/icons/ListOutlined';
 import AppointmentCard from "../../components/AppointmentCard/AppointmentCard";
 import useStyles from "./FunctionsPP"

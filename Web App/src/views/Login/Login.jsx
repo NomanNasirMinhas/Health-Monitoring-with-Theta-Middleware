@@ -20,7 +20,6 @@ import { Link as link } from "react-router-dom";
 import moment from "moment";
 import { Formik, Form } from 'formik';
 import { useStyles, LoginSchema } from "./Functions"
-
 const Login = (props) => {
 
     const [visible, setVisible] = React.useState(false);

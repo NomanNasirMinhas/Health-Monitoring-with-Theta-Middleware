@@ -9,27 +9,32 @@ import YourProfile from './views/YourProfile/YourProfile'
 import LiveReadings from './views/LiveReadings/LiveReadings';
 import PatientProfile from './views/ViewPatientProfile/PatientProfile';
 import AddPatient from './views/AddPatient/AddPatient';
-import { UserContext } from "./Context"
+import { UserContext } from "./PatientVitalsContext"
+import { PatientListContext } from "./PatientListContext"
 import './App.css'
 import ViewReport from './views/ViewReport/ViewReport';
 
 const AppRouter = () => {
     const [Empty, setEmpty] = useState(false);
+    const [patientList, setPatientList] = useState(0)
     return (
         <Router>
             <Switch>
                 <Route path="/" exact component={Login} />
                 <Route path="/forgotpassword" component={ForgotPassword} />
                 <Route path="/createaccount" component={CreateAccount} />
-                <Route path="/dashboard" component={HomePage} />
-                <UserContext.Provider value={{ Empty, setEmpty }}>
-                    <Route path="/viewpatientprofile/:address" component={PatientProfile} />
-                    <Route path="/yourprofile" component={YourProfile} />
-                    <Route path="/livereadings/:name&:gender&:admissionDate&:address" component={LiveReadings} />
-                    <Route path="/addpatient" component={AddPatient} />
-                    <Route path="/report/:name&:gender&:admissionDate&:address" component={ViewReport} />
-                    <Route path="/viewhistory/:name&:gender&:admissionDate&:address" component={ViewHistory} />
-                </UserContext.Provider>
+                <PatientListContext.Provider value={{ patientList, setPatientList }}>
+                    <Route path="/dashboard" component={HomePage} />
+                    <UserContext.Provider value={{ Empty, setEmpty }}>
+                        <Route path="/viewpatientprofile/:address" component={PatientProfile} />
+                        <Route path="/yourprofile" component={YourProfile} />
+                        <Route path="/livereadings/:name&:gender&:admissionDate&:address" component={LiveReadings} />
+                        <Route path="/addpatient" component={AddPatient} />
+                        <Route path="/report/:name&:gender&:admissionDate&:address" component={ViewReport} />
+                        <Route path="/viewhistory/:name&:gender&:admissionDate&:address" component={ViewHistory} />
+                    </UserContext.Provider>
+                </PatientListContext.Provider>
+
                 <Route path="*" component={() => "404 NOT FOUND"} />
             </Switch>
         </Router>

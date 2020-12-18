@@ -4,7 +4,7 @@ import Thermometer from "../../assets/icons/thermometer";
 import Oxygen from "../../assets/icons/oxygen";
 import Frequency from "../../assets/icons/frequency";
 import Vital from "../../assets/icons/Vital"
-import { UserContext } from "../../Context";
+import { UserContext } from "../../PatientVitalsContext";
 const useStyles = makeStyles((theme) => ({
   tileTopText: {
     fontSize: "1.1rem",
