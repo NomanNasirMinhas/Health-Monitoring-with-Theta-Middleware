@@ -7,6 +7,17 @@ const SERVER_PORT = 7000;
 let nextVisitorNumber = 1;
 let onlineClients = new Set();
 
+function timestamp() {
+    var today = new Date();
+    var date =
+      today.getDate() + "-" + (today.getMonth() + 1) + "-" + today.getFullYear();
+    var time =
+      today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    var dateTime = time + "\n" + date;
+    //console.log("Current time is " + dateTime);
+    return dateTime;
+  }
+
 async function readData(){
   const fetch = require("node-fetch");
   const sensor = require('ds18b20-raspi');
@@ -52,7 +63,7 @@ function startServer() {
     io.on("connection", onNewWebsocketConnection);
 
     // important! must listen from `server`, not `app`, otherwise socket.io won't function correctly
-    server.listen(SERVER_PORT, () => console.info(`Listening on port ${SERVER_PORT}.`));
+    server.listen(SERVER_PORT, "0.0.0.0", () => console.info(`Listening on port ${SERVER_PORT}.`));
     console.log("Server Address ",server.address())
     // will send one message per second to all its clients
     let secondsSinceServerStarted = 0;

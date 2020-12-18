@@ -9,12 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "ds18b20": "^0.1.0",
-    "ds18b20-raspi": "^0.3.5",
-    "node-fetch": "^2.6.1",
-    "python-shell": "^2.0.2",
-    "raspi": "^6.0.1",
-    "raspi-i2c": "^6.2.4",
     "@iota/converter": "^1.0.0-beta.23",
     "@iota/core": "^1.0.0-beta.30",
     "@iota/extract-json": "^1.0.0-beta.23",
@@ -25,10 +19,17 @@
     "crypto": "^1.0.1",
     "date-fns": "^2.16.1",
     "dotenv": "^8.0.0",
+    "ds18b20": "^0.1.0",
+    "ds18b20-raspi": "^0.3.5",
     "express": "^4.16.4",
     "mongodb": "^3.6.1",
     "mongoose": "^5.5.7",
+    "node-fetch": "^2.6.1",
     "nodemon": "^2.0.4",
-    "socket.io-client": "^2.3.1"
+    "python-shell": "^2.0.2",
+    "raspi": "^6.0.1",
+    "raspi-i2c": "^6.2.4",
+    "socket.io": "^3.0.4",
+    "socket.io-client": "^3.0.4"
   }
 }
