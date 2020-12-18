@@ -1,26 +1,66 @@
+const http = require("http");
 const express = require("express");
-const cors = require("cors");
-const app = express();
+const socketio = require("socket.io");
 
-let port = 5555;
-if (port == null || port == "") {
-  port = 8000;
+const SERVER_PORT = 7000;
+
+let nextVisitorNumber = 1;
+let onlineClients = new Set();
+
+async function readData(){
+  const fetch = require("node-fetch");
+  const sensor = require('ds18b20-raspi');
+  
+  var tempF = sensor.readSimpleF();
+  var max30100 = await fetch('http://localhost:5000/');
+  max30100 = await max30100.json();
+  //console.log(`Temp = ${tempF}-F, Heart Rate = ${max30100.HR}, SPo2 = ${max30100.SPo2}`);
+  var dataObj = {
+      TimeStamp:timestamp(),
+      Temp: tempF,
+      HR: max30100.HR,
+      SpO2: max30100.SPo2
+  }
+  return JSON.stringify(dataObj)
+  }
+
+function onNewWebsocketConnection(socket) {
+
+    console.info(`Socket ${socket.id} has connected.`);
+    onlineClients.add(socket.id);
+
+    socket.on("disconnect", () => {
+        onlineClients.delete(socket.id);
+        console.info(`Socket ${socket.id} has disconnected.`);
+    });
+
+    // echoes on the terminal every "hello" message this socket sends
+    socket.on("hello", helloMsg => console.info(`Socket ${socket.id} says: "${helloMsg}"`));
+
+    // will send a message only to this socket (different than using `io.emit()`, which would broadcast it)
+    socket.emit("welcome", `Welcome! You are visitor number ${nextVisitorNumber++}`);
 }
 
-app.use(cors());
-app.use(express.json());
+function startServer() {
+    // create a new express app
+    const app = express();
+    // create http server and wrap the express app
+    const server = http.createServer(app);
+    // bind socket.io to that server
+    const io = socketio(server);
 
-const io = require('socket.io')(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"]
-  }
-});
+    io.on("connection", onNewWebsocketConnection);
 
-io.on("connection", (socket) => {
-  console.log("Client Connected")
-});
+    // important! must listen from `server`, not `app`, otherwise socket.io won't function correctly
+    server.listen(SERVER_PORT, () => console.info(`Listening on port ${SERVER_PORT}.`));
+    console.log("Server Address ",server.address())
+    // will send one message per second to all its clients
+    let secondsSinceServerStarted = 0;
+    setInterval(async () => {
 
-const server = app.listen(port, () => {
-  console.log(`Server is running on port: ${port}`);
-});
+        io.emit("vitals", await readData());
+        io.emit("online", onlineClients.size);
+    }, 1000);
+}
+
+startServer();
