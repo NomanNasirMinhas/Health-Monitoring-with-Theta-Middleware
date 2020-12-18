@@ -9,7 +9,10 @@ import { AppLoading } from 'expo';
 import { Dimensions } from "react-native";
 import { useFonts } from 'expo-font';
 import { LineChart } from "react-native-chart-kit";
-import { io } from 'socket.io-client';
+import {
+  BarChart,
+} from "react-native-chart-kit";
+const io = require('socket.io-client');
 
 //this.state = {
 
@@ -28,8 +31,12 @@ export default function LiveReadings({route, navigation}) {
   var [diastArray, setDiastArray] = useState([])
   var [BPArray, setBPArray] = useState([])
   var [tempArray, setTempArray] = useState([])
-  var [streamRoot, setStreamRoot] = useState('')
-  const socket = io('https://thetamiddleware.herokuapp.com/');
+  var [current, setCurrent] = useState('Not Found')
+  const [currentTemp, setCurrentTemp] = useState(0)
+  const [currentHR, setCurrentHR] = useState(0)
+  const [currentSpO2, setCurrentSpO2] = useState(0)
+
+  const socket = io.connect('http://172.20.10.3:7000/');
 
   var tempData=[]
   var hrData=[]
@@ -43,17 +50,16 @@ export default function LiveReadings({route, navigation}) {
     (async () => {
 
       try{
-        const { address } = route.params;
-        const { seed } = route.params;
 
+    socket.on("connect", () => console.log("hello", `Connected to Server`));
+    socket.on("vitals", data => {
+      console.log(data)
+      data = JSON.parse(data)
+      setCurrentTemp(data.Temp)
+      setCurrentHR(data.HR)
+      setCurrentSpO2(data.SpO2)
 
-        setHistState('Fetching Transaction Hashes\nPlease Wait......')
-        var root = await fetch(
-          `https://thetamiddleware.herokuapp.com/getMAMroot/${seed}&${address}`
-        );
-        root = await root.json();
-        console.log("Root is ", root);
-        
+    });
     setFinished(true)
       }
       catch(e){
@@ -89,49 +95,103 @@ export default function LiveReadings({route, navigation}) {
 
   return (
     <View style={styles.container}>
-      <Spinner
-          visible={!finished}
-          textContent={histState}
-          textStyle={styles.text}
-        />
-      <ScrollView horizontal={false} showsVerticalScrollIndicator={true} >
 
-      {finished &&
-      <View style={{marginBottom:30, paddingHorizontal:20, paddingTop:40}}>
-        <Text>Hello</Text>
-        <View style={styles.buttonContainer}>
+<Card containerStyle={styles.card}>
+
+          <View>
+            {/* Bar Chart Starts From Here */}
+
+            <Card.Title>
+          <Text style={[styles.text, { color: 'white', fontWeight: "900", fontSize: 26, fontFamily:'Righteous' }]}>
+            Live Readings
+          </Text>
+        </Card.Title>
+
+            <BarChart
+              data={{
+                labels: ["Temp (F)", "HR (BPM)", "SpO2"],
+                datasets: [
+                  {
+                    data: [currentTemp, currentHR, currentSpO2],
+                  },
+                ],
+              }}
+              width={maxWidth} // from react-native
+              height={250}
+              fromZero={true}
+              yAxisInterval={1} // optional, defaults to 1
+              chartConfig={{
+                backgroundColor: "#103952",
+                backgroundGradientFrom: "#02395A",
+                backgroundGradientTo: "#074164",
+                decimalPlaces: 0, // optional, defaults to 2dp
+                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                style: {
+                  borderRadius: 6,
+                },
+              }}
+              style={{
+                marginVertical: 0,
+                paddingHorizontal: "auto",
+                borderRadius: 0,
+              }}
+            />
+
+            <View style={styles.lastTxContainer}>
+              <View style={styles.statsBox}>
+                <Text style={[styles.text, { fontSize: 20 }]}>
+                  Heart{"\n"}Beat
+                </Text>
+                <Text style={[styles.text, styles.subText]}>
+                  {currentHR} BPM
+                </Text>
+              </View>
+              <View
+                style={[
+                  styles.statsBox,
+                  {
+                    borderColor: "#DFD8C8",
+                    borderLeftWidth: 2,
+                    borderRightWidth: 2,
+                  },
+                ]}
+              >
+                <Text style={[styles.text, { fontSize: 20 }]}>
+                  Body{"\n"}Temp.
+                </Text>
+                <Text style={[styles.text, styles.subText]}>
+                  {currentTemp} F
+                </Text>
+              </View>
+              <View style={styles.statsBox}>
+                <Text style={[styles.text, { fontSize: 20 }]}>
+                  Oxygen{"\n"}Saturation
+                </Text>
+                <Text style={[styles.text, styles.subText]}>
+                  {currentSpO2} %
+                </Text>
+              </View>
+
+            </View>
+
+          </View>
+          <View style={styles.buttonContainer}>
           <Button
             title="Go Back"
             buttonStyle={styles.buttonStyle}
             titleStyle={styles.buttonText}
             style={{ width: 150}}
             onPress={
-              () => navigation.goBack()
+              () => {
+                socket.disconnect()
+                navigation.goBack()
+              }
               // navigation.navigate('Readings')
             }
           ></Button>
         </View>
-      </View>
-      }
-
-      {/* {finished &&
-
-      <Card containerStyle={[styles.card, {borderTopLeftRadius: 20, borderTopRightRadius: 20,}]}>
-        <Card.Title>
-            <Text style={[styles.text, { color: "white", fontSize: 20 }]}>
-              Your Readings are shown below
-            </Text>
-            </Card.Title>
-
-      <Table  style={styles.tableStyle} borderStyle={{borderWidth: 2, borderColor: 'white'}}>
-        <Row data={tableHead} style={styles.head} textStyle={styles.headerText}/>
-        <Rows data={tableState} textStyle={styles.text}/>
-      </Table>
-      </Card>
-
-      } */}
-
-      </ScrollView>
+        </Card>
     </View>
   )
 }
@@ -139,27 +199,37 @@ export default function LiveReadings({route, navigation}) {
 
 
 const styles = StyleSheet.create({
-  container: { flex: 1, paddingTop: 30, backgroundColor: '#034772' },
-  head: { height: 40, backgroundColor: '#154360' },
-  text: { margin: 6, color: "white", alignSelf: 'center', fontFamily:'Righteous'},
-  headerText: { margin: 6, color: "white", alignSelf: 'center', fontFamily:'MetropolisBold'},
-  tableStyle: { backgroundColor: "#485776"},
+  container: {
+    flex: 1,
+    backgroundColor: "#034772",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingTop: 50,
+  },
+
   card: {
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
     padding: "auto",
     paddingTop: 20,
     margin: "auto",
     borderStyle: "solid",
-    borderWidth: 5,
-    borderColor: "#F6F8FC",
+    borderWidth: 0,
+    borderColor: "#154360",
     backgroundColor: "#0B3047",
   },
-  buttonContainer: {
-    flexDirection: "row",
-    alignSelf: "center",
-    marginBottom: 20,
+
+  spinnerText: { margin: 6, color: "white", alignSelf: 'center', fontFamily:'Righteous'},
+
+  text: {
+    fontFamily: "Metropolis",
+    color: "white",
+    textAlign: "center",
+    fontWeight: "900",
   },
+
   buttonStyle:{
     backgroundColor:'#00619E',
     borderWidth:2,
@@ -171,4 +241,47 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 
+  subText: {
+    fontSize: 14,
+    color: "#e3e1dc",
+    fontFamily:'Secular',
+    textTransform: "capitalize",
+    fontWeight: "500",
+  },
+
+  infoContainer: {
+    alignSelf: "center",
+    alignItems: "center",
+    marginTop: 0,
+  },
+
+  statsContainer: {
+    flexDirection: "row",
+    alignSelf: "center",
+    marginTop: 0,
+    marginBottom: 20,
+  },
+
+  lastTxContainer: {
+    flexDirection: "row",
+    alignSelf: "center",
+    marginTop: 20,
+    marginBottom: 20,
+  },
+
+  buttonContainer: {
+    flexDirection: "row",
+    alignSelf: "center",
+    marginBottom: 20,
+  },
+  statsBox: {
+    alignItems: "center",
+    flex: 1,
+  },
+  statusOnline:{
+    color:'#1E8449'
+  },
+  statusOffline:{
+    color:'#C0392B'
+  }
 });

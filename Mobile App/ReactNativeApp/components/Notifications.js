@@ -46,9 +46,9 @@ export default function Notifications({route, navigation}) {
 
     const Item = ({ item }) => (
       <View style={styles.item}>
-        <Text style={styles.text}>{item.NotificationTitle}</Text>
+        <Text style={styles.text}>{item.title}</Text>
         <Card.Divider />
-        <Text style={styles.subText}>{item.NotificationDetails}</Text>
+        <Text style={styles.subText}>{item.details}</Text>
         <Text style={styles.subText}>At: {item.TimeStamp}</Text>
       </View>
     );

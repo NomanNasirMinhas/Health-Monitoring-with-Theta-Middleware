@@ -16,12 +16,7 @@ import History from "./Histroy";
 import { Dimensions } from "react-native";
 import { FloatingAction } from "react-native-floating-action";
 import {
-  LineChart,
   BarChart,
-  PieChart,
-  ProgressChart,
-  ContributionGraph,
-  StackedBarChart,
 } from "react-native-chart-kit";
 
 const getFonts = () =>
@@ -116,7 +111,7 @@ export default function Profile({ route, navigation }) {
           // setPatientBPsys(resObjTx.BP.systolic.toString());
           // setPatientBPdiast(resObjTx.BP.diastolic.toString());
           var prediction = await fetch(
-            `https://thetamiddleware.herokuapp.com/getPrediction/${patientTemp}&${patientHR}&${patientSpO2}`);
+            `https://thetamiddleware.herokuapp.com/getPrediction/${resObjTx.response.Temp}&${resObjTx.response.HR}&${resObjTx.response.SpO2}`);
             prediction = await prediction.json();
           setLastTx([resObjTx.response.HR, resObjTx.response.Temp, resObjTx.response.SpO2]);
           // setPredGraphData([prediction])
