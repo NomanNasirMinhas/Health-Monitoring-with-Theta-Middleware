@@ -15,8 +15,7 @@ import PeopleOutlineIcon from "@material-ui/icons/PeopleOutline";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import Tooltip from "@material-ui/core/Tooltip";
-import Badge from '@material-ui/core/Badge';
-
+import Badge from "@material-ui/core/Badge";
 
 //TOAST MESSAGE
 import { ToastContainer, toast } from "react-toastify";
@@ -98,20 +97,17 @@ const useStylesTable = makeStyles({
   hover: {
     backgroundColor: "#1B4F72", //   #2980B9 blue   dark#2471A3  button #1B4F72
     color: "white",
-   
+
     "&:hover": {
       backgroundColor: "#2980B9", //#3498DB
-      padding: "10px"
+      padding: "10px",
     },
   },
-  
-papers:{
- 
+
+  papers: {
     "&:hover": {
-     
-      padding: "30px"
+      padding: "30px",
     },
-  
   },
 });
 
@@ -256,32 +252,63 @@ function Doctors(props) {
         console.log("loop =", i);
         let addresses_for = seeds[i].SEED;
         // addresses_for
+        //get doctor addresses from seeds
+        //getAlphaaddress---> address-->> put in
+        console.log("Address for", addresses_for);
         const patients = await fetch(
-          `https://thetamiddleware.herokuapp.com/getAllAddresses/${addresses_for}`
+          `https://thetamiddleware.herokuapp.com/getAllAddresses/${addresses_for}` //
         );
         //convert to json
         const patients_json = await patients.json();
 
-        // get STATUSES--------------------------------------
+        // get STATUSES--------------------------------------////UPDATE
 
-         //get statuses
-         const response = await fetch(
-          `https://thetamiddleware.herokuapp.com/getLastTx/${addresses_for}&docLog`
+        //get statuses
+        const response = await fetch(
+          `https://thetamiddleware.herokuapp.com/getAlphaAddress/${addresses_for}` // send doctor address,returns transaction
+          //insert transaction into getTx
+        );
+        // address fetched
+        console.log("FOR SEED:", addresses_for);
+        const alphaAddress = await response.json();
+        console.log("AlphTransaction", alphaAddress.ADDRESS)
+
+        const alphaTransaction = await fetch(
+          `https://thetamiddleware.herokuapp.com/getLastTx/${alphaAddress.ADDRESS}&docLog`
         );
 
+        //transaction fecthed for doctor logs
+        const Transaction = await alphaTransaction.json(); //put in getTx to get data
+       
+        const transactionData = await fetch(
+          `https://thetamiddleware.herokuapp.com/getTx/${Transaction}`
+        );
+          //Convert to JSON
+        const jsonData = await transactionData.json();
+
+
+          console.log("DOCTOR LOGS DATA:", jsonData.response); // data fetched
         
-         const resObj = await response.json();
-          resObj==false ? status.concat(0) : status.concat(1);
+         // let STAT=0;
+      //  console.log("docLogs:", resObj);
+        if(jsonData.response != false)
+        { 
+      
+        jsonData.response.LogType == 1 ? status[i]=0 : status[i]=1 ;
+       // jsonData.LogType == 1 ? STAT=0 : STAT=1;  
+        //console.log("STAT:",STAT);
 
-        //----------------------------------------------
-
+      }
+      else{ status[i]=0};
+        //---------------------------------------------
+      console.log(status[i])
         if (patients_json == false || patients_json == null) {
           // PatientCount.push(patients_json.length);
           //console.log("patients_json =", PatientCount);
           //console.log("patients_json length=", PatientCount);
           console.log("addresses=", patients_json.length);
           setPatientCount(PatientCount.concat(0));
-          NewSeeds.push({ seed_obj: seeds[i], num_of_pat: 0, stat : resObj });
+          NewSeeds.push({ seed_obj: seeds[i], num_of_pat: 0 , stat: status[i]}); 
           console.log("patient count if =", PatientCount);
           console.log("New seeds =", NewSeeds);
         } else {
@@ -290,8 +317,8 @@ function Doctors(props) {
           NewSeeds.push({
             seed_obj: seeds[i],
             num_of_pat: patients_json.length,
-            stat: resObj
-          });
+            stat: status[i] });
+ 
 
           console.log("patient count else =", PatientCount);
           console.log("New seeds =", NewSeeds);
@@ -375,7 +402,7 @@ function Doctors(props) {
   let p_count = 0;
   //IF FETCHING DATA------>
 
-  if ( (seeds == false) || ( newSeedsArray == false) ) {
+  if (seeds == false || newSeedsArray == false) {
     return (
       <ThemeProvider theme={theme}>
         <Navbar />
@@ -393,73 +420,68 @@ function Doctors(props) {
         </Grid>
         {/**  <Typography variant="h1"> Loading...</Typography>*/}
         <CircularProgress size="200px" />
-
         <Grid
-        container
-        spacing={0}
-        style={{ alignSelf: "bottom" }}
-        justify="space-between"
-        display="bottom"
-      >
-        {/**  <Grid item xs={1}></Grid> */}
-        <Grid item xs={1}></Grid>
-        <Grid item xs={4}>
-          <Paper
-          className={classesTable.papers}
-            elevation={5}
-            style={{ backgroundColor: "#08A24A", marginTop: "2%" }}
-
-          >
-            <Typography
-              variant="h4"
-              style={{ marginTop: "1%", color: "white", fontWeight: "bold" }}
-              startIcon={<FavoriteBorderIcon fontSize="small" />}
+          container
+          spacing={0}
+          style={{ alignSelf: "bottom" }}
+          justify="space-between"
+          display="bottom"
+        >
+          {/**  <Grid item xs={1}></Grid> */}
+          <Grid item xs={1}></Grid>
+          <Grid item xs={4}>
+            <Paper
+              className={classesTable.papers}
+              elevation={5}
+              style={{ backgroundColor: "#08A24A", marginTop: "2%" }}
             >
-              <startIcon></startIcon>
-              Registered Doctors{" "}
-            </Typography>
-            <Typography variant="h5">
-              <strong style={{ color: "white" }}>
-                {totalPatients == 0 ? (
-                  <CircularProgress style={{ color: "white" }} />
-                ) : (
-                  totalDoctors
-                )}{" "}
-              </strong>
-            </Typography>
-          </Paper>
-        </Grid>
-        {/**  <Grid item xs={1}></Grid> */}
-        <Grid item xs={2}></Grid>
-        <Grid item xs={4}>
-          <Paper
-          className={classesTable.papers}
-            elevation={5}
-            style={{ backgroundColor: "#2B8FA3", marginTop: "2%" }}
-          >
-            <Typography
-              variant="h4"
-              style={{ marginTop: "1%", color: "white", fontWeight: "bold" }}
+              <Typography
+                variant="h4"
+                style={{ marginTop: "1%", color: "white", fontWeight: "bold" }}
+                startIcon={<FavoriteBorderIcon fontSize="small" />}
+              >
+                <startIcon></startIcon>
+                Registered Doctors{" "}
+              </Typography>
+              <Typography variant="h5">
+                <strong style={{ color: "white" }}>
+                  {totalPatients == 0 ? (
+                    <CircularProgress style={{ color: "white" }} />
+                  ) : (
+                    totalDoctors
+                  )}{" "}
+                </strong>
+              </Typography>
+            </Paper>
+          </Grid>
+          {/**  <Grid item xs={1}></Grid> */}
+          <Grid item xs={2}></Grid>
+          <Grid item xs={4}>
+            <Paper
+              className={classesTable.papers}
+              elevation={5}
+              style={{ backgroundColor: "#2B8FA3", marginTop: "2%" }}
             >
-              Registered Patients{" "}
-            </Typography>
-            <Typography variant="h5">
-              <strong style={{ color: "white" }}>
-                {" "}
-                {totalPatients == 0 ? (
-                  <CircularProgress style={{ color: "white" }} />
-                ) : (
-                  totalPatients
-                )}{" "}
-              </strong>
-            </Typography>
-          </Paper>
+              <Typography
+                variant="h4"
+                style={{ marginTop: "1%", color: "white", fontWeight: "bold" }}
+              >
+                Registered Patients{" "}
+              </Typography>
+              <Typography variant="h5">
+                <strong style={{ color: "white" }}>
+                  {" "}
+                  {totalPatients == 0 ? (
+                    <CircularProgress style={{ color: "white" }} />
+                  ) : (
+                    totalPatients
+                  )}{" "}
+                </strong>
+              </Typography>
+            </Paper>
+          </Grid>
+          <Grid item xs={1}></Grid>
         </Grid>
-        <Grid item xs={1}></Grid>
-        </Grid>
-
-        
-
       </ThemeProvider>
     );
   }
@@ -559,23 +581,19 @@ function Doctors(props) {
                     : newSeedsArray
                   ).map((obj) => (
                     <TableRow hover key={obj.name} className={classesTable.row}>
-                      
                       <TableCell component="th" scope="row">
-                        
-                          {" "}
-                          
-                          {obj.stat==false ?
+                        {" "}
+                        {obj.stat == 0 ? (
                           <Typography variant="body2">
-                           <Badge 
-                           color="error"
-                           variant="dot"></Badge><strong>-- </strong>Offline</Typography>
-
-                           : 
-                           <Typography variant="body2">
-                             <Badge color="primary" variant="dot"></Badge><strong>-- </strong>Online
-                             </Typography>
-                             }{" "}
-                        
+                            <Badge color="error" variant="dot"></Badge>
+                            <strong>-- </strong>Offline
+                          </Typography>
+                        ) : (
+                          <Typography variant="body2">
+                            <Badge color="primary" variant="dot"></Badge>
+                            <strong>-- </strong>Online
+                          </Typography>
+                        )}{" "}
                       </TableCell>
 
                       <TableCell component="th" scope="row">
@@ -726,7 +744,7 @@ function Doctors(props) {
       <Grid
         container
         spacing={0}
-        style={{ alignSelf: "bottom" }}
+        style={{ alignSelf: "bottom", marginTop: "5%" }}
         justify="space-between"
         display="bottom"
       >
@@ -734,10 +752,13 @@ function Doctors(props) {
         <Grid item xs={1}></Grid>
         <Grid item xs={4}>
           <Paper
-          className={classesTable.papers}
+            className={classesTable.papers}
             elevation={5}
-            style={{ backgroundColor: "#08A24A", marginTop: "2%" }}
-
+            style={{
+              backgroundColor: "#08A24A",
+              marginTop: "3%",
+              marginBottom: "4%",
+            }}
           >
             <Typography
               variant="h4"
@@ -762,9 +783,9 @@ function Doctors(props) {
         <Grid item xs={2}></Grid>
         <Grid item xs={4}>
           <Paper
-          className={classesTable.papers}
+            className={classesTable.papers}
             elevation={5}
-            style={{ backgroundColor: "#2B8FA3", marginTop: "2%" }}
+            style={{ backgroundColor: "#2B8FA3", marginTop: "4%" }}
           >
             <Typography
               variant="h4"
