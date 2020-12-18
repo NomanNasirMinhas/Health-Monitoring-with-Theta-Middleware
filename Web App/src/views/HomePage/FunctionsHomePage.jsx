@@ -31,11 +31,6 @@ export const useStyles = makeStyles((theme) => ({
     titletext: {
         marginBottom: "40px",
     },
-    CircularProgress: {
-        position: "absolute",
-        top: "45%",
-        left: "46%",
-    },
 }));
 
 export const ErrorMessage = () => {

@@ -152,7 +152,7 @@ const PatientProfile = (props) => {
                                                 </MenuItem>
                                                 <Divider />
                                                 <MenuItem disabled={Empty} component={Link}
-                                                     to={`/livereadings/${patient.name}&${patient.gender}&${patient.date}&${address}`}>
+                                                    to={`/livereadings/${patient.name}&${patient.gender}&${patient.date}&${address}`}>
                                                     <ListItemIcon>
                                                         <TimelineIcon />
                                                     </ListItemIcon>
@@ -178,7 +178,7 @@ const PatientProfile = (props) => {
 
                                 <Grid item xs={12} md={5}>
                                     <Typography gutterBottom variant="h5" color="secondary">
-                                        Prescription
+                                        Prescriptions
                                 </Typography>
                                     <PrescriptionCard
                                         Address={address}
@@ -196,7 +196,9 @@ const PatientProfile = (props) => {
                                     <Typography gutterBottom variant="h5" color="secondary">
                                         Appointments
                                     </Typography>
-                                    <AppointmentCard />
+                                    <AppointmentCard
+                                        Address={address}
+                                    />
                                 </Grid>
                             </Grid>
                         </Grow>

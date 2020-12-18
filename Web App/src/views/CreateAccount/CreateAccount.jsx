@@ -115,6 +115,34 @@ export default function SignUp(props) {
             actions.setSubmitting(false)
             console.log("Done")
             setOpen(true)
+            await fetch(
+                "https://thetamiddleware.herokuapp.com/addAddress/",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        seed: x[1],
+                        deviceNum: 0,
+                        secLevel: 3,
+                        id: x[1],
+                        password: "PASSWORD",
+                        info: null,
+                    }),
+                }
+            ).then((result) =>
+                result.json().then((resp) => {
+                    if (resp[0] === true) {
+                    } else {
+                        alert(
+                            "Issue occured while adding patient. Contact administrator"
+                        );
+                        window.location.reload(false);
+                    }
+                })
+            );
+
         }
         else {
             alert("Unknown error occured. Try contacting administrator")

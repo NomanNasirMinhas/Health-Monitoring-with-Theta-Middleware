@@ -5,7 +5,6 @@ import AddIcon from '@material-ui/icons/Add';
 import * as Yup from "yup";
 import moment from "moment";
 import { Formik, Form } from "formik";
-import { FixedSizeList as List } from "react-window";
 import {
     Typography,
     CircularProgress,
@@ -18,7 +17,6 @@ import {
     TableRow,
     TableContainer,
     TextField,
-    Button,
     IconButton,
     Tooltip
 } from '@material-ui/core';
@@ -26,7 +24,7 @@ import {
 const useStyles = makeStyles((theme) => ({
     card: {
         display: "grid",
-        minHeight: "25vh",
+        minHeight: "41vh",
         background: "#3C3C46",
         borderRadius: "31px",
         color: "lightcyan"
@@ -131,11 +129,12 @@ const PrescriptionCard = (props) => {
         response = await response.json();
         if (response !== false) {
             for (var i = 0; i < response.length; i++) {
-                setEmpty(false);
                 x = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${response[i]}`);
                 x = await x.json();
-                if (x.response !== false)
+                if (x.response !== false) {
+                    setEmpty(false);
                     setprescriptionArray(array => [...array, x]);
+                }
             }
         }
         setLoading(false);
@@ -244,6 +243,7 @@ const PrescriptionCard = (props) => {
                                                 disabled={isSubmitting}
                                                 autoComplete="off"
                                                 variant="outlined"
+                                                size="small"
                                                 id="Name"
                                                 label="Name"
                                                 value={values.Name}
@@ -256,6 +256,7 @@ const PrescriptionCard = (props) => {
                                                 disabled={isSubmitting}
                                                 autoComplete="off"
                                                 variant="outlined"
+                                                size="small"
                                                 id="Details"
                                                 label="Details"
                                                 value={values.Details}
