@@ -20,17 +20,10 @@ const io = require('socket.io-client');
 
 
 export default function LiveReadings({route, navigation}) {
-  var [finished, setFinished]=useState(false)
-  var [tableState, setTableState]= useState([]);
-  var [hashArray, setHashArray] = useState([])
-  var [histState, setHistState] = useState('Please Wait...')
-  var [txInfo, setTxInfo] = useState([])
-  var [tempArray, setTempArray] = useState([])
-  var [hrArray, setHrArray] = useState([])
-  var [systArray, setSystArray] = useState([])
-  var [diastArray, setDiastArray] = useState([])
-  var [BPArray, setBPArray] = useState([])
-  var [tempArray, setTempArray] = useState([])
+
+  var [tempArray, setTempArray] = useState([60])
+  var [hrArray, setHrArray] = useState([60])
+  var [SpO2Array, setSpO2Array] = useState([90])
   var [current, setCurrent] = useState('Not Found')
   const [currentTemp, setCurrentTemp] = useState(0)
   const [currentHR, setCurrentHR] = useState(0)
@@ -58,12 +51,15 @@ export default function LiveReadings({route, navigation}) {
       setCurrentTemp(data.Temp)
       setCurrentHR(data.HR)
       setCurrentSpO2(data.SpO2)
+      setTempArray(array => [...array, data.Temp]);
+      setHrArray(array => [...array, data.HR]);
+      setSpO2Array(array => [...array, data.SpO2]);
 
     });
-    setFinished(true)
+    // setFinished(true)
       }
       catch(e){
-        setFinished(true)
+        // setFinished(true)
         console.log(e)
         // Alert.alert("Error Has Occurred")
       }
@@ -95,88 +91,41 @@ export default function LiveReadings({route, navigation}) {
 
   return (
     <View style={styles.container}>
-
-<Card containerStyle={styles.card}>
-
-          <View>
-            {/* Bar Chart Starts From Here */}
-
-            <Card.Title>
-          <Text style={[styles.text, { color: 'white', fontWeight: "900", fontSize: 26, fontFamily:'Righteous' }]}>
+      <Card.Title>
+          <Text style={[styles.text, { color:'white', fontWeight: "900", fontSize: 36, fontFamily:'Righteous' }]}>
             Live Readings
           </Text>
         </Card.Title>
 
-            <BarChart
-              data={{
-                labels: ["Temp (F)", "HR (BPM)", "SpO2"],
-                datasets: [
-                  {
-                    data: [currentTemp, currentHR, currentSpO2],
-                  },
-                ],
-              }}
-              width={maxWidth} // from react-native
-              height={250}
-              fromZero={true}
-              yAxisInterval={1} // optional, defaults to 1
-              chartConfig={{
-                backgroundColor: "#103952",
-                backgroundGradientFrom: "#02395A",
-                backgroundGradientTo: "#074164",
-                decimalPlaces: 0, // optional, defaults to 2dp
-                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                style: {
-                  borderRadius: 6,
-                },
-              }}
-              style={{
-                marginVertical: 0,
-                paddingHorizontal: "auto",
-                borderRadius: 0,
-              }}
-            />
 
-            <View style={styles.lastTxContainer}>
-              <View style={styles.statsBox}>
-                <Text style={[styles.text, { fontSize: 20 }]}>
-                  Heart{"\n"}Beat
-                </Text>
-                <Text style={[styles.text, styles.subText]}>
-                  {currentHR} BPM
-                </Text>
-              </View>
-              <View
-                style={[
-                  styles.statsBox,
-                  {
-                    borderColor: "#DFD8C8",
-                    borderLeftWidth: 2,
-                    borderRightWidth: 2,
-                  },
-                ]}
-              >
-                <Text style={[styles.text, { fontSize: 20 }]}>
-                  Body{"\n"}Temp.
-                </Text>
-                <Text style={[styles.text, styles.subText]}>
-                  {currentTemp} F
-                </Text>
-              </View>
-              <View style={styles.statsBox}>
-                <Text style={[styles.text, { fontSize: 20 }]}>
-                  Oxygen{"\n"}Saturation
-                </Text>
-                <Text style={[styles.text, styles.subText]}>
-                  {currentSpO2} %
-                </Text>
-              </View>
-
-            </View>
-
+        <View style={styles.statsContainer}>
+          <View style={styles.statsBox}>
+            <Text style={[styles.text, { fontSize: 20 }]}>Temperature</Text>
+            <Text style={[styles.text, styles.subText]}>{currentTemp}</Text>
           </View>
-          <View style={styles.buttonContainer}>
+          <View
+            style={[
+              styles.statsBox,
+              {
+                borderColor: "#DFD8C8",
+                borderLeftWidth: 2,
+                borderRightWidth: 2,
+              },
+            ]}
+          >
+            <Text style={[styles.text, { fontSize: 20 }]}>Heart Rate</Text>
+            <Text style={[styles.text, styles.subText]}>
+              {currentHR}
+            </Text>
+          </View>
+          <View style={styles.statsBox}>
+            <Text style={[styles.text, { fontSize: 20 }]}>Oxygen Sat.</Text>
+            <Text style={[styles.text, styles.subText]}>{currentSpO2} %</Text>
+          </View>
+        </View>
+
+        <Card.Divider/>
+        <View style={styles.buttonContainer}>
           <Button
             title="Go Back"
             buttonStyle={styles.buttonStyle}
@@ -191,7 +140,142 @@ export default function LiveReadings({route, navigation}) {
             }
           ></Button>
         </View>
-        </Card>
+
+      <View style={{marginBottom:30, paddingHorizontal:5, paddingTop:20}}>
+
+            <Card.Divider />
+      <ScrollView horizontal={false} showsVerticalScrollIndicator={true}>
+        <View>
+            {/* Bar Chart Starts From Here */}
+            <Card containerStyle={[styles.card, {backgroundColor:'#940101', borderRadius:10, borderWidth:0, marginBottom:20,}]}>
+            <Card.Title>
+            <Text style={[styles.text, { color: "white", fontSize: 20 }]}>
+              Body Temperature
+            </Text>
+
+            </Card.Title>
+            <LineChart
+              data={{
+                labels: [],
+                datasets: [
+                  {
+                    data: tempArray,
+                    strokeWidth:2,
+                  },
+                ],
+              }}
+              bezier
+              width={maxWidth} // from react-native
+              height={250}
+              withHorizontalLines={true}
+              withVerticalLines={true}
+              yAxisInterval={1} // optional, defaults to 1
+              chartConfig={{
+                backgroundColor: "#048bbd",
+                backgroundGradientFrom: "#CD210E",
+                backgroundGradientTo: "#FF1900",
+                decimalPlaces: 1, // optional, defaults to 2dp
+                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+              }}
+              style={{
+                marginVertical: 0,
+                paddingHorizontal: "auto",
+                borderRadius: 0,
+              }}
+            />
+            </Card>
+
+            </View>
+
+            <View>
+            {/* Bar Chart Starts From Here */}
+            <Card containerStyle={[styles.card, {backgroundColor:'#126435', borderRadius:10, borderWidth:0, marginBottom:20}]}>
+            <Card.Title>
+            <Text style={[styles.text, { color: "white", fontSize: 20 }]}>
+              Oxygen Saturation
+            </Text>
+
+            </Card.Title>
+            <LineChart
+              data={{
+                labels: [],
+                datasets: [
+                  {
+                    data: SpO2Array,
+                    strokeWidth:2,
+                  },
+                ],
+              }}
+              bezier
+              width={maxWidth} // from react-native
+              height={250}
+              withHorizontalLines={true}
+              withVerticalLines={true}
+              yAxisInterval={1} // optional, defaults to 1
+              chartConfig={{
+                backgroundColor: "#048bbd",
+                backgroundGradientFrom: "#1E8449",
+                backgroundGradientTo: "#02A647",
+                decimalPlaces: 1, // optional, defaults to 2dp
+                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+              }}
+              style={{
+                marginVertical: 0,
+                paddingHorizontal: "auto",
+                borderRadius: 0,
+              }}
+            />
+            </Card>
+
+            </View>
+
+            <View>
+            {/* Bar Chart Starts From Here */}
+            <Card containerStyle={[styles.card, {backgroundColor:'#C69E00', borderRadius:10, borderWidth:0, marginBottom:20}]}>
+            <Card.Title>
+            <Text style={[styles.text, { color: "white", fontSize: 20 }]}>
+              Heart Rate
+            </Text>
+
+            </Card.Title>
+            <LineChart
+              data={{
+                labels: [],
+                datasets: [
+                  {
+                    data: hrArray,
+                    strokeWidth:2,
+                  },
+                ],
+              }}
+              bezier
+              width={maxWidth} // from react-native
+              height={250}
+              withHorizontalLines={true}
+              withVerticalLines={true}
+              yAxisInterval={1} // optional, defaults to 1
+              chartConfig={{
+                backgroundColor: "#048bbd",
+                backgroundGradientFrom: "#E1B711",
+                backgroundGradientTo: "#F1C40F",
+                decimalPlaces: 1, // optional, defaults to 2dp
+                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+              }}
+              style={{
+                marginVertical: 0,
+                paddingHorizontal: "auto",
+                borderRadius: 0,
+              }}
+            />
+            </Card>
+
+            </View>
+      </ScrollView>
+      </View>
+
     </View>
   )
 }
@@ -204,7 +288,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#034772",
     alignItems: "center",
     justifyContent: "center",
-    paddingTop: 50,
+    paddingTop: 150,
   },
 
   card: {
