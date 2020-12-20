@@ -1,7 +1,6 @@
 import React, { Fragment, useState, useEffect, useContext } from "react"
 import {
     Typography,
-    makeStyles,
     Grid,
     Button,
     Dialog,
@@ -35,6 +34,7 @@ import { UserContext } from "../../PatientVitalsContext";
 import ListOutlinedIcon from '@material-ui/icons/ListOutlined';
 import AppointmentCard from "../../components/AppointmentCard/AppointmentCard";
 import useStyles from "./FunctionsPP"
+import PredictionCard from "../../components/PredictionCard/PredictionCard";
 
 const PatientProfile = (props) => {
     const classes = useStyles();
@@ -175,17 +175,8 @@ const PatientProfile = (props) => {
                                         contact={patient.contact}
                                     />
                                 </Grid>
-
                                 <Grid item xs={12} md={5}>
                                     <Typography gutterBottom variant="h5" color="secondary">
-                                        Prescriptions
-                                </Typography>
-                                    <PrescriptionCard
-                                        Address={address}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} md={5}>
-                                    <Typography variant="h5" color="secondary">
                                         Recent Vitals
                                     </Typography>
                                     <VitalsCard
@@ -197,6 +188,14 @@ const PatientProfile = (props) => {
                                         Appointments
                                     </Typography>
                                     <AppointmentCard
+                                        Address={address}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} md={5}>
+                                    <Typography gutterBottom variant="h5" color="secondary">
+                                        Prescriptions
+                                  </Typography>
+                                    <PrescriptionCard
                                         Address={address}
                                     />
                                 </Grid>

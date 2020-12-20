@@ -208,6 +208,7 @@ const LiveReadings = () => {
       // setMamReadings(mamReadings.push(JSON.stringify(parsedData)));
       // setMamReadings(array => [...array, JSON.stringify(parsedData)]);
     };
+    
     await Mam.fetch(root, mode, null, logData);
   }
 

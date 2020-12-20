@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import NoDrugs from "../../assets/icons/NoDrugs";
 import AddIcon from '@material-ui/icons/Add';
 import * as Yup from "yup";
+import DeleteOutlineOutlinedIcon from '@material-ui/icons/DeleteOutlineOutlined';
 import moment from "moment";
 import { Formik, Form } from "formik";
 import {
@@ -131,6 +132,7 @@ const PrescriptionCard = (props) => {
             for (var i = 0; i < response.length; i++) {
                 x = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${response[i]}`);
                 x = await x.json();
+                x.hash = response[i];
                 if (x.response !== false) {
                     setEmpty(false);
                     setprescriptionArray(array => [...array, x]);
@@ -146,10 +148,32 @@ const PrescriptionCard = (props) => {
         // setLoading(false);
         // console.log(response);
     }
-
     useEffect(() => {
         getPrescription();
     }, [])
+
+    const disablePrescription = async (hash) => {
+        var responsePrescription = await fetch("https://thetamiddleware.herokuapp.com/changePresDescription/",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    address: props.Address,
+                    txHash: hash,
+                }),
+            }
+        );
+        responsePrescription = await responsePrescription.json();
+        if (responsePrescription === true) {
+            console.log("Discarded successfully")
+            getPrescription()
+        }
+        else {
+            alert("error")
+        }
+    }
 
     return (
         <Fragment>
@@ -172,11 +196,14 @@ const PrescriptionCard = (props) => {
                                                     <StyledTableCell align="center">
                                                         Details
                                                     </StyledTableCell>
+                                                    <StyledTableCell align="center">
+                                                        Actions
+                                                    </StyledTableCell>
                                                 </TableRow>
                                             </TableHead>
                                             <TableBody>
                                                 {prescriptionArray?.map((row) => (
-                                                    <TableRow key={row.TimeStamp}>
+                                                    <TableRow key={row.response.TimeStamp}>
                                                         <StyledTableCell align="center">
                                                             {row.response.TimeStamp}
                                                         </StyledTableCell>
@@ -185,6 +212,15 @@ const PrescriptionCard = (props) => {
                                                         </StyledTableCell>
                                                         <StyledTableCell align="center">
                                                             {row.response.details}
+                                                        </StyledTableCell>
+                                                        <StyledTableCell align="center">
+                                                            <IconButton
+                                                                color="secondary"
+                                                                onClick={() => { disablePrescription(row.hash) }}>
+                                                                <Tooltip arrow title={`Delete ${row.response.title}`}>
+                                                                    <DeleteOutlineOutlinedIcon />
+                                                                </Tooltip>
+                                                            </IconButton>
                                                         </StyledTableCell>
                                                     </TableRow>
                                                 ))}
@@ -205,6 +241,7 @@ const PrescriptionCard = (props) => {
                                             TimeStamp: moment().format('MMMM Do YYYY, h:mm:ss a'),
                                             details: values.Details,
                                             title: values.Name,
+                                            status: true
                                         };
                                         prescription = JSON.stringify(prescription);
                                         var response = await fetch(
@@ -218,7 +255,7 @@ const PrescriptionCard = (props) => {
                                                     seed: seed,
                                                     address: props.Address,
                                                     txType: "prescription",
-                                                    Data: prescription
+                                                    Data: prescription,
                                                 }),
                                             }
                                         );

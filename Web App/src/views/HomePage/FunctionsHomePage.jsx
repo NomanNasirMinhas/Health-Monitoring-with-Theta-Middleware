@@ -65,7 +65,6 @@ export const Options = {
                 },
                 ticks: {
                     fontColor: "#FFFFFF",
-                    beginAtZero: true,
                 },
             },
         ],

@@ -5,6 +5,8 @@ import Oxygen from "../../assets/icons/oxygen";
 import Frequency from "../../assets/icons/frequency";
 import Vital from "../../assets/icons/Vital"
 import { UserContext } from "../../PatientVitalsContext";
+import PredictionCard from "../PredictionCard/PredictionCard";
+import createTypography from "@material-ui/core/styles/createTypography";
 const useStyles = makeStyles((theme) => ({
   tileTopText: {
     fontSize: "1.1rem",
@@ -39,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
     gridTemplateRows: "1fr 1fr",
     gridTemplateColumns: "1fr 1fr",
     flexWrap: "wrap",
+    paddingBottom: "12px",
     borderRadius: "4px",
   },
   secondRow: {
@@ -100,60 +103,63 @@ const VitalsCard = (props) => {
       {loading ? <CircularProgress color="secondary" /> : Empty ? (
         <ErrorMessage />
       ) : (
-          <div className={classes.cardBody}>
-            <div className={classes.minicard} style={{ background: "#E8413E" }}>
-              <div className={classes.flexBox}><Thermometer fontSize="inherit" /></div>
-              <div className={classes.secondRow}>
-                <div>
-                  <h6 className={classes.tileTopText}>
-                    Temperature
+          <React.Fragment>
+            <div className={classes.cardBody}>
+              <div className={classes.minicard} style={{ background: "#E8413E" }}>
+                <div className={classes.flexBox}><Thermometer fontSize="inherit" /></div>
+                <div className={classes.secondRow}>
+                  <div>
+                    <h6 className={classes.tileTopText}>
+                      Temperature
                   </h6>
-                </div>
-                <div className={classes.flexBoxBottom}>
-                  <h2 className={classes.tileBottomText}>
-                    {Vitals.Temp} <small>F</small>
-                  </h2>
+                  </div>
+                  <div className={classes.flexBoxBottom}>
+                    <h2 className={classes.tileBottomText}>
+                      {Vitals.Temp} <small>F</small>
+                    </h2>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className={classes.minicard} style={{ background: "#fc940c" }}>
-              <div className={classes.flexBox}><Frequency fontSize="inherit" /></div>
-              <div className={classes.secondRow}>
-                <div>
-                  <h6 className={classes.tileTopText}>
-                    Heart Rate
+              <div className={classes.minicard} style={{ background: "#fc940c" }}>
+                <div className={classes.flexBox}><Frequency fontSize="inherit" /></div>
+                <div className={classes.secondRow}>
+                  <div>
+                    <h6 className={classes.tileTopText}>
+                      Heart Rate
                   </h6>
-                </div>
-                <div className={classes.flexBoxBottom}>
-                  <h2 className={classes.tileBottomText}>
-                    {Vitals.HR} <small>BPM</small>
-                  </h2>
+                  </div>
+                  <div className={classes.flexBoxBottom}>
+                    <h2 className={classes.tileBottomText}>
+                      {Vitals.HR} <small>BPM</small>
+                    </h2>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className={classes.minicard} style={{ background: "#50aa54" }}>
-              <div className={classes.flexBox}><Oxygen fontSize="inherit" /></div>
-              <div className={classes.secondRow}>
-                <div>
-                  <h6 className={classes.tileTopText}>
-                    Oxygen Level
+              <div className={classes.minicard} style={{ background: "#50aa54" }}>
+                <div className={classes.flexBox}><Oxygen fontSize="inherit" /></div>
+                <div className={classes.secondRow}>
+                  <div>
+                    <h6 className={classes.tileTopText}>
+                      Oxygen Level
                   </h6>
-                </div>
-                <div className={classes.flexBoxBottom}>
-                  <h2 className={classes.tileBottomText}>
-                    {Vitals.SpO2}<small> SpO<small>2</small></small>
-                  </h2>
+                  </div>
+                  <div className={classes.flexBoxBottom}>
+                    <h2 className={classes.tileBottomText}>
+                      {Vitals.SpO2}<small> SpO<small>2</small></small>
+                    </h2>
+                  </div>
                 </div>
               </div>
+              <div className={classes.timeStamp}>
+                <Typography variant="subtitle1" color="secondary">
+                  Updated At <br />{Vitals.TimeStamp}
+                </Typography>
+              </div>
             </div>
-            <div className={classes.timeStamp}>
-              <Typography variant="subtitle1" color="secondary">
-                Updated At <br />{Vitals.TimeStamp}
-              </Typography>
-            </div>
-          </div>
+            <PredictionCard Temp={Vitals.Temp} HR={Vitals.HR} SpO2={Vitals.SpO2} />
+          </React.Fragment>
         )}
     </>
   );

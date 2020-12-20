@@ -197,7 +197,7 @@ const AppointmentCard = (props) => {
                                             </TableHead>
                                             <TableBody>
                                                 {AppointmentArray?.map((row) => (
-                                                    <TableRow key={row.TimeStamp}>
+                                                    <TableRow key={row.response.TimeStamp}>
                                                         <StyledTableCell align="center">
                                                             {row.response.TimeStamp}
                                                         </StyledTableCell>
@@ -232,6 +232,7 @@ const AppointmentCard = (props) => {
                                     />
                                     <CssTextField
                                         disabled={Submitting}
+                                        required
                                         autoComplete="off"
                                         variant="outlined"
                                         size="small"
