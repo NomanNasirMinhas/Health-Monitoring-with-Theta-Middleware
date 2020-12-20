@@ -254,7 +254,7 @@ function ViewPatient(props) {
    setName(name);
 
     const info = await fetch(
-      `https://thetamiddleware.herokuapp.com/getAllHash/${address}&${"26-11-2020"}&${"vitals"}`
+      `https://thetamiddleware.herokuapp.com/getAllHash/${address}&${"18-12-2020"}&${"vitals"}`
     );
     const to_json = await info.json();
 
@@ -650,7 +650,27 @@ function ViewPatient(props) {
                             </Typography>
                           </TableCell>
                           <TableCell>
-                            <Button
+                            {obj.Profile == null ?  
+                          <Button
+                          disabled
+                          className={classesTable.hover}
+                          color="inherit"
+                          /** onClick={()=>{setopenDialogue(true); sethistoryAddress(obj.ADDRESS)}} */
+                          onClick={() => getInfo(obj.ADDRESS,obj.Profile.name)}
+                          startIcon={
+                            <ListIcon
+                              fontSize="small"
+                              // component={link}
+                              //to={`/ViewPatient/${obj.SEED}`}
+                            />
+                          }
+                        >
+                          {" "}
+                          <Typography variant="button"> View</Typography>
+                        </Button>
+                        :
+                        
+                        <Button
                               className={classesTable.hover}
                               color="inherit"
                               /** onClick={()=>{setopenDialogue(true); sethistoryAddress(obj.ADDRESS)}} */
@@ -666,6 +686,8 @@ function ViewPatient(props) {
                               {" "}
                               <Typography variant="button"> View</Typography>
                             </Button>
+                          }
+                            
                           </TableCell>
 
                           <TableCell>
