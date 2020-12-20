@@ -106,7 +106,7 @@ const useStylesTable = makeStyles({
 
   papers: {
     "&:hover": {
-      padding: "30px",
+      padding: "0px",
     },
   },
 });
@@ -269,7 +269,7 @@ function Doctors(props) {
           //insert transaction into getTx
         );
         // address fetched
-        console.log("FOR SEED:", addresses_for);
+      //  console.log("FOR SEED:", addresses_for);
         const alphaAddress = await response.json();
         console.log("AlphTransaction", alphaAddress.ADDRESS)
 

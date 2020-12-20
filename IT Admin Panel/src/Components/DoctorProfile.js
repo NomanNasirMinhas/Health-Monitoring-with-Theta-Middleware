@@ -14,6 +14,7 @@ import { useHistory } from "react-router-dom";
 
 //Avatar import
 import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
 import Avatar from "@material-ui/core/Avatar";
 import HomeIcon from "@material-ui/icons/Home";
 import PhoneIcon from "@material-ui/icons/Phone";
@@ -26,7 +27,10 @@ import IconButton from "@material-ui/core/IconButton";
 //TOAST MESSAGE
 import { ToastContainer, toast } from "react-toastify";
 import AssignmentIcon from "@material-ui/icons/Assignment";
-
+import FormControl from "@material-ui/core/FormControl";
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
+import OutlinedInput from "@material-ui/core/OutlinedInput";
 //import QRCode from "react-qr-code";
 
 //Dialog box imports
@@ -35,6 +39,8 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import TextField from '@material-ui/core/TextField';
+
 import swal from "sweetalert";
 
 //import theme provider
@@ -79,6 +85,16 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "#922B21", //#3498DB
     },
   },
+
+  hoverEdit: {
+    backgroundColor: "#018D87", //   #2980B9 blue   dark#2471A3  button #1B4F72
+    color: "white",
+
+    "&:hover": {
+      padding: "10px",
+      backgroundColor: "#3498DB", //#3498DB
+    },
+  },
 }));
 
 function DoctorProfile() {
@@ -90,13 +106,23 @@ function DoctorProfile() {
 
   let history = useHistory(); // assigning useHistory
   const [open, setOpen] = React.useState(false); //dialog box for deleting doctor
+  const [openTwo, setopenTwo] = React.useState(false); // for edit password dialog
   //handle dialog box open
   const handleClickOpen = () => {
     setOpen(true);
   };
+
+  const handleClickOpenTwo = () => {
+    setopenTwo(true);
+  };
+
   //close dialog handle
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleCloseTwo = () => {
+    setopenTwo(false);
   };
 
   const classes = useStyles();
@@ -111,6 +137,8 @@ function DoctorProfile() {
   const [dummy, setDummy] = React.useState();
   const canvas = useRef(null);
 
+  const [updatedPassword, setUpdatedPassword] = React.useState();
+
   //console.log("SEED=",JSON.parse(obj));
 
   //get seed data
@@ -124,7 +152,9 @@ function DoctorProfile() {
         //setting doctor object to variables
         //const name=local_seed.seed_obj.Profile.name;
         setName(local_seed.seed_obj.Profile.name);
-        setsubName(local_seed.seed_obj.Profile.name.substring(0,1).toUpperCase());
+        setsubName(
+          local_seed.seed_obj.Profile.name.substring(0, 1).toUpperCase()
+        );
         //const address = local_seed.seed_obj.Profile.address;
         setAddress(local_seed.seed_obj.Profile.address);
         //const contact = local_seed.seed_obj.Profile.contact;
@@ -190,6 +220,33 @@ function DoctorProfile() {
     DocLogs();
   }, [seed]);
 
+  //---FUNCTION TO EDIT PASSWORD
+
+  function editPassword() {
+    setopenTwo(true);
+  }
+
+  const toSend = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ seed: seed, password : updatedPassword })
+};
+  function updatePassword() {
+    
+    //var sendingObject ={seed: seed, password: updatedPassword }
+    //console.log("Objetc to send",sendingObject)
+    fetch(`https://thetamiddleware.herokuapp.com/updateSeedPassword/`, toSend);
+
+    //swal alert
+    swal({
+      text: "Password Successfully UPDATED!",
+      timer: 4000,
+      icon: "success",
+      buttons: false,
+    });
+    history.push(`/home`);
+  }
+
   function Delete(seedReceived) {
     //console.log("going back from:", seed)
 
@@ -197,6 +254,10 @@ function DoctorProfile() {
     handleClickOpen();
   }
 
+
+  const changePassword = (event) => {
+    setUpdatedPassword(event.target.value);
+  };
   var QRCode = require("qrcode.react");
   //var dummy=seed.json();
   if (seed == null || seed == undefined) {
@@ -239,11 +300,12 @@ function DoctorProfile() {
                 >
                   <Avatar
                     className={classes.large}
-                    style={{ backgroundColor: "#018D87" }}
+                    style={{ backgroundColor: "#018D87", zIndex: "1" }}
                   >
                     <Typography variant="h4">{subName}</Typography>
                   </Avatar>
                 </div>
+
                 <div>
                   <Divider variant="middle" />
                 </div>
@@ -266,7 +328,26 @@ function DoctorProfile() {
                     <Typography variant="h6">
                       <StarsIcon fontSize="small" /> {specialization}
                     </Typography>
-                  </div>{" "}
+                  </div>
+
+                  <div>
+                    {" "}
+                    <Typography variant="h6">
+                      <IconButton
+                        style={{ marginBottom: "3%", marginTop: "3%" }}
+                        className={classes.hoverEdit}
+                        color="primary"
+                        onClick={() => {
+                          console.log("CLICKED");
+                          editPassword();
+                        }}
+                      >
+                        {" "}
+                        <EditIcon fontSize="small" />
+                      </IconButton>
+                      Edit Password
+                    </Typography>
+                  </div>
                 </div>
               </Paper>{" "}
             </Grid>
@@ -434,19 +515,22 @@ function DoctorProfile() {
               <Typography variant="h6">Email: {email}</Typography>
             </DialogContentText>
             <DialogContentText>
-            <Typography variant="h6">Contact: {contact}</Typography>
+              <Typography variant="h6">Contact: {contact}</Typography>
             </DialogContentText>
-
           </DialogContent>
           <DialogActions>
-            <Button onClick={ ()=>{handleClose();
-             swal({
-              text: "Terminated",
-              timer: 2000,
-              icon: "success",
-              buttons: false,
-            });
-            }} color="primary">
+            <Button
+              onClick={() => {
+                handleClose();
+                swal({
+                  text: "Terminated",
+                  timer: 2000,
+                  icon: "success",
+                  buttons: false,
+                });
+              }}
+              color="primary"
+            >
               NO!
             </Button>
 
@@ -465,6 +549,88 @@ function DoctorProfile() {
               color="primary"
             >
               YES! Continue
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog
+          open={openTwo}
+          onClose={handleCloseTwo}
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogTitle id="alert-dialog-slide-title">
+            {"Please Update Password for following entry!"}
+          </DialogTitle>
+
+          <DialogContent>
+            <FormControl disabled>
+              <InputLabel htmlFor="component-disabled">Name</InputLabel>
+              <OutlinedInput
+                id="component-outlined"
+                value={name}
+                label="Name"
+              />
+            </FormControl>
+            <Divider orientation="vertical" />
+          </DialogContent>
+
+          <DialogContent>
+            <FormControl disabled>
+              <InputLabel htmlFor="component-disabled">Email</InputLabel>
+              <OutlinedInput
+                id="component-outlined"
+                value={email}
+                label="Name"
+              />
+            </FormControl>
+          </DialogContent>
+
+          <DialogContent>
+            <FormControl disabled>
+              <InputLabel htmlFor="component-disabled">Contact</InputLabel>
+              <OutlinedInput
+                id="component-outlined"
+                value={contact}
+                label="Name"
+              />
+            </FormControl>
+          </DialogContent>
+
+          <DialogContent>
+            <TextField
+              id="outlined-basic"
+              label="New Password"
+              placeholder="Password"
+              type="text"
+              variant="outlined"
+              required
+              
+              size="medium"
+              color="primary"
+              value={updatedPassword}
+              onChange={changePassword}
+            />
+          </DialogContent>
+
+          <DialogActions>
+            <Button
+              onClick={() => {
+                handleCloseTwo();
+                swal({
+                  text: "Terminated",
+                  timer: 2000,
+                  icon: "success",
+                  buttons: false,
+                });
+              }}
+              color="primary"
+            >
+              Close!
+            </Button>
+
+            <Button onClick={() => {updatePassword(); }} color="primary">
+              Confirm Change !
             </Button>
           </DialogActions>
         </Dialog>
