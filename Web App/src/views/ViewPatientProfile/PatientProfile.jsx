@@ -19,6 +19,7 @@ import {
     Divider,
     ListItemIcon,
     ListItemText,
+    Container,
 } from "@material-ui/core";
 import Header from "../../components/Header/Header";
 import theme from "../../assets/theme/theme";
@@ -94,7 +95,7 @@ const PatientProfile = (props) => {
                 </Backdrop>
                 :
                 (
-                    <Fragment>
+                    <Container maxWidth="xl">
                         <Grow in={true} timeout={200}>
                             <Grid container justify="space-around" className={classes.body} >
                                 <Grid item xs={12}>
@@ -164,7 +165,6 @@ const PatientProfile = (props) => {
                                         </div>
                                     </Hidden>
                                 </Grid>
-
                                 <Grid item xs={12} md={5}>
                                     <PatientCard
                                         name={patient.name}
@@ -185,22 +185,23 @@ const PatientProfile = (props) => {
                                 </Grid>
                                 <Grid item xs={12} md={5}>
                                     <Typography gutterBottom variant="h5" color="secondary">
-                                        Appointments
-                                    </Typography>
-                                    <AppointmentCard
-                                        Address={address}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} md={5}>
-                                    <Typography gutterBottom variant="h5" color="secondary">
                                         Prescriptions
                                   </Typography>
                                     <PrescriptionCard
                                         Address={address}
                                     />
                                 </Grid>
+                                <Grid item xs={12} md={5}>
+                                    <Typography gutterBottom variant="h5" color="secondary">
+                                        Appointments
+                                    </Typography>
+                                    <AppointmentCard
+                                        Address={address}
+                                    />
+                                </Grid>
                             </Grid>
                         </Grow>
+
                         <Hidden smDown>
                             <div className={classes.bottom}>
                                 <Button
@@ -297,7 +298,7 @@ const PatientProfile = (props) => {
                                 </DialogActions>
                             </DialogContent>
                         </Dialog>
-                    </Fragment>
+                    </Container>
                 )
             }
         </ThemeProvider >

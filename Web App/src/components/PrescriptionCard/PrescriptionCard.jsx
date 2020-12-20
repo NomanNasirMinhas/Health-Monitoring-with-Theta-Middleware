@@ -132,6 +132,7 @@ const PrescriptionCard = (props) => {
             for (var i = 0; i < response.length; i++) {
                 x = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${response[i]}`);
                 x = await x.json();
+                console.log(x)
                 x.hash = response[i];
                 if (x.response !== false) {
                     setEmpty(false);
@@ -162,6 +163,7 @@ const PrescriptionCard = (props) => {
                 body: JSON.stringify({
                     address: props.Address,
                     txHash: hash,
+                    status: false,
                 }),
             }
         );

@@ -24,7 +24,6 @@ const PredictionCard = (props) => {
             var response = await fetch(
                 `https://thetamiddleware.herokuapp.com/getPrediction/${props.Temp}&${props.HR}&${props.SpO2}`);
             response = await response.json();
-            console.log(response);
             response = response.toFixed(2)
             setPrediction(response);
         } catch (error) {
