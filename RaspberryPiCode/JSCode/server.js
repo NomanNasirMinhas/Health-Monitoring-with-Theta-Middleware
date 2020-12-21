@@ -1,7 +1,7 @@
 const http = require("http");
 const express = require("express");
 const socketio = require("socket.io");
-
+const cors = require("cors");
 const SERVER_PORT = 7000;
 
 let nextVisitorNumber = 1;
@@ -55,6 +55,8 @@ function onNewWebsocketConnection(socket) {
 function startServer() {
     // create a new express app
     const app = express();
+app.use(cors());
+app.use(express.json());
     // create http server and wrap the express app
     const server = http.createServer(app);
     // bind socket.io to that server
@@ -71,7 +73,7 @@ function startServer() {
 
         io.emit("vitals", await readData());
         io.emit("online", onlineClients.size);
-    }, 1000);
+    }, 3000);
 }
 
 startServer();
