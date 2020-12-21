@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect, useContext } from "react"
+import React, { useState, useEffect, useContext } from "react"
 import {
     Typography,
     Grid,
@@ -20,6 +20,7 @@ import {
     ListItemIcon,
     ListItemText,
     Container,
+    Tooltip,
 } from "@material-ui/core";
 import Header from "../../components/Header/Header";
 import theme from "../../assets/theme/theme";
@@ -35,8 +36,8 @@ import { UserContext } from "../../PatientVitalsContext";
 import ListOutlinedIcon from '@material-ui/icons/ListOutlined';
 import AppointmentCard from "../../components/AppointmentCard/AppointmentCard";
 import useStyles from "./FunctionsPP"
-import PredictionCard from "../../components/PredictionCard/PredictionCard";
-
+import AllPrescription from "../../assets/icons/AllPrescription"
+import AllAppointment from "../../assets/icons/AllAppointment"
 const PatientProfile = (props) => {
     const classes = useStyles();
     let { address } = useParams();
@@ -185,7 +186,15 @@ const PatientProfile = (props) => {
                                 </Grid>
                                 <Grid item xs={12} md={5}>
                                     <Typography gutterBottom variant="h5" color="secondary">
-                                        Prescriptions
+                                        <Tooltip title="View All Previous Prescriptions">
+                                            <IconButton
+                                                component={Link}
+                                                to={`/allprescriptions/${patient.name}&${patient.gender}&${patient.date}&${address}`}
+                                            >
+                                                <AllPrescription />
+                                            </IconButton>
+                                        </Tooltip>
+                                    Prescriptions
                                   </Typography>
                                     <PrescriptionCard
                                         Address={address}
@@ -193,7 +202,13 @@ const PatientProfile = (props) => {
                                 </Grid>
                                 <Grid item xs={12} md={5}>
                                     <Typography gutterBottom variant="h5" color="secondary">
-                                        Appointments
+                                        <Tooltip title="View All Previous Appointments">
+                                            <IconButton component={Link}
+                                                to={`/allappointments/${patient.name}&${patient.gender}&${patient.date}&${address}`}>
+                                                <AllAppointment />
+                                            </IconButton>
+                                        </Tooltip>
+                                    Appointments
                                     </Typography>
                                     <AppointmentCard
                                         Address={address}

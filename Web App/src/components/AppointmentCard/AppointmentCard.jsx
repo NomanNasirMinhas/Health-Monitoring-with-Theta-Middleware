@@ -1,7 +1,9 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import NoDrugs from "../../assets/icons/NoDrugs";
-import AddIcon from '@material-ui/icons/Add';
+import AddAppointment from "../../assets/icons/AddAppointment";
+import DeleteOutlineOutlinedIcon from '@material-ui/icons/DeleteOutlineOutlined';
+
 import moment from "moment";
 import {
     Typography,
@@ -17,7 +19,6 @@ import {
     TextField,
     IconButton,
     Tooltip,
-    Button
 } from '@material-ui/core';
 const useStyles = makeStyles((theme) => ({
     card: {
@@ -114,6 +115,7 @@ const AppointmentCard = (props) => {
     }
     async function getAppointments() {
         setLoading(true);
+        setEmpty(true);
         let x;
         setAppointmentArray([]);
         var response = await fetch(`https://thetamiddleware.herokuapp.com/getAllHash/${props.Address}&0&docNotification`);
@@ -122,6 +124,7 @@ const AppointmentCard = (props) => {
             for (var i = 0; i < response.length; i++) {
                 x = await fetch(`https://thetamiddleware.herokuapp.com/getTx/${response[i]}`);
                 x = await x.json();
+                x.hash = response[i];
                 if (x.response !== false) {
                     setEmpty(false);
                     setAppointmentArray(array => [...array, x]);
@@ -141,6 +144,30 @@ const AppointmentCard = (props) => {
     useEffect(() => {
         getAppointments();
     }, [])
+
+    const disablePrescription = async (hash) => {
+        var responsePrescription = await fetch("https://thetamiddleware.herokuapp.com/changePresDescription/",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    address: props.Address,
+                    txHash: hash,
+                    status: false,
+                }),
+            }
+        );
+        responsePrescription = await responsePrescription.json();
+        if (responsePrescription === true) {
+            console.log("Discarded successfully")
+            getAppointments()
+        }
+        else {
+            alert("error")
+        }
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -188,10 +215,13 @@ const AppointmentCard = (props) => {
                                                         Issued At
                                                     </StyledTableCell>
                                                     <StyledTableCell align="center">
-                                                        Name
+                                                        Details
                                                     </StyledTableCell>
                                                     <StyledTableCell align="center">
-                                                        Details
+                                                        Time for Appointment
+                                                    </StyledTableCell>
+                                                    <StyledTableCell align="center">
+                                                        Action
                                                     </StyledTableCell>
                                                 </TableRow>
                                             </TableHead>
@@ -206,6 +236,15 @@ const AppointmentCard = (props) => {
                                                         </StyledTableCell>
                                                         <StyledTableCell align="center">
                                                             {row.response.details}
+                                                        </StyledTableCell>
+                                                        <StyledTableCell align="center">
+                                                            <IconButton
+                                                                color="secondary"
+                                                                onClick={() => { disablePrescription(row.hash) }}>
+                                                                <Tooltip arrow title={`Delete ${row.response.title}`}>
+                                                                    <DeleteOutlineOutlinedIcon />
+                                                                </Tooltip>
+                                                            </IconButton>
                                                         </StyledTableCell>
                                                     </TableRow>
                                                 ))}
@@ -251,12 +290,12 @@ const AppointmentCard = (props) => {
                                             <CircularProgress color="secondary" />
                                         ) : (
                                                 <Tooltip arrow title="Add Appointment">
-                                                    <AddIcon />
+                                                    <AddAppointment />
                                                 </Tooltip>
                                             )}
                                     </IconButton>
                                 </form>
-                    
+
                             </div>
                         </div>
                     )

@@ -1,18 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   Typography,
   Grid,
   ThemeProvider,
   Slide,
-  Backdrop,
-  CircularProgress,
   IconButton,
   Grow,
 } from "@material-ui/core";
 import Card from "../../components/Card/Card";
 import clsx from 'clsx';
 import CardBody from "../../components/Card/CardBody";
-import CardHeader from "../../components/Card/CardHeader";
 import Header from "../../components/Header/Header";
 import theme from "../../assets/theme/theme";
 import { useParams } from "react-router-dom";
@@ -208,8 +205,8 @@ const LiveReadings = () => {
       // setMamReadings(mamReadings.push(JSON.stringify(parsedData)));
       // setMamReadings(array => [...array, JSON.stringify(parsedData)]);
     };
-    
-    await Mam.fetch(root, mode, null, logData);
+    while (true)
+      await Mam.fetch(root, mode, null, logData);
   }
 
   useEffect(() => {

@@ -212,7 +212,6 @@ export default function ViewHistory({ history }) {
                     </Slide>
                     {Empty ? "NIL" :
                         <Grow in={true}>
-
                             <Grid container>
                                 <Grid item xs={12}>
                                     <Typography gutterBottom variant="h5" color="secondary">

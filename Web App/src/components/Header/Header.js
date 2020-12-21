@@ -107,7 +107,7 @@ const Header = props => {
       LogDetails: "Doctor Offline",
     }
     data = JSON.stringify(data);
-    var response = await fetch(
+    await fetch(
       "https://thetamiddleware.herokuapp.com/sendTx",
       {
         method: "POST",
@@ -122,7 +122,6 @@ const Header = props => {
         }),
       }
     );
-    response = await response.json();
     localStorage.clear()
     props.history.push('/')
   }

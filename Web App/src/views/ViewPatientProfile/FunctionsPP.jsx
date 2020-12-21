@@ -9,6 +9,7 @@ const useStyles = makeStyles((theme) => ({
     },
     bottom: {
         position: "fixed",
+        zIndex: "2",
         display: "flex",
         flexWrap: "wrap",
         alignItems: "center",
@@ -18,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
         left: "0",
         bottom: "0",
         width: "100%",
-        backgroundColor: "rgb(240, 248, 255,0.5)",
+        backgroundColor: "rgb(240, 248, 255,0.8)",
     },
 }));
 

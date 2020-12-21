@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import NoDrugs from "../../assets/icons/NoDrugs";
-import AddIcon from '@material-ui/icons/Add';
+import AddPrescription from '../../assets/icons/AddPrescription';
 import * as Yup from "yup";
 import DeleteOutlineOutlinedIcon from '@material-ui/icons/DeleteOutlineOutlined';
 import moment from "moment";
@@ -124,6 +124,7 @@ const PrescriptionCard = (props) => {
     const [prescriptionArray, setprescriptionArray] = useState([])
     async function getPrescription() {
         setLoading(true);
+        setEmpty(true);
         let x;
         setprescriptionArray([]);
         var response = await fetch(`https://thetamiddleware.herokuapp.com/getAllHash/${props.Address}&0&prescription`);
@@ -199,7 +200,7 @@ const PrescriptionCard = (props) => {
                                                         Details
                                                     </StyledTableCell>
                                                     <StyledTableCell align="center">
-                                                        Actions
+                                                        Action
                                                     </StyledTableCell>
                                                 </TableRow>
                                             </TableHead>
@@ -313,7 +314,7 @@ const PrescriptionCard = (props) => {
                                                     <CircularProgress color="secondary" />
                                                 ) : (
                                                         <Tooltip arrow title="Add Prescription">
-                                                            <AddIcon />
+                                                            <AddPrescription />
                                                         </Tooltip>
                                                     )}
                                             </IconButton>

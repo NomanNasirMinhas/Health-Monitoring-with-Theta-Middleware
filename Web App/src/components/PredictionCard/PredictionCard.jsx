@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react"
 import Card from "../Card/Card"
 import { Typography, makeStyles, CircularProgress } from "@material-ui/core";
-import CardHeader from "../Card/CardHeader";
-import { Doughnut, Pie } from "react-chartjs-2"
+import { Doughnut,  } from "react-chartjs-2"
 
 const useStyles = makeStyles(() => ({
     cardDiv: {

@@ -6,7 +6,7 @@ import Frequency from "../../assets/icons/frequency";
 import Vital from "../../assets/icons/Vital"
 import { UserContext } from "../../PatientVitalsContext";
 import PredictionCard from "../PredictionCard/PredictionCard";
-import createTypography from "@material-ui/core/styles/createTypography";
+import moment from "moment";
 const useStyles = makeStyles((theme) => ({
   tileTopText: {
     fontSize: "1.1rem",
@@ -154,7 +154,10 @@ const VitalsCard = (props) => {
               </div>
               <div className={classes.timeStamp}>
                 <Typography variant="subtitle1" color="secondary">
-                  Updated At <br />{Vitals.TimeStamp}
+                  Last updated: <br />
+                  <small>
+                    {moment(Vitals.TimeStamp, "HH:mm:ss DD-MM-YYYY").endOf('hour').fromNow()}
+                  </small>
                 </Typography>
               </div>
             </div>

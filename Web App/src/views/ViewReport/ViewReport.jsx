@@ -3,7 +3,7 @@ import { useParams } from 'react-router';
 import { Line } from "react-chartjs-2";
 import clsx from 'clsx';
 import Card from "../../components/Card/Card"
-import { makeStyles, Backdrop, Typography, ThemeProvider, Grid, IconButton } from "@material-ui/core"
+import { Backdrop, Typography, ThemeProvider, Grid, IconButton } from "@material-ui/core"
 import CustomizedCircularProgress from "../../components/CustomizedCircularProgress/CustomizedCircularProgress"
 import Header from '../../components/Header/Header';
 import theme from '../../assets/theme/theme';
@@ -78,7 +78,8 @@ const ViewReport = () => {
                             </Grid>
                             <Grid item xs={12} md={5}>
                                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-evenly" }}>
-                                    <img src={wearable} style={{ width: "auto", height: "29vh" }} />
+                                    <img alt="display-character"
+                                     src={wearable} style={{ width: "auto", height: "29vh" }} />
                                     <Typography
                                         variant="h5"
                                         color="secondary"

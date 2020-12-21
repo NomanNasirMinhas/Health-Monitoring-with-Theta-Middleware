@@ -62,7 +62,7 @@ const Login = (props) => {
                                             LogDetails: "Doctor Online",
                                         }
                                         data = JSON.stringify(data);
-                                        var response = await fetch(
+                                        await fetch(
                                             "https://thetamiddleware.herokuapp.com/sendTx",
                                             {
                                                 method: "POST",
@@ -77,7 +77,6 @@ const Login = (props) => {
                                                 }),
                                             }
                                         );
-                                        response = await response.json();
                                         props.history.push('/dashboard')
                                         actions.setSubmitting(false)
                                     }
