@@ -12,7 +12,7 @@ import { LineChart } from "react-native-chart-kit";
 import {
   BarChart,
 } from "react-native-chart-kit";
-const io = require('socket.io-client');
+// const io = require('socket.io-client');
 
 //this.state = {
 
@@ -22,14 +22,15 @@ const io = require('socket.io-client');
 export default function LiveReadings({route, navigation}) {
 
   var [tempArray, setTempArray] = useState([60])
-  var [hrArray, setHrArray] = useState([60])
+  var [hrArray, setHrArray] = useState([90])
   var [SpO2Array, setSpO2Array] = useState([90])
   var [current, setCurrent] = useState('Not Found')
+
   const [currentTemp, setCurrentTemp] = useState(0)
   const [currentHR, setCurrentHR] = useState(0)
   const [currentSpO2, setCurrentSpO2] = useState(0)
 
-  const socket = io.connect('http://172.20.10.3:7000/');
+  const {socket} = route.params;
 
   var tempData=[]
   var hrData=[]
@@ -133,7 +134,7 @@ export default function LiveReadings({route, navigation}) {
             style={{ width: 150}}
             onPress={
               () => {
-                socket.disconnect()
+                // socket.disconnect()
                 navigation.goBack()
               }
               // navigation.navigate('Readings')

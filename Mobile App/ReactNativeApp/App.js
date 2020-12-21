@@ -15,8 +15,9 @@ import Prescriptions from "./components/Prescription";
 import HistoryCards from "./components/HistoryCards";
 import LiveReading from "./components/LiveReadings";
 import LiveReadings from "./components/LiveReadings";
-import { Buffer } from 'buffer';
-global.Buffer = Buffer;
+const io = require('socket.io-client');
+const socket = io.connect('http://172.20.10.3:7000/');
+
 
 function DetailsScreen({ navigation }) {
   return (
@@ -165,6 +166,7 @@ function App() {
 
         <Stack.Screen
           name="LiveReadings"
+          initialParams = {{socket: socket}}
           component={LiveReadings}
           options={{
             title: "Patient Live Readings",

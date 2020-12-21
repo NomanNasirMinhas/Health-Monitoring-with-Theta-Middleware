@@ -68,7 +68,7 @@ export default function Notifications({route, navigation}) {
 
       <Card containerStyle={styles.card}>
       <Card.Title style={[styles.text, { color: "white", fontFamily: 'MetropolisBold', fontSize:30 }]}>
-              Doctor's Notifications
+              Doctor's Appointments
             </Card.Title>
         <View style={styles.buttonContainer}>
           <Button

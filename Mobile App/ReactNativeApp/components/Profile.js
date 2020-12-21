@@ -60,157 +60,156 @@ export default function Profile({ route, navigation }) {
   const[notifTitle, setNotifTitle] = useState("Loading... Please Wait...")
   const[notifDetails, setNotifDetails] = useState("Loading... Please Wait...")
   const[notifTime, setNotifTime] = useState("Loading... Please Wait...")
-
-
   var maxWidth = Dimensions.get("window").width;
 
+  async function getInitialData(){
+    setFinished(false)
+    try {
+
+      // Alert.alert(JSON.stringify(info))
+      // console.log(info)
+      setPatientName(info.Profile.name.toString());
+      setPatientAge(info.Profile.age.toString());
+      setPatientGender(info.Profile.gender.toString());
+      setPatientDate(info.Profile.date.toString());
+      setPatientSeed(info.SEED.toString())
+      setPatientAddress(info.ADDRESS.toString());
+      setPatientDeviceID(info.ID.toString());
+
+      var response = await fetch(
+        `https://thetamiddleware.herokuapp.com/getLastTx/${info.ADDRESS}&vitals`
+      );
+
+      var resObj = await response.json();
+      // console.log("Last TX ", resObj)
+      if (resObj !== false) {
+        var responseTx = await fetch(
+          `https://thetamiddleware.herokuapp.com/getTx/${resObj}`
+        );
+        var resObjTx = await responseTx.json();
+        // resObjTx = JSON.parse(resObjTx["response"]);
+        // console.log(resObjTx)
+
+        if(resObjTx.response === false)
+        {
+          Alert.alert("IOTA is Down For Maintainance");
+          setPatientHR("N/A");
+        setPatientTemp("N/A");
+        setPatientSpO2("N/A");
+        setFinished(true);
+        }
+        else
+        // Alert.alert(JSON.stringify(resObjTx))
+        {setPatientHR(resObjTx.response.HR.toString());
+        setPatientTemp(resObjTx.response.Temp.toString());
+        setPatientSpO2(resObjTx.response.SpO2.toString())
+        // setPatientBPsys(resObjTx.BP.systolic.toString());
+        // setPatientBPdiast(resObjTx.BP.diastolic.toString());
+        var prediction = await fetch(
+          `https://thetamiddleware.herokuapp.com/getPrediction/${resObjTx.response.Temp}&${resObjTx.response.HR}&${resObjTx.response.SpO2}`);
+          prediction = await prediction.json();
+        setLastTx([resObjTx.response.HR, resObjTx.response.Temp, resObjTx.response.SpO2]);
+        // setPredGraphData([prediction])
+          setPatientHealth(prediction.toFixed(2).toString())
+          // predictionData.data.push(prediction)
+          console.log("Health Stability = ", patientHealth)
+        setHasLastTx(true);
+        setFinished(true);}
+      }
+      // alert("Finished")
+      else {
+        setPatientHR("N/A");
+        setPatientTemp("N/A");
+        setPatientSpO2("N/A");
+        // setPatientBPsys("N/A");
+        // setPatientBPdiast("N/A");
+        setFinished(true);
+      }
+
+      var checkOnline = await fetch(
+        `https://thetamiddleware.herokuapp.com/getLastTx/${info.ADDRESS}&deviceLog`
+      );
+      checkOnline = await checkOnline.json();
+      if(checkOnline !== false){
+        var logTx = await fetch(
+          `https://thetamiddleware.herokuapp.com/getTx/${checkOnline}`
+        );
+        var onlineStatus = await logTx.json();
+        // onlineStatus = JSON.parse(onlineStatus);
+        // Alert.alert(JSON.stringify(onlineStatus))
+        onlineStatus.response.LogType == 1 ? setBoolOnline(1) : setBoolOnline(0)
+        onlineStatus.response.LogType == 1 ? setOnline("Your Device is ONLINE") : setOnline("Your Device is OFFLINE")
+      }
+      else{
+        setBoolOnline(2)
+        setOnline("Patient's Device Status is Unknown")
+      }
+
+      var prescHash = await fetch(
+        `https://thetamiddleware.herokuapp.com/getLastTx/${info.ADDRESS}&prescription`
+      );
+      prescHash = await prescHash.json();
+      console.log("Presc Hash ", notifHash)
+      if(prescHash !== false){
+        var logTx = await fetch(
+          `https://thetamiddleware.herokuapp.com/getTx/${prescHash}`
+        );
+        var prescData = await logTx.json();
+        console.log("Prescriptions ", prescData)
+        // prescData = JSON.parse(prescData);
+        setPrescTitle(prescData.response.title)
+        setPrescDetails(prescData.response.details)
+        setPrescTime(prescData.response.TimeStamp)
+        // setLastPresc({...lastPresc, now:{prescData}})
+        // setPrescFinished(true)
+        // console.log("Prescription Data", lastPresc)
+      }
+      else{
+        setPrescTitle("Not Found...")
+        setPrescDetails("Not Found...")
+        setPrescTime("Not Found...")
+        console.log("No Last Prescription")
+      }
+
+      var notifHash = await fetch(
+        `https://thetamiddleware.herokuapp.com/getLastTx/${info.ADDRESS}&docNotification`
+      );
+      notifHash = await notifHash.json();
+        // console.log("Notif Hash ", notifHash)
+      if(notifHash !== false){
+        var logTx = await fetch(
+          `https://thetamiddleware.herokuapp.com/getTx/${notifHash}`
+        );
+        var notifData = await logTx.json();
+        console.log("Notification ", notifData)
+        // notifData = JSON.parse(notifData);
+
+        setNotifTitle(notifData.response.title)
+        setNotifDetails(notifData.response.details)
+        setNotifTime(notifData.response.TimeStamp)
+        // setLastNotif({...lastNotif, now: {notifData}})
+        // setNotifFinished(true)
+        // console.log("Notification Data", lastNotif)
+      }
+      else{
+        setNotifTitle("Not Found...")
+        setNotifDetails("Not Found...")
+        setNotifTime("Not Found...")
+        console.log("No Last Notification")
+      }
+
+
+    } catch (e) {
+      setFinished(true);
+      console.log(e)
+      Alert.alert("Error has Ocurred", JSON.stringify(e));
+    }
+  }
   var HistoryArray = []
   var lastPrescVar = false;
   const { info } = route.params;
   useEffect(() => {
-    (async () => {
-      try {
-
-        // Alert.alert(JSON.stringify(info))
-        // console.log(info)
-        setPatientName(info.Profile.name.toString());
-        setPatientAge(info.Profile.age.toString());
-        setPatientGender(info.Profile.gender.toString());
-        setPatientDate(info.Profile.date.toString());
-        setPatientSeed(info.SEED.toString())
-        setPatientAddress(info.ADDRESS.toString());
-        setPatientDeviceID(info.ID.toString());
-
-        var response = await fetch(
-          `https://thetamiddleware.herokuapp.com/getLastTx/${info.ADDRESS}&vitals`
-        );
-
-        var resObj = await response.json();
-        // console.log("Last TX ", resObj)
-        if (resObj !== false) {
-          var responseTx = await fetch(
-            `https://thetamiddleware.herokuapp.com/getTx/${resObj}`
-          );
-          var resObjTx = await responseTx.json();
-          // resObjTx = JSON.parse(resObjTx["response"]);
-          // console.log(resObjTx)
-
-          if(resObjTx.response === false)
-          {
-            Alert.alert("IOTA is Down For Maintainance");
-            setPatientHR("N/A");
-          setPatientTemp("N/A");
-          setPatientSpO2("N/A");
-          setFinished(true);
-          }
-          else
-          // Alert.alert(JSON.stringify(resObjTx))
-          {setPatientHR(resObjTx.response.HR.toString());
-          setPatientTemp(resObjTx.response.Temp.toString());
-          setPatientSpO2(resObjTx.response.SpO2.toString())
-          // setPatientBPsys(resObjTx.BP.systolic.toString());
-          // setPatientBPdiast(resObjTx.BP.diastolic.toString());
-          var prediction = await fetch(
-            `https://thetamiddleware.herokuapp.com/getPrediction/${resObjTx.response.Temp}&${resObjTx.response.HR}&${resObjTx.response.SpO2}`);
-            prediction = await prediction.json();
-          setLastTx([resObjTx.response.HR, resObjTx.response.Temp, resObjTx.response.SpO2]);
-          // setPredGraphData([prediction])
-            setPatientHealth(prediction.toFixed(2).toString())
-            // predictionData.data.push(prediction)
-            console.log("Health Stability = ", patientHealth)
-          setHasLastTx(true);
-          setFinished(true);}
-        }
-        // alert("Finished")
-        else {
-          setPatientHR("N/A");
-          setPatientTemp("N/A");
-          setPatientSpO2("N/A");
-          // setPatientBPsys("N/A");
-          // setPatientBPdiast("N/A");
-          setFinished(true);
-        }
-
-        var checkOnline = await fetch(
-          `https://thetamiddleware.herokuapp.com/getLastTx/${info.ADDRESS}&deviceLog`
-        );
-        checkOnline = await checkOnline.json();
-        if(checkOnline !== false){
-          var logTx = await fetch(
-            `https://thetamiddleware.herokuapp.com/getTx/${checkOnline}`
-          );
-          var onlineStatus = await logTx.json();
-          // onlineStatus = JSON.parse(onlineStatus);
-          // Alert.alert(JSON.stringify(onlineStatus))
-          onlineStatus.response.LogType == 1 ? setBoolOnline(1) : setBoolOnline(0)
-          onlineStatus.response.LogType == 1 ? setOnline("Your Device is ONLINE") : setOnline("Your Device is OFFLINE")
-        }
-        else{
-          setBoolOnline(2)
-          setOnline("Patient's Device Status is Unknown")
-        }
-
-        var prescHash = await fetch(
-          `https://thetamiddleware.herokuapp.com/getLastTx/${info.ADDRESS}&prescription`
-        );
-        prescHash = await prescHash.json();
-        console.log("Presc Hash ", notifHash)
-        if(prescHash !== false){
-          var logTx = await fetch(
-            `https://thetamiddleware.herokuapp.com/getTx/${prescHash}`
-          );
-          var prescData = await logTx.json();
-          console.log("Prescriptions ", prescData)
-          // prescData = JSON.parse(prescData);
-          setPrescTitle(prescData.response.title)
-          setPrescDetails(prescData.response.details)
-          setPrescTime(prescData.response.TimeStamp)
-          // setLastPresc({...lastPresc, now:{prescData}})
-          // setPrescFinished(true)
-          // console.log("Prescription Data", lastPresc)
-        }
-        else{
-          setPrescTitle("Not Found...")
-          setPrescDetails("Not Found...")
-          setPrescTime("Not Found...")
-          console.log("No Last Prescription")
-        }
-
-        var notifHash = await fetch(
-          `https://thetamiddleware.herokuapp.com/getLastTx/${info.ADDRESS}&docNotification`
-        );
-        notifHash = await notifHash.json();
-          // console.log("Notif Hash ", notifHash)
-        if(notifHash !== false){
-          var logTx = await fetch(
-            `https://thetamiddleware.herokuapp.com/getTx/${notifHash}`
-          );
-          var notifData = await logTx.json();
-          console.log("Notification ", notifData)
-          // notifData = JSON.parse(notifData);
-
-          setNotifTitle(notifData.response.title)
-          setNotifDetails(notifData.response.details)
-          setNotifTime(notifData.response.TimeStamp)
-          // setLastNotif({...lastNotif, now: {notifData}})
-          // setNotifFinished(true)
-          // console.log("Notification Data", lastNotif)
-        }
-        else{
-          setNotifTitle("Not Found...")
-          setNotifDetails("Not Found...")
-          setNotifTime("Not Found...")
-          console.log("No Last Notification")
-        }
-
-
-      } catch (e) {
-        setFinished(true);
-        console.log(e)
-        Alert.alert("Error has Ocurred", JSON.stringify(e));
-      }
-      // Alert.alert(JSON.stringify(info))
-    })();
+    getInitialData();
   }, []);
 
   const handlePrescription = async () => {
@@ -452,8 +451,8 @@ export default function Profile({ route, navigation }) {
             titleStyle={styles.buttonText}
             // title="Notifications"
             onPress={
-              () =>
-              navigation.navigate("Profile", {info: info})
+              async () =>
+              await getInitialData()
             }
           ></Button>
         </View>
@@ -545,9 +544,9 @@ export default function Profile({ route, navigation }) {
         </Card>
 
         <Card.Divider />
-        <Card containerStyle={[styles.card, {borderTopLeftRadius: 10, borderTopRightRadius:10, borderBottomLeftRadius:10, borderBottomRightRadius:10, marginBottom:20, paddingBottom:20, borderWidth:3, borderColor:'white'}]}>
+        <Card containerStyle={[styles.card, {marginBottom:20, paddingBottom:20, borderWidth:3, borderColor:'white'}]}>
           <Card.Title>
-            <Text style={[styles.text, { color: "yellow", fontSize: 24, fontFamily:'MetropolisBold' }]}>
+          <Text style={[styles.text, { color: "white", fontSize: 20 }]}>
               Last Prescription
             </Text>
           </Card.Title>
@@ -564,10 +563,10 @@ export default function Profile({ route, navigation }) {
         </Card>
 
         <Card.Divider />
-        <Card containerStyle={[styles.card, {borderTopLeftRadius: 10, borderTopRightRadius:10, borderBottomLeftRadius:10, borderBottomRightRadius:10, marginBottom:20, paddingBottom:20, borderWidth:3, borderColor:'white'}]}>
+        <Card containerStyle={[styles.card, {marginBottom:20, paddingBottom:20, borderWidth:3, borderColor:'white'}]}>
           <Card.Title>
-            <Text style={[styles.text, { color: "red", fontSize: 24, fontFamily:'MetropolisBold' }]}>
-              Last Notification
+          <Text style={[styles.text, { color: "white", fontSize: 20 }]}>
+              Last Appointment
             </Text>
           </Card.Title>
           <Card.Divider />
