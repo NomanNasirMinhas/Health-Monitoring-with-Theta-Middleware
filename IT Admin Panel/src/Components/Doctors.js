@@ -247,10 +247,11 @@ function Homepage(props) {
           `https://thetamiddleware.herokuapp.com/getAllAddresses/${current}`
         );
         const js = await add.json();
-        if (js == false) {
+        if (js == false || js.length==1) { //js.length means if there's only doctor's address,dont include
           continue;
         } else {
-          js.map((obj) => {
+          js.map( function(obj) {
+            if(obj.Profile!=null)
             l.push(obj.ADDRESS);
           });
           let one = { seed: current, addresses: l, name: c_name }; //seed and its addresses
@@ -574,6 +575,7 @@ function Homepage(props) {
                         </TableRow>
                       );
                     }
+                    else {console.log("missed")};
                   })}
                   
                 </TableBody>

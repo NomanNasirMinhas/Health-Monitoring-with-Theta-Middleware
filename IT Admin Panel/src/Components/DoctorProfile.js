@@ -202,11 +202,11 @@ function DoctorProfile() {
   const [allLogs, setAllLogs] = React.useState([]);
   const [showLogs, setShowLogs] = React.useState(false);
   let [transactionCircular, setTransactionCirular] = React.useState(false);
-  const [updateName, setUpdateName] = React.useState();
-  const [updateSpecialization, setUpdateSpecialization] = React.useState();
-  const [updateAddress, setUpdateAddress] = React.useState();
-  const [updateContact, setUpdateContact] = React.useState();
-  const [updateEmail, setUpdateEmail] = React.useState();
+  const [updateName, setUpdateName] = React.useState("");
+  const [updateSpecialization, setUpdateSpecialization] = React.useState("");
+  const [updateAddress, setUpdateAddress] = React.useState("");
+  const [updateContact, setUpdateContact] = React.useState("");
+  const [updateEmail, setUpdateEmail] = React.useState("");
 
   var info;
 
@@ -266,7 +266,7 @@ function DoctorProfile() {
       }
     }
 
-    updateProfile();
+    //updateProfile();
     SeedInfo();
   }, []);
 
@@ -304,14 +304,15 @@ function DoctorProfile() {
     for (var i = 0; i < doctorlogs.length; i++) {
       let pass = doctorlogs[i];
       const transactionData = await fetch(
-        `https://thetamiddleware.herokuapp.com/getTx/&${pass}`
+        `https://thetamiddleware.herokuapp.com/getTx/${pass}`
       );
       console.log("FOR:", doctorlogs[i]);
 
       const check = await transactionData.json();
       console.log("TEST:", check.response);
-      if (check.response != false) {
-        setAllLogs.push(check.response);
+      if (check.response !== false) {
+        //setAllLogs.push(check.response);
+        setAllLogs((array) => [...array, check.response]);
       }
     }
 
@@ -364,7 +365,9 @@ function DoctorProfile() {
         icon: "success",
         buttons: false,
       });
-      history.push(`/home`);
+      // history.push(`/home`);
+      setopenTwo(false);
+
     } else {
       swal({
         text: "PLEASE ENTER A PASSWORD!",
@@ -378,21 +381,23 @@ function DoctorProfile() {
   const profileData = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ seed: seed, info:{name: "Dr.Asim", specialization: "Cardiologist",
-    address: "House 23 Street 2 ISB", contact: "03342727211", email: "asim@gmail.com"
-     
-
-    } }),
+    body: JSON.stringify({
+      seed: seed,
+      info: {
+        name: updateName,
+        specialization: updateSpecialization,
+        address: updateAddress,
+        contact: updateContact,
+        email: updateEmail,
+      },
+    }),
   };
 
-  function updateProfile(){
+  function updateProfile() {
     //info = { name: updateName, specialization: updateSpecialization,
     //  address: updateAddress, contact: updateContact, email: updateEmail };
-      console.log("OBJECT TO PASS:", info)
-    fetch(
-      `https://thetamiddleware.herokuapp.com/updateSeedInfo/`,
-      profileData
-    );
+    console.log("OBJECT TO PASS:", info);
+    fetch(`https://thetamiddleware.herokuapp.com/updateSeedInfo/`, profileData);
 
     swal({
       text: "PROFILE UPDATED SUCCESSFULLY!",
@@ -401,7 +406,7 @@ function DoctorProfile() {
       buttons: false,
     });
     setEditDialog(false);
-   // history.push(`/home`);
+    // history.push(`/home`);
   }
 
   function Delete(seedReceived) {
@@ -474,6 +479,12 @@ function DoctorProfile() {
             }}
           ></Button>
         </div>
+        <Typography variant="h2" style={{ marginTop: "2%", color: "#2471A3" }}>
+          {" "}
+          {/**#B4B4B4 */}
+          {name}'s Log Details
+        </Typography>
+
         {allLogs.length == 0 ? (
           <Typography
             variant="h2"
@@ -485,6 +496,8 @@ function DoctorProfile() {
           <Slide direction="down" in={true} timeout={300}>
             <Grid container spacing={0} style={{ marginTop: "2%" }}>
               <Grid item xs={12}>
+
+
                 <TableContainer className={classesTable.paper}>
                   <Table
                     className={classesTable.table}
@@ -511,11 +524,34 @@ function DoctorProfile() {
                     </TableHead>
                     <TableBody>
                       {/**BODY HERE */}
+
                       {allLogs.map((obj) => (
-                        <TableCell align="center">
-                          {" "}
-                          <Typography variant="body2">{obj}</Typography>
-                        </TableCell>
+                        <TableRow
+                          hover
+                          key={obj.name}
+                          className={classesTable.row}
+                        >
+                          <TableCell align="center">
+                            {" "}
+                            <Typography variant="body2">
+                              {obj.LogDetails}
+                            </Typography>
+                          </TableCell>
+
+                          <TableCell align="center">
+                            {" "}
+                            <Typography variant="body2">
+                              {obj.LogType}
+                            </Typography>
+                          </TableCell>
+
+                          <TableCell align="center">
+                            {" "}
+                            <Typography variant="body2">
+                              {obj.TimeStamp}
+                            </Typography>
+                          </TableCell>
+                        </TableRow>
                       ))}
                     </TableBody>
                   </Table>
@@ -623,7 +659,7 @@ function DoctorProfile() {
             onClick={() => handleClickOpen()}
             startIcon={<DeleteIcon fontSize="large" />}
           >
-            <Typography variant="h6">Delete</Typography>
+            <Typography variant="h6"> Delete</Typography>
           </Button>
 
           <Button
@@ -632,7 +668,7 @@ function DoctorProfile() {
             onClick={() => DocLogs()}
             startIcon={<DeleteIcon fontSize="large" />}
           >
-            <Typography variant="h6">View Logs</Typography>
+            <Typography variant="h6"> View Logs</Typography>
           </Button>
 
           <Button
@@ -641,7 +677,7 @@ function DoctorProfile() {
             onClick={() => setEditDialog(true)}
             startIcon={<DeleteIcon fontSize="large" />}
           >
-            <Typography variant="h6">Edit Profile</Typography>
+            <Typography variant="h6"> Edit Profile</Typography>
           </Button>
         </div>
 

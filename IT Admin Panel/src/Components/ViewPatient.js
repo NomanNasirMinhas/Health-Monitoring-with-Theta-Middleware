@@ -245,7 +245,7 @@ function ViewPatient(props) {
       
 
       const len = address_json.length;
-      setTotal(len);
+      setTotal(len-1);
     }
 
     getAddresses();
@@ -329,7 +329,7 @@ function ViewPatient(props) {
     );
   }
 
-  if (addresses == false) {
+  if (addresses == false || total==0) {
     return (
       <div>
         <Navbar />

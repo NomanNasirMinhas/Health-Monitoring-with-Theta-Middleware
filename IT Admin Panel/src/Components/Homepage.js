@@ -22,9 +22,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import {
-  Card,
-  CardActions,
-  CardContent,
+  
   Button,
   Typography,
   CircularProgress,
@@ -250,7 +248,10 @@ function Doctors(props) {
 
       for (var i = 0; i < seeds.length; i++) {
         console.log("loop =", i);
+       
+        
         let addresses_for = seeds[i].SEED;
+
         // addresses_for
         //get doctor addresses from seeds
         //getAlphaaddress---> address-->> put in
@@ -269,9 +270,9 @@ function Doctors(props) {
           //insert transaction into getTx
         );
         // address fetched
-      //  console.log("FOR SEED:", addresses_for);
+        //  console.log("FOR SEED:", addresses_for);
         const alphaAddress = await response.json();
-        console.log("AlphTransaction", alphaAddress.ADDRESS)
+        console.log("AlphTransaction", alphaAddress.ADDRESS);
 
         const alphaTransaction = await fetch(
           `https://thetamiddleware.herokuapp.com/getLastTx/${alphaAddress.ADDRESS}&docLog`
@@ -279,56 +280,54 @@ function Doctors(props) {
 
         //transaction fecthed for doctor logs
         const Transaction = await alphaTransaction.json(); //put in getTx to get data
-       
+
         const transactionData = await fetch(
           `https://thetamiddleware.herokuapp.com/getTx/${Transaction}`
         );
-          //Convert to JSON
+        //Convert to JSON
         const jsonData = await transactionData.json();
 
+        console.log("DOCTOR LOGS DATA:", jsonData.response); // data fetched
 
-          console.log("DOCTOR LOGS DATA:", jsonData.response); // data fetched
-        
-         // let STAT=0;
-      //  console.log("docLogs:", resObj);
-        if(jsonData.response != false)
-        { 
-      
-        jsonData.response.LogType == 1 ? status[i]=0 : status[i]=1 ;
-       // jsonData.LogType == 1 ? STAT=0 : STAT=1;  
-        //console.log("STAT:",STAT);
-
-      }
-      else{ status[i]=0};
+        // let STAT=0;
+        //  console.log("docLogs:", resObj);
+        if (jsonData.response != false) {
+          jsonData.response.LogType == 1 ? (status[i] = 0) : (status[i] = 1);
+          // jsonData.LogType == 1 ? STAT=0 : STAT=1;
+          //console.log("STAT:",STAT);
+        } else {
+          status[i] = 0;
+        }
         //---------------------------------------------
-      console.log(status[i])
+        console.log(status[i]);
         if (patients_json == false || patients_json == null) {
           // PatientCount.push(patients_json.length);
           //console.log("patients_json =", PatientCount);
           //console.log("patients_json length=", PatientCount);
           console.log("addresses=", patients_json.length);
           setPatientCount(PatientCount.concat(0));
-          NewSeeds.push({ seed_obj: seeds[i], num_of_pat: 0 , stat: status[i]}); 
+          NewSeeds.push({ seed_obj: seeds[i], num_of_pat: 0, stat: status[i] });
           console.log("patient count if =", PatientCount);
           console.log("New seeds =", NewSeeds);
         } else {
           console.log("addresses=", patients_json.length);
-          setPatientCount(PatientCount.concat(patients_json.length));
+          setPatientCount(PatientCount.concat(patients_json.length-1));
           NewSeeds.push({
             seed_obj: seeds[i],
-            num_of_pat: patients_json.length,
-            stat: status[i] });
- 
+            num_of_pat: patients_json.length-1,
+            stat: status[i],
+          });
 
           console.log("patient count else =", PatientCount);
           console.log("New seeds =", NewSeeds);
         }
-      }
+      
+    }
       setnewSeedsArray(NewSeeds);
     }
 
     Patient_Count();
-  }, [seeds]);
+  }, [seeds,status]);
 
   //console.log("PC=",Patient_Count());
 
@@ -364,8 +363,9 @@ function Doctors(props) {
         if (js == false) {
           continue;
         } else {
-          js.map((obj) => {
-            l.push(obj.ADDRESS);
+          js.map(function(obj){
+            if(obj.Profile!=null){
+            l.push(obj.ADDRESS);}
           });
         }
       }
