@@ -144,7 +144,7 @@ function Navbar() {
               onClick={goAdd}
             >
               {" "}
-              <Typography variant="subtitle2">Profile</Typography>
+              <Typography variant="subtitle2">Past Doctors</Typography>
             </Button>
             </div>
          

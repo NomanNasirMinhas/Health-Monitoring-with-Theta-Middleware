@@ -209,6 +209,7 @@ function PatientProfile() {
       } else {
         // SetLastReading('No Reading');
         console.log("last Reading", "No Reading");
+        setTimeStamp("not available");
       }
 
       //------------------deviceLog------------------
@@ -224,10 +225,17 @@ function PatientProfile() {
         );
         var patDetails = await patLogDetails.json();
         console.log("Patient details:", patDetails);
-        setdevStatus(patDetails.response.LogDetails);
-        setlastOnline(patDetails.response.TimeStamp);
+        
+        patDetails.response.LogDetails==null ? setdevStatus("not available")
+         : setdevStatus(patDetails.response.LogDetails);
+        
+         patDetails.response.TimeStamp==null ? setlastOnline("not available")
+         : setlastOnline(patDetails.response.TimeStamp);
       }
-
+      else {
+        setdevStatus("not available");
+        setlastOnline("not available")
+      }
       //----------------------------------
     }
     getProfile();
@@ -393,7 +401,7 @@ function PatientProfile() {
                         <Divider variant="middle" />
                       </div>
                       <Typography variant="h5">
-                        {timeStamp == null ? (
+                        {(timeStamp == null ) ? (
                           <CircularProgress
                             size="20px"
                             style={{ color: "white" }}
@@ -445,7 +453,7 @@ function PatientProfile() {
                         <Divider variant="middle" />
                       </div>
                       <Typography variant="h5">
-                        {devStatus == null ? (
+                        { (devStatus == null ) ? (
                           <CircularProgress
                             size="20px"
                             style={{ color: "white" }}
@@ -479,7 +487,7 @@ function PatientProfile() {
                         <Divider variant="middle" style={{backgroundColor :"white"}}/>
                       </div>
                       <Typography variant="h5">
-                        {lastOnline == null ? (
+                        { (lastOnline == null ) ? (
                           <CircularProgress
                             size="20px"
                             style={{ color: "white" }}

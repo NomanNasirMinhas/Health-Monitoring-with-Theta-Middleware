@@ -215,6 +215,7 @@ function ViewPatient(props) {
   const [seeds, setSeeds] = useState([]);
   let [Transactions, setTransactions] = React.useState("");
   let [Show, setShow] = React.useState(false);
+  let [transactionCircular, setTransactionCirular] = React.useState(false);
   let [Name, setName] = React.useState("");
 
   const handleChangePage = (event, newPage) => {
@@ -236,10 +237,12 @@ function ViewPatient(props) {
       const address = await fetch(
         `https://thetamiddleware.herokuapp.com/getAllAddresses/${SEED}`
       );
-      console.log("ADDRESSES=", address);
+     // console.log("ADDRESSES=", address);
       const address_json = await address.json();
       console.log("address.json=", address_json);
+      
       setAddresses(address_json);
+      
 
       const len = address_json.length;
       setTotal(len);
@@ -250,11 +253,13 @@ function ViewPatient(props) {
   console.log("ADDRESS", addresses);
 
   async function getInfo(address,name) {
+    setTransactionCirular(true)
     console.log("Address to find", address);
    setName(name);
+   //setShow(true);
 
     const info = await fetch(
-      `https://thetamiddleware.herokuapp.com/getAllHash/${address}&${"18-12-2020"}&${"vitals"}`
+      `https://thetamiddleware.herokuapp.com/getAllHash/${address}&${"0"}&${"vitals"}`
     );
     const to_json = await info.json();
 
@@ -263,9 +268,11 @@ function ViewPatient(props) {
     try {
       if (to_json != false) {
         setTransactions(to_json);
+        setTransactionCirular(false);
         setShow(true);
       } else {
         // display SWEET ALERT
+        setTransactionCirular(false);
         swal({
           text: "No Transactions made",
           timer: 4000,
@@ -274,6 +281,7 @@ function ViewPatient(props) {
         });
       }
     } catch (e) {
+      setTransactionCirular(false);
       swal({
         text: "404 Not Found",
         timer: 4000,
@@ -385,8 +393,22 @@ function ViewPatient(props) {
     props.history.push(`/home`);
   }
 
+    
+  if(transactionCircular){
+    return(
+  <div>
+    <Navbar />
+    <Typography variant="h2" gutterBottom>
+      <br /> <br />
+      <CircularProgress size="200px" />
+    </Typography>
+  </div>
+    )};
+
+
   if (Show) {
-    return (
+    
+      return (
       //  <Slide direction="up" in={true} timeout={800}>
       <ThemeProvider theme={theme}>
         <Navbar />
@@ -431,6 +453,7 @@ function ViewPatient(props) {
                   marginTop: "4%",
                   marginLeft: "2%",
                   marginRight: "1%",
+                  marginBottom:"4%"
                 }}
               >
                 <div style={{ backgroundColor: "#2980B9", color: "white" }}>
@@ -613,7 +636,10 @@ function ViewPatient(props) {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {addresses.map((obj) => (
+                      {addresses.map(function(obj) {
+
+                        if(obj.Profile !=null){
+                          return(
                         <TableRow hover key={obj.name}>
                           <TableCell
                             component="th"
@@ -621,7 +647,7 @@ function ViewPatient(props) {
                             //style={{ color: "green" }}
                           >
                             <Typography variant="body2">
-                              {obj.Profile == null ? "empty" : obj.Profile.name}{" "}
+                              {obj.Profile != null ? obj.Profile.name : console.log("SKIPPED") }{" "}
                             </Typography>
                           </TableCell>
 
@@ -646,7 +672,7 @@ function ViewPatient(props) {
 
                           <TableCell align="center">
                             <Typography variant="body2">
-                              <EllipsisText text={obj.ADDRESS} length={"30"} />
+                              <EllipsisText text={obj.ADDRESS} length={"29"} />
                             </Typography>
                           </TableCell>
                           <TableCell>
@@ -712,8 +738,9 @@ function ViewPatient(props) {
                               </Button>
                             }
                           </TableCell>
-                        </TableRow>
-                      ))}
+                        </TableRow>)}
+
+                      })}
                     </TableBody>
 
                     <TableFooter

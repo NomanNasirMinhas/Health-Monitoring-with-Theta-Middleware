@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import { Link as link } from "react-router-dom";
 import PropTypes from "prop-types";
+//import css
+import "./body.css";
 
 import ListIcon from "@material-ui/icons/List";
 import SettingsIcon from "@material-ui/icons/Settings";
@@ -13,17 +15,8 @@ import LastPageIcon from "@material-ui/icons/LastPage";
 import { useHistory } from "react-router-dom";
 import EllipsisText from "react-ellipsis-text";
 
-
 import Grid from "@material-ui/core/Grid";
-import {
-  useTheme,
-  Card,
-  CardActions,
-  CardContent,
-  Button,
-  Typography,
-  CircularProgress,
-} from "@material-ui/core";
+import { useTheme, Typography, CircularProgress } from "@material-ui/core";
 import {
   createMuiTheme,
   withStyles,
@@ -66,8 +59,8 @@ const useStyles1 = makeStyles((theme) => ({
   root: {
     flexShrink: 0,
     marginLeft: theme.spacing(2.5),
-  }, 
-   menuButton: {
+  },
+  menuButton: {
     marginRight: theme.spacing(2),
   },
   title: {
@@ -183,7 +176,7 @@ function Homepage(props) {
   const classes = useStyles();
   const classesTable = useStylesTable();
   const [seeds, setSeeds] = useState(null);
-  const [patients, setAll] = React.useState( null);
+  const [patients, setAll] = React.useState(null);
   const [arr, setArr] = useState(null);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -318,7 +311,7 @@ function Homepage(props) {
     props.history.push(`/ViewPatient/${SEED}`);
   }
 
-  if (seeds === null || all_add == null || load == false) {
+  if (seeds === null || all_add == null || load == false || patients == null) {
     return (
       <ThemeProvider>
         <Navbar />
@@ -366,11 +359,9 @@ function Homepage(props) {
         </Typography>
 
         {/* TABLE START*/}
-        <Grid container spacing={0} >
-
+        <Grid container spacing={0}>
           <Grid item xs={12}>
-            
-              {/**   <Typography variant="h3" style={{backgroundColor:"#B4B4B4"}}> </Typography>
+            {/**   <Typography variant="h3" style={{backgroundColor:"#B4B4B4"}}> </Typography>
               <Typography
                 variant="h3"
                 component="h2"
@@ -384,7 +375,7 @@ function Homepage(props) {
                 <b>Doctors</b>
               </Typography> */}
 
-              {/**     <TableContainer className={classesTable.paper}>
+            {/**     <TableContainer className={classesTable.paper}>
               <Table className={classesTable.table} aria-label="simple table">
                 <TableHead style={{ backgroundColor: "#0ea80e" }}>
                   <TableRow>
@@ -443,149 +434,153 @@ function Homepage(props) {
               </Table>
             </TableContainer>*/}
 
-              <TableContainer className={classesTable.paper} style={{marginTop:"2%"}}>
-                <Table className={classesTable.table} aria-label="simple table">
-                  <TableHead style={{ backgroundColor: "#2980B9" }}>
-                    <TableRow>
-                      <TableCell align="center">
+            <TableContainer
+              className={classesTable.paper}
+              style={{ marginTop: "2%" }}
+            >
+              <Table className={classesTable.table} aria-label="simple table">
+                <TableHead style={{ backgroundColor: "#2980B9" }}>
+                  <TableRow>
+                    <TableCell align="center">
                       <Typography variant="h6" style={{ color: "white" }}>
                         Name
                       </Typography>
-                        
-                      </TableCell>
+                    </TableCell>
 
-                      <TableCell align="center">
+                    <TableCell align="center">
                       <Typography variant="h6" style={{ color: "white" }}>
                         Patient ID
                       </Typography>
-                        
-                      </TableCell>
+                    </TableCell>
 
-                      <TableCell align="center">
-                        <Typography variant="h6" style={{ color: "white" }}>
+                    <TableCell align="center">
+                      <Typography variant="h6" style={{ color: "white" }}>
                         Age
                       </Typography>
-                      </TableCell>
+                    </TableCell>
 
-                      <TableCell align="center">
-                        <Typography variant="h6" style={{ color: "white" }}>
+                    <TableCell align="center">
+                      <Typography variant="h6" style={{ color: "white" }}>
                         Contact
                       </Typography>
-                      </TableCell>
+                    </TableCell>
 
-                      <TableCell align="center">
+                    <TableCell align="center">
                       <Typography variant="h6" style={{ color: "white" }}>
                         Gender
                       </Typography>
-                       
-                      </TableCell>
+                    </TableCell>
 
-                      <TableCell align="center">
+                    <TableCell align="center">
                       <Typography variant="h6" style={{ color: "white" }}>
                         Admitted on
                       </Typography>
-                        
-                      </TableCell>
+                    </TableCell>
 
-                      <TableCell align="center">
+                    <TableCell align="center">
                       <Typography variant="h6" style={{ color: "white" }}>
                         Doctor
                       </Typography>
-                        
-                      </TableCell>
+                    </TableCell>
 
-                      <TableCell align="center">
+                    <TableCell align="center">
                       <Typography variant="h6" style={{ color: "white" }}>
                         Address
                       </Typography>
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {/*{(rowsPerPage > 0
-                    ? all_add.slice(
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {(rowsPerPage > 0
+                    ? patients.slice(
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage
                       )
-                    : all_add
-                  )*/}
+                    : patients
+                  ).map(function (obj) {
+                    if (obj.data.Profile != null) {
+                      return (
+                        <TableRow
+                          hover
+                          key={obj}
+                          style={{ backgroundColor: "white" }}
+                        >
+                          <TableCell component="th" scope="row">
+                            <Typography variant="body2">
+                              {" "}
+                              {obj.data.Profile == null
+                                ? "Empty"
+                                : obj.data.Profile.name}
+                            </Typography>
+                          </TableCell>
 
-                    {patients.map((obj) => (
-                      <TableRow hover key={obj} style={{backgroundColor:"white"}}>
-                        <TableCell component="th" scope="row">
-                        <Typography variant="body2">
-                          {" "}
-                          {obj.data.Profile==null ? "Empty" : obj.data.Profile.name} 
-                        </Typography>
-                         
-                        </TableCell>
+                          <TableCell align="center">
+                            <Typography variant="body2">
+                              {" "}
+                              {obj.data.ID}
+                            </Typography>
+                          </TableCell>
 
-                        <TableCell align="center">
-                        <Typography variant="body2">
-                          {" "}
-                          {obj.data.ID}
-                        </Typography>
-                          
-                        </TableCell>
-                        
-                        <TableCell align="center">
-                        <Typography variant="body2">
-                          {" "}
-                          {obj.data.Profile==null ? "Empty" : obj.data.Profile.age}
-                        </Typography>
-                         
-                        </TableCell>
+                          <TableCell align="center">
+                            <Typography variant="body2">
+                              {" "}
+                              {obj.data.Profile == null
+                                ? "Empty"
+                                : obj.data.Profile.age}
+                            </Typography>
+                          </TableCell>
 
-                        <TableCell align="center">
-                        <Typography variant="body2">
-                          {" "}
-                          {obj.data.Profile== null ? "Empty" : obj.data.Profile.contact}
-                        </Typography>
-                          
-                        </TableCell>
+                          <TableCell align="center">
+                            <Typography variant="body2">
+                              {" "}
+                              {obj.data.Profile == null
+                                ? "Empty"
+                                : obj.data.Profile.contact}
+                            </Typography>
+                          </TableCell>
 
-                        
+                          <TableCell align="center">
+                            <Typography variant="body2">
+                              {" "}
+                              {obj.data.Profile == null
+                                ? "Empty"
+                                : obj.data.Profile.gender}
+                            </Typography>
+                          </TableCell>
 
-                        <TableCell align="center">
-                        <Typography variant="body2">
-                          {" "}
-                          {obj.data.Profile==null ? "Empty" : obj.data.Profile.gender}
-                        </Typography>
-                         
-                        </TableCell>
+                          <TableCell align="center">
+                            <Typography variant="body2">
+                              {" "}
+                              {obj.data.Profile == null
+                                ? "Empty"
+                                : obj.data.Profile.date}
+                            </Typography>
+                          </TableCell>
 
-                        <TableCell align="center">
-                        <Typography variant="body2">
-                          {" "}
-                          {obj.data.Profile==null ? "Empty" : obj.data.Profile.date}
-                        </Typography>
-                          
-                        </TableCell>
+                          <TableCell align="center">
+                            <Typography variant="body2"> {obj.name}</Typography>
+                          </TableCell>
 
-                        <TableCell align="center">
-                        <Typography variant="body2">
-                          {" "}
-                          {obj.name}
-                        </Typography>
-                          
-                        </TableCell>
-
-                        <TableCell align="center">
-                          {" "}
-                          <Typography variant="body2">
-                          {" "}
-                          <EllipsisText
-                              text={obj.data.ADDRESS}
-                              length={"15"}
-                            />
-                        </Typography>
-                          
-                         
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                  <TableFooter className={classesTable.row} style={{ maxwidth: "100%", backgroundColor:"white " }}>
+                          <TableCell align="center">
+                            {" "}
+                            <Typography variant="body2">
+                              {" "}
+                              <EllipsisText
+                                text={obj.data.ADDRESS}
+                                length={"15"}
+                              />
+                            </Typography>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    }
+                  })}
+                  
+                </TableBody>
+                <TableFooter
+                  className={classesTable.row}
+                  style={{ maxwidth: "100%", backgroundColor: "white " }}
+                >
                   <TableRow>
                     <TablePagination
                       rowsPerPageOptions={[
@@ -608,19 +603,16 @@ function Homepage(props) {
                     />
                   </TableRow>
                 </TableFooter>
-
-                </Table>
-              </TableContainer>
-            
+              </Table>
+            </TableContainer>
           </Grid>
 
           {/**  <Grid item xs={0.5}></Grid>
         {/********************* */}
         </Grid>
- 
-
-             </ThemeProvider>
+      </ThemeProvider>
     );
   }
 }
+
 export default Homepage;

@@ -33,13 +33,25 @@ import InputLabel from "@material-ui/core/InputLabel";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
 //import QRCode from "react-qr-code";
 
+//**** TABLE ******/
+
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TablePagination from "@material-ui/core/TablePagination";
+import TableRow from "@material-ui/core/TableRow";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableFooter from "@material-ui/core/TableFooter";
+import KeyboardBackspaceTwoToneIcon from "@material-ui/icons/KeyboardBackspaceTwoTone";
+
 //Dialog box imports
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import TextField from '@material-ui/core/TextField';
+import TextField from "@material-ui/core/TextField";
 
 import swal from "sweetalert";
 
@@ -67,6 +79,36 @@ let theme = createMuiTheme({
 });
 //Adjuts font size
 theme = responsiveFontSizes(theme);
+const useStylesTable = makeStyles({
+  row: { backgroundColor: "white" },
+
+  table: {
+    maxWidth: "100%",
+    fontFamily: "Metrophobic",
+  },
+  TableHead: {
+    cell: { color: "white" },
+    fontFamily: "Metrophobic",
+  },
+  paper: {
+    maxwidth: "100%",
+  },
+  hover: {
+    backgroundColor: "#1B4F72", //   #2980B9 blue   dark#2471A3  button #1B4F72
+    color: "white",
+
+    "&:hover": {
+      backgroundColor: "#2980B9", //#3498DB
+      padding: "10px",
+    },
+  },
+
+  papers: {
+    "&:hover": {
+      padding: "0px",
+    },
+  },
+});
 
 const useStyles = makeStyles((theme) => ({
   large: {
@@ -83,6 +125,15 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       padding: "10px",
       backgroundColor: "#922B21", //#3498DB
+    },
+  },
+
+  logs: {
+    backgroundColor: "#018D87", //   #2980B9 blue   dark#2471A3  button #1B4F72
+    color: "white",
+    "&:hover": {
+      padding: "10px",
+      backgroundColor: "#2980B9", //#3498DB
     },
   },
 
@@ -103,10 +154,11 @@ function DoctorProfile() {
   //var QRCode = require('qrcode.react');
 
   //var QRCode = require('qrcode.react');
-
+  const classesTable = useStylesTable();
   let history = useHistory(); // assigning useHistory
   const [open, setOpen] = React.useState(false); //dialog box for deleting doctor
   const [openTwo, setopenTwo] = React.useState(false); // for edit password dialog
+  const [editDialog, setEditDialog] = React.useState(false);
   //handle dialog box open
   const handleClickOpen = () => {
     setOpen(true);
@@ -116,6 +168,10 @@ function DoctorProfile() {
     setopenTwo(true);
   };
 
+  const handleEditOpen = () => {
+    setEditDialog(true);
+  };
+
   //close dialog handle
   const handleClose = () => {
     setOpen(false);
@@ -123,6 +179,10 @@ function DoctorProfile() {
 
   const handleCloseTwo = () => {
     setopenTwo(false);
+  };
+
+  const handleEditClose = () => {
+    setEditDialog(false);
   };
 
   const classes = useStyles();
@@ -138,6 +198,17 @@ function DoctorProfile() {
   const canvas = useRef(null);
 
   const [updatedPassword, setUpdatedPassword] = React.useState();
+  const [hashes, setHashes] = React.useState();
+  const [allLogs, setAllLogs] = React.useState([]);
+  const [showLogs, setShowLogs] = React.useState(false);
+  let [transactionCircular, setTransactionCirular] = React.useState(false);
+  const [updateName, setUpdateName] = React.useState();
+  const [updateSpecialization, setUpdateSpecialization] = React.useState();
+  const [updateAddress, setUpdateAddress] = React.useState();
+  const [updateContact, setUpdateContact] = React.useState();
+  const [updateEmail, setUpdateEmail] = React.useState();
+
+  var info;
 
   //console.log("SEED=",JSON.parse(obj));
 
@@ -170,6 +241,7 @@ function DoctorProfile() {
         const id = local_seed.seed_obj.ID;
         //const seed = local_seed.seed_obj.SEED;
         setSeed(local_seed.seed_obj.SEED);
+        console.log(local_seed.seed_obj.SEED);
         setDummy = seed;
 
         console.log(
@@ -194,31 +266,75 @@ function DoctorProfile() {
       }
     }
 
+    updateProfile();
     SeedInfo();
   }, []);
 
-  useEffect(() => {
-    async function DocLogs() {
-      //-------------------------DOCTOR LOGSS--------------------
+  //-----------FUNCTION TO SHOW DOCTOR LOGS-----------//
 
-      //------------------deviceLog------------------
-      console.log("REached");
-      var patLog = await fetch(
-        `https://thetamiddleware.herokuapp.com/getLastTx/${seed}&docLog`
+  function doctorLogs() {
+    const info = fetch(
+      `https://thetamiddleware.herokuapp.com/getAllHash/${seed}&${"0"}&${"docLog"}`
+    );
+    //const logs = info.json();
+    console.log("Logs to fetch:", info);
+  }
+
+  async function DocLogs() {
+    //-------------------------DOCTOR LOGSS--------------------
+    setTransactionCirular(true);
+    //------------------deviceLog------------------
+    // console.log("REached");
+    const response = await fetch(
+      `https://thetamiddleware.herokuapp.com/getAlphaAddress/${seed}` // send doctor address,returns transaction
+      //insert transaction into getTx
+    );
+    const alphaAddress = await response.json();
+    console.log("AlphTransaction", alphaAddress.ADDRESS);
+
+    const alphaTransaction = await fetch(
+      `https://thetamiddleware.herokuapp.com/getAllHash/${alphaAddress.ADDRESS}&0&docLog`
+    );
+    // console.log("LETS SEE :", alphaTransaction);
+    const doctorlogs = await alphaTransaction.json();
+    console.log("LETS SEE LOGS:", doctorlogs);
+    setHashes(doctorlogs);
+    console.log("HASHES ARRAY:", hashes);
+
+    for (var i = 0; i < doctorlogs.length; i++) {
+      let pass = doctorlogs[i];
+      const transactionData = await fetch(
+        `https://thetamiddleware.herokuapp.com/getTx/&${pass}`
       );
-      var patLogObj = await patLog.json();
-      console.log("docLOGS= ", patLogObj);
+      console.log("FOR:", doctorlogs[i]);
 
-      if (patLogObj != false) {
-        var patLogDetails = await fetch(
-          `https://thetamiddleware.herokuapp.com/getTx/${patLogObj}`
-        );
-        var docDetails = await patLogDetails.json();
-        console.log("Doctor details:", docDetails);
+      const check = await transactionData.json();
+      console.log("TEST:", check.response);
+      if (check.response != false) {
+        setAllLogs.push(check.response);
       }
     }
-    DocLogs();
-  }, [seed]);
+
+    console.log("ALL Transaction:", allLogs);
+    setTransactionCirular(false);
+    setShowLogs(true);
+    //   var patLog = await fetch(
+    // `https://thetamiddleware.herokuapp.com/getLastTx/${seed}&docLog`
+    // );
+    //var patLogObj = await patLog.json();
+    //console.log("docLOGS= ", patLogObj);
+
+    //if (patLogObj != false) {
+    //var patLogDetails = await fetch(
+    // `https://thetamiddleware.herokuapp.com/getTx/${patLogObj}`
+    // );
+    //var docDetails = await patLogDetails.json();
+    //console.log("Doctor details:", docDetails);
+    // }
+  }
+  //DocLogs();
+  //doctorLogs();
+  //}, [seed]);
 
   //---FUNCTION TO EDIT PASSWORD
 
@@ -227,24 +343,65 @@ function DoctorProfile() {
   }
 
   const toSend = {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ seed: seed, password : updatedPassword })
-};
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ seed: seed, password: updatedPassword }),
+  };
   function updatePassword() {
-    
     //var sendingObject ={seed: seed, password: updatedPassword }
     //console.log("Objetc to send",sendingObject)
-    fetch(`https://thetamiddleware.herokuapp.com/updateSeedPassword/`, toSend);
+    if (updatedPassword != undefined) {
+      console.log("NEW PASSWORD:", updatedPassword);
+      fetch(
+        `https://thetamiddleware.herokuapp.com/updateSeedPassword/`,
+        toSend
+      );
 
-    //swal alert
+      //swal alert
+      swal({
+        text: "Password Successfully UPDATED!",
+        timer: 4000,
+        icon: "success",
+        buttons: false,
+      });
+      history.push(`/home`);
+    } else {
+      swal({
+        text: "PLEASE ENTER A PASSWORD!",
+        timer: 4000,
+        icon: "error",
+        buttons: false,
+      });
+    }
+  }
+
+  const profileData = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ seed: seed, info:{name: "Dr.Asim", specialization: "Cardiologist",
+    address: "House 23 Street 2 ISB", contact: "03342727211", email: "asim@gmail.com"
+     
+
+    } }),
+  };
+
+  function updateProfile(){
+    //info = { name: updateName, specialization: updateSpecialization,
+    //  address: updateAddress, contact: updateContact, email: updateEmail };
+      console.log("OBJECT TO PASS:", info)
+    fetch(
+      `https://thetamiddleware.herokuapp.com/updateSeedInfo/`,
+      profileData
+    );
+
     swal({
-      text: "Password Successfully UPDATED!",
+      text: "PROFILE UPDATED SUCCESSFULLY!",
       timer: 4000,
       icon: "success",
       buttons: false,
     });
-    history.push(`/home`);
+    setEditDialog(false);
+   // history.push(`/home`);
   }
 
   function Delete(seedReceived) {
@@ -254,9 +411,28 @@ function DoctorProfile() {
     handleClickOpen();
   }
 
-
   const changePassword = (event) => {
     setUpdatedPassword(event.target.value);
+  };
+
+  const changeName = (event) => {
+    setUpdateName(event.target.value);
+  };
+
+  const changeSpecialization = (event) => {
+    setUpdateSpecialization(event.target.value);
+  };
+
+  const changeAddress = (event) => {
+    setUpdateAddress(event.target.value);
+  };
+
+  const changeContact = (event) => {
+    setUpdateContact(event.target.value);
+  };
+
+  const changeEmail = (event) => {
+    setUpdateEmail(event.target.value);
   };
   var QRCode = require("qrcode.react");
   //var dummy=seed.json();
@@ -269,11 +445,96 @@ function DoctorProfile() {
     );
   }
 
+  if (transactionCircular) {
+    return (
+      <div>
+        <Navbar />
+        <Typography variant="h2" gutterBottom>
+          <br /> <br />
+          <CircularProgress size="200px" />
+        </Typography>
+      </div>
+    );
+  }
+
+  //-----------SHOW DOCTOR LOGS-----------------------//
+  if (showLogs) {
+    return (
+      <ThemeProvider theme={theme}>
+        <Navbar />
+
+        <div style={{ float: "left", marginLeft: "1%", marginTop: "1%" }}>
+          <Button
+            className={classesTable.hover}
+            style={{ marginBottom: "2%", marginTop: "2%" }}
+            color="inherit"
+            startIcon={<KeyboardBackspaceTwoToneIcon fontSize="small" />}
+            onClick={() => {
+              setShowLogs(false);
+            }}
+          ></Button>
+        </div>
+        {allLogs.length == 0 ? (
+          <Typography
+            variant="h2"
+            style={{ marginTop: "2%", color: "#B4B4B4" }}
+          >
+            No logs to show{" "}
+          </Typography>
+        ) : (
+          <Slide direction="down" in={true} timeout={300}>
+            <Grid container spacing={0} style={{ marginTop: "2%" }}>
+              <Grid item xs={12}>
+                <TableContainer className={classesTable.paper}>
+                  <Table
+                    className={classesTable.table}
+                    aria-label="simple table"
+                  >
+                    <TableHead style={{ backgroundColor: "#2980B9" }}>
+                      <TableRow>
+                        <TableCell align="center">
+                          <Typography variant="h6" style={{ color: "white" }}>
+                            Status
+                          </Typography>
+                        </TableCell>
+                        <TableCell align="center">
+                          <Typography variant="h6" style={{ color: "white" }}>
+                            LogType
+                          </Typography>
+                        </TableCell>
+                        <TableCell align="center">
+                          <Typography variant="h6" style={{ color: "white" }}>
+                            Time Stamp
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {/**BODY HERE */}
+                      {allLogs.map((obj) => (
+                        <TableCell align="center">
+                          {" "}
+                          <Typography variant="body2">{obj}</Typography>
+                        </TableCell>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Grid>
+            </Grid>
+          </Slide>
+        )}
+      </ThemeProvider>
+    );
+  }
+
   if (seed != null) {
     return (
       <ThemeProvider theme={theme}>
         <Navbar />
-        <Typography variant="h2" style={{ marginTop: "2%", color: "#B4B4B4" }}>
+        <Typography variant="h2" style={{ marginTop: "2%", color: "#2471A3" }}>
+          {" "}
+          {/**#B4B4B4 */}
           {name}'s Profile
         </Typography>
 
@@ -355,11 +616,42 @@ function DoctorProfile() {
           <Grid item xs="4"></Grid>
         </Grid>
 
+        <div style={{ marginBottom: "2%", marginTop: "2%" }}>
+          <Button
+            style={{ marginRight: "0%" }}
+            className={classes.hover}
+            onClick={() => handleClickOpen()}
+            startIcon={<DeleteIcon fontSize="large" />}
+          >
+            <Typography variant="h6">Delete</Typography>
+          </Button>
+
+          <Button
+            style={{ marginLeft: "3%" }}
+            className={classes.logs}
+            onClick={() => DocLogs()}
+            startIcon={<DeleteIcon fontSize="large" />}
+          >
+            <Typography variant="h6">View Logs</Typography>
+          </Button>
+
+          <Button
+            style={{ marginLeft: "3%" }}
+            className={classes.logs}
+            onClick={() => setEditDialog(true)}
+            startIcon={<DeleteIcon fontSize="large" />}
+          >
+            <Typography variant="h6">Edit Profile</Typography>
+          </Button>
+        </div>
+
         <div style={{ marginTop: "2%", marginBottom: "2%" }}>
           <Divider variant="middle" />
         </div>
 
-        <Typography variant="h2" style={{ marginTop: "2%", color: "#B4B4B4" }}>
+        <Typography variant="h2" style={{ marginTop: "2%", color: "#2471A3" }}>
+          {" "}
+          {/**#B4B4B4 */}
           QR Code
         </Typography>
 
@@ -487,16 +779,95 @@ function DoctorProfile() {
           </Grid>
         </Slide>
       </Grid> */}
+        <Dialog
+          open={editDialog}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogTitle id="alert-dialog-slide-title">
+            {"Update your profile info"}
+          </DialogTitle>
+          <DialogContent>
+            <TextField
+              required
+              id="outlined-required"
+              label="Required"
+              defaultValue={name}
+              variant="outlined"
+              onChange={changeName}
+            />
+          </DialogContent>
 
-        <div style={{ marginBottom: "2%" }}>
-          <Button
-            className={classes.hover}
-            onClick={() => handleClickOpen()}
-            startIcon={<DeleteIcon fontSize="large" />}
-          >
-            <Typography variant="h6">Delete</Typography>
-          </Button>
-        </div>
+          <DialogContent>
+            <TextField
+              required
+              id="outlined-required"
+              label="Required"
+              defaultValue={specialization}
+              variant="outlined"
+              onChange={changeSpecialization}
+            />
+          </DialogContent>
+
+          <DialogContent>
+            <TextField
+              required
+              id="outlined-required"
+              label="Required"
+              defaultValue={address}
+              variant="outlined"
+              onChange={changeAddress}
+            />
+          </DialogContent>
+
+          <DialogContent>
+            <TextField
+              required
+              id="outlined-required"
+              label="Required"
+              defaultValue={contact}
+              variant="outlined"
+              onChange={changeContact}
+            />
+          </DialogContent>
+
+          <DialogContent>
+            <TextField
+              required
+              id="outlined-required"
+              label="Required"
+              defaultValue={email}
+              variant="outlined"
+              onChange={changeEmail}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => {
+                handleEditClose();
+                swal({
+                  text: "Terminated",
+                  timer: 2000,
+                  icon: "success",
+                  buttons: false,
+                });
+              }}
+              color="primary"
+            >
+              Close!
+            </Button>
+
+            <Button
+              onClick={() => {
+                updateProfile();
+              }}
+              color="primary"
+            >
+              Confirm Change !
+            </Button>
+          </DialogActions>
+        </Dialog>
 
         <Dialog
           open={open}
@@ -604,8 +975,7 @@ function DoctorProfile() {
               placeholder="Password"
               type="text"
               variant="outlined"
-              required
-              
+              required={true}
               size="medium"
               color="primary"
               value={updatedPassword}
@@ -629,7 +999,12 @@ function DoctorProfile() {
               Close!
             </Button>
 
-            <Button onClick={() => {updatePassword(); }} color="primary">
+            <Button
+              onClick={() => {
+                updatePassword();
+              }}
+              color="primary"
+            >
               Confirm Change !
             </Button>
           </DialogActions>
