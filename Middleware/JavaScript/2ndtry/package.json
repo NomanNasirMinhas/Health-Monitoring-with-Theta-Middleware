@@ -1,7 +1,7 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
-  "description": "",
+  "name": "thetamiddleware",
+  "version": "3.0.1",
+  "description": "Beta Release of Theta Middleware",
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js"
@@ -10,7 +10,7 @@
   "engines": {
     "node": "12.14.1"
   },
-  "author": "",
+  "author": "Noman Nasir Minhas",
   "license": "ISC",
   "dependencies": {
     "@iota/converter": "^1.0.0-beta.23",
@@ -18,15 +18,19 @@
     "@iota/extract-json": "^1.0.0-beta.23",
     "@iota/mam": "^0.7.3",
     "@iota/signing": "^1.0.0-beta.23",
+    "@tensorflow/tfjs": "^2.8.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "date-fns": "^2.16.1",
     "dotenv": "^8.0.0",
     "express": "^4.16.4",
+    "http": "0.0.1-security",
     "mongodb": "^3.6.1",
     "mongoose": "^5.5.7",
     "nodemon": "^2.0.4",
-    "socket.io-client": "^2.3.1"
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^3.0.4",
+    "socket.io-stream": "^0.9.1"
   }
 }

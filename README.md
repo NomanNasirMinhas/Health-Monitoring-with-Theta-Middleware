@@ -1,5 +1,6 @@
 # Health Monitoring with Theta Middleware
 ## [API End-Point](https://thetamiddleware.herokuapp.com/)
+## [npm Package](https://www.npmjs.com/package/thetamiddleware)
 ## [Heroku API Git Link](https://git.heroku.com/thetamiddleware.git)
 ## Supervisor
 Dr. Adeel Anjum
