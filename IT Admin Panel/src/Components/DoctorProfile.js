@@ -223,17 +223,22 @@ function DoctorProfile() {
         //setting doctor object to variables
         //const name=local_seed.seed_obj.Profile.name;
         setName(local_seed.seed_obj.Profile.name);
+        setUpdateName(local_seed.seed_obj.Profile.name);
         setsubName(
           local_seed.seed_obj.Profile.name.substring(0, 1).toUpperCase()
         );
         //const address = local_seed.seed_obj.Profile.address;
         setAddress(local_seed.seed_obj.Profile.address);
+        setUpdateAddress(local_seed.seed_obj.Profile.address);
         //const contact = local_seed.seed_obj.Profile.contact;
         setContact(local_seed.seed_obj.Profile.contact);
+        setUpdateContact(local_seed.seed_obj.Profile.contact);
         //const email = local_seed.seed_obj.Profile.email;
         setEmail(local_seed.seed_obj.Profile.email);
+        setUpdateEmail(local_seed.seed_obj.Profile.email);
         //const specialization = local_seed.seed_obj.Profile.specialization;
         setSpecialization(local_seed.seed_obj.Profile.specialization);
+        setUpdateSpecialization(local_seed.seed_obj.Profile.specialization);
 
         //other info
         //const num_of_pat = local_seed.num_of_pat;
@@ -367,7 +372,6 @@ function DoctorProfile() {
       });
       // history.push(`/home`);
       setopenTwo(false);
-
     } else {
       swal({
         text: "PLEASE ENTER A PASSWORD!",
@@ -496,8 +500,6 @@ function DoctorProfile() {
           <Slide direction="down" in={true} timeout={300}>
             <Grid container spacing={0} style={{ marginTop: "2%" }}>
               <Grid item xs={12}>
-
-
                 <TableContainer className={classesTable.paper}>
                   <Table
                     className={classesTable.table}
