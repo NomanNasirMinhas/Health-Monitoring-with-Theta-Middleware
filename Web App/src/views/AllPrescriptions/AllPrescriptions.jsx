@@ -4,12 +4,8 @@ import { Backdrop, CircularProgress, Table, Container, Grid, Grow, makeStyles, P
 import Header from '../../components/Header/Header';
 import PatientCard from '../../components/PatientCard/PatientCard';
 import theme from '../../assets/theme/theme';
-import { ErrorMessage, StyledTableCell, useStyles } from "../HomePage/FunctionsHomePage"
-import { set } from 'date-fns';
+import { StyledTableCell } from "../HomePage/FunctionsHomePage"
 const useStyle = makeStyles((theme) => ({
-    container: {
-        maxHeight: 440,
-    },
     content: {
         padding: theme.spacing(3)
     },
@@ -25,7 +21,6 @@ const useStyle = makeStyles((theme) => ({
 }))
 const AllPrescriptions = () => {
     const classes = useStyle();
-    const tableClass = useStyles();
     const [Loading, setLoading] = useState(false);
     const [Empty, setEmpty] = useState(true);
     const [Array, setArray] = useState([]);
@@ -135,4 +130,4 @@ const AllPrescriptions = () => {
     )
 }
 
-export default AllPrescriptions
+export default AllPrescriptions;

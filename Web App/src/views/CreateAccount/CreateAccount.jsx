@@ -149,6 +149,14 @@ export default function SignUp(props) {
         }
         actions.handleReset()
     }
+    const saveQR = () => {
+        var link = document.createElement('a');
+        link.download = 'filename.png';
+        link.href = document.getElementById('qr-canvas').toDataURL();
+        link.click();
+        setOpen(false);
+        props.history.push('/')
+    }
 
     const handleClose = () => {
         setOpen(false)
@@ -328,14 +336,14 @@ export default function SignUp(props) {
                                                 <DialogContentText>
                                                     Kindly keep the Seed ID safe. Your Seed ID is: {displaySeed}. Your QR is:
                                             </DialogContentText>
-                                                <QRCode value={displaySeed} />
+                                                <QRCode id="qr-canvas" value={displaySeed} />
                                                 <DialogActions>
-                                                    <Button onClick={handleClose} color="primary">
+                                                    <Button onClick={saveQR} color="primary">
                                                         Save QR
-                                                </Button>
+                                                    </Button>
                                                     <Button onClick={handleClose} color="primary">
                                                         Close
-                                                </Button>
+                                                    </Button>
                                                 </DialogActions>
                                             </DialogContent>
                                         </Dialog>

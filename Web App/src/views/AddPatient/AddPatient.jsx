@@ -149,6 +149,14 @@ export default function AddPatient() {
     setOpen(false);
   };
 
+  const saveQR = () => {
+    var link = document.createElement('a');
+    link.download = 'filename.png';
+    link.href = document.getElementById('qr-canvas').toDataURL();
+    link.click();
+    setOpen(false);
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <Header />
@@ -386,11 +394,11 @@ export default function AddPatient() {
                           Kindly keep the Address ID safe. Your Patient's
                           Address is: {DeviceAddress} and the QR is:
                           <div className={classes.qr}>
-                            <QRCode value={`${seed}&${DeviceAddress}`} />
+                            <QRCode id="qr-canvas" value={`${seed}&${DeviceAddress}`} />
                           </div>
                         </DialogContentText>
                         <DialogActions>
-                          <Button onClick={handleClose} color="primary">
+                          <Button onClick={saveQR} color="primary">
                             Save QR
                           </Button>
                           <Button

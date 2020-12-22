@@ -42,6 +42,7 @@ const PatientProfile = (props) => {
     const classes = useStyles();
     let { address } = useParams();
     const [circularVisible, SetCircularVisible] = useState(true);
+    const [DeviceOffline, setDeviceOffline] = useState(true)
     const [openDischarge, setOpenDischarge] = useState(false);
     const [dischargeDialogue, SetDischargeDialogue] = useState(false);
     const [visible, setVisible] = useState(false);
@@ -71,6 +72,25 @@ const PatientProfile = (props) => {
         obj = await obj.json();
         SetPatient(obj.Profile);
         SetCircularVisible(false);
+        setInterval(async () => {
+            try {
+                var obj = await fetch(
+                    `https://thetamiddleware.herokuapp.com/getLastTx/${address}&deviceLog`
+                );
+                obj = await obj.json();
+                var tx = await fetch(
+                    `https://thetamiddleware.herokuapp.com/getTx/${obj}`
+                );
+                tx = await tx.json();
+                console.log(tx.response.LogType);
+                if (tx.response.LogType === 0)
+                    setDeviceOffline(true)
+                else
+                    setDeviceOffline(false);
+            } catch (error) {
+                console.log(error);
+            }
+        }, 5000);
     }
 
     useEffect(() => {
@@ -153,7 +173,7 @@ const PatientProfile = (props) => {
                                                     </ListItemText>
                                                 </MenuItem>
                                                 <Divider />
-                                                <MenuItem disabled={Empty} component={Link}
+                                                <MenuItem disabled={DeviceOffline} component={Link}
                                                     to={`/livereadings/${patient.name}&${patient.gender}&${patient.date}&${address}`}>
                                                     <ListItemIcon>
                                                         <TimelineIcon />
@@ -253,7 +273,7 @@ const PatientProfile = (props) => {
                                     style={{ textTransform: "capitalize" }}
                                     component={Link}
                                     size="large"
-                                    disabled={Empty}
+                                    disabled={DeviceOffline}
                                     to={`/livereadings/${patient.name}&${patient.gender}&${patient.date}&${address}`}
                                     startIcon={<TimelineIcon />}
                                 >
