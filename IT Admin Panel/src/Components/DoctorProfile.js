@@ -13,8 +13,10 @@ import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router-dom";
 
 //Avatar import
+import TouchAppIcon from "@material-ui/icons/TouchApp";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
+import VisibilityIcon from "@material-ui/icons/Visibility";
 import Avatar from "@material-ui/core/Avatar";
 import HomeIcon from "@material-ui/icons/Home";
 import PhoneIcon from "@material-ui/icons/Phone";
@@ -32,8 +34,6 @@ import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
 //import QRCode from "react-qr-code";
-
-
 
 ///**** TABLE ******/
 import PropTypes from "prop-types";
@@ -54,10 +54,8 @@ import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardBackspaceTwoToneIcon from "@material-ui/icons/KeyboardBackspaceTwoTone";
 import ListIcon from "@material-ui/icons/List";
 
-
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
-
 
 //Dialog box imports
 import Dialog from "@material-ui/core/Dialog";
@@ -148,6 +146,15 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       padding: "10px",
       backgroundColor: "#2980B9", //#3498DB
+    },
+  },
+
+  edit: {
+    backgroundColor: "#018D87", //   #2980B9 blue   dark#2471A3  button #1B4F72
+    color: "white",
+    "&:hover": {
+      padding: "10px",
+      backgroundColor: "#27AE60", //#3498DB
     },
   },
 
@@ -243,9 +250,6 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-
-
-
 function DoctorProfile() {
   //var { obj} = useParams();
 
@@ -296,6 +300,7 @@ function DoctorProfile() {
   const canvas = useRef(null);
 
   const [updatedPassword, setUpdatedPassword] = React.useState();
+  const [confirmUpdatedPassword, setConfirmUpdatedPassword] = React.useState();
   const [hashes, setHashes] = React.useState();
   const [allLogs, setAllLogs] = React.useState([]);
   const [showLogs, setShowLogs] = React.useState(false);
@@ -305,7 +310,6 @@ function DoctorProfile() {
   const [updateAddress, setUpdateAddress] = React.useState("");
   const [updateContact, setUpdateContact] = React.useState("");
   const [updateEmail, setUpdateEmail] = React.useState("");
-
 
   //table footer---------
   const [page, setPage] = React.useState(0);
@@ -319,7 +323,6 @@ function DoctorProfile() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
 
   var info;
 
@@ -469,22 +472,39 @@ function DoctorProfile() {
   function updatePassword() {
     //var sendingObject ={seed: seed, password: updatedPassword }
     //console.log("Objetc to send",sendingObject)
+
     if (updatedPassword != undefined) {
       console.log("NEW PASSWORD:", updatedPassword);
-      fetch(
-        `https://thetamiddleware.herokuapp.com/updateSeedPassword/`,
-        toSend
-      );
+      if (updatedPassword.length < 8) {
+        swal({
+          text: "Password length must be at least 8",
+          timer: 4000,
+          icon: "warning",
+          buttons: false,
+        });
+      } else if (updatedPassword != confirmUpdatedPassword) {
+        swal({
+          text: "Confirmed password does not match!",
+          timer: 4000,
+          icon: "warning",
+          buttons: false,
+        });
+      } else if (updatedPassword == confirmUpdatedPassword) {
+        fetch(
+          `https://thetamiddleware.herokuapp.com/updateSeedPassword/`,
+          toSend
+        );
 
-      //swal alert
-      swal({
-        text: "Password Successfully UPDATED!",
-        timer: 4000,
-        icon: "success",
-        buttons: false,
-      });
-      // history.push(`/home`);
-      setopenTwo(false);
+        //swal alert
+        swal({
+          text: "Password Successfully UPDATED!",
+          timer: 4000,
+          icon: "success",
+          buttons: false,
+        });
+        // history.push(`/home`);
+        setopenTwo(false);
+      } // if for password==confrimPassword
     } else {
       swal({
         text: "PLEASE ENTER A PASSWORD!",
@@ -535,6 +555,10 @@ function DoctorProfile() {
 
   const changePassword = (event) => {
     setUpdatedPassword(event.target.value);
+  };
+
+  const changeUpdatePassword = (event) => {
+    setConfirmUpdatedPassword(event.target.value);
   };
 
   const changeName = (event) => {
@@ -640,12 +664,12 @@ function DoctorProfile() {
                     <TableBody>
                       {/**BODY HERE */}
                       {(rowsPerPage > 0
-                    ? allLogs.slice(
-                        page * rowsPerPage,
-                        page * rowsPerPage + rowsPerPage
-                      )
-                    : allLogs
-                  ).map((obj) => (
+                        ? allLogs.slice(
+                            page * rowsPerPage,
+                            page * rowsPerPage + rowsPerPage
+                          )
+                        : allLogs
+                      ).map((obj) => (
                         <TableRow
                           hover
                           key={obj.name}
@@ -776,19 +800,20 @@ function DoctorProfile() {
                   <div>
                     {" "}
                     <Typography variant="h6">
-                      <IconButton
-                        style={{ marginBottom: "3%", marginTop: "3%" }}
-                        className={classes.hoverEdit}
-                        color="primary"
-                        onClick={() => {
-                          console.log("CLICKED");
-                          editPassword();
-                        }}
-                      >
-                        {" "}
-                        <EditIcon fontSize="small" />
-                      </IconButton>
-                      Edit Password
+                      <Tooltip title="Edit Password" aria-label="add">
+                        <IconButton
+                          style={{ marginBottom: "3%", marginTop: "3%" }}
+                          className={classes.hoverEdit}
+                          color="primary"
+                          onClick={() => {
+                            console.log("CLICKED");
+                            editPassword();
+                          }}
+                        >
+                          {" "}
+                          <VisibilityIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
                     </Typography>
                   </div>
                 </div>
@@ -799,32 +824,38 @@ function DoctorProfile() {
         </Grid>
 
         <div style={{ marginBottom: "2%", marginTop: "2%" }}>
-          <Button
-            style={{ marginRight: "0%" }}
-            className={classes.hover}
-            onClick={() => handleClickOpen()}
-            startIcon={<DeleteIcon fontSize="large" />}
-          >
-            <Typography variant="h6"> Delete</Typography>
-          </Button>
+          <Tooltip title="Delete Profile" aria-label="add">
+            <Button
+              style={{ marginRight: "0%" }}
+              className={classes.hover}
+              onClick={() => handleClickOpen()}
+              startIcon={<DeleteIcon fontSize="small" />}
+            >
+              <Typography variant="button"> Delete</Typography>
+            </Button>
+          </Tooltip>
 
+          <Tooltip title="View Logs" aria-label="add">
           <Button
-            style={{ marginLeft: "3%" }}
+            style={{ marginLeft: "3%", marginRight:"3%" }}
             className={classes.logs}
             onClick={() => DocLogs()}
-            startIcon={<DeleteIcon fontSize="large" />}
+            startIcon={<TouchAppIcon fontSize="small" />}
           >
-            <Typography variant="h6"> View Logs</Typography>
-          </Button>
+            <Typography variant="button"> Logs</Typography>
+          </Button></Tooltip>
 
+
+          <Tooltip title="Edit Profile" aria-label="add">
           <Button
-            style={{ marginLeft: "3%" }}
-            className={classes.logs}
+            style={{ marginLeft: "0%" }}
+            className={classes.edit}
             onClick={() => setEditDialog(true)}
-            startIcon={<DeleteIcon fontSize="large" />}
+            startIcon={<EditIcon fontSize="small" />}
           >
-            <Typography variant="h6"> Edit Profile</Typography>
+            <Typography variant="button">Profile</Typography>
           </Button>
+          </Tooltip>
         </div>
 
         <div style={{ marginTop: "2%", marginBottom: "2%" }}>
@@ -1155,13 +1186,29 @@ function DoctorProfile() {
               id="outlined-basic"
               label="New Password"
               placeholder="Password"
-              type="text"
+              type="password"
               variant="outlined"
+              helperText="Must be at least 8 characters"
               required={true}
               size="medium"
               color="primary"
               value={updatedPassword}
               onChange={changePassword}
+            />
+          </DialogContent>
+
+          <DialogContent>
+            <TextField
+              id="outlined-basic"
+              label="Confirm New Password"
+              placeholder="Confirm New Password"
+              type="password"
+              variant="outlined"
+              required={true}
+              size="medium"
+              color="primary"
+              value={confirmUpdatedPassword}
+              onChange={changeUpdatePassword}
             />
           </DialogContent>
 
