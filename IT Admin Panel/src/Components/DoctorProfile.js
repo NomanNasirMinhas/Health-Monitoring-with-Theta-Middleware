@@ -530,11 +530,11 @@ function DoctorProfile() {
     }),
   };
 
-  function updateProfile() {
+  async function updateProfile() {
     //info = { name: updateName, specialization: updateSpecialization,
     //  address: updateAddress, contact: updateContact, email: updateEmail };
     console.log("OBJECT TO PASS:", info);
-    fetch(`https://thetamiddleware.herokuapp.com/updateSeedInfo/`, profileData);
+    await fetch(`https://thetamiddleware.herokuapp.com/updateSeedInfo/`, profileData);
 
     swal({
       text: "PROFILE UPDATED SUCCESSFULLY!",
@@ -1119,8 +1119,8 @@ function DoctorProfile() {
             </Button>
 
             <Button
-              onClick={() => {
-                fetch(`https://thetamiddleware.herokuapp.com/dropSeed/${seed}`);
+              onClick={async () => {
+               await fetch(`https://thetamiddleware.herokuapp.com/dropSeed/${seed}`);
                 //swal alert
                 swal({
                   text: "Doctor Profile Deleted!",

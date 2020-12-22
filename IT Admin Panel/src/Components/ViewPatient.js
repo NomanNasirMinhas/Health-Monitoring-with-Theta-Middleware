@@ -756,7 +756,7 @@ function ViewPatient(props) {
                             { label: "All", value: -1 },
                           ]}
                           colSpan={12}
-                          count={addresses.length}
+                          count={addresses.length-1}
                           rowsPerPage={rowsPerPage}
                           page={page}
                           SelectProps={{

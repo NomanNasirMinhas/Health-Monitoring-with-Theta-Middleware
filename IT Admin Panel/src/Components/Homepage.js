@@ -1,6 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import Navbar from "./Navbar";
+import { Bar } from "react-chartjs-2";
 
 //import css
 import "./body.css";
@@ -21,13 +22,7 @@ import Badge from "@material-ui/core/Badge";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import {
-  
-  Button,
-  Typography,
-  CircularProgress,
-  Slide,
-} from "@material-ui/core";
+import { Button, Typography, CircularProgress, Slide } from "@material-ui/core";
 import {
   createMuiTheme,
   withStyles,
@@ -192,6 +187,11 @@ TablePaginationActions.propTypes = {
 
 function Doctors(props) {
   const classesTable = useStylesTable();
+  //---------CHART STATE AND VARS------------------
+  const [chartData, setChartData] = useState({});
+  var docNames = [];
+  var numOfPatients = [];
+  //---------------------------------------
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [totalDoctors, settotalDoctors] = React.useState("");
@@ -248,9 +248,9 @@ function Doctors(props) {
 
       for (var i = 0; i < seeds.length; i++) {
         console.log("loop =", i);
-       
-        
+
         let addresses_for = seeds[i].SEED;
+        docNames[i] = seeds[i].Profile.name;
 
         // addresses_for
         //get doctor addresses from seeds
@@ -261,6 +261,7 @@ function Doctors(props) {
         );
         //convert to json
         const patients_json = await patients.json();
+        numOfPatients[i] = patients_json.length - 1;
 
         // get STATUSES--------------------------------------////UPDATE
 
@@ -311,23 +312,39 @@ function Doctors(props) {
           console.log("New seeds =", NewSeeds);
         } else {
           console.log("addresses=", patients_json.length);
-          setPatientCount(PatientCount.concat(patients_json.length-1));
+          setPatientCount(PatientCount.concat(patients_json.length - 1));
           NewSeeds.push({
             seed_obj: seeds[i],
-            num_of_pat: patients_json.length-1,
+            num_of_pat: patients_json.length - 1,
             stat: status[i],
           });
 
           console.log("patient count else =", PatientCount);
           console.log("New seeds =", NewSeeds);
         }
-      
-    }
+      }
+
+      setChartData({
+        type: "Bar",
+        labels: docNames,
+        datasets: [
+          {
+            label: "Number of patients",
+            data: numOfPatients,
+            backgroundColor: "#9FF9C5",
+            borderWidth: 4,
+          },
+        ],
+     
+      });
+
       setnewSeedsArray(NewSeeds);
     }
 
     Patient_Count();
-  }, [seeds,status]);
+    console.log("docNames", docNames);
+    console.log("NUMBER OF PATIENTS", numOfPatients);
+  }, [seeds, status]);
 
   //console.log("PC=",Patient_Count());
 
@@ -356,6 +373,7 @@ function Doctors(props) {
       let current = "";
       for (var i = 0; i <= s.length; i++) {
         current = s[i];
+
         const add = await fetch(
           `https://thetamiddleware.herokuapp.com/getAllAddresses/${current}`
         );
@@ -363,9 +381,10 @@ function Doctors(props) {
         if (js == false) {
           continue;
         } else {
-          js.map(function(obj){
-            if(obj.Profile!=null){
-            l.push(obj.ADDRESS);}
+          js.map(function (obj) {
+            if (obj.Profile != null) {
+              l.push(obj.ADDRESS);
+            }
           });
         }
       }
@@ -740,6 +759,41 @@ function Doctors(props) {
           </Grid>
         </Grid>
       </Slide>
+
+     
+      <Grid
+        container
+        spacing={0}
+        style={{ alignSelf: "bottom", marginTop: "5%" }}
+        justify="space-between"
+        display="bottom"
+      >
+        <Grid item xs={3}></Grid>
+        <Grid item xs={6}>
+         <Paper>
+          <Bar
+            data={chartData}
+            options={{
+              responsive: true,
+              scales: {
+                yAxes: [
+                  {
+                    
+                    ticks: {
+                      beginAtZero: true,
+                    },
+                  },
+                ],
+              },
+            }}
+            height={300}
+            width={500}
+          />
+          </Paper>
+        </Grid>
+        <Grid item xs={3}></Grid>
+      </Grid>
+
 
       <Grid
         container

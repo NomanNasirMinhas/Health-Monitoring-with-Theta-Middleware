@@ -61,7 +61,7 @@ export const Options = {
         yAxes: [
             {
                 gridLines: {
-                    color: "rgba(255, 255, 255, 0.2)",
+                    color: "red",
                 },
                 ticks: {
                     fontColor: "#FFFFFF",
