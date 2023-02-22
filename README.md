@@ -1,4 +1,4 @@
-# Health Monitoring with Theta Middleware
+# Health Monitoring with Theta Middleware (Outdated)
 ## [API End-Point](https://thetamiddleware.herokuapp.com/)
 ## [npm Package](https://www.npmjs.com/package/thetamiddleware)
 ## [Heroku API Git Link](https://git.heroku.com/thetamiddleware.git)
